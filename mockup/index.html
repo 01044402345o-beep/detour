@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daejeon Detour · Interactive Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --ink:#151a26; --ink2:#2b3346; --soft:#6b7287; --mute:#9aa0b0;
+  --paper:#fbf7ef; --card:#ffffff; --line:#ece4d6; --line2:#e2d8c6;
+  --acc:#ee6a3c; --acc-d:#c24e22; --acc-s:#fde6dc;
+  --sea:#13807e; --sea-d:#0c5654; --sea-s:#d8efed;
+  --sun:#f2b33d; --sun-s:#fdf1d6;
+  --plum:#6b4fc6; --plum-s:#ece7fb;
+  --gold:#c8a46a; --gold-l:#e9d6b0;
+  --side:#0e121b; --side2:#161b27; --side-line:#232a3a; --side-txt:#c9cdd8; --side-mute:#7c849a;
+  --stage1:#f3eee5; --stage2:#e6dccb;
+  --kfont:"Pretendard Variable",Pretendard,"Malgun Gothic","Yu Gothic UI","Microsoft YaHei",system-ui,sans-serif;
+  --dfont:"Fraunces",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--kfont);color:var(--ink);background:var(--stage1);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.app{display:grid;grid-template-columns:292px 1fr;height:100vh}
+
+/* ───────── Sidebar ───────── */
+.side{background:linear-gradient(180deg,var(--side) 0%,#121725 100%);color:var(--side-txt);display:flex;flex-direction:column;border-right:1px solid #000;overflow:hidden}
+.brand{padding:26px 24px 20px;border-bottom:1px solid var(--side-line)}
+.brand .mark{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#f58a5c,var(--acc-d));display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;box-shadow:0 6px 18px rgba(238,106,60,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+.brand h1{font-family:var(--dfont);font-weight:500;font-size:21px;color:#fff;letter-spacing:.2px;line-height:1.1}
+.brand h1 i{color:var(--gold-l)}
+.brand .tag{font-size:11.5px;color:var(--side-mute);margin-top:3px;letter-spacing:.3px}
+.brand .ver{margin-top:16px;display:flex;gap:6px;flex-wrap:wrap}
+.chip-s{font-size:10.5px;font-weight:600;letter-spacing:.4px;padding:4px 9px;border-radius:99px;border:1px solid var(--side-line);color:var(--side-mute)}
+.chip-s.g{border-color:rgba(200,164,106,.4);color:var(--gold-l)}
+.nav{flex:1;overflow:auto;padding:14px 12px 20px}
+.nav::-webkit-scrollbar{width:6px}.nav::-webkit-scrollbar-thumb{background:#262d3e;border-radius:6px}
+.grp{font-size:10.5px;font-weight:700;letter-spacing:1.6px;color:var(--side-mute);text-transform:uppercase;padding:16px 12px 7px}
+.item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:9px 12px;border-radius:11px;color:var(--side-txt);transition:background .18s,color .18s;position:relative}
+.item:hover{background:var(--side2);color:#fff}
+.item .no{font-family:var(--dfont);font-size:12.5px;width:26px;color:var(--side-mute);font-variant-numeric:tabular-nums}
+.item .tt{font-size:13.5px;font-weight:600;line-height:1.25}
+.item .ss{font-size:11px;color:var(--side-mute);margin-top:1px}
+.item.on{background:linear-gradient(90deg,rgba(200,164,106,.16),rgba(200,164,106,.04));color:#fff}
+.item.on::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--gold)}
+.item.on .no{color:var(--gold-l)}
+.side-foot{padding:16px 22px;border-top:1px solid var(--side-line);font-size:11px;color:var(--side-mute);line-height:1.55}
+.side-foot b{color:var(--side-txt);font-weight:600}
+
+/* ───────── Stage ───────── */
+.stage{position:relative;display:flex;flex-direction:column;overflow:hidden;background:
+  radial-gradient(1200px 700px at 30% 10%,#faf6ee 0%,transparent 60%),
+  radial-gradient(900px 600px at 90% 100%,#e4d8c3 0%,transparent 60%),
+  linear-gradient(160deg,var(--stage1),var(--stage2))}
+.bar{display:flex;align-items:center;gap:14px;padding:16px 28px;border-bottom:1px solid rgba(21,26,38,.07);background:rgba(251,247,239,.55);backdrop-filter:blur(10px)}
+.bar .crumb{font-size:12px;color:var(--soft);letter-spacing:.3px}
+.bar .crumb b{color:var(--ink);font-weight:700}
+.bar .sp{flex:1}
+.seg{display:flex;background:#fff;border:1px solid var(--line2);border-radius:99px;padding:3px}
+.seg button{font-size:12px;font-weight:700;padding:6px 12px;border-radius:99px;color:var(--soft)}
+.seg button.on{background:var(--ink);color:#fff}
+.tbtn{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;padding:8px 14px;border-radius:99px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.tbtn:hover{border-color:var(--gold)}
+.tbtn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.tbtn .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.8}
+.body{flex:1;display:flex;gap:34px;align-items:center;justify-content:center;padding:18px 28px;min-height:0}
+
+/* phone */
+.phone-wrap{flex:none;display:flex;align-items:center;justify-content:center}
+.phone-scale{transform-origin:center center}
+.phone{width:390px;height:844px;border-radius:58px;background:#0b0d12;padding:11px;position:relative;
+  box-shadow:0 40px 80px -20px rgba(21,26,38,.45),0 18px 36px -18px rgba(21,26,38,.4),inset 0 0 0 2px #2a2f3b,inset 0 0 0 5px #0b0d12,inset 0 0 0 6px #3a404e}
+.phone::after{content:"";position:absolute;right:-3px;top:180px;width:3px;height:90px;border-radius:0 3px 3px 0;background:#2a2f3b}
+.screen{width:100%;height:100%;border-radius:47px;overflow:hidden;background:var(--paper);position:relative;display:flex;flex-direction:column}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:124px;height:36px;border-radius:20px;background:#000;z-index:50}
+.status{height:54px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 36px;font-size:15px;font-weight:700;z-index:40;position:relative}
+.status .ic{display:flex;gap:6px;align-items:center}
+.status.light{color:#fff}
+.view{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:5px;background:#151a26;z-index:60;opacity:.85}
+
+/* notes panel */
+.notes{width:340px;flex:none;align-self:stretch;display:flex;flex-direction:column;gap:14px;padding:8px 0;min-height:0}
+.ncard{background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border:1px solid rgba(21,26,38,.06);border-radius:20px;padding:20px 22px;box-shadow:0 10px 30px -18px rgba(21,26,38,.25)}
+.ncard .k{font-size:10.5px;font-weight:700;letter-spacing:1.6px;color:var(--gold);text-transform:uppercase}
+.ncard h2{font-size:21px;font-weight:800;letter-spacing:-.4px;margin-top:6px}
+.ncard p.d{font-size:13px;color:var(--ink2);line-height:1.6;margin-top:8px}
+.ncard ul.hs{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.ncard ul.hs li{display:flex;gap:10px;font-size:12.5px;line-height:1.5;color:var(--ink2)}
+.ncard ul.hs li .b{flex:none;font-weight:700;color:var(--ink);background:var(--sun-s);border:1px solid #f3dfae;border-radius:7px;padding:1px 7px;height:fit-content;white-space:nowrap}
+.ncard .warn{margin-top:12px;font-size:11.5px;color:var(--acc-d);background:var(--acc-s);border-radius:10px;padding:8px 10px;line-height:1.5}
+.logcard{flex:1;min-height:0;display:flex;flex-direction:column}
+.log{list-style:none;margin-top:10px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px}
+.log li{font-size:12px;line-height:1.5;color:var(--ink2);padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--line);animation:fadein .35s ease}
+.log li time{font-variant-numeric:tabular-nums;color:var(--mute);font-size:10.5px;margin-right:6px}
+.log li.new{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,164,106,.15)}
+.log .empty{color:var(--mute);background:none;border:1px dashed var(--line2)}
+@keyframes fadein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* hotspot mode */
+.hot [data-a]{outline:2px dashed rgba(238,106,60,.85);outline-offset:2px;animation:hp 1.4s ease-in-out infinite}
+@keyframes hp{50%{outline-color:rgba(238,106,60,.25)}}
+
+/* ───────── App UI (inside phone) ───────── */
+.pad{padding:0 22px}
+.row{display:flex;align-items:center}
+.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}
+.sp{flex:1}
+.h-xl{font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1.15}
+.h-l{font-size:22px;font-weight:800;letter-spacing:-.6px;line-height:1.2}
+.h-m{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.t-s{font-size:13px;color:var(--soft)}
+.t-xs{font-size:11.5px;color:var(--soft)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.p-acc{background:var(--acc-s);color:var(--acc-d)}
+.p-sea{background:var(--sea-s);color:var(--sea-d)}
+.p-plum{background:var(--plum-s);color:var(--plum)}
+.p-ink{background:var(--ink);color:#fff}
+.p-line{background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:16px;font-weight:700;font-size:15px;width:100%;transition:transform .12s}
+.btn:active{transform:scale(.98)}
+.b-ink{background:var(--ink);color:#fff}
+.b-acc{background:var(--acc);color:#fff;box-shadow:0 10px 20px -10px rgba(238,106,60,.7)}
+.b-sea{background:var(--sea);color:#fff}
+.b-ghost{background:#fff;border:1.5px solid var(--line2);color:var(--ink)}
+.icb{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid var(--line);flex:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px}
+.topbar{display:flex;align-items:center;gap:10px;padding:4px 18px 10px}
+.topbar .ttl{flex:1;text-align:center;font-weight:800;font-size:15px}
+
+/* language */
+.lang-hero{height:100%;display:flex;flex-direction:column;background:linear-gradient(170deg,#151a26 0%,#1d2436 55%,#2a2233 100%);color:#fff;position:relative;overflow:hidden}
+.lang-hero .glow{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(238,106,60,.45),transparent 65%);top:-120px;right:-160px}
+.lang-hero .glow2{position:absolute;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(19,128,126,.45),transparent 65%);bottom:80px;left:-180px}
+.lang-hero .in{position:relative;padding:40px 28px 0;flex:1;display:flex;flex-direction:column}
+.lang-hero .logo{width:56px;height:56px;border-radius:17px;background:linear-gradient(135deg,#f58a5c,var(--acc-d));display:grid;place-items:center;font-weight:800;font-size:26px;box-shadow:0 12px 30px rgba(238,106,60,.4)}
+.lang-hero .nm{font-family:var(--dfont);font-size:38px;font-weight:500;line-height:1.05;margin-top:26px;letter-spacing:-.5px}
+.lang-hero .nm i{color:var(--gold-l)}
+.lang-hero .sub{color:#b8bfd0;font-size:14px;margin-top:12px;line-height:1.6}
+.lang-list{margin-top:auto;margin-bottom:46px;display:flex;flex-direction:column;gap:10px}
+.lang-opt{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);text-align:left;transition:all .2s}
+.lang-opt:hover{background:rgba(255,255,255,.1)}
+.lang-opt.on{background:#fff;color:var(--ink);border-color:#fff}
+.lang-opt .fl{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:13px;background:rgba(255,255,255,.12)}
+.lang-opt.on .fl{background:var(--acc);color:#fff}
+.lang-opt .a{font-weight:700;font-size:16px}
+.lang-opt .b2{font-size:12px;opacity:.65}
+.lang-opt .ck{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3)}
+.lang-opt.on .ck{border-color:var(--acc);background:var(--acc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/13px no-repeat}
+
+/* home */
+.hello{padding:6px 22px 0}
+.search{margin:16px 22px 0;height:50px;border-radius:16px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--mute);font-size:14px}
+.hubs{display:flex;gap:12px;overflow-x:auto;padding:12px 22px 4px;scrollbar-width:none}
+.hubs::-webkit-scrollbar{display:none}
+.hub{flex:none;width:236px;border-radius:22px;overflow:hidden;background:#fff;border:1px solid var(--line);text-align:left;position:relative}
+.hub .art{height:120px;display:block}
+.hub .info{padding:12px 15px 14px}
+.hub.lock .art,.hub.lock .info{opacity:.55;filter:grayscale(.4)}
+.hub .soon{position:absolute;top:12px;left:12px}
+.banner{margin:16px 22px 0;border-radius:22px;padding:16px;background:linear-gradient(120deg,var(--sea),var(--sea-d));color:#fff;display:flex;align-items:center;gap:14px;text-align:left;width:calc(100% - 44px)}
+.banner .k{font-size:10.5px;font-weight:700;letter-spacing:1.2px;opacity:.75}
+.banner .t{font-weight:800;font-size:15px;line-height:1.3;margin-top:3px}
+.phr-day{margin:10px 22px 0;padding:16px 18px;display:flex;align-items:center;gap:12px}
+.phr-day .ko{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.playb{width:46px;height:46px;border-radius:50%;background:var(--sea-s);color:var(--sea-d);display:grid;place-items:center;flex:none}
+.sec{display:flex;align-items:baseline;justify-content:space-between;padding:22px 22px 0}
+.sec a,.sec button.lk{font-size:13px;font-weight:700;color:var(--acc)}
+.tabbar{flex:none;height:84px;background:rgba(255,255,255,.96);border-top:1px solid var(--line);display:flex;padding:8px 8px 22px}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--mute)}
+.tabbar button.on{color:var(--acc)}
+
+/* course */
+.mapbox{margin:0 16px;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:#f1ebde;position:relative}
+.mapbox svg{display:block;width:100%;height:auto}
+.mapbox .pin{cursor:pointer}
+.mapbox .pin:hover circle.o{r:17}
+.cmeta{padding:16px 22px 6px}
+.stop{display:flex;gap:14px;align-items:flex-start;padding:12px 22px;text-align:left;width:100%}
+.stop .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;flex:none;margin-top:2px}
+.stop .line{position:relative}
+.walkseg{margin-left:36px;padding:2px 22px 2px 22px;font-size:11.5px;color:var(--soft);display:flex;align-items:center;gap:6px}
+.walkseg::before{content:"";width:2px;height:18px;background:repeating-linear-gradient(var(--line2) 0 3px,transparent 3px 6px);margin-right:8px}
+
+/* place */
+.phero{height:236px;position:relative;flex:none}
+.phero > svg{position:absolute;inset:0;width:100%;height:100%}
+.phero .tl{position:absolute;top:58px;left:18px;right:18px;display:flex;justify-content:space-between}
+.phero .tl .icb{background:rgba(255,255,255,.92);border:0;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.psheet{margin-top:-26px;position:relative;background:var(--paper);border-radius:26px 26px 0 0;padding:20px 22px 0}
+.tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-top:16px}
+.tabs button{padding:10px 0;font-size:14px;font-weight:700;color:var(--mute);position:relative}
+.tabs button.on{color:var(--ink)}
+.tabs button.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2.5px;border-radius:2px;background:var(--acc)}
+.mitem{display:flex;gap:12px;align-items:center;padding:12px;margin-top:10px}
+.mitem .art{width:62px;height:62px;border-radius:16px;flex:none;display:grid;place-items:center}
+.mitem .nm{font-weight:800;font-size:14.5px;letter-spacing:-.2px}
+.mitem .ko{font-size:12px;color:var(--soft);margin-top:1px}
+.mitem .ds{font-size:11.5px;color:var(--soft);margin-top:3px;line-height:1.35}
+.qty{display:flex;align-items:center;gap:2px;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:3px;flex:none}
+.qty button{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:18px;font-weight:700;color:var(--ink)}
+.qty button.pl{background:var(--ink);color:#fff}
+.qty span{min-width:18px;text-align:center;font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
+.addb{width:36px;height:36px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:20px;font-weight:600;flex:none}
+.allergy{margin-top:14px;display:flex;gap:8px;align-items:center;font-size:12px;font-weight:600;color:var(--acc-d);background:var(--acc-s);border-radius:12px;padding:10px 12px}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:14px}
+.step{display:flex;gap:14px;padding:12px 0;align-items:flex-start}
+.step .n{width:34px;height:34px;border-radius:12px;background:var(--sun-s);color:#8a6210;font-weight:800;display:grid;place-items:center;flex:none}
+.prow{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-top:10px;text-align:left;width:100%}
+.prow .ko{font-weight:800;font-size:16px;letter-spacing:-.3px}
+.orderbar{position:sticky;bottom:0;padding:12px 16px 30px;background:linear-gradient(180deg,rgba(251,247,239,0),var(--paper) 30%);z-index:20}
+.orderbar .btn{justify-content:space-between;padding:0 18px}
+.orderbar .cnt{background:var(--acc);border-radius:99px;min-width:26px;height:26px;display:grid;place-items:center;font-size:13px;padding:0 8px}
+
+/* order */
+.okcard{margin:6px 18px 0;border-radius:24px;padding:20px;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.okcard::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(238,106,60,.35),transparent 65%);right:-80px;top:-90px}
+.okcard .k{font-size:10.5px;font-weight:700;letter-spacing:1.4px;color:var(--gold-l)}
+.okcard .ko{font-size:24px;font-weight:800;line-height:1.35;letter-spacing:-.5px;margin-top:10px;position:relative}
+.okcard .pr{font-size:12.5px;color:#aeb5c6;margin-top:8px;position:relative}
+.okcard .mn{font-size:13.5px;color:#7ee0d7;margin-top:6px;font-weight:600;position:relative}
+.olist .oi{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line2)}
+.toggle{display:flex;background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px}
+.toggle button{flex:1;height:40px;border-radius:11px;font-weight:700;font-size:13.5px;color:var(--soft)}
+.toggle button.on{background:var(--ink);color:#fff}
+
+/* practice */
+.prog{flex:1;height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--acc);border-radius:6px;transition:width .3s}
+.pcard{margin:14px 18px 0;padding:22px 18px 18px;text-align:center}
+.pcard .ko{font-size:27px;font-weight:800;letter-spacing:-.6px;line-height:1.35}
+.pcard .pr{font-size:13px;color:var(--soft);margin-top:10px}
+.pcard .mn{font-size:14px;color:var(--sea-d);font-weight:700;margin-top:4px}
+.ctrl{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.ctrl button{font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:99px;border:1px solid var(--line2);background:#fff;display:flex;align-items:center;gap:6px}
+.ctrl button.sea{background:var(--sea-s);border-color:transparent;color:var(--sea-d)}
+.words{display:flex;flex-wrap:wrap;gap:8px;padding:0 18px;margin-top:10px}
+.words button{background:#fff;border:1px solid var(--line2);border-radius:12px;padding:8px 11px;font-weight:800;font-size:14px}
+.words button small{font-weight:600;color:var(--soft);font-size:11px;margin-left:5px}
+.mic{margin-top:auto;background:#fff;border-radius:28px 28px 0 0;border-top:1px solid var(--line);padding:18px 22px 34px;text-align:center;box-shadow:0 -10px 30px -20px rgba(21,26,38,.25)}
+.wave{display:flex;align-items:center;justify-content:center;gap:4px;height:46px}
+.wave i{width:4px;border-radius:3px;background:var(--line2);height:8px}
+.wave.on i{background:var(--acc);animation:wv .9s ease-in-out infinite}
+@keyframes wv{0%,100%{height:8px}50%{height:var(--h,30px)}}
+.micb{width:74px;height:74px;border-radius:50%;background:var(--acc);display:grid;place-items:center;margin:10px auto 0;box-shadow:0 0 0 10px var(--acc-s),0 14px 26px -10px rgba(238,106,60,.8)}
+.micb.on{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 18px rgba(253,230,220,.6),0 14px 26px -10px rgba(238,106,60,.8)}}
+
+/* result */
+.ring{width:170px;height:170px;margin:12px auto 0;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .v b{font-size:48px;font-weight:800;letter-spacing:-2px;line-height:1}
+.heard{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.heard span{padding:7px 11px;border-radius:11px;font-weight:800;font-size:15px}
+.heard .ok{background:var(--sea-s);color:var(--sea-d)}
+.heard .ng{background:var(--sun-s);color:#8a6210;border:1.5px dashed var(--sun)}
+.tipb{display:flex;gap:10px;padding:13px 14px;border-radius:14px;background:var(--sun-s);font-size:13px;line-height:1.5;margin-top:14px;color:#5e4610}
+
+/* staff */
+.staff{height:100%;display:flex;flex-direction:column;background:#fffdf8}
+.staff .note{margin:4px 18px 0;padding:11px 14px;border-radius:14px;background:var(--sea-s);color:var(--sea-d);font-weight:700;font-size:13.5px;text-align:center}
+.staff .big{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:0 24px}
+.staff .big .ko{font-weight:800;letter-spacing:-1px;line-height:1.3;transition:font-size .25s}
+.staff .big hr{width:44px;height:4px;border:0;border-radius:4px;background:var(--acc);margin:22px auto}
+.staff .replies{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px}
+.staff .replies button{border-radius:16px;border:1.5px solid var(--line2);background:#fff;padding:12px 6px;font-weight:800;font-size:16px;line-height:1.2}
+.staff .replies button small{display:block;font-size:10.5px;color:var(--soft);font-weight:600;margin-top:3px}
+.staff .replies button.y{background:var(--sea);color:#fff;border-color:var(--sea)}
+.staff .replies button.y small{color:#cdeeea}
+.olines{margin:14px auto 0;display:inline-flex;flex-direction:column;gap:4px;text-align:left;font-size:15px;font-weight:700;color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+
+/* reply */
+.reply{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 28px;color:#fff}
+.reply .ic{width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:44px}
+.reply h3{font-size:34px;font-weight:800;letter-spacing:-1px;margin-top:24px;line-height:1.2}
+.reply .ko{font-size:15px;opacity:.75;margin-top:10px}
+.reply p{font-size:16px;opacity:.9;margin-top:14px;line-height:1.5}
+
+/* sheet & toast */
+.dim{position:absolute;inset:0;background:rgba(14,18,27,.45);z-index:70;display:flex;align-items:flex-end;animation:fadein .2s}
+.sheet{width:100%;background:var(--paper);border-radius:28px 28px 0 0;padding:12px 22px 38px;animation:up .28s cubic-bezier(.2,.8,.2,1)}
+.sheet .grab{width:40px;height:5px;border-radius:5px;background:var(--line2);margin:0 auto 16px}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.ropt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:15px 16px;margin-top:8px;font-weight:700;font-size:14.5px}
+.toast{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);z-index:80;background:var(--ink);color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:99px;white-space:nowrap;box-shadow:0 12px 30px -10px rgba(0,0,0,.4);animation:tst 2.4s ease forwards}
+@keyframes tst{0%{opacity:0;transform:translate(-50%,10px)}10%,85%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+
+/* report (desktop) */
+.report{width:min(1060px,100%);max-height:100%;overflow:auto;background:#fff;border-radius:26px;border:1px solid rgba(21,26,38,.06);box-shadow:0 40px 80px -30px rgba(21,26,38,.35);padding:30px 34px}
+.report .hd{display:flex;align-items:flex-end;gap:16px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.report .hd h2{font-weight:800;font-size:28px;letter-spacing:-.8px}
+.report .hd .s{font-size:13px;color:var(--soft);margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.kpi{border:1px solid var(--line);border-radius:18px;padding:16px 18px;background:linear-gradient(180deg,#fff,#fcfaf5)}
+.kpi .l{font-size:12px;color:var(--soft);font-weight:600}
+.kpi .n{font-size:30px;font-weight:800;letter-spacing:-1px;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:11.5px;font-weight:700;margin-top:2px}
+.rgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:16px}
+.rbox{border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.rbox h4{font-size:14px;font-weight:800}
+.rbox .s{font-size:11.5px;color:var(--soft);margin-top:2px}
+.hbar{display:grid;grid-template-columns:130px 1fr 44px;align-items:center;gap:10px;margin-top:11px;font-size:12.5px;font-weight:600}
+.hbar .tr{height:12px;border-radius:6px;background:#f2ece1;overflow:hidden}
+.hbar .tr i{display:block;height:100%;border-radius:6px}
+.hbar .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink2)}
+.stack{display:flex;height:16px;border-radius:8px;overflow:hidden;margin-top:14px}
+.legend{display:flex;gap:14px;margin-top:10px;font-size:12px;color:var(--ink2)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+.toplist{list-style:none;margin-top:8px}
+.toplist li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.toplist li b{font-family:var(--dfont);color:var(--gold);width:18px}
+.toplist li .c{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--soft);font-weight:600}
+.cols{display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:14px}
+.cols div{flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--acc),#f3a080);position:relative}
+.cols div span{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--soft)}
+.sample{display:inline-block;font-size:11px;font-weight:700;color:var(--acc-d);background:var(--acc-s);border-radius:99px;padding:4px 10px}
+
+@media (max-width:1280px){.notes{width:290px}}
+@media (max-width:1100px){.notes{display:none}}
+@media (max-width:760px){.app{grid-template-columns:1fr}.side{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="mark">
+        <div class="logo">D</div>
+        <div><h1>Daejeon <i>Detour</i></h1><div class="tag">대전 디투어 · 인터랙티브 목업</div></div>
+      </div>
+      <div class="ver"><span class="chip-s g">DEMO v0.1</span><span class="chip-s">원도심 코스</span><span class="chip-s">EN · JA · ZH</span></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot"><b>사용법</b> — 왼쪽에서 화면을 고르거나, 폰 안의 버튼을 직접 눌러보세요. 오른쪽 패널에 각 버튼의 동작과 실행 기록이 표시됩니다.</div>
+  </aside>
+
+  <main class="stage">
+    <div class="bar">
+      <div class="crumb" id="crumb"></div>
+      <div class="sp"></div>
+      <div class="seg" id="langSeg"></div>
+      <button class="tbtn" id="hotBtn"><span class="dot"></span>누를 수 있는 곳 표시</button>
+      <button class="tbtn" id="resetBtn">↺ 처음부터</button>
+    </div>
+    <div class="body" id="body">
+      <div class="phone-wrap" id="phoneWrap">
+        <div class="phone-scale" id="phoneScale">
+          <div class="phone"><div class="screen" id="screen"></div></div>
+        </div>
+      </div>
+      <div class="report" id="report" style="display:none"></div>
+      <aside class="notes" id="notes">
+        <div class="ncard" id="noteCard"></div>
+        <div class="ncard logcard"><div class="k">Interaction log · 동작 기록</div><ul class="log" id="log"></ul></div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ═════════════ i18n ═════════════ */
+const T = {
+  en:{chooseLang:'Choose your language',welcome:'Daejeon, one detour at a time.<br>Routes, real menus and the Korean you need — no app install.',start:'Get started',
+    hi:'Hi there 👋',whereTo:'Where to today?',search:'Search places, food, phrases',pickHub:'Pick a hub',seeMap:'See map',
+    hubDown:'Old Downtown',hubDownSub:'Bakery · History · Local food',hubSt:'Station & Sojedong',hubStSub:'Cafés · Alleys · Luggage',hubYu:'Yuseong Spa',hubYuSub:'Hot springs · Overnight',
+    soon:'Coming soon',spots:'spots',min:'min',overK:'MAKE IT AN OVERNIGHT',overT:'Yuseong Spa · Line 1, no transfer',todayPhr:'Phrase of the day',todayCourse:'Today\'s course',
+    nExplore:'Explore',nCourse:'Course',nPhrases:'Phrases',nSaved:'Saved',nMe:'Me',
+    courseT:'Old Downtown Half-day',courseM:'4 stops · 2.0 km · about 3 hrs',from:'Start · Jungang-ro Stn (Line 1)',checked:'Checked',startWalk:'Start with stop 1',walk:'walk',
+    food:'FOOD',sight:'SIGHTS',openNow:'Open now',hours:'Hours',tMenu:'Menu',tHow:'How to order',tVisit:'How to visit',tPhr:'Phrases',
+    sig:'Signature',spicy:'Spicy',contains:'Contains',addHint:'Tap + to build your order',viewOrder:'View my order',est:'Est.',sample:'Sample prices',
+    myOrder:'My order',togo:'To go',here:'For here',sayThis:'SAY THIS AT THE COUNTER',practice:'Practice saying it',showStaff:'Show to staff',
+    listen:'Listen',tapWord:'TAP A WORD',listening:'Listening… say it now',tapMic:'Tap the mic and say it',notSaved:'This app does not save your voice or what was recognized. Speech may be processed by your browser’s speech service.',
+    great:'Great job! 🎉',almost:'Almost there!',understood:'The staff will understand you.',heard:'WHAT WE HEARD',
+    tip:w=>`“${w}” sounded short. Say it slowly, one syllable at a time.`,again:'Try again',next:'Next phrase',instead:'Show this to staff instead',
+    staffReply:'Staff reply',play:'Play aloud',bigger:'Bigger',done:'Done',edit:'Change my order',
+    rYes:['Yes! 👍','Your order is understood.'],rSold:['Sold out','Please choose something else.'],rWait:['Please wait a moment','The staff will be right with you.'],rPay:['Please pay at the counter','Head to the cashier to pay.'],
+    phrasesT:'Phrases',savedT:'Saved',wrong:'Info looks wrong?',wrongT:'What is different?',rClosed:'Closed or moved',rMenu:'Menu changed',rPrice:'Price changed',rOther:'Something else',
+    thanks:'Thanks! We\'ll re-check it.',settings:'Settings',language:'Language',reset:'Reset demo data',savedOk:'Saved',removed:'Removed',empty:'Your order is empty',
+    directions:'Directions',stopOf:(n,t)=>`STOP ${n} OF ${t}`,at:'AT',noTts:'Korean voice is not available on this device.',dir:'Opens your map app',
+    soonToast:'Coming soon — Old Downtown is open in this demo.',disc:'Independent guide — not affiliated with this store and not an official ordering service.',match:'Recognition match',fail:'We couldn’t hear you',failSub:'No speech was recognized. Try again in a quieter spot, or simply show the screen to the staff.',report:'Operator report',dirFirst:'Opens walking directions to stop 1 in Naver Map',items:'items',priceTbd:'Price to confirm',totalTbd:'Total: confirm at counter',privacy:'Your voice is never saved. Your usage history stays only on this phone.',savedEmpty:'Nothing saved yet'},
+  ja:{chooseLang:'言語を選んでください',welcome:'大田を、もう一歩先へ。<br>ルート・実際のメニュー・使える韓国語を、インストール不要で。',start:'はじめる',
+    hi:'こんにちは 👋',whereTo:'今日はどこへ?',search:'場所・グルメ・フレーズを検索',pickHub:'エリアを選ぶ',seeMap:'地図',
+    hubDown:'旧都心',hubDownSub:'パン・歴史・ご当地グルメ',hubSt:'大田駅・ソジェドン',hubStSub:'カフェ・路地・荷物預け',hubYu:'儒城温泉',hubYuSub:'温泉・1泊',
+    soon:'近日公開',spots:'か所',min:'分',overK:'1泊してみる',overT:'儒城温泉・1号線で乗り換えなし',todayPhr:'今日のフレーズ',todayCourse:'今日のコース',
+    nExplore:'探す',nCourse:'コース',nPhrases:'フレーズ',nSaved:'保存',nMe:'設定',
+    courseT:'旧都心 半日コース',courseM:'4か所・2.0km・約3時間',from:'出発・中央路駅(1号線)',checked:'確認日',startWalk:'1か所目から出発',walk:'徒歩',
+    food:'グルメ',sight:'見どころ',openNow:'営業中',hours:'営業時間',tMenu:'メニュー',tHow:'注文方法',tVisit:'見学方法',tPhr:'フレーズ',
+    sig:'看板',spicy:'辛い',contains:'アレルギー',addHint:'+ で注文に追加',viewOrder:'注文を見る',est:'目安',sample:'価格は参考値',
+    myOrder:'わたしの注文',togo:'持ち帰り',here:'店内',sayThis:'レジでこう言いましょう',practice:'話す練習',showStaff:'スタッフに見せる',
+    listen:'聞く',tapWord:'単語をタップ',listening:'聞いています…どうぞ',tapMic:'マイクを押して話してください',notSaved:'このアプリは音声も認識結果も保存しません。音声認識はブラウザの音声サービスで処理される場合があります。',
+    great:'よくできました!🎉',almost:'あと少し!',understood:'スタッフに伝わります。',heard:'聞き取った内容',
+    tip:w=>`「${w}」が短く聞こえました。一音ずつゆっくり言ってみましょう。`,again:'もう一度',next:'次のフレーズ',instead:'代わりにスタッフに見せる',
+    staffReply:'スタッフの返事',play:'読み上げ',bigger:'拡大',done:'完了',edit:'注文を変更',
+    rYes:['はい!👍','注文が伝わりました。'],rSold:['品切れです','別のメニューを選んでください。'],rWait:['少々お待ちください','スタッフがすぐ対応します。'],rPay:['レジでお支払いください','レジへどうぞ。'],
+    phrasesT:'フレーズ',savedT:'保存',wrong:'情報が違う?',wrongT:'何が違いますか?',rClosed:'閉店・移転',rMenu:'メニューが違う',rPrice:'価格が違う',rOther:'その他',
+    thanks:'ありがとうございます!再確認します。',settings:'設定',language:'言語',reset:'デモデータをリセット',savedOk:'保存しました',removed:'削除しました',empty:'注文が空です',
+    directions:'道順',stopOf:(n,t)=>`${t}か所中 ${n}か所目`,at:'',noTts:'この端末では韓国語音声が使えません。',dir:'地図アプリが開きます',
+    soonToast:'近日公開 — デモでは旧都心のみ利用できます。',disc:'各店舗と提携していない独自の案内です。公式の注文サービスではありません。',match:'認識一致度',fail:'うまく聞き取れませんでした',failSub:'音声を認識できませんでした。静かな場所でもう一度試すか、画面をスタッフに見せてください。',report:'運営者レポート',dirFirst:'NAVER地図で1か所目への徒歩ルートが開きます',items:'点',priceTbd:'価格確認中',totalTbd:'合計はレジで確認',privacy:'音声は保存しません。利用履歴はこの端末にのみ保存されます。',savedEmpty:'まだ保存がありません'},
+  zh:{chooseLang:'请选择语言',welcome:'多走一步,遇见大田。<br>路线、真实菜单和用得上的韩语——无需安装。',start:'开始',
+    hi:'你好 👋',whereTo:'今天去哪儿?',search:'搜索地点、美食、短句',pickHub:'选择区域',seeMap:'地图',
+    hubDown:'老城区',hubDownSub:'面包·历史·本地美食',hubSt:'大田站·小堤洞',hubStSub:'咖啡·小巷·行李寄存',hubYu:'儒城温泉',hubYuSub:'温泉·住一晚',
+    soon:'即将上线',spots:'处',min:'分钟',overK:'住一晚吧',overT:'儒城温泉·1号线直达',todayPhr:'今日短句',todayCourse:'今日路线',
+    nExplore:'探索',nCourse:'路线',nPhrases:'短句',nSaved:'收藏',nMe:'我的',
+    courseT:'老城区半日游',courseM:'4站·2.0公里·约3小时',from:'起点·中央路站(1号线)',checked:'核实于',startWalk:'从第1站出发',walk:'步行',
+    food:'美食',sight:'景点',openNow:'营业中',hours:'营业时间',tMenu:'菜单',tHow:'点餐方法',tVisit:'参观方法',tPhr:'短句',
+    sig:'招牌',spicy:'辣',contains:'过敏原',addHint:'点 + 加入点单',viewOrder:'查看点单',est:'约',sample:'价格仅供参考',
+    myOrder:'我的点单',togo:'打包',here:'堂食',sayThis:'在柜台这样说',practice:'练习说',showStaff:'给店员看',
+    listen:'听',tapWord:'点击单词',listening:'正在听…请说',tapMic:'点麦克风开始说',notSaved:'本应用不保存你的语音和识别结果。语音识别可能由浏览器的语音服务处理。',
+    great:'太棒了!🎉',almost:'差一点!',understood:'店员能听懂。',heard:'识别结果',
+    tip:w=>`“${w}”有点短,请一个音一个音慢慢说。`,again:'再试一次',next:'下一句',instead:'直接给店员看',
+    staffReply:'店员回复',play:'朗读',bigger:'放大',done:'完成',edit:'修改点单',
+    rYes:['好的!👍','店员明白了。'],rSold:['已售罄','请换一样吧。'],rWait:['请稍等','店员马上就来。'],rPay:['请到柜台付款','请前往收银台。'],
+    phrasesT:'短句',savedT:'收藏',wrong:'信息有误?',wrongT:'哪里不一样?',rClosed:'已关门或搬迁',rMenu:'菜单变了',rPrice:'价格变了',rOther:'其他',
+    thanks:'谢谢!我们会重新核实。',settings:'设置',language:'语言',reset:'重置演示数据',savedOk:'已收藏',removed:'已取消收藏',empty:'点单为空',
+    directions:'导航',stopOf:(n,t)=>`第 ${n} 站 / 共 ${t} 站`,at:'',noTts:'此设备不支持韩语语音。',dir:'将打开地图应用',
+    soonToast:'即将上线——演示版仅开放老城区。',disc:'本信息为独立整理,与该店铺无合作关系,并非官方点餐服务。',match:'识别一致度',fail:'没有听清',failSub:'未识别到语音。请到安静的地方再试一次,或直接把屏幕给店员看。',report:'运营报告',dirFirst:'将在NAVER地图中打开前往第1站的步行路线',items:'件',priceTbd:'价格待确认',totalTbd:'总价请在柜台确认',privacy:'不会保存语音。使用记录只保存在本机。',savedEmpty:'还没有收藏'}
+};
+const LANGS={en:{a:'English',b:'영어',f:'EN'},ja:{a:'日本語',b:'일본어',f:'JA'},zh:{a:'简体中文',b:'중국어',f:'中'}};
+
+/* ═════════════ Data (예시값 · 현장 확인 필요) ═════════════ */
+const W=(ko,en,ja,zh)=>({ko,m:{en,ja,zh}});
+const PLACES=[
+ {id:'ssd',no:1,cat:'food',ko:'성심당 본점',name:{en:'Sungsimdang Main Store',ja:'聖心堂 本店',zh:'圣心堂 总店'},area:{en:'Eunhaeng-dong',ja:'銀杏洞',zh:'银杏洞'},
+  hours:'08:00–22:00',walk:5,checked:'2026.11.10',orderable:true,takeout:true,color:'#ee6a3c',xy:[262,118],
+  allergy:{en:'Wheat, egg, milk',ja:'小麦・卵・乳',zh:'小麦、鸡蛋、牛奶'},
+  steps:[{en:'Grab a tray & tongs at the entrance',ja:'入口でトレーとトングを取る',zh:'在入口拿托盘和夹子'},{en:'Pick your bread',ja:'パンを選ぶ',zh:'挑选面包'},{en:'Line up & pay at the counter',ja:'レジに並んで支払う',zh:'排队到柜台付款'}],
+  menu:[
+   {id:'tw',ko:'튀김소보로',roman:'twigim soboro',kana:'トィギム ソボロ',cnt:'개',price:1700,sig:true,name:{en:'Fried Soboro',ja:'揚げソボロパン',zh:'炸酥粒面包'},ds:{en:'Crispy fried crumble bun, red bean filling',ja:'あんこ入りのサクサク揚げパン',zh:'红豆馅酥脆炸面包'},c:['#f6d9a8','#c97b34']},
+   {id:'bu',ko:'판타롱부추빵',roman:'pantarong buchuppang',kana:'パンタロン ブチュッパン',cnt:'개',price:2000,name:{en:'Pantarong Chive Bread',ja:'パンタロン ニラパン',zh:'韭菜面包'},ds:{en:'Soft bread packed with chives',ja:'ニラたっぷりのパン',zh:'满满韭菜馅的软面包'},c:['#e3efd2','#6f9a3c']},
+   {id:'mr',ko:'명란바게트',roman:'myeongnan bagete',kana:'ミョンナン バゲトゥ',cnt:'개',price:3500,name:{en:'Pollock Roe Baguette',ja:'明太子バゲット',zh:'明太子法棍'},ds:{en:'Baguette with pollock-roe butter',ja:'明太子バターのバゲット',zh:'明太子黄油法棍'},c:['#fbe1d6','#d8714f']},
+   {id:'bm',ko:'보문산메아리',roman:'bomunsan meari',kana:'ボムンサン メアリ',cnt:'개',price:null,name:{en:'Bomunsan Meari',ja:'ボムンサン・メアリ',zh:'宝文山回声面包'},ds:{en:'Layered sweet bread',ja:'層になった甘いパン',zh:'千层甜面包'},c:['#f3e7cf','#a8803f']}],
+  phrases:[
+   {ko:'이거 하나 주세요',roman:'igeo hana juseyo',kana:'イゴ ハナ ジュセヨ',m:{en:'One of these, please.',ja:'これを一つください。',zh:'请给我一个这个。'},w:[W('이거','this','これ','这个'),W('하나','one','一つ','一个'),W('주세요','please','ください','请给我')]},
+   {ko:'포장해 주세요',roman:'pojanghae juseyo',kana:'ポジャンヘ ジュセヨ',m:{en:'To go, please.',ja:'持ち帰りでお願いします。',zh:'请打包。'},w:[W('포장해','pack it','包んで','打包'),W('주세요','please','ください','请')]},
+   {ko:'카드 돼요?',roman:'kadeu dwaeyo?',kana:'カドゥ ドェヨ?',m:{en:'Can I pay by card?',ja:'カード使えますか?',zh:'可以刷卡吗?'},w:[W('카드','card','カード','卡'),W('돼요?','is it OK?','いいですか?','可以吗?')]},
+   {ko:'봉투 주세요',roman:'bongtu juseyo',kana:'ポントゥ ジュセヨ',m:{en:'A bag, please.',ja:'袋をください。',zh:'请给我袋子。'},w:[W('봉투','bag','袋','袋子'),W('주세요','please','ください','请给我')]}]},
+ {id:'eun',no:2,cat:'sight',ko:'으능정이 문화의거리',name:{en:'Eunhaengjeong-i Culture Street',ja:'ウヌンジョンイ文化の街',zh:'银杏亭文化街'},area:{en:'Sky Road LED canopy',ja:'スカイロード',zh:'天空之路'},
+  hours:'Always open',walk:2,checked:'2026.11.10',orderable:false,color:'#6b4fc6',xy:[214,96],
+  steps:[{en:'Walk under the Sky Road LED canopy',ja:'スカイロードのLEDアーケードを歩く',zh:'走过天空之路LED长廊'},{en:'Evening light shows — check times on site',ja:'夜はライトショー(時間は現地で確認)',zh:'晚上有灯光秀(时间请现场确认)'},{en:'Great photo spot, shops & cafés nearby',ja:'写真スポット、周辺にショップやカフェ',zh:'拍照好去处,附近有商店和咖啡馆'}],
+  phrases:[
+   {ko:'사진 좀 찍어 주시겠어요?',roman:'sajin jom jjigeo jusigesseoyo?',kana:'サジン ジョム チゴ ジュシゲッソヨ?',m:{en:'Could you take a photo for us?',ja:'写真を撮っていただけますか?',zh:'能帮我们拍张照吗?'},w:[W('사진','photo','写真','照片'),W('좀','please','ちょっと','请'),W('찍어','take','撮って','拍'),W('주시겠어요?','would you?','くださいますか?','可以吗?')]},
+   {ko:'화장실 어디예요?',roman:'hwajangsil eodiyeyo?',kana:'ファジャンシル オディエヨ?',m:{en:'Where is the restroom?',ja:'トイレはどこですか?',zh:'洗手间在哪里?'},w:[W('화장실','restroom','トイレ','洗手间'),W('어디예요?','where is?','どこですか?','在哪里?')]},
+   {ko:'공연 몇 시에 해요?',roman:'gongyeon myeot sie haeyo?',kana:'コンヨン ミョッ シエ ヘヨ?',m:{en:'What time is the show?',ja:'ショーは何時ですか?',zh:'演出几点开始?'},w:[W('공연','show','ショー','演出'),W('몇 시에','what time','何時に','几点'),W('해요?','is it on?','やりますか?','开始?')]}]},
+ {id:'mus',no:3,cat:'sight',ko:'대전근현대사전시관',name:{en:'Daejeon Modern History Hall',ja:'大田近現代史展示館',zh:'大田近现代史展览馆'},area:{en:'Old Chungnam Provincial Office',ja:'旧忠清南道庁舎',zh:'旧忠清南道厅'},
+  hours:'10:00–18:00 · Closed Mon',walk:12,checked:'2026.11.10',orderable:false,color:'#6b4fc6',xy:[56,150],
+  steps:[{en:'Enter through the main gate',ja:'正門から入る',zh:'从正门进入'},{en:'See 1930s architecture & city history',ja:'1930年代の建築と街の歴史を見る',zh:'参观1930年代建筑与城市历史'},{en:'Photo spot: the central staircase',ja:'写真スポット:中央階段',zh:'拍照点:中央楼梯'}],
+  phrases:[
+   {ko:'입장료 있어요?',roman:'ipjangnyo isseoyo?',kana:'イプチャンニョ イッソヨ?',m:{en:'Is there an admission fee?',ja:'入場料はありますか?',zh:'要门票吗?'},w:[W('입장료','admission fee','入場料','门票'),W('있어요?','is there?','ありますか?','有吗?')]},
+   {ko:'사진 찍어도 돼요?',roman:'sajin jjigeodo dwaeyo?',kana:'サジン チゴド ドェヨ?',m:{en:'May I take photos?',ja:'写真を撮ってもいいですか?',zh:'可以拍照吗?'},w:[W('사진','photo','写真','照片'),W('찍어도','even if I take','撮っても','拍也'),W('돼요?','is it OK?','いいですか?','可以吗?')]},
+   {ko:'외국어 안내 있어요?',roman:'oegugeo annae isseoyo?',kana:'ウェグゴ アンネ イッソヨ?',m:{en:'Is there a foreign-language guide?',ja:'外国語の案内はありますか?',zh:'有外语导览吗?'},w:[W('외국어','foreign language','外国語','外语'),W('안내','guide','案内','导览'),W('있어요?','is there?','ありますか?','有吗?')]}]},
+ {id:'gwc',no:4,cat:'food',ko:'광천식당',name:{en:'Gwangcheon Sikdang',ja:'クァンチョン食堂',zh:'广川食堂'},area:{en:'Seonhwa-dong',ja:'宣化洞',zh:'宣化洞'},
+  hours:'11:00–21:00',walk:10,checked:'2026.11.10',orderable:true,takeout:false,color:'#ee6a3c',xy:[118,232],
+  allergy:{en:'Soy, wheat',ja:'大豆・小麦',zh:'大豆、小麦'},
+  steps:[{en:'Take a seat & order from the staff',ja:'席に座ってスタッフに注文',zh:'入座后向店员点餐'},{en:'Add noodles into the sauce at the end',ja:'最後にソースに麺を入れる',zh:'最后把面条加入酱汁'},{en:'Pay at the counter on the way out',ja:'帰りにレジで支払う',zh:'离开时在柜台付款'}],
+  menu:[
+   {id:'dt',ko:'두부두루치기',roman:'dubu duruchigi',kana:'トゥブ トゥルチギ',cnt:'인분',price:8000,sig:true,spicy:true,name:{en:'Spicy Braised Tofu',ja:'豆腐トゥルチギ',zh:'辣炒豆腐'},ds:{en:'Tofu in spicy red sauce · per person',ja:'ピリ辛ソースの豆腐・1人前',zh:'辣酱豆腐·每人份'},c:['#fbd9c9','#d9472b']},
+   {id:'od',ko:'오징어두루치기',roman:'ojingeo duruchigi',kana:'オジンオ トゥルチギ',cnt:'인분',price:null,spicy:true,name:{en:'Spicy Braised Squid',ja:'イカのトゥルチギ',zh:'辣炒鱿鱼'},ds:{en:'Squid in spicy red sauce · per person',ja:'イカのピリ辛煮・1人前',zh:'辣酱鱿鱼·每人份'},c:['#fde2d2','#c2502f']},
+   {id:'sr',ko:'칼국수 사리',roman:'kalguksu sari',kana:'カルグクス サリ',cnt:'개',price:1000,name:{en:'Noodle add-on',ja:'カルグクス麺の追加',zh:'加刀切面'},ds:{en:'Noodles to mix into the sauce',ja:'ソースに絡める麺',zh:'拌进酱汁的面条'},c:['#f6efd9','#b99a52']},
+   {id:'gb',ko:'공기밥',roman:'gonggibap',kana:'コンギッパプ',cnt:'개',price:1000,name:{en:'Bowl of rice',ja:'ご飯',zh:'米饭'},ds:{en:'Steamed rice',ja:'白ご飯',zh:'白米饭'},c:['#f4f1ea','#9aa0b0']}],
+  phrases:[
+   {ko:'두 명이에요',roman:'du myeongieyo',kana:'トゥ ミョンイエヨ',m:{en:'Two people.',ja:'二人です。',zh:'两位。'},w:[W('두','two','二','两'),W('명이에요','people','人です','位')]},
+   {ko:'덜 맵게 해 주세요',roman:'deol maepge hae juseyo',kana:'トル メプケ ヘ ジュセヨ',m:{en:'Less spicy, please.',ja:'辛さ控えめでお願いします。',zh:'请做得不那么辣。'},w:[W('덜','less','控えめに','少'),W('맵게','spicy','辛く','辣'),W('해 주세요','please make it','してください','请做')]},
+   {ko:'물 좀 주세요',roman:'mul jom juseyo',kana:'ムル ジョム ジュセヨ',m:{en:'Some water, please.',ja:'お水ください。',zh:'请给我水。'},w:[W('물','water','水','水'),W('좀','please','ちょっと','请'),W('주세요','give me','ください','给我')]},
+   {ko:'계산할게요',roman:'gyesanhalgeyo',kana:'ケサナルケヨ',m:{en:'I\'d like to pay.',ja:'お会計お願いします。',zh:'我要结账。'},w:[W('계산할게요','I\'ll pay','会計します','我要结账')]}]}
+];
+const P=id=>PLACES.find(p=>p.id===id);
+const NAT=['','한','두','세','네','다섯','여섯','일곱','여덟','아홉'],NATR=['','han','du','se','ne','daseot','yeoseot','ilgop','yeodeol','ahop'],NATK=['','ハン','トゥ','セ','ネ','タソッ','ヨソッ','イルゴプ','ヨドル','アホプ'];
+const SINOR=['','il','i','sam','sa','o','yuk','chil','pal','gu'],SINOK=['','イル','イ','サム','サ','オ','ユク','チル','パル','ク'];
+
+/* ═════════════ State ═════════════ */
+const init=()=>({lang:'en',screen:'lang',placeId:'ssd',tab:'menu',cart:{ssd:{},gwc:{}},takeout:{ssd:true,gwc:false},
+  prac:{list:[],idx:0,src:'order'},rec:false,result:null,big:false,saved:new Set(['ssd']),reply:'yes',sheet:false,staffSrc:'order',hist:[],reports:0,events:[],failNext:false,failed:false});
+let S=init();
+const t=k=>T[S.lang][k];
+const L=o=>o?o[S.lang]:'';
+const pron=p=>S.lang==='ja'?p.kana:p.roman;
+const won=n=>n==null?t('priceTbd'):'₩'+n.toLocaleString('en-US');
+
+/* order sentence builder */
+function cartItems(pid){const p=P(pid);if(!p.menu)return[];return p.menu.filter(m=>S.cart[pid][m.id]>0).map(m=>({...m,n:S.cart[pid][m.id]}))}
+function orderPhrase(pid){
+  const it=cartItems(pid);if(!it.length)return null;
+  const q=m=>m.cnt==='인분'?`${m.n}인분`:`${NAT[m.n]} ${m.cnt}`;
+  const qr=m=>m.cnt==='인분'?`${SINOR[m.n]}-inbun`:`${NATR[m.n]} gae`;
+  const qk=m=>m.cnt==='인분'?`${SINOK[m.n]}インブン`:`${NATK[m.n]} ゲ`;
+  const tk=S.takeout[pid]&&P(pid).takeout;
+  const ko=it.map(m=>`${m.ko} ${q(m)}`).join(', ')+' 주세요.'+(tk?' 포장해 주세요.':'');
+  const roman=it.map(m=>`${m.roman} ${qr(m)}`).join(', ')+' juseyo.'+(tk?' pojanghae juseyo.':'');
+  const kana=it.map(m=>`${m.kana} ${qk(m)}`).join('、')+' ジュセヨ。'+(tk?' ポジャンヘ ジュセヨ。':'');
+  const m={en:it.map(m=>`${m.name.en} ×${m.n}`).join(', ')+', please.'+(tk?' To go, please.':''),
+    ja:it.map(m=>`${m.name.ja} ×${m.n}`).join('、')+' をください。'+(tk?'持ち帰りでお願いします。':''),
+    zh:'请给我'+it.map(m=>`${m.name.zh} ×${m.n}`).join('、')+'。'+(tk?'请打包。':'')};
+  const w=[];const seen=new Set();const push=x=>{if(!seen.has(x.ko)){seen.add(x.ko);w.push(x)}};
+  it.forEach(m=>{push({ko:m.ko,m:m.name});const qq=q(m);push({ko:qq,m:{en:'× '+m.n,ja:'× '+m.n,zh:'× '+m.n}})});
+  push(W('주세요','please','ください','请给我'));if(tk)push(W('포장해','to go','持ち帰り','打包'));
+  return{ko,roman,kana,m,w,order:true};
+}
+const cartCount=pid=>Object.values(S.cart[pid]||{}).reduce((a,b)=>a+b,0);
+const cartSum=pid=>{const it=cartItems(pid);if(it.some(m=>m.price==null))return null;return it.reduce((a,m)=>a+m.price*m.n,0)};
+const sumTxt=pid=>{const v=cartSum(pid);return v==null?t('totalTbd'):t('est')+' '+won(v)};
+
+/* ═════════════ TTS ═════════════ */
+function speak(text,rate=1){
+  if(!('speechSynthesis' in window)){toast(t('noTts'));return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ko-KR';u.rate=rate;
+  const v=speechSynthesis.getVoices().find(v=>/^ko/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u);
+}
+
+/* ═════════════ Icons ═════════════ */
+const I={
+ back:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+ close:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+ spk:'<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a4.5 4.5 0 010 7M18.5 6a8 8 0 010 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+ mic:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>',
+ stop:'<svg width="26" height="26" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="3" fill="#fff"/></svg>',
+ bm:(on)=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="${on?'#ee6a3c':'none'}" stroke="${on?'#ee6a3c':'currentColor'}" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>`,
+ pin:'<svg width="14" height="14" viewBox="0 0 24 24" fill="#ee6a3c"><path d="M12 2a7 7 0 00-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z"/></svg>',
+ walk:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l3-7 3 3v4M7 12l3-4h4l2 4"/></svg>',
+ search:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+ chev:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>',
+ check:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>',
+ flag:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 21V4h11l-2 4 2 4H5"/></svg>',
+ phone:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10 18h4" stroke-linecap="round"/></svg>',
+ nav:{
+  explore:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor"/></svg>',
+  course:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 000-6H9a3 3 0 010-6h6.5"/></svg>',
+  phrases:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>',
+  saved:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>',
+  me:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>'}
+};
+const statusIcons='<span class="ic"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5c2.3 0 4.4.9 5.9 2.4l1.1-1.1A9.9 9.9 0 008 1 9.9 9.9 0 001 3.8l1.1 1.1A8.3 8.3 0 018 2.5zm0 3.2c1.4 0 2.7.5 3.6 1.4l1.1-1.1A6.6 6.6 0 008 4.2a6.6 6.6 0 00-4.7 1.8l1.1 1.1c.9-.9 2.2-1.4 3.6-1.4zM8 9a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".4"/></svg></span>';
+
+/* illustrations */
+function artPlace(p,h=236){
+  if(p.id==='ssd')return`<svg viewBox="0 0 390 ${h}" preserveAspectRatio="xMidYMid slice"><rect width="390" height="${h}" fill="#f6dba9"/><rect y="${h-70}" width="390" height="70" fill="#e8c587"/><path d="M40 52h310l22 44H18z" fill="#ee6a3c"/>${[0,1,2,3,4,5,6].map(i=>`<path d="M${56+i*44} 52h18l8 44h-26z" fill="#fff3ea" opacity=".9"/>`).join('')}<rect x="50" y="96" width="290" height="${h-120}" fill="#fff8ee"/><rect x="72" y="118" width="150" height="${h-160}" rx="10" fill="#fde9c8" stroke="#e1a95b" stroke-width="4"/>${[[100,150],[148,145],[196,152],[118,182],[170,184]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="24" ry="15" fill="#c97b34"/><path d="M${x-10} ${y-3}l8 5M${x+2} ${y-5}l8 5" stroke="#f6d39f" stroke-width="3" stroke-linecap="round"/>`).join('')}<rect x="252" y="118" width="64" height="${h-122}" fill="#8b5a33"/><rect x="248" y="112" width="72" height="8" fill="#6d4426"/><circle cx="302" cy="${h/2+30}" r="4" fill="#f2b33d"/></svg>`;
+  if(p.id==='eun')return`<svg viewBox="0 0 390 ${h}" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2160"/><stop offset="1" stop-color="#6b4fc6"/></linearGradient></defs><rect width="390" height="${h}" fill="url(#sky)"/><path d="M-10 90 Q195 20 400 90 L400 120 Q195 52 -10 120z" fill="#1a1540"/>${Array.from({length:22},(_,i)=>`<circle cx="${10+i*18}" cy="${92-Math.sin(i/21*Math.PI)*52}" r="4" fill="${['#f2b33d','#ee6a3c','#7ee0d7','#fff'][i%4]}"/>`).join('')}<rect x="20" y="130" width="70" height="${h-130}" fill="#3b2f7a"/><rect x="300" y="120" width="80" height="${h-120}" fill="#3b2f7a"/><rect x="0" y="${h-40}" width="390" height="40" fill="#241c52"/>${[40,60,320,345].map(x=>`<rect x="${x}" y="150" width="12" height="16" rx="2" fill="#f2b33d" opacity=".8"/>`).join('')}</svg>`;
+  if(p.id==='mus')return`<svg viewBox="0 0 390 ${h}" preserveAspectRatio="xMidYMid slice"><rect width="390" height="${h}" fill="#dde8ee"/><rect y="${h-50}" width="390" height="50" fill="#c9c2b0"/><rect x="60" y="80" width="270" height="${h-130}" fill="#e9dcc3"/><rect x="150" y="56" width="90" height="${h-106}" fill="#e2d0ae"/><path d="M150 56l45-26 45 26z" fill="#7a5a3a"/>${[0,1,2,3,4,5].map(i=>`<rect x="${74+i*42}" y="100" width="22" height="34" rx="2" fill="#7b8da3"/><rect x="${74+i*42}" y="150" width="22" height="34" rx="2" fill="#7b8da3"/>`).join('')}<rect x="178" y="${h-100}" width="34" height="50" rx="4" fill="#6d4426"/><circle cx="34" cy="${h-62}" r="22" fill="#7da35a"/><circle cx="356" cy="${h-62}" r="22" fill="#7da35a"/></svg>`;
+  return`<svg viewBox="0 0 390 ${h}" preserveAspectRatio="xMidYMid slice"><rect width="390" height="${h}" fill="#fbe0cf"/><circle cx="195" cy="${h/2+20}" r="96" fill="#2b2b2b"/><circle cx="195" cy="${h/2+20}" r="84" fill="#d9472b"/>${[[165,120],[215,110],[190,150],[235,150],[160,165],[210,180]].map(([x,y])=>`<rect x="${x-14}" y="${y-10+(h-236)/2}" width="28" height="20" rx="4" fill="#fff4e6" transform="rotate(${x%30-15} ${x} ${y})"/>`).join('')}<path d="M140 ${h/2+40}q30-20 55 0t55 0" stroke="#f6efd9" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M150 ${h/2+55}q25-16 45 0t45 0" stroke="#f6efd9" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="120" cy="${h/2-30}" r="5" fill="#7da35a"/><circle cx="260" cy="${h/2-10}" r="5" fill="#7da35a"/></svg>`;
+}
+function artMenu(m){const[a,b]=m.c;return`<div class="art" style="background:${a}"><svg width="44" height="44" viewBox="0 0 44 44"><ellipse cx="22" cy="24" rx="17" ry="12" fill="${b}"/><path d="M13 21l6 4M21 18l6 4M28 22l4 3" stroke="${a}" stroke-width="2.6" stroke-linecap="round"/></svg></div>`}
+function artHub(kind){
+  if(kind==='down')return`<svg class="art" viewBox="0 0 236 120" preserveAspectRatio="xMidYMid slice"><rect width="236" height="120" fill="#f6dba9"/><rect y="88" width="236" height="32" fill="#e8c587"/><path d="M30 26h176l14 26H16z" fill="#ee6a3c"/>${[0,1,2,3,4].map(i=>`<path d="M${44+i*34} 26h12l5 26h-18z" fill="#fff3ea"/>`).join('')}<rect x="36" y="52" width="164" height="50" fill="#fff8ee"/><rect x="48" y="60" width="86" height="34" rx="6" fill="#fde9c8" stroke="#e1a95b" stroke-width="3"/><ellipse cx="72" cy="77" rx="13" ry="8" fill="#c97b34"/><ellipse cx="104" cy="77" rx="13" ry="8" fill="#c97b34"/><rect x="152" y="60" width="34" height="42" fill="#8b5a33"/></svg>`;
+  if(kind==='st')return`<svg class="art" viewBox="0 0 236 120" preserveAspectRatio="xMidYMid slice"><rect width="236" height="120" fill="#dfece6"/><path d="M10 40q110-34 230 0" stroke="#3b4256" stroke-width="8" fill="none"/><rect x="40" y="52" width="150" height="50" fill="#f2e9d8"/><rect x="58" y="62" width="40" height="26" fill="#8b5a33"/><rect x="120" y="62" width="30" height="40" fill="#6d4426"/><circle cx="28" cy="88" r="14" fill="#7da35a"/><rect y="100" width="236" height="20" fill="#cbbfa6"/></svg>`;
+  return`<svg class="art" viewBox="0 0 236 120" preserveAspectRatio="xMidYMid slice"><rect width="236" height="120" fill="#d8efed"/><ellipse cx="118" cy="86" rx="80" ry="20" fill="#8fd1cb" stroke="#5a8f8a" stroke-width="5"/>${[90,118,146].map(x=>`<path d="M${x} 58q-8-10 0-20t0-20" stroke="#5a8f8a" stroke-width="3" fill="none" stroke-linecap="round"/>`).join('')}</svg>`;
+}
+
+/* ═════════════ Screens ═════════════ */
+const status=(light)=>`<div class="status ${light?'light':''}"><span>9:41</span>${statusIcons}</div>`;
+const tabbar=(on)=>`<nav class="tabbar">${[['explore','home','nExplore'],['course','course','nCourse'],['phrases','phrases','nPhrases'],['saved','saved','nSaved'],['me','settings','nMe']].map(([ic,to,k])=>`<button class="${on===to?'on':''}" data-a="go" data-to="${to}" data-log="하단 탭 '${k.slice(1)}' → ${to} 화면">${I.nav[ic]}${t(k)}</button>`).join('')}</nav>`;
+const topbar=(title,right='')=>`<div class="topbar"><button class="icb" data-a="back" data-log="뒤로 가기">${I.back}</button><div class="ttl">${title}</div>${right||'<div style="width:40px"></div>'}</div>`;
+
+const R={};
+R.lang=()=>`<div class="lang-hero"><div class="glow"></div><div class="glow2"></div>${status(true)}<div class="in">
+  <div class="logo">D</div><div class="nm">Daejeon<br><i>Detour</i></div><div class="sub">${t('welcome')}</div>
+  <div class="lang-list"><div style="font-size:12px;font-weight:700;letter-spacing:1.4px;color:#8f97ab;margin-bottom:4px">${t('chooseLang').toUpperCase()}</div>
+  ${Object.entries(LANGS).map(([k,v])=>`<button class="lang-opt ${S.lang===k?'on':''}" data-a="pickLang" data-l="${k}"><span class="fl">${v.f}</span><span><div class="a">${v.a}</div><div class="b2">${v.b}</div></span><span class="ck"></span></button>`).join('')}
+  <button class="btn b-acc" style="margin-top:10px" data-a="go" data-to="home" data-log="'${LANGS[S.lang].a}'로 시작 → 홈">${t('start')} →</button></div></div></div>`;
+
+R.home=()=>{const ph=P('ssd').phrases[1];return`${status()}<div class="view">
+  <div class="row pad gap10" style="padding-top:4px"><div style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#f58a5c,#c24e22);display:grid;place-items:center;color:#fff;font-weight:800">D</div><div><div style="font-weight:800;font-size:16px">Daejeon Detour</div><div class="t-xs">Daejeon, Korea</div></div><div class="sp"></div><span class="pill p-line">${I.pin} Jungang-ro</span></div>
+  <div class="hello" style="margin-top:20px"><div class="h-xl">${t('hi')}<br>${t('whereTo')}</div></div>
+  <div class="search">${I.search}${t('search')}</div>
+  <div class="sec"><div class="h-m">${t('pickHub')}</div><button class="lk" data-a="go" data-to="course" data-log="'지도 보기' → 원도심 코스 지도">${t('seeMap')}</button></div>
+  <div class="hubs">
+    <button class="hub" data-a="go" data-to="course" data-log="원도심 거점 카드 → 코스 지도">${artHub('down')}<div class="info"><div class="row"><div class="h-m">${t('hubDown')}</div><div class="sp"></div><span class="pill p-acc">DEMO</span></div><div class="t-xs" style="margin-top:2px">${t('hubDownSub')}</div><div class="row gap10 t-xs" style="margin-top:8px;color:var(--ink2);font-weight:600">${I.pin} 4 ${t('spots')} <span>${I.walk} 29 ${t('min')}</span></div></div></button>
+    <button class="hub lock" data-a="soon" data-log="잠긴 거점(대전역·소제동) → 'Coming soon' 안내">${artHub('st')}<span class="pill p-ink soon">${t('soon')}</span><div class="info"><div class="h-m">${t('hubSt')}</div><div class="t-xs" style="margin-top:2px">${t('hubStSub')}</div></div></button>
+    <button class="hub lock" data-a="soon" data-log="잠긴 거점(유성온천) → 'Coming soon' 안내">${artHub('yu')}<span class="pill p-ink soon">${t('soon')}</span><div class="info"><div class="h-m">${t('hubYu')}</div><div class="t-xs" style="margin-top:2px">${t('hubYuSub')}</div></div></button>
+  </div>
+  <button class="banner" data-a="soon" data-log="유성 1박 배너 → 'Coming soon' 안내"><div style="width:58px;height:58px;border-radius:14px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:26px">♨</div><div style="flex:1"><div class="k">${t('overK')} · ${t('soon').toUpperCase()}</div><div class="t">${t('overT')}</div></div>${I.chev}</button>
+  <div class="sec"><div class="h-m">${t('todayPhr')}</div></div>
+  <div class="card phr-day"><div style="flex:1"><div class="ko">${ph.ko}</div><div class="t-s" style="margin-top:3px">${pron(ph)} · ${L(ph.m)}</div></div><button class="playb" data-a="say" data-text="${ph.ko}" data-log="오늘의 문장 듣기 → TTS '${ph.ko}' 재생">${I.spk}</button></div>
+  <div style="height:24px"></div></div>${tabbar('home')}`};
+
+R.course=()=>{const pts=PLACES.map(p=>p.xy);return`${status()}${topbar(t('courseT'),`<button class="icb" data-a="go" data-to="phrases" data-log="문장 모음 열기">${I.nav.phrases.replace(/24/g,'18')}</button>`)}<div class="view">
+  <div class="mapbox"><svg viewBox="0 0 360 290">
+    <rect width="360" height="290" fill="#f1ebde"/>
+    ${[[18,20,70,60],[100,18,80,40],[290,24,56,70],[18,196,60,70],[160,210,90,62],[268,200,76,70],[150,40,40,38]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="#e8e0cf"/>`).join('')}
+    <path d="M318 0 C300 80 330 150 304 290" stroke="#bcd9e6" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <text x="323" y="270" font-size="9" fill="#6a8ea0" font-weight="700" transform="rotate(-80 323 270)">대전천</text>
+    <path d="M0 170 H360" stroke="#fff" stroke-width="18"/><path d="M0 170 H360" stroke="#e3d7bf" stroke-width="1"/>
+    <path d="M250 0 V290" stroke="#fff" stroke-width="12"/><path d="M150 100 V290" stroke="#fff" stroke-width="8"/><path d="M0 110 H250" stroke="#fff" stroke-width="7"/>
+    <text x="12" y="186" font-size="9.5" fill="#8b8270" font-weight="700">중앙로 Jungang-ro</text>
+    <path d="M0 176 H360" stroke="#13807e" stroke-width="3.5" stroke-dasharray="2 0" opacity=".85"/>
+    <g><circle cx="236" cy="176" r="9" fill="#fff" stroke="#13807e" stroke-width="3.5"/><text x="236" y="180" font-size="10" text-anchor="middle" font-weight="800" fill="#13807e">1</text><text x="236" y="200" font-size="10" text-anchor="middle" font-weight="800" fill="#0c5654">중앙로역</text></g>
+    <text x="352" y="166" font-size="9" text-anchor="end" fill="#0c5654" font-weight="700">대전역 →</text>
+    <path d="M236 176 L${pts[0]} L${pts[1]} L${pts[2]} L${pts[3]}" fill="none" stroke="#151a26" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round" opacity=".75"/>
+    ${PLACES.map(p=>`<g class="pin" data-a="open" data-id="${p.id}" data-log="지도 핀 ${p.no} → '${p.ko}' 상세"><circle class="o" cx="${p.xy[0]}" cy="${p.xy[1]}" r="15" fill="${p.color}" stroke="#fff" stroke-width="3.5"/><text x="${p.xy[0]}" y="${p.xy[1]+5}" font-size="14" font-weight="800" fill="#fff" text-anchor="middle">${p.no}</text></g>`).join('')}
+  </svg></div>
+  <div class="cmeta"><div class="row"><div class="h-l">${t('courseT')}</div></div><div class="t-s" style="margin-top:4px">${t('courseM')}</div>
+   <div class="row gap8" style="margin-top:10px"><span class="pill p-sea">${I.check} ${t('checked')} 2026.11.10</span><span class="pill p-line">🚇 ${t('from')}</span></div></div>
+  ${PLACES.map((p,i)=>`<div class="walkseg">${I.walk} ${t('walk')} ${p.walk} ${t('min')}</div><button class="stop" data-a="open" data-id="${p.id}" data-log="정류장 ${p.no} '${p.ko}' → 장소 상세"><span class="n" style="background:${p.color}">${p.no}</span><span style="flex:1"><span class="row gap8"><b style="font-size:15.5px">${L(p.name)}</b></span><span class="t-xs" style="display:block;margin-top:2px">${p.ko} · ${L(p.area)}</span><span class="row gap8" style="margin-top:7px"><span class="pill ${p.cat==='food'?'p-acc':'p-plum'}">${t(p.cat)}</span>${p.orderable?`<span class="pill p-line">🧾 ${t('tMenu')} ${p.menu.length}</span>`:''}<span class="pill p-line">💬 ${p.phrases.length}</span></span></span><span style="color:var(--mute);margin-top:8px">${I.chev}</span></button>`).join('')}
+  <div class="pad" style="padding-top:14px;padding-bottom:30px"><button class="btn b-ink" data-a="walkStart" data-log="'1번부터 출발' → 네이버 지도에서 1번(성심당) 도보 길찾기 (목업은 안내만)">${t('startWalk')} →</button></div>
+  </div>${tabbar('course')}`};
+
+R.place=()=>{const p=P(S.placeId);const cnt=p.orderable?cartCount(p.id):0;const tabs=p.orderable?[['menu','tMenu'],['how','tHow'],['phr','tPhr']]:[['how','tVisit'],['phr','tPhr']];if(!tabs.some(x=>x[0]===S.tab))S.tab=tabs[0][0];
+ let body='';
+ if(S.tab==='menu'){body=`<div class="row" style="margin-top:14px"><div class="t-xs" style="font-weight:600">${t('addHint')}</div><div class="sp"></div><span class="pill p-line" style="font-size:10px">${t('sample')}</span></div>`+p.menu.map(m=>{const n=S.cart[p.id][m.id]||0;return`<div class="card mitem">${artMenu(m)}<div style="flex:1;min-width:0"><div class="row gap8"><span class="nm">${L(m.name)}</span>${m.sig?`<span class="pill p-acc" style="padding:2px 7px;font-size:10px">★ ${t('sig')}</span>`:''}${m.spicy?`<span class="pill p-acc" style="padding:2px 7px;font-size:10px">🌶 ${t('spicy')}</span>`:''}</div><div class="ko">${m.ko} · ${m.price==null?`<b style="color:var(--acc-d)">${t('priceTbd')}</b>`:t('est')+' '+won(m.price)+(m.cnt==='인분'?' / 1':'')}</div><div class="ds">${L(m.ds)}</div></div>${n?`<div class="qty"><button data-a="qty" data-id="${m.id}" data-d="-1" data-log="'${m.ko}' 수량 −1">−</button><span>${n}</span><button class="pl" data-a="qty" data-id="${m.id}" data-d="1" data-log="'${m.ko}' 수량 +1">+</button></div>`:`<button class="addb" data-a="qty" data-id="${m.id}" data-d="1" data-log="'${m.ko}' 담기 → 하단 주문 바 표시">+</button>`}</div>`}).join('')+`<div class="allergy">⚠ ${t('contains')}: ${L(p.allergy)}</div>`}
+ if(S.tab==='how'){body=`<div class="steps">${p.steps.map((s,i)=>`<div class="step"><span class="n">${i+1}</span><div style="padding-top:6px;font-weight:700;font-size:14.5px;line-height:1.45">${L(s)}</div></div>`).join('')}</div><div class="card" style="padding:14px 16px;margin-top:6px"><div class="row"><div><div class="t-xs">${t('hours')}</div><div style="font-weight:800;margin-top:2px">${p.hours}</div></div><div class="sp"></div><button class="pill p-ink" style="padding:9px 14px" data-a="dir" data-log="'길찾기' → 외부 지도 앱 연결(목업에서는 안내만)">${I.pin.replace('#ee6a3c','#fff')} ${t('directions')}</button></div></div>`}
+ if(S.tab==='phr'){body=p.phrases.map((ph,i)=>`<div class="card prow"><div style="flex:1" data-a="practice" data-src="place" data-i="${i}" data-log="문장 '${ph.ko}' → 말하기 연습"><div class="ko">${ph.ko}</div><div class="t-xs" style="margin-top:3px">${pron(ph)}</div><div style="font-size:12.5px;color:var(--sea-d);font-weight:700;margin-top:3px">${L(ph.m)}</div></div><button class="playb" style="width:40px;height:40px" data-a="say" data-text="${ph.ko}" data-log="문장 듣기 → TTS '${ph.ko}'">${I.spk}</button></div>`).join('')}
+ return`<div class="view"><div class="phero">${artPlace(p)}<div style="position:absolute;top:0;left:0;right:0">${status()}</div><div class="tl"><button class="icb" data-a="back" data-log="뒤로 가기">${I.back}</button><span class="row gap8"><button class="icb" data-a="report" data-log="'정보가 달라요' 제보 시트 열기">${I.flag}</button><button class="icb" data-a="save" data-id="${p.id}" data-log="장소 저장 토글">${I.bm(S.saved.has(p.id))}</button></span></div></div>
+ <div class="psheet"><div class="row gap8" style="flex-wrap:wrap"><span class="pill p-acc">${t('stopOf')(p.no,4)}</span><span class="pill p-sea">${I.check} ${t('checked')} ${p.checked}</span></div>
+ <div class="h-l" style="margin-top:10px">${L(p.name)}</div><div class="t-s" style="margin-top:3px">${p.ko} · ${L(p.area)} · <b style="color:var(--sea)">${t('openNow')}</b></div>
+ <div class="tabs">${tabs.map(([k,lab])=>`<button class="${S.tab===k?'on':''}" data-a="tab" data-t="${k}" data-log="탭 '${k}' 전환">${t(lab)}</button>`).join('')}</div>
+ ${body}<div class="t-xs" style="margin-top:16px;padding:10px 12px;border:1px dashed var(--line2);border-radius:12px;line-height:1.5">ⓘ ${t('disc')}</div><div style="height:${cnt?20:40}px"></div></div>
+ ${cnt?`<div class="orderbar"><button class="btn b-ink" data-a="go" data-to="order" data-log="주문 바 → 내 주문(주문 카드)"><span class="row gap10"><span class="cnt">${cnt}</span>${t('viewOrder')}</span><span style="font-size:13.5px">${sumTxt(p.id)}</span></button></div>`:`<div class="orderbar"><button class="btn b-acc" data-a="practice" data-src="place" data-i="0" data-log="'말하기 연습' → 이 장소 문장 연습 시작"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0" stroke-linecap="round"/></svg>${t('practice')} · ${p.phrases.length}</button></div>`}
+ </div>`};
+
+R.order=()=>{const p=P(S.placeId);const op=orderPhrase(p.id);const it=cartItems(p.id);return`${status()}${topbar(t('myOrder'))}<div class="view">
+ <div class="pad" style="padding-bottom:6px"><div class="t-xs">${L(p.name)} · ${p.ko}</div></div>
+ ${op?`<div class="okcard"><div class="k">${t('sayThis')}</div><div class="ko">${op.ko}</div><div class="pr">${pron(op)}</div><div class="mn">${L(op.m)}</div>
+  <div class="row gap8" style="margin-top:14px;position:relative"><button class="pill" style="background:rgba(255,255,255,.12);color:#fff;padding:8px 12px" data-a="say" data-text="${op.ko}" data-log="주문 문장 듣기 → TTS">${I.spk} ${t('listen')}</button><button class="pill" style="background:rgba(255,255,255,.12);color:#fff;padding:8px 12px" data-a="say" data-text="${op.ko}" data-rate=".75" data-log="주문 문장 0.75배속 듣기">🐢 0.75×</button></div></div>`:`<div class="card" style="margin:6px 18px;padding:30px;text-align:center" class="t-s">${t('empty')}</div>`}
+ <div class="pad" style="margin-top:18px">${p.takeout?`<div class="toggle"><button class="${S.takeout[p.id]?'on':''}" data-a="takeout" data-v="1" data-log="'포장' 선택 → 문장에 '포장해 주세요' 추가">🛍 ${t('togo')}</button><button class="${!S.takeout[p.id]?'on':''}" data-a="takeout" data-v="0" data-log="'매장' 선택 → '포장해 주세요' 제거">🍽 ${t('here')}</button></div>`:''}
+ <div class="olist" style="margin-top:8px">${it.map(m=>`<div class="oi">${artMenu(m).replace('class="art"','class="art" style="width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:'+m.c[0]+'"')}<div style="flex:1"><div style="font-weight:800;font-size:14px">${L(m.name)}</div><div class="t-xs">${m.ko} · ${m.price==null?t('priceTbd'):won(m.price*m.n)}</div></div><div class="qty"><button data-a="qty" data-id="${m.id}" data-d="-1" data-log="'${m.ko}' −1 → 문장 즉시 갱신">−</button><span>${m.n}</span><button class="pl" data-a="qty" data-id="${m.id}" data-d="1" data-log="'${m.ko}' +1 → 문장 즉시 갱신">+</button></div></div>`).join('')}</div>
+ <div class="row" style="padding:14px 2px"><span class="t-s">${t('sample')}</span><div class="sp"></div><b style="font-size:${cartSum(p.id)==null?14:18}px">${sumTxt(p.id)}</b></div></div>
+ <div class="pad" style="display:flex;flex-direction:column;gap:10px;padding-bottom:34px">
+  <button class="btn b-acc" data-a="practice" data-src="order" data-i="0" data-log="'말하기 연습' → 주문 문장부터 연습" ${op?'':'disabled'}>${t('practice')}</button>
+  <button class="btn b-ghost" data-a="staff" data-src="order" data-log="'직원에게 보여주기' → 큰 글씨 주문 화면" ${op?'':'disabled'}>${I.phone} ${t('showStaff')}</button></div>
+ </div>`};
+
+R.practice=()=>{const pr=S.prac;const ph=pr.list[pr.idx];const p=P(S.placeId);if(!ph)return R.order();const sz=ph.ko.length>18?22:27;return`${status()}<div class="topbar"><button class="icb" data-a="back" data-log="연습 닫기">${I.close}</button><div class="prog"><i style="width:${(pr.idx+1)/pr.list.length*100}%"></i></div><b style="font-size:13px;width:40px;text-align:right">${pr.idx+1}/${pr.list.length}</b></div>
+ <div class="view" style="display:flex;flex-direction:column">
+ <div class="pad t-xs" style="font-weight:700;letter-spacing:.6px">${ph.order?'🧾 '+t('myOrder').toUpperCase():'💬'} · ${L(p.name)}</div>
+ <div class="card pcard"><div class="ko" style="font-size:${sz}px">${ph.ko}</div><div class="pr">${pron(ph)}</div><div class="mn">“${L(ph.m)}”</div>
+  <div class="ctrl"><button class="sea" data-a="say" data-text="${ph.ko}" data-log="듣기 → TTS 보통 속도">${I.spk} ${t('listen')}</button><button data-a="say" data-text="${ph.ko}" data-rate=".7" data-log="0.75배속 듣기 → TTS 느리게">🐢 0.75×</button></div></div>
+ <div class="pad t-xs" style="font-weight:700;letter-spacing:1px;margin-top:18px">${t('tapWord')}</div>
+ <div class="words">${ph.w.map(w=>`<button data-a="say" data-text="${w.ko}" data-log="단어 칩 '${w.ko}' → 단어만 TTS">${w.ko}<small>${L(w.m)}</small></button>`).join('')}</div>
+ <div class="mic">${S.failed?`<div style="text-align:left;background:var(--sun-s);border-radius:14px;padding:12px 14px;margin-bottom:6px"><b style="font-size:14px">${t('fail')}</b><div style="font-size:12.5px;color:#5e4610;margin-top:3px;line-height:1.45">${t('failSub')}</div><button class="pill p-ink" style="margin-top:10px;padding:8px 12px" data-a="staff" data-src="practice" data-log="인식 실패 → 직원에게 보여주기">📱 ${t('showStaff')}</button></div>`:''}<div style="font-size:13px;font-weight:700;color:${S.rec?'var(--acc)':'var(--soft)'}">${S.rec?'● '+t('listening'):t('tapMic')}</div>
+  <div class="wave ${S.rec?'on':''}">${Array.from({length:26},(_,i)=>`<i style="--h:${10+Math.round(Math.abs(Math.sin(i*1.7))*30)}px;animation-delay:${(i%7)*.08}s"></i>`).join('')}</div>
+  <button class="micb ${S.rec?'on':''}" data-a="rec" data-log="${S.rec?'녹음 중지':'마이크 → 음성 인식 시작(목업: 2.2초 후 자동 채점)'}">${S.rec?I.stop:I.mic}</button>
+  <div class="t-xs" style="margin-top:12px;line-height:1.45">🔒 ${t('notSaved')}</div></div></div>`};
+
+R.result=()=>{const r=S.result;const ph=S.prac.list[S.prac.idx];const C=2*Math.PI*72;const ok=r.score>=85;return`${status()}<div class="topbar"><button class="icb" data-a="back" data-log="결과 닫기 → 연습으로">${I.close}</button><div class="prog"><i style="width:${(S.prac.idx+1)/S.prac.list.length*100}%"></i></div><b style="font-size:13px;width:40px;text-align:right">${S.prac.idx+1}/${S.prac.list.length}</b></div>
+ <div class="view"><div class="ring"><svg width="170" height="170"><circle cx="85" cy="85" r="72" stroke="#efe7d8" stroke-width="14" fill="none"/><circle cx="85" cy="85" r="72" stroke="${ok?'#13807e':'#f2b33d'}" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-r.score/100)}"/></svg><div class="v"><div><b>${r.score}</b><div class="t-xs">/ 100</div><div class="t-xs" style="font-weight:700;margin-top:2px">${t('match')}</div></div></div></div>
+ <div style="text-align:center;margin-top:10px"><div class="h-l">${ok?t('great'):t('almost')}</div><div class="t-s" style="margin-top:4px">${t('understood')}</div></div>
+ <div class="pad" style="margin-top:20px"><div class="t-xs" style="font-weight:700;letter-spacing:1px">${t('heard')}</div><div class="heard">${r.words.map(w=>`<span class="${w.ok?'ok':'ng'}">${w.ko}</span>`).join('')}</div>
+ ${r.weak?`<div class="tipb">💡 <span>${t('tip')(r.weak)}</span></div>`:''}
+ <div class="row gap10" style="margin-top:18px"><button class="btn b-ghost" data-a="say" data-text="${ph.ko}" data-log="정답 다시 듣기">${I.spk}</button><button class="btn b-ghost" data-a="retry" data-log="'다시 하기' → 같은 문장 연습">${t('again')}</button></div>
+ <button class="btn b-ink" style="margin-top:10px" data-a="next" data-log="'다음 문장' → 다음 연습 문장">${t('next')} →</button>
+ <button class="btn" style="margin-top:6px;color:var(--acc-d);font-size:14px" data-a="staff" data-src="practice" data-log="'대신 직원에게 보여주기' → 직원 화면">📱 ${t('instead')}</button></div><div style="height:30px"></div></div>`};
+
+function staffPhrase(){if(S.staffSrc==='order')return orderPhrase(S.placeId);return S.prac.list[S.prac.idx]}
+R.staff=()=>{const ph=staffPhrase()||P(S.placeId).phrases[0];const isOrder=!!ph.order;const it=isOrder?cartItems(S.placeId):[];const base=ph.ko.length>22?(S.big?34:27):(S.big?44:34);return`<div class="staff">${status()}<div class="topbar"><button class="icb" data-a="back" data-log="직원 화면 닫기">${I.close}</button><div class="ttl" style="font-size:13px;color:var(--soft)">${t('showStaff')}</div><div style="width:40px"></div></div>
+ <div class="note">👋 직원분께: 외국인 손님의 ${isOrder?'주문':'요청'}입니다</div>
+ <div class="big"><div class="ko" style="font-size:${base}px">${ph.ko}</div>${isOrder?`<div><div class="olines">${it.map(m=>`<span>· ${m.ko} <b style="color:var(--acc)">${m.cnt==='인분'?m.n+'인분':m.n+'개'}</b></span>`).join('')}${S.takeout[S.placeId]&&P(S.placeId).takeout?'<span>· 포장</span>':''}</div></div>`:''}<hr><div style="font-size:14px;color:var(--soft)">${L(ph.m)}</div></div>
+ <div style="text-align:center;font-size:12px;color:var(--soft);font-weight:600;margin-bottom:8px">직원분 응답 · ${t('staffReply')}</div>
+ <div class="replies"><button class="y" data-a="reply" data-r="yes" data-log="직원 '네' → 손님 언어로 응답 표시">네<small>${t('rYes')[0].replace(' 👍','')}</small></button><button data-a="reply" data-r="sold" data-log="직원 '품절이에요' → 손님 언어 표시 + 주문 수정 버튼">품절이에요<small>${t('rSold')[0]}</small></button><button data-a="reply" data-r="wait" data-log="직원 '잠시만요' → 손님 언어 표시">잠시만요<small>${t('rWait')[0]}</small></button><button data-a="reply" data-r="pay" data-log="직원 '계산대에서 결제해 주세요' → 손님 언어 표시">계산대로 와 주세요<small>${t('rPay')[0]}</small></button></div>
+ <div class="row gap8" style="justify-content:center;padding:14px 0 34px"><button class="pill p-line" style="padding:9px 14px" data-a="say" data-text="${ph.ko}" data-log="'소리 내어 읽기' → TTS">${I.spk} ${t('play')}</button><button class="pill ${S.big?'p-ink':'p-line'}" style="padding:9px 14px" data-a="big" data-log="'글씨 크게' 토글">A⁺ ${t('bigger')}</button></div></div>`};
+
+R.reply=()=>{const map={yes:['rYes','네','#13807e','✓'],sold:['rSold','품절이에요','#c24e22','✕'],wait:['rWait','잠시만요','#8a6210','⏳'],pay:['rPay','계산대로 와 주세요','#2b3346','₩']};const[k,ko,bg,ic]=map[S.reply];return`<div style="height:100%;background:${bg};display:flex;flex-direction:column">${status(true)}<div class="reply" style="flex:1"><div class="ic">${ic}</div><div class="ko">직원 응답 · ${ko}</div><h3>${t(k)[0]}</h3><p>${t(k)[1]}</p>
+ <div style="width:100%;margin-top:36px;display:flex;flex-direction:column;gap:10px">${S.reply==='sold'?`<button class="btn" style="background:#fff;color:${bg}" data-a="edit" data-log="'주문 수정' → 메뉴 탭으로 이동">${t('edit')}</button>`:''}<button class="btn" style="background:rgba(255,255,255,.16);color:#fff" data-a="go" data-to="staff" data-log="직원 화면으로 돌아가기">${t('showStaff')}</button><button class="btn" style="background:transparent;color:#fff;opacity:.8" data-a="go" data-to="course" data-log="'완료' → 코스로 돌아가 다음 정류장">${t('done')}</button></div></div></div>`};
+
+R.phrases=()=>`${status()}<div class="pad" style="padding-top:6px;padding-bottom:6px"><div class="h-l">${t('phrasesT')}</div><div class="t-s" style="margin-top:2px">${t('courseT')}</div></div><div class="view" style="padding-bottom:20px">
+ ${PLACES.map(p=>`<div class="sec" style="padding-top:16px"><div class="row gap8"><span class="stop" style="padding:0;width:auto"><span class="n" style="background:${p.color};width:24px;height:24px;font-size:11px;margin:0">${p.no}</span></span><b>${L(p.name)}</b></div></div><div style="padding:0 18px">${p.phrases.map((ph,i)=>`<div class="card prow" style="margin-top:8px"><div style="flex:1" data-a="practice" data-src="phrase" data-pid="${p.id}" data-i="${i}" data-log="'${ph.ko}' → 말하기 연습"><div class="ko" style="font-size:15px">${ph.ko}</div><div class="t-xs" style="margin-top:2px">${pron(ph)} · ${L(ph.m)}</div></div><button class="playb" style="width:38px;height:38px" data-a="say" data-text="${ph.ko}" data-log="TTS '${ph.ko}'">${I.spk}</button></div>`).join('')}</div>`).join('')}</div>${tabbar('phrases')}`;
+
+R.saved=()=>{const list=PLACES.filter(p=>S.saved.has(p.id));return`${status()}<div class="pad" style="padding-top:6px"><div class="h-l">${t('savedT')}</div></div><div class="view" style="padding:6px 18px 20px">
+ ${list.length?list.map(p=>`<div class="card" style="display:flex;gap:12px;align-items:center;padding:10px;margin-top:10px"><div style="width:64px;height:64px;border-radius:14px;overflow:hidden;flex:none;position:relative">${artPlace(p,236).replace('<svg','<svg style="width:100%;height:100%"')}</div><div style="flex:1" data-a="open" data-id="${p.id}" data-log="저장한 장소 → 상세"><b>${L(p.name)}</b><div class="t-xs">${p.ko} · ${t('checked')} ${p.checked}</div></div><button class="icb" data-a="save" data-id="${p.id}" data-log="저장 해제">${I.bm(true)}</button></div>`).join(''):`<div class="t-s" style="text-align:center;padding:40px 0">${t('savedEmpty')}</div>`}
+ <button class="card ropt" style="margin-top:24px" data-a="report" data-log="'정보가 달라요' 제보 시트 열기">${I.flag}<span style="flex:1">${t('wrong')}</span>${I.chev}</button></div>${tabbar('saved')}`};
+
+R.settings=()=>`${status()}<div class="pad" style="padding-top:6px"><div class="h-l">${t('settings')}</div></div><div class="view" style="padding:10px 18px 20px">
+ <div class="t-xs" style="font-weight:700;letter-spacing:1px;margin:10px 4px">${t('language').toUpperCase()}</div>
+ <div class="card" style="padding:6px">${Object.entries(LANGS).map(([k,v])=>`<button class="ropt" style="margin:0;border-radius:14px;${S.lang===k?'background:var(--paper)':''}" data-a="setLang" data-l="${k}" data-log="언어를 '${v.a}'로 변경 → 전체 UI 즉시 전환"><span class="pill ${S.lang===k?'p-ink':'p-line'}">${v.f}</span><span style="flex:1">${v.a}</span>${S.lang===k?`<span style="color:var(--acc)">${I.check}</span>`:''}</button>`).join('')}</div>
+ <div class="card" style="padding:14px 16px;margin-top:14px;font-size:13px;color:var(--ink2);line-height:1.5">🔒 ${t('privacy')}</div>
+ <button class="card ropt" style="margin-top:14px" data-a="openReport" data-log="설정 → '운영자 리포트' 진입">📊<span style="flex:1">${t('report')}</span>${I.chev}</button>
+ <button class="card ropt" style="margin-top:10px;color:var(--acc-d)" data-a="resetData" data-log="데모 데이터 초기화 → 언어 선택 화면">↺ ${t('reset')}</button></div>${tabbar('settings')}`;
+
+function sheetHTML(){return`<div class="dim" data-a="closeSheet" data-log="제보 시트 닫기"><div class="sheet" onclick="event.stopPropagation()"><div class="grab"></div><div class="h-m">${t('wrongT')}</div><div class="t-xs" style="margin-top:4px">${L(P(S.placeId).name)} · ${t('checked')} ${P(S.placeId).checked}</div>
+ ${[['rClosed','🚪'],['rMenu','🧾'],['rPrice','₩'],['rOther','✎']].map(([k,ic])=>`<button class="card ropt" data-a="sendReport" data-k="${k}" data-log="제보 '${k}' 전송 → 운영자 리포트 제보 건수 +1">${ic}<span style="flex:1">${t(k)}</span>${I.chev}</button>`).join('')}</div></div>`}
+
+/* report (desktop) */
+function renderReport(){
+ const my=S.events.length;const nexts=[['으능정이 문화의거리',38,'#6b4fc6'],['대전근현대사전시관',21,'#8c74d8'],['광천식당',17,'#ee6a3c'],['중앙시장 (코스 외)',9,'#f2b33d'],['바로 귀가 (대전역)',15,'#9aa0b0']];
+ return`<div class="hd"><div><div class="sample">예시 데이터 · 시연용</div><h2 style="margin-top:8px">운영자 리포트 — 원도심</h2><div class="s">“빵집 다음은 어디였나” · 2026.11.01 – 11.21 · 대전시·자치구·관광기관 제공용</div></div><div class="sp" style="flex:1"></div><span class="pill p-line">내 기기 기록 ${my}건 반영</span></div>
+ <div class="kpis">
+  <div class="kpi"><div class="l">이용자 (QR 접속)</div><div class="n">1,284</div><div class="d" style="color:var(--sea)">▲ 18% 전주 대비</div></div>
+  <div class="kpi"><div class="l">추가 방문 비율</div><div class="n">46%</div><div class="d" style="color:var(--soft)">성심당 이후 1곳 이상 방문</div></div>
+  <div class="kpi"><div class="l">주문 카드 사용</div><div class="n">612</div><div class="d" style="color:var(--soft)">직원에게 보여주기 포함</div></div>
+  <div class="kpi"><div class="l">정보 제보</div><div class="n">${12+S.reports}</div><div class="d" style="color:var(--acc-d)">${S.reports?`+${S.reports} 방금 제보됨`:'확인 대기 3건'}</div></div></div>
+ <div class="rgrid">
+  <div class="rbox"><h4>성심당 다음 방문지</h4><div class="s">성심당 방문 이용자의 다음 체크인 장소 (%)</div>${nexts.map(([n,v,c])=>`<div class="hbar"><span>${n}</span><span class="tr"><i style="width:${v*2.2}%;background:${c}"></i></span><span class="v">${v}%</span></div>`).join('')}</div>
+  <div class="rbox"><h4>많이 쓴 문장 Top 5</h4><div class="s">듣기 + 연습 + 직원에게 보여주기</div><ol class="toplist">${[['포장해 주세요',412],['이거 하나 주세요',366],['카드 돼요?',214],['덜 맵게 해 주세요',158],['화장실 어디예요?',131]].map(([k,c],i)=>`<li><b>${i+1}</b>${k}<span class="c">${c}</span></li>`).join('')}</ol></div>
+  <div class="rbox"><h4>언어별 이용</h4><div class="s">첫 실행 시 선택한 언어</div><div class="stack"><i style="width:52%;background:var(--ink)"></i><i style="width:21%;background:var(--acc)"></i><i style="width:27%;background:var(--sea)"></i></div><div class="legend"><span><i style="background:var(--ink)"></i>English 52%</span><span><i style="background:var(--acc)"></i>日本語 21%</span><span><i style="background:var(--sea)"></i>中文 27%</span></div>
+   <h4 style="margin-top:22px">1박 전환 관심</h4><div class="s">유성 1박 배너 클릭 비율</div><div class="hbar" style="grid-template-columns:1fr 44px"><span class="tr"><i style="width:7%;background:var(--sea)"></i></span><span class="v">7%</span></div></div>
+  <div class="rbox"><h4>시간대별 코스 진입</h4><div class="s">원도심 코스 시작 시각</div><div class="cols">${[['10',30],['12',62],['14',88],['16',70],['18',52],['20',34]].map(([h,v])=>`<div style="height:${v}%"><span>${h}시</span></div>`).join('')}</div></div>
+ </div>`;
+}
+
+/* ═════════════ Notes (오른쪽 설명 패널) ═════════════ */
+const NOTES={
+ lang:{k:'S00 · 시작',t:'언어 선택',d:'첫 실행 시 한 번만 보이는 화면입니다. 고른 언어는 기기에 저장되고, 이후 모든 안내 문구·번역·발음 표기(영/중: 로마자, 일: 가타카나)가 바뀝니다.',h:[['언어 카드','EN · JA · 中 선택 → 이 화면 문구가 바로 바뀜'],['시작하기','홈으로 이동']]},
+ home:{k:'S01 · 탐색',t:'홈',d:'데모에서는 원도심 거점만 열려 있습니다. 대전역·소제동, 유성은 “Coming soon”으로 다음 확장 범위를 보여줍니다.',h:[['원도심 카드','코스 지도로 이동'],['잠긴 카드 · 1박 배너','“Coming soon” 토스트'],['🔊 버튼','오늘의 문장을 한국어 음성으로 재생 (실제 TTS)'],['하단 탭','코스 · 문장 · 저장 · 설정']]},
+ course:{k:'S02 · 탐색',t:'원도심 코스 지도',d:'중앙로역(1호선)에서 출발해 4곳을 도는 반나절 코스. 실제 앱은 Leaflet + OpenStreetMap 지도, 목업은 약도입니다.',h:[['지도 핀 1~4','해당 장소 상세로 이동'],['정류장 목록','이동 시간 · 메뉴/문장 수 표시, 누르면 상세'],['1번부터 출발','네이버 지도 웹 도보 길찾기 (Google Maps는 장소 보기용 보조 링크)']],w:'연결선은 실제 보행 경로가 아닙니다. 장소 위치·도보 시간은 주소·좌표 확정 후 재검증합니다.'},
+ place:{k:'S03 · 탐색 / 주문',t:'장소 상세 · 메뉴 담기',d:'실제 가게 이름과 판매 메뉴를 보여주고, + 버튼으로 주문을 담습니다. 담는 순간 하단에 주문 바가 나타납니다. 보기 장소(으능정이·전시관)는 메뉴 대신 “이용 방법”과 문장만 있습니다.',h:[['+ / −','수량 조절 → 하단 주문 바(개수·예상 금액) 갱신'],['주문 바','내 주문(주문 카드)로 이동'],['탭','메뉴 / 주문 방법 / 문장'],['🚩','정보 오류 제보 시트'],['🔖','장소 저장']],w:'가격 미확인 메뉴(예: 보문산메아리, 오징어두루치기)는 “가격 확인 필요”로 표시되고, 담으면 합계 대신 “총액 확인 필요”가 나옵니다. 메뉴·가격·영업시간은 현장 확인 전 예시값입니다. 광천식당 주소(선화동)와 사리 명칭(칼국수/우동)도 확인 필요.'},
+ order:{k:'S05 · 주문',t:'내 주문 · 주문 카드',d:'담은 메뉴로 한국어 주문 문장을 자동으로 만듭니다. 고유어 수사(한/두/세 개)와 인분(2인분)을 구분하고, 포장을 고르면 “포장해 주세요”가 붙습니다.',h:[['포장 / 매장','문장 끝 “포장해 주세요” 추가·제거'],['수량 +/−','문장·발음·번역이 즉시 다시 만들어짐'],['듣기 / 0.75×','주문 문장을 한국어 음성으로 재생'],['말하기 연습','주문 문장부터 연습 시작'],['직원에게 보여주기','큰 글씨 화면']]},
+ practice:{k:'S06 · 말하기',t:'말하기 연습',d:'줄 서는 동안 듣고 따라 말하는 화면입니다. 실제 앱은 브라우저 음성인식(ko-KR)을 쓰고, 녹음은 저장하지 않습니다. 목업에서는 마이크를 누르면 2.2초 뒤 자동 채점됩니다.',h:[['듣기 · 0.75×','문장 전체를 보통/느리게 재생'],['단어 칩','그 단어만 재생'],['마이크','인식 중 애니메이션 → 채점 결과'],['✕','이전 화면']],x:true},
+ result:{k:'S07 · 말하기',t:'채점 결과',d:'점수 이름은 “인식 일치도”입니다. 인식 결과와 목표 문장을 자모 단위로 비교해 점수를 매기고, 약한 단어를 노란색으로 표시하고 팁을 사용자 언어로 보여줍니다.',h:[['다시 하기','같은 문장 재도전'],['다음 문장','다음 연습 문장 (마지막이면 처음으로)'],['대신 직원에게 보여주기','말하기가 어려울 때 바로 화면 제시']],w:'목업의 점수는 시뮬레이션 값입니다.'},
+ staff:{k:'S08 · 현장',t:'직원에게 보여주기',d:'말이 막히면 화면을 그대로 보여주는 모드입니다. 직원용 한국어 안내, 큰 주문 문장, 품목·수량 목록, 직원 응답 버튼이 있습니다.',h:[['직원 응답 4종','네 / 품절 / 잠시만요 / 계산대 → 손님 언어로 크게 표시'],['소리 내어 읽기','문장을 음성으로 재생'],['글씨 크게','문장 크기 확대']]},
+ reply:{k:'S09 · 현장',t:'직원 응답 결과',d:'직원이 누른 응답을 손님 언어로 크게 보여줍니다. 품절이면 “주문 수정”으로 메뉴 탭에 돌아갑니다.',h:[['주문 수정','(품절일 때) 메뉴 탭으로'],['직원에게 보여주기','이전 화면으로'],['완료','코스로 돌아가 다음 정류장']]},
+ phrases:{k:'S10 · 기타',t:'문장 모음',d:'코스 4곳의 문장을 한 곳에서 보고 듣고 연습합니다.',h:[['문장','해당 문장으로 말하기 연습'],['🔊','바로 듣기']]},
+ saved:{k:'S11 · 기타',t:'저장 · 제보',d:'저장한 장소 목록과 “정보가 달라요” 제보. 제보는 운영자 리포트의 제보 건수에 바로 반영됩니다.',h:[['장소','상세로 이동'],['🔖','저장 해제'],['정보가 달라요','제보 시트 → 항목 선택 → 감사 토스트']]},
+ settings:{k:'S12 · 기타',t:'설정',d:'언어를 바꾸면 앱 전체가 즉시 전환됩니다. 기록 초기화로 시연을 처음부터 다시 할 수 있습니다.',h:[['언어','EN / JA / 中 즉시 전환'],['운영자 리포트','기관 제공용 리포트 화면으로'],['데모 데이터 초기화','언어 선택 화면으로']]},
+ report:{k:'S13 · 운영',t:'운영자 리포트',d:'무료 서비스로 쌓은 “빵집 다음은 어디였나” 데이터를 대전시·자치구·관광기관에 리포트로 제공하는 사업 모델을 보여주는 화면입니다. 폰에서 제보하면 제보 건수가 바로 늘어납니다.',h:[['KPI','이용자 · 추가 방문 비율 · 주문 카드 사용 · 제보'],['다음 방문지','성심당 이후 이동 분포']],w:'수치는 모두 시연용 예시 데이터입니다.'}
+};
+
+/* ═════════════ Sidebar ═════════════ */
+const MENU=[
+ ['시작',[['lang','00','언어 선택','EN · JA · 中']]],
+ ['탐색',[['home','01','홈','거점 · 오늘의 문장'],['course','02','원도심 코스 지도','4곳 · 약 3시간'],['place','03','장소 상세 · 메뉴 담기','성심당 본점']]],
+ ['주문',[['order','04','내 주문 · 주문 카드','한국어 문장 자동 생성']]],
+ ['말하기',[['practice','05','말하기 연습','듣기 · 따라 말하기'],['result','06','채점 결과','점수 · 약한 단어']]],
+ ['현장',[['staff','07','직원에게 보여주기','큰 글씨 · 응답 버튼'],['reply','08','직원 응답 결과','손님 언어로 표시']]],
+ ['기타',[['phrases','09','문장 모음','장소별 문장'],['saved','10','저장 · 제보','정보가 달라요'],['settings','11','설정','언어 변경']]],
+ ['운영',[['report','12','운영자 리포트','기관 제공용 · 예시']]]
+];
+function renderNav(){document.getElementById('nav').innerHTML=MENU.map(([g,items])=>`<div class="grp">${g}</div>`+items.map(([id,no,tt,ss])=>`<button class="item ${S.screen===id?'on':''}" data-jump="${id}"><span class="no">${no}</span><span><div class="tt">${tt}</div><div class="ss">${ss}</div></span></button>`).join('')).join('')}
+
+/* presets when jumping from sidebar */
+function ensureCart(){if(!cartCount('ssd')){S.cart.ssd={tw:2,bu:1}}S.placeId='ssd'}
+function preset(id){
+ if(id==='place'){S.placeId='ssd';S.tab='menu'}
+ if(id==='order'){ensureCart()}
+ if(id==='practice'||id==='result'){ensureCart();buildPractice('order',0)}
+ if(id==='result'){S.result=score(S.prac.list[0])}
+ if(id==='staff'){ensureCart();S.staffSrc='order'}
+ if(id==='reply'){ensureCart();S.staffSrc='order';S.reply='sold'}
+}
+
+/* ═════════════ Logic ═════════════ */
+function buildPractice(src,i,pid){
+ if(pid)S.placeId=pid;const p=P(S.placeId);
+ const op=src==='order'?orderPhrase(p.id):null;
+ S.prac={list:op?[op,...p.phrases]:[...p.phrases],idx:Math.min(i,p.phrases.length),src};S.rec=false;
+}
+function score(ph){const ws=ph.w.map(w=>w.ko);const weakI=ws.length>1?1:-1;const s=86+(ph.ko.length*7)%11;return{score:s,weak:weakI>=0?ws[weakI]:null,words:ws.map((w,i)=>({ko:w,ok:i!==weakI}))}}
+let recTimer=null;
+
+function go(to,push=true){if(push&&S.screen!==to)S.hist.push(S.screen);S.screen=to;S.sheet=false;S.rec=false;clearTimeout(recTimer);render(true)}
+function back(){const prev=S.hist.pop();if(prev){S.screen=prev;S.rec=false;clearTimeout(recTimer);render(true)}else go('home',false)}
+
+const A={
+ go:d=>go(d.to),
+ back:()=>back(),
+ pickLang:d=>{S.lang=d.l;render();return`언어 '${LANGS[d.l].a}' 선택 → 화면 문구 전환`},
+ setLang:d=>{S.lang=d.l;render()},
+ soon:()=>{toast(t('soonToast'))},
+ say:d=>{speak(d.text,parseFloat(d.rate||1))},
+ open:d=>{S.placeId=d.id;S.tab=P(d.id).orderable?'menu':'how';go('place')},
+ tab:d=>{S.tab=d.t;render()},
+ qty:d=>{const c=S.cart[S.placeId];c[d.id]=Math.max(0,Math.min(9,(c[d.id]||0)+parseInt(d.d)));if(!c[d.id])delete c[d.id];if(S.screen==='order'&&!cartCount(S.placeId)){back();return}render()},
+ takeout:d=>{S.takeout[S.placeId]=d.v==='1';render()},
+ practice:d=>{buildPractice(d.src,parseInt(d.i||0),d.pid);go('practice')},
+ rec:()=>{S.failed=false;if(S.rec){S.rec=false;clearTimeout(recTimer);render();return}S.rec=true;render();recTimer=setTimeout(()=>{S.rec=false;if(S.failNext){S.failNext=false;S.failed=true;render();logIt('음성 인식 실패(무음·타임아웃) → 다시 하기 / 직원에게 보여주기 안내');return}S.result=score(S.prac.list[S.prac.idx]);S.events.push('practice');go('result');logIt('음성 인식 완료 → 채점 결과 화면 (점수 '+S.result.score+')')},2200)},
+ retry:()=>{S.screen='practice';render(true)},
+ next:()=>{S.prac.idx=(S.prac.idx+1)%S.prac.list.length;S.screen='practice';render(true)},
+ staff:d=>{S.staffSrc=d.src;S.big=false;S.events.push('staff');go('staff')},
+ big:()=>{S.big=!S.big;render()},
+ reply:d=>{S.reply=d.r;go('reply')},
+ edit:()=>{S.tab='menu';S.hist=['home','course'];S.screen='place';render(true)},
+ save:d=>{if(S.saved.has(d.id)){S.saved.delete(d.id);toast(t('removed'))}else{S.saved.add(d.id);toast(t('savedOk'))}render()},
+ report:()=>{S.sheet=true;render()},
+ closeSheet:()=>{S.sheet=false;render()},
+ sendReport:()=>{S.sheet=false;S.reports++;render();toast(t('thanks'))},
+ dir:()=>{toast(t('dir'))},
+ walkStart:()=>{toast(t('dirFirst'))},
+ openReport:()=>{S.hist.push(S.screen);S.screen='report';render(true)},
+ failMode:()=>{S.failNext=!S.failNext;render()},
+ resetData:()=>{const l=S.lang;S=init();S.lang=l;render(true)}
+};
+
+/* ═════════════ Render ═════════════ */
+function render(scrollTop){
+ const scr=document.getElementById('screen');
+ const isReport=S.screen==='report';
+ document.getElementById('phoneWrap').style.display=isReport?'none':'';
+ const rep=document.getElementById('report');rep.style.display=isReport?'':'none';
+ if(isReport){rep.innerHTML=renderReport()}
+ else{
+  const prevView=scr.querySelector('.view');const st=prevView?prevView.scrollTop:0;
+  scr.innerHTML=`<div class="island"></div>`+R[S.screen]()+(S.sheet?sheetHTML():'')+`<div class="homebar" style="${['lang','reply'].includes(S.screen)?'background:#fff':''}"></div>`;
+  const v=scr.querySelector('.view');if(v&&!scrollTop)v.scrollTop=st;
+ }
+ renderNav();renderNotes();renderTop();
+}
+function renderNotes(){const n=NOTES[S.screen];document.getElementById('noteCard').innerHTML=`<div class="k">${n.k}</div><h2>${n.t}</h2><p class="d">${n.d}</p><ul class="hs">${n.h.map(([a,b])=>`<li><span class="b">${a}</span><span>${b}</span></li>`).join('')}</ul>${n.w?`<div class="warn">⚠ ${n.w}</div>`:''}${n.x?`<button class="tbtn ${S.failNext?'on':''}" style="margin-top:12px" id="failBtn"><span class="dot"></span>다음 녹음을 인식 실패로 시뮬레이션</button>`:''}`;const fb=document.getElementById('failBtn');if(fb)fb.onclick=()=>{S.failNext=!S.failNext;render();logIt(S.failNext?'[패널] 다음 녹음 → 인식 실패 시뮬레이션 켜짐':'[패널] 실패 시뮬레이션 꺼짐')}}
+function renderTop(){
+ const flat=MENU.flatMap(([g,it])=>it.map(x=>[g,...x]));const cur=flat.find(x=>x[1]===S.screen);
+ document.getElementById('crumb').innerHTML=cur?`${cur[0]} &nbsp;/&nbsp; <b>${cur[2]} · ${cur[3]}</b>`:'';
+ document.getElementById('langSeg').innerHTML=Object.entries(LANGS).map(([k,v])=>`<button class="${S.lang===k?'on':''}" data-lang="${k}">${v.f}</button>`).join('');
+}
+let logN=0;
+function logIt(txt){const ul=document.getElementById('log');const now=new Date();const tm=now.toTimeString().slice(0,8);ul.querySelectorAll('li.new').forEach(x=>x.classList.remove('new'));const e=ul.querySelector('.empty');if(e)e.remove();ul.insertAdjacentHTML('afterbegin',`<li class="new"><time>${tm}</time>${txt}</li>`);if(++logN>40)ul.lastElementChild.remove()}
+function toast(msg){const scr=document.getElementById('screen');const old=scr.querySelector('.toast');if(old)old.remove();scr.insertAdjacentHTML('beforeend',`<div class="toast">${msg}</div>`);setTimeout(()=>{const x=scr.querySelector('.toast');if(x&&x.textContent===msg)x.remove()},2500)}
+
+/* events */
+document.getElementById('screen').addEventListener('click',e=>{
+ const el=e.target.closest('[data-a]');if(!el||el.disabled)return;
+ const d=el.dataset;const fn=A[d.a];if(!fn)return;
+ if(d.a==='closeSheet'&&e.target!==el)return;
+ const ret=fn(d);logIt(ret||d.log||d.a);
+});
+document.getElementById('report').addEventListener('click',()=>{});
+document.getElementById('nav').addEventListener('click',e=>{const b=e.target.closest('[data-jump]');if(!b)return;const id=b.dataset.jump;preset(id);S.hist=id==='lang'||id==='home'?[]:['home'];if(['practice','result','staff','reply','order'].includes(id))S.hist=['home','course','place'];if(id==='result')S.hist.push('practice');if(id==='reply')S.hist.push('staff');S.screen=id;S.sheet=false;S.rec=false;clearTimeout(recTimer);render(true);logIt(`[메뉴] '${b.querySelector('.tt').textContent}' 화면으로 이동`)});
+document.getElementById('langSeg').addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;S.lang=b.dataset.lang;render();logIt(`[상단] 언어를 '${LANGS[S.lang].a}'로 전환`)});
+document.getElementById('hotBtn').addEventListener('click',e=>{const s=document.getElementById('screen');s.classList.toggle('hot');e.currentTarget.classList.toggle('on')});
+document.getElementById('resetBtn').addEventListener('click',()=>{S=init();render(true);document.getElementById('log').innerHTML='<li class="empty">폰 화면의 버튼을 눌러보세요. 동작이 여기에 기록됩니다.</li>';logN=0});
+
+/* phone scaling */
+function fit(){const body=document.getElementById('body');const h=body.clientHeight-20;const sc=Math.min(1,h/844);const ps=document.getElementById('phoneScale');ps.style.transform=`scale(${sc})`;const w=document.getElementById('phoneWrap');w.style.width=390*sc+'px';w.style.height=844*sc+'px'}
+window.addEventListener('resize',fit);
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+document.getElementById('log').innerHTML='<li class="empty">폰 화면의 버튼을 눌러보세요. 동작이 여기에 기록됩니다.</li>';
+render(true);fit();
+</script>
+</body>
+</html>

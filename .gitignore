@@ -1,0 +1,18 @@
+# 허용 목록 방식: 루트의 모든 항목을 무시한 뒤 아래 경로만 허용 (task.md 0.3절)
+/*
+!/app/
+!/prd.md
+!/task.md
+!/mockup/
+!/reviews/
+!/.github/
+!/.gitignore
+!/README.md
+
+# 허용 경로 안에서도 빌드 산출물·비밀값은 제외
+**/node_modules/
+**/dist/
+**/coverage/
+**/test-results/
+**/playwright-report/
+**/.env*
