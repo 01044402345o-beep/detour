@@ -1,0 +1,855 @@
+{
+  "hub": "downtown",
+  "note": "PRD 4장: 메뉴명·가격·영업시간·휴무일·주문 방식·알레르기·좌표는 현장 확인 전 예시값. 확인 필요",
+  "course": {
+    "id": "downtown-halfday",
+    "hub": "downtown",
+    "title": {
+      "en": "Old Downtown Half-day",
+      "ja": "旧市街 半日コース",
+      "zh": "老城区半日游"
+    },
+    "stops": ["ssd", "eun", "mus", "gwc"],
+    "distanceKm": 2,
+    "durationMin": 180,
+    "note": "총거리·소요시간은 4곳 주소·좌표 확정 후 재검증. 확인 필요"
+  },
+  "places": [
+    {
+      "id": "ssd",
+      "order": 1,
+      "category": "food",
+      "nameKo": "성심당 본점",
+      "name": {
+        "en": "Sungsimdang Main Store",
+        "ja": "聖心堂 本店",
+        "zh": "圣心堂 总店"
+      },
+      "area": "은행동",
+      "areaLocal": {
+        "en": "Eunhaeng-dong",
+        "ja": "銀杏洞",
+        "zh": "银杏洞"
+      },
+      "hours": "08:00–22:00",
+      "checkedAt": "2026-11-10",
+      "walkMinFromPrev": 5,
+      "transitHint": {
+        "en": "About 5 min walk from Jungang-ro Station (Line 1)",
+        "ja": "地下鉄1号線 中央路駅から徒歩約5分",
+        "zh": "从地铁1号线中央路站步行约5分钟"
+      },
+      "orderable": true,
+      "takeout": true,
+      "steps": [
+        {
+          "en": "Grab a tray & tongs at the entrance",
+          "ja": "入口でトレーとトングを取る",
+          "zh": "在入口拿托盘和夹子"
+        },
+        {
+          "en": "Pick your bread",
+          "ja": "パンを選ぶ",
+          "zh": "挑选面包"
+        },
+        {
+          "en": "Line up & pay at the counter",
+          "ja": "レジに並んで支払う",
+          "zh": "排队到柜台付款"
+        }
+      ],
+      "menu": [
+        {
+          "id": "tw",
+          "ko": "튀김소보로",
+          "name": {
+            "en": "Fried Soboro",
+            "ja": "揚げソボロパン",
+            "zh": "炸酥粒面包"
+          },
+          "roman": "twigim soboro",
+          "kana": "トィギム ソボロ",
+          "counter": "개",
+          "priceKrw": 1700,
+          "description": {
+            "en": "Crispy fried crumble bun, red bean filling",
+            "ja": "あんこ入りのサクサク揚げパン",
+            "zh": "红豆馅酥脆炸面包"
+          },
+          "signature": true,
+          "verified": false,
+          "allergenStatus": "unknown"
+        },
+        {
+          "id": "bu",
+          "ko": "판타롱부추빵",
+          "name": {
+            "en": "Pantarong Chive Bread",
+            "ja": "パンタロン ニラパン",
+            "zh": "韭菜面包"
+          },
+          "roman": "pantarong buchuppang",
+          "kana": "パンタロン ブチュッパン",
+          "counter": "개",
+          "priceKrw": 2000,
+          "description": {
+            "en": "Soft bread packed with chives",
+            "ja": "ニラたっぷりのパン",
+            "zh": "满满韭菜馅的软面包"
+          },
+          "verified": false,
+          "allergenStatus": "unknown"
+        },
+        {
+          "id": "mr",
+          "ko": "명란바게트",
+          "name": {
+            "en": "Pollock Roe Baguette",
+            "ja": "明太子バゲット",
+            "zh": "明太子法棍"
+          },
+          "roman": "myeongnan bageteu",
+          "kana": "ミョンナン バゲトゥ",
+          "counter": "개",
+          "priceKrw": 3500,
+          "description": {
+            "en": "Baguette with pollock-roe butter",
+            "ja": "明太子バターのバゲット",
+            "zh": "明太子黄油法棍"
+          },
+          "verified": false,
+          "allergenStatus": "unknown"
+        },
+        {
+          "id": "bm",
+          "ko": "보문산메아리",
+          "name": {
+            "en": "Bomunsan Meari (layered bread)",
+            "ja": "ボムンサン・メアリ",
+            "zh": "宝文山回声面包"
+          },
+          "roman": "bomunsan meari",
+          "kana": "ボムンサン メアリ",
+          "counter": "개",
+          "description": {
+            "en": "Layered sweet bread",
+            "ja": "層になった甘いパン",
+            "zh": "千层甜面包"
+          },
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "가격 미확인. 확인 필요"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "ssd-1",
+          "ko": "이거 하나 주세요",
+          "roman": "igeo hana juseyo",
+          "kana": "イゴ ハナ ジュセヨ",
+          "meaning": {
+            "en": "One of these, please.",
+            "ja": "これを一つください。",
+            "zh": "请给我一个这个。"
+          },
+          "words": [
+            {
+              "ko": "이거",
+              "meaning": {
+                "en": "this",
+                "ja": "これ",
+                "zh": "这个"
+              }
+            },
+            {
+              "ko": "하나",
+              "meaning": {
+                "en": "one",
+                "ja": "一つ",
+                "zh": "一个"
+              }
+            },
+            {
+              "ko": "주세요",
+              "meaning": {
+                "en": "please",
+                "ja": "ください",
+                "zh": "请给我"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ssd-2",
+          "ko": "포장해 주세요",
+          "roman": "pojanghae juseyo",
+          "kana": "ポジャンヘ ジュセヨ",
+          "meaning": {
+            "en": "To go, please.",
+            "ja": "持ち帰りでお願いします。",
+            "zh": "请打包。"
+          },
+          "words": [
+            {
+              "ko": "포장해",
+              "meaning": {
+                "en": "pack it",
+                "ja": "包んで",
+                "zh": "打包"
+              }
+            },
+            {
+              "ko": "주세요",
+              "meaning": {
+                "en": "please",
+                "ja": "ください",
+                "zh": "请"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ssd-3",
+          "ko": "카드 돼요?",
+          "roman": "kadeu dwaeyo?",
+          "kana": "カドゥ ドェヨ?",
+          "meaning": {
+            "en": "Can I pay by card?",
+            "ja": "カード使えますか?",
+            "zh": "可以刷卡吗?"
+          },
+          "words": [
+            {
+              "ko": "카드",
+              "meaning": {
+                "en": "card",
+                "ja": "カード",
+                "zh": "卡"
+              }
+            },
+            {
+              "ko": "돼요?",
+              "meaning": {
+                "en": "is it OK?",
+                "ja": "いいですか?",
+                "zh": "可以吗?"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ssd-4",
+          "ko": "봉투 주세요",
+          "roman": "bongtu juseyo",
+          "kana": "ポントゥ ジュセヨ",
+          "meaning": {
+            "en": "A bag, please.",
+            "ja": "袋をください。",
+            "zh": "请给我袋子。"
+          },
+          "words": [
+            {
+              "ko": "봉투",
+              "meaning": {
+                "en": "bag",
+                "ja": "袋",
+                "zh": "袋子"
+              }
+            },
+            {
+              "ko": "주세요",
+              "meaning": {
+                "en": "please",
+                "ja": "ください",
+                "zh": "请给我"
+              }
+            }
+          ]
+        }
+      ],
+      "geo": {
+        "lat": 36.3277,
+        "lng": 127.4273
+      },
+      "note": "좌표는 근사값. 확인 필요"
+    },
+    {
+      "id": "eun",
+      "order": 2,
+      "category": "sight",
+      "nameKo": "으능정이 문화의거리",
+      "name": {
+        "en": "Euneungjeongi Culture Street",
+        "ja": "ウヌンジョンイ文化の街",
+        "zh": "银杏亭文化街"
+      },
+      "area": "은행동 · 스카이로드",
+      "areaLocal": {
+        "en": "Sky Road LED canopy",
+        "ja": "スカイロード",
+        "zh": "天空之路"
+      },
+      "hours": "00:00–24:00",
+      "checkedAt": "2026-11-10",
+      "walkMinFromPrev": 2,
+      "transitHint": {
+        "en": "About 2 min walk from Sungsimdang",
+        "ja": "聖心堂から徒歩約2分",
+        "zh": "从圣心堂步行约2分钟"
+      },
+      "orderable": false,
+      "takeout": false,
+      "steps": [
+        {
+          "en": "Walk under the Sky Road LED canopy",
+          "ja": "スカイロードのLEDアーケードを歩く",
+          "zh": "走过天空之路LED长廊"
+        },
+        {
+          "en": "Evening light shows — check times on site",
+          "ja": "夜はライトショー(時間は現地で確認)",
+          "zh": "晚上有灯光秀(时间请现场确认)"
+        },
+        {
+          "en": "Great photo spot, shops & cafés nearby",
+          "ja": "写真スポット、周辺にショップやカフェ",
+          "zh": "拍照好去处,附近有商店和咖啡馆"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "eun-1",
+          "ko": "사진 좀 찍어 주시겠어요?",
+          "roman": "sajin jom jjigeo jusigesseoyo?",
+          "kana": "サジン ジョム チゴ ジュシゲッソヨ?",
+          "meaning": {
+            "en": "Could you take a photo for us?",
+            "ja": "写真を撮っていただけますか?",
+            "zh": "能帮我们拍张照吗?"
+          },
+          "words": [
+            {
+              "ko": "사진",
+              "meaning": {
+                "en": "photo",
+                "ja": "写真",
+                "zh": "照片"
+              }
+            },
+            {
+              "ko": "좀",
+              "meaning": {
+                "en": "please",
+                "ja": "ちょっと",
+                "zh": "请"
+              }
+            },
+            {
+              "ko": "찍어",
+              "meaning": {
+                "en": "take",
+                "ja": "撮って",
+                "zh": "拍"
+              }
+            },
+            {
+              "ko": "주시겠어요?",
+              "meaning": {
+                "en": "would you?",
+                "ja": "くださいますか?",
+                "zh": "可以吗?"
+              }
+            }
+          ]
+        },
+        {
+          "id": "eun-2",
+          "ko": "화장실 어디예요?",
+          "roman": "hwajangsil eodiyeyo?",
+          "kana": "ファジャンシル オディエヨ?",
+          "meaning": {
+            "en": "Where is the restroom?",
+            "ja": "トイレはどこですか?",
+            "zh": "洗手间在哪里?"
+          },
+          "words": [
+            {
+              "ko": "화장실",
+              "meaning": {
+                "en": "restroom",
+                "ja": "トイレ",
+                "zh": "洗手间"
+              }
+            },
+            {
+              "ko": "어디예요?",
+              "meaning": {
+                "en": "where is?",
+                "ja": "どこですか?",
+                "zh": "在哪里?"
+              }
+            }
+          ]
+        },
+        {
+          "id": "eun-3",
+          "ko": "공연 몇 시에 해요?",
+          "roman": "gongyeon myeot sie haeyo?",
+          "kana": "コンヨン ミョッ シエ ヘヨ?",
+          "meaning": {
+            "en": "What time is the show?",
+            "ja": "ショーは何時ですか?",
+            "zh": "演出几点开始?"
+          },
+          "words": [
+            {
+              "ko": "공연",
+              "meaning": {
+                "en": "show",
+                "ja": "ショー",
+                "zh": "演出"
+              }
+            },
+            {
+              "ko": "몇 시에",
+              "meaning": {
+                "en": "what time",
+                "ja": "何時に",
+                "zh": "几点"
+              }
+            },
+            {
+              "ko": "해요?",
+              "meaning": {
+                "en": "is it on?",
+                "ja": "やりますか?",
+                "zh": "开始?"
+              }
+            }
+          ]
+        }
+      ],
+      "geo": {
+        "lat": 36.3289,
+        "lng": 127.4262
+      },
+      "note": "좌표는 근사값. 확인 필요"
+    },
+    {
+      "id": "mus",
+      "order": 3,
+      "category": "sight",
+      "nameKo": "대전근현대사전시관",
+      "name": {
+        "en": "Daejeon Modern History Hall",
+        "ja": "大田近現代史展示館",
+        "zh": "大田近现代史展览馆"
+      },
+      "area": "선화동 · 옛 충남도청사",
+      "areaLocal": {
+        "en": "Old Chungnam Provincial Office",
+        "ja": "旧忠清南道庁舎",
+        "zh": "旧忠清南道厅"
+      },
+      "hours": "10:00–18:00",
+      "closedOn": "mon",
+      "checkedAt": "2026-11-10",
+      "walkMinFromPrev": 12,
+      "transitHint": {
+        "en": "About 12 min walk from Euneungjeongi Culture Street",
+        "ja": "ウヌンジョンイ文化の街から徒歩約12分",
+        "zh": "从银杏亭文化街步行约12分钟"
+      },
+      "orderable": false,
+      "takeout": false,
+      "steps": [
+        {
+          "en": "Enter through the main gate",
+          "ja": "正門から入る",
+          "zh": "从正门进入"
+        },
+        {
+          "en": "See 1930s architecture & city history",
+          "ja": "1930年代の建築と街の歴史を見る",
+          "zh": "参观1930年代建筑与城市历史"
+        },
+        {
+          "en": "Photo spot: the central staircase",
+          "ja": "写真スポット:中央階段",
+          "zh": "拍照点:中央楼梯"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "mus-1",
+          "ko": "입장료 있어요?",
+          "roman": "ipjangnyo isseoyo?",
+          "kana": "イプチャンニョ イッソヨ?",
+          "meaning": {
+            "en": "Is there an admission fee?",
+            "ja": "入場料はありますか?",
+            "zh": "要门票吗?"
+          },
+          "words": [
+            {
+              "ko": "입장료",
+              "meaning": {
+                "en": "admission fee",
+                "ja": "入場料",
+                "zh": "门票"
+              }
+            },
+            {
+              "ko": "있어요?",
+              "meaning": {
+                "en": "is there?",
+                "ja": "ありますか?",
+                "zh": "有吗?"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mus-2",
+          "ko": "사진 찍어도 돼요?",
+          "roman": "sajin jjigeodo dwaeyo?",
+          "kana": "サジン チゴド ドェヨ?",
+          "meaning": {
+            "en": "May I take photos?",
+            "ja": "写真を撮ってもいいですか?",
+            "zh": "可以拍照吗?"
+          },
+          "words": [
+            {
+              "ko": "사진",
+              "meaning": {
+                "en": "photo",
+                "ja": "写真",
+                "zh": "照片"
+              }
+            },
+            {
+              "ko": "찍어도",
+              "meaning": {
+                "en": "even if I take",
+                "ja": "撮っても",
+                "zh": "拍也"
+              }
+            },
+            {
+              "ko": "돼요?",
+              "meaning": {
+                "en": "is it OK?",
+                "ja": "いいですか?",
+                "zh": "可以吗?"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mus-3",
+          "ko": "외국어 안내 있어요?",
+          "roman": "oegugeo annae isseoyo?",
+          "kana": "ウェグゴ アンネ イッソヨ?",
+          "meaning": {
+            "en": "Is there a foreign-language guide?",
+            "ja": "外国語の案内はありますか?",
+            "zh": "有外语导览吗?"
+          },
+          "words": [
+            {
+              "ko": "외국어",
+              "meaning": {
+                "en": "foreign language",
+                "ja": "外国語",
+                "zh": "外语"
+              }
+            },
+            {
+              "ko": "안내",
+              "meaning": {
+                "en": "guide",
+                "ja": "案内",
+                "zh": "导览"
+              }
+            },
+            {
+              "ko": "있어요?",
+              "meaning": {
+                "en": "is there?",
+                "ja": "ありますか?",
+                "zh": "有吗?"
+              }
+            }
+          ]
+        }
+      ],
+      "geo": {
+        "lat": 36.3273,
+        "lng": 127.4206
+      },
+      "note": "좌표는 근사값. 휴무일·관람시간 확인 필요"
+    },
+    {
+      "id": "gwc",
+      "order": 4,
+      "category": "food",
+      "nameKo": "광천식당",
+      "name": {
+        "en": "Gwangcheon Sikdang",
+        "ja": "クァンチョン食堂",
+        "zh": "广川食堂"
+      },
+      "area": "선화동",
+      "areaLocal": {
+        "en": "Seonhwa-dong",
+        "ja": "宣化洞",
+        "zh": "宣化洞"
+      },
+      "hours": "11:00–21:00",
+      "checkedAt": "2026-11-10",
+      "walkMinFromPrev": 10,
+      "transitHint": {
+        "en": "About 10 min walk from Daejeon Modern History Hall",
+        "ja": "大田近現代史展示館から徒歩約10分",
+        "zh": "从大田近现代史展览馆步行约10分钟"
+      },
+      "orderable": true,
+      "takeout": false,
+      "steps": [
+        {
+          "en": "Take a seat & order from the staff",
+          "ja": "席に座ってスタッフに注文",
+          "zh": "入座后向店员点餐"
+        },
+        {
+          "en": "Add noodles into the sauce at the end",
+          "ja": "最後にソースに麺を入れる",
+          "zh": "最后把面条加入酱汁"
+        },
+        {
+          "en": "Pay at the counter on the way out",
+          "ja": "帰りにレジで支払う",
+          "zh": "离开时在柜台付款"
+        }
+      ],
+      "menu": [
+        {
+          "id": "dt",
+          "ko": "두부두루치기",
+          "name": {
+            "en": "Spicy Braised Tofu",
+            "ja": "豆腐トゥルチギ",
+            "zh": "辣炒豆腐"
+          },
+          "roman": "dubu duruchigi",
+          "kana": "トゥブ トゥルチギ",
+          "counter": "인분",
+          "priceKrw": 8000,
+          "description": {
+            "en": "Tofu in spicy red sauce · per person",
+            "ja": "ピリ辛ソースの豆腐・1人前",
+            "zh": "辣酱豆腐·每人份"
+          },
+          "signature": true,
+          "spicy": true,
+          "verified": false,
+          "allergenStatus": "unknown"
+        },
+        {
+          "id": "od",
+          "ko": "오징어두루치기",
+          "name": {
+            "en": "Spicy Braised Squid",
+            "ja": "イカのトゥルチギ",
+            "zh": "辣炒鱿鱼"
+          },
+          "roman": "ojingeo duruchigi",
+          "kana": "オジンオ トゥルチギ",
+          "counter": "인분",
+          "description": {
+            "en": "Squid in spicy red sauce · per person",
+            "ja": "イカのピリ辛煮・1人前",
+            "zh": "辣酱鱿鱼·每人份"
+          },
+          "spicy": true,
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "가격 미확인. 확인 필요"
+        },
+        {
+          "id": "sr",
+          "ko": "칼국수 사리",
+          "name": {
+            "en": "Noodle add-on",
+            "ja": "カルグクス麺の追加",
+            "zh": "加刀切面"
+          },
+          "roman": "kalguksu sari",
+          "kana": "カルグクス サリ",
+          "counter": "개",
+          "priceKrw": 1000,
+          "description": {
+            "en": "Noodles to mix into the sauce",
+            "ja": "ソースに絡める麺",
+            "zh": "拌进酱汁的面条"
+          },
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "사리 명칭(칼국수/우동)·단독 주문 가능 여부 확인 필요"
+        },
+        {
+          "id": "gb",
+          "ko": "공기밥",
+          "name": {
+            "en": "Bowl of rice",
+            "ja": "ご飯",
+            "zh": "米饭"
+          },
+          "roman": "gonggibap",
+          "kana": "コンギッパプ",
+          "counter": "공기",
+          "priceKrw": 1000,
+          "description": {
+            "en": "Steamed rice",
+            "ja": "白ご飯",
+            "zh": "白米饭"
+          },
+          "verified": false,
+          "allergenStatus": "unknown"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "gwc-1",
+          "ko": "두 명이에요",
+          "roman": "du myeongieyo",
+          "kana": "トゥ ミョンイエヨ",
+          "meaning": {
+            "en": "Two people.",
+            "ja": "二人です。",
+            "zh": "两位。"
+          },
+          "words": [
+            {
+              "ko": "두",
+              "meaning": {
+                "en": "two",
+                "ja": "二",
+                "zh": "两"
+              }
+            },
+            {
+              "ko": "명이에요",
+              "meaning": {
+                "en": "people",
+                "ja": "人です",
+                "zh": "位"
+              }
+            }
+          ]
+        },
+        {
+          "id": "gwc-2",
+          "ko": "덜 맵게 해 주세요",
+          "roman": "deol maepge hae juseyo",
+          "kana": "トル メプケ ヘ ジュセヨ",
+          "meaning": {
+            "en": "Less spicy, please.",
+            "ja": "辛さ控えめでお願いします。",
+            "zh": "请做得不那么辣。"
+          },
+          "words": [
+            {
+              "ko": "덜",
+              "meaning": {
+                "en": "less",
+                "ja": "控えめに",
+                "zh": "少"
+              }
+            },
+            {
+              "ko": "맵게",
+              "meaning": {
+                "en": "spicy",
+                "ja": "辛く",
+                "zh": "辣"
+              }
+            },
+            {
+              "ko": "해 주세요",
+              "meaning": {
+                "en": "please make it",
+                "ja": "してください",
+                "zh": "请做"
+              }
+            }
+          ]
+        },
+        {
+          "id": "gwc-3",
+          "ko": "물 좀 주세요",
+          "roman": "mul jom juseyo",
+          "kana": "ムル ジョム ジュセヨ",
+          "meaning": {
+            "en": "Some water, please.",
+            "ja": "お水ください。",
+            "zh": "请给我水。"
+          },
+          "words": [
+            {
+              "ko": "물",
+              "meaning": {
+                "en": "water",
+                "ja": "水",
+                "zh": "水"
+              }
+            },
+            {
+              "ko": "좀",
+              "meaning": {
+                "en": "please",
+                "ja": "ちょっと",
+                "zh": "请"
+              }
+            },
+            {
+              "ko": "주세요",
+              "meaning": {
+                "en": "give me",
+                "ja": "ください",
+                "zh": "给我"
+              }
+            }
+          ]
+        },
+        {
+          "id": "gwc-4",
+          "ko": "계산할게요",
+          "roman": "gyesanhalgeyo",
+          "kana": "ケサンハルケヨ",
+          "meaning": {
+            "en": "I'd like to pay.",
+            "ja": "お会計お願いします。",
+            "zh": "我要结账。"
+          },
+          "words": [
+            {
+              "ko": "계산할게요",
+              "meaning": {
+                "en": "I'll pay",
+                "ja": "会計します",
+                "zh": "我要结账"
+              }
+            }
+          ]
+        }
+      ],
+      "geo": {
+        "lat": 36.3305,
+        "lng": 127.4222
+      },
+      "note": "주소: 대전 중구 대종로505번길 29(선화동) — 비공식 출처 기준, 공식 출처 확인 필요. 좌표는 근사값. 확인 필요"
+    }
+  ]
+}

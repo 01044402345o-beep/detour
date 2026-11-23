@@ -34,6 +34,8 @@ export type MenuItem = {
   counter: Counter;
   /** 없으면 가격 미확인 → '가격 확인 필요' 표시 (F-04·F-05) */
   priceKrw?: number;
+  /** 메뉴 한 줄 설명 (목업 S03 메뉴 카드) */
+  description?: L10n;
   signature?: boolean;
   spicy?: boolean;
   verified: boolean;
@@ -59,7 +61,10 @@ export type Place = {
   category: PlaceCategory;
   nameKo: string;
   name: L10n;
+  /** 한국어 동·지역 이름 (예: 은행동) */
   area: string;
+  /** 사용자 언어로 된 동·지역 이름 (목업 S02·S03 부제) */
+  areaLocal: L10n;
   hours: string;
   closedOn?: string;
   checkedAt: IsoDate;
