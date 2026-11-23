@@ -113,7 +113,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - `app/src/types.ts`에 PRD 8.1 데이터 모델을 TypeScript 타입으로 작성 (`priceKrw?`, `allergenStatus` 포함)
   - **공유 계약:** `types.ts`에 `OrderSentence`(`words[]` 구체 타입 포함)·`ScoreResult`·`SttState`·`TtsState` 타입, `numerals.ts` 함수 시그니처(`toNative(n)`, `toSino(n)`), store의 `lang` 슬라이스 골격
   - 완료 조건: `npm run dev`로 빈 화면 표시, `npm run build`·`npm run test`·`npm run lint`·`tsc --noEmit` 모두 통과, 공유 계약 파일 존재
-- [ ] **T0.3 CI·배포 골격** — 소유: `.github/workflows/`
+- [x] **T0.3 CI·배포 골격** — 소유: `.github/workflows/` — 2026-11-23 · reviews/T0.3_r2.md (미해결 0) · 배포 252d106→favicon 수정 후 smoke 200·콘솔 오류 0
   - PR/push 시 lint·type·unit test 실행, `main` push 시 build → GitHub Pages 배포
   - 완료 조건 [배포 전]: workflow 파일의 lint·type·test·build 단계가 `dev` push에서 성공
   - 완료 조건 [배포 후]: `main`에 빈 앱이 배포되어 배포 URL에서 열림 (HTTPS) → smoke 뒤 체크 (0.3절 0-f)
@@ -126,20 +126,20 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 > 화면 없이 순수 로직과 데이터만 만듭니다. 모두 단위 테스트로 검증합니다. 서로의 모듈은 T0.2 공유 계약(타입·시그니처)만 의존하고, 구현이 필요하면 fixture로 테스트합니다.
 
-- [ ] **T1.1 원도심 콘텐츠 데이터** — 소유: `app/src/data/`
+- [ ] **T1.1 원도심 콘텐츠 데이터** (진행 중 · Claude worker) — 소유: `app/src/data/`
   - `downtown.json`: 코스 1개, 장소 4곳(PRD 4장), 메뉴 8개, 문장 14개, 단계 안내, 좌표, 확인일
   - 현장 미확인 값은 `verified:false`, 가격 미확인은 `priceKrw` 생략, 알레르기 미확인은 `allergenStatus:'unknown'`
   - 광천식당 주소(선화동)·사리 명칭은 데이터 안 `note` 필드에 "확인 필요" 표기
   - 장소별 문장의 `words`(단어 칩)와 3개 언어 뜻, 로마자·가타카나
   - `validate.ts`: 타입·필수 필드·L10n 3개 언어 누락·좌표 범위 검사
   - 완료 조건: 검증 테스트 통과(누락 0), 목업 데이터와 내용 일치
-- [ ] **T1.2 다국어 사전** — 소유: `app/src/i18n/`
+- [ ] **T1.2 다국어 사전** (진행 중 · Claude worker) — 소유: `app/src/i18n/`
   - `en.json`·`ja.json`·`zh.json`: 목업의 UI 문구 전체 + PRD에 정한 고지 문구(비제휴 안내, 음성 처리 안내, 가격 확인 필요, 총액 확인 필요, 인식 실패 메시지 등)
   - **PRD 우선:** PRD와 목업이 충돌하면 PRD를 따릅니다. 목업 `privacy` 키는 '이용 기록은 이 기기에만 저장됩니다(음성은 저장하지 않음)' 취지로 교체합니다(PRD F-08·7장)
   - `t(lang, key)`는 순수 함수, `useT()`는 store의 `lang` 계약만 import. 키 누락 시 개발 모드 경고
   - 하드코딩 검사 예외 목록: 한국어 콘텐츠 JSON(학습 문장·메뉴명), 직원 화면 고정 문구(한국어 안내·응답 버튼), 상호명
   - 완료 조건: 세 파일의 키 집합이 같음(테스트), 빈 문자열·영어 fallback 없음(ja·zh), 예외 목록 밖 하드코딩 문구 없음(린트 규칙 또는 검사 스크립트)
-- [ ] **T1.3 주문 문장 생성 + 수사 검수표** — 소유: `app/src/domain/orderSentence.ts`, `numerals.ts`
+- [ ] **T1.3 주문 문장 생성 + 수사 검수표** (진행 중 · Claude worker) — 소유: `app/src/domain/orderSentence.ts`, `numerals.ts`
   - PRD F-06 규칙: `{메뉴} {수사} {단위}, … 주세요.` + 포장 시 ` 포장해 주세요.`, 수량 1~9, 0개 제외, 빈 주문이면 `null`
   - 단위별 수사: `개`·`공기` → 고유어(한·두·세·네·다섯·여섯·일곱·여덟·아홉), `인분` → 아라비아 숫자 + 인분(읽기: 일·이·삼·사·오·육·칠·팔·구)
   - 출력: T0.2의 `OrderSentence` 타입 (`{ ko, roman, kana, meaning: L10n, words[] }`)
@@ -159,13 +159,13 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
     표의 가타카나는 근사 표기이며 원어민 검수(T4.2) 대상.
   - 완료 조건: 검수표 27칸 + 포장/매장 + 여러 품목 + 빈 주문 테스트 통과
-- [ ] **T1.4 채점 모듈** — 소유: `app/src/domain/scoring.ts`
+- [ ] **T1.4 채점 모듈** (진행 중 · Claude worker) — 소유: `app/src/domain/scoring.ts`
   - 정규화: 공백·문장부호 제거, 숫자 → 한글 수사(뒤따르는 단위 기준: 개·공기·명 → 고유어, 인분 → 한자어. `numerals.ts` 시그니처만 의존하고 fixture로 테스트), 소문자화
   - 한글 음절 → 자모 분해, 레벤슈타인 거리 → "인식 일치도" 점수 = `round(100 × (1 − 거리 / max(목표 자모 수, 인식 자모 수)))`, 하한 0
   - 단어별 일치 여부(목표 단어 기준 정렬), 가장 약한 단어 1개 반환. 출력은 T0.2의 `ScoreResult` 타입
   - 빈 인식 결과 → `{ status:'empty' }` (0점 아님)
   - 완료 조건: 기대값 예시(완전 일치 → 100, '두 개'↔'2개' → 100, 빈 결과 → `empty`) 포함, 한 글자 틀림·띄어쓰기 차이·숫자 표기 차이·빈 입력 테스트 통과
-- [ ] **T1.5 음성 어댑터** — 소유: `app/src/speech/`
+- [ ] **T1.5 음성 어댑터** (진행 중 · Claude worker) — 소유: `app/src/speech/`
   - `tts.ts`: `speak(text, rate)`, 한국어 음성 찾기(`voiceschanged` 대기, 최대 2초), 사용자 탭에서만 시작, 화면 이탈 시 `cancel()`, 상태 `unsupported | no-korean-voice | ready`
   - `stt.ts` 상태 머신 (PRD F-08):
     ```
@@ -176,7 +176,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
     모든 실패 상태는 `{ retry, showStaff }` 두 선택지를 UI에 넘김(단, `unsupported`는 재시도가 의미 없으므로 `showStaff`만 — T0.2 R1 판정). 인식 원문은 결과로만 반환하고 저장·로그하지 않음
   - 테스트: Web Speech API 목(mock)으로 상태 전이 전부 검증
   - 완료 조건: 상태 전이 테스트 통과, 타임아웃 8초 테스트(가짜 타이머)
-- [ ] **T1.6 앱 상태·이용 기록** — 소유: `app/src/store/`, `app/src/domain/events.ts`
+- [ ] **T1.6 앱 상태·이용 기록** (진행 중 · Claude worker) — 소유: `app/src/store/`, `app/src/domain/events.ts`
   - Zustand + persist(localStorage, 실패 시 메모리로 대체): `lang`(T0.2 골격 확장), `cart{placeId: {menuId: n}}`, `takeout`, `saved`, `reports`, `events`
   - 장소가 바뀔 때 기존 주문이 있으면 비울지 확인하는 액션(`switchPlace` → `needsConfirm`)
   - `switchPlace`와 문장 생성 시 `takeout:false` 장소면 `takeout=false`로 강제 (PRD F-05 '매장으로 고정')
@@ -310,7 +310,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 | Phase | task 수 | 완료 | 병렬 |
 |---|---|---|---|
-| 0 기반 | 4 | 3 | 순차 |
+| 0 기반 | 4 | 4 | 순차 |
 | 1 데이터·도메인 | 6 | 0 | 6개 동시 |
 | 2 화면 | 7 | 0 | T2.0 후 6개 동시 |
 | 2.5 시연 영상 | 1 | 0 | Phase 3과 병렬 |
