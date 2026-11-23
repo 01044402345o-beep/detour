@@ -1,0 +1,53 @@
+/* 디자인 토큰 — mockup/index.html :root 값을 그대로 옮김 */
+:root {
+  /* 글자·배경 */
+  --ink: #151a26;
+  --ink2: #2b3346;
+  --soft: #6b7287;
+  --mute: #9aa0b0;
+  --paper: #fbf7ef;
+  --card: #ffffff;
+  --line: #ece4d6;
+  --line2: #e2d8c6;
+
+  /* 강조색 */
+  --acc: #ee6a3c;
+  --acc-d: #c24e22;
+  --acc-s: #fde6dc;
+  --sea: #13807e;
+  --sea-d: #0c5654;
+  --sea-s: #d8efed;
+  --sun: #f2b33d;
+  --sun-s: #fdf1d6;
+  --plum: #6b4fc6;
+  --plum-s: #ece7fb;
+  --gold: #c8a46a;
+  --gold-l: #e9d6b0;
+
+  /* 어두운 면(목업 사이드바) */
+  --side: #0e121b;
+  --side2: #161b27;
+  --side-line: #232a3a;
+  --side-txt: #c9cdd8;
+  --side-mute: #7c849a;
+
+  /* 무대 배경 */
+  --stage1: #f3eee5;
+  --stage2: #e6dccb;
+
+  /* 글꼴 — Pretendard 우선 */
+  --kfont:
+    'Pretendard Variable', Pretendard, 'Malgun Gothic', 'Yu Gothic UI', 'Microsoft YaHei',
+    system-ui, sans-serif;
+  --dfont: 'Fraunces', Georgia, serif;
+
+  /* 반경 — 목업에서 쓰인 값 */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 12px;
+  --r-lg: 14px;
+  --r-xl: 16px;
+  --r-2xl: 20px;
+  --r-3xl: 24px;
+  --r-pill: 99px;
+}
