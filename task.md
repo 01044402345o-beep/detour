@@ -35,7 +35,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - 공용 파일(`src/types.ts`, `package.json` 등)을 바꿔야 하면 해당 task를 멈추고 coordinator(메인 세션)에 요청합니다.
 - **테스트 파일:** 소유 파일과 같은 이름의 `*.test.ts(x)`는 자동으로 그 task가 소유합니다.
 - **체크·커밋·push:** task.md 체크, 커밋, push는 coordinator만 합니다.
-- **이용 기록:** 각 화면 task는 자기 화면의 `screen_view`·`place_view` 등 이벤트를 store 액션으로 기록합니다.
+- **이용 기록:** 각 화면 task는 자기 화면의 `screen_view`·`place_view` 등 이벤트를 store 액션으로 기록합니다. 장소·문장 ID는 `downtown.json`의 실제 ID를 그대로 넘기고, `logEvent`의 반환값이 false면 개발 모드에서 경고합니다(T1.6 R2).
 - **제보 시트:** `ui/ReportSheet`는 T2.6 소유(T2.0 `ui/` 소유의 예외)이고, T2.3은 import만 합니다.
 - **E2E 파일:** Playwright 테스트는 `app/e2e/`에 두고, phase E2E는 coordinator가 작성·실행합니다.
 
@@ -176,7 +176,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
     모든 실패 상태는 `{ retry, showStaff }` 두 선택지를 UI에 넘김(단, `unsupported`는 재시도가 의미 없으므로 `showStaff`만 — T0.2 R1 판정). 권한 대기(requesting)는 15초 기한 후 실패 처리(T1.5 R1 판정). 인식 원문은 결과로만 반환하고 저장·로그하지 않음
   - 테스트: Web Speech API 목(mock)으로 상태 전이 전부 검증
   - 완료 조건: 상태 전이 테스트 통과, 타임아웃 8초 테스트(가짜 타이머)
-- [ ] **T1.6 앱 상태·이용 기록** (진행 중 · Claude worker) — 소유: `app/src/store/`, `app/src/domain/events.ts`
+- [x] **T1.6 앱 상태·이용 기록** — 소유: `app/src/store/`, `app/src/domain/events.ts` — 2026-11-23 · reviews/T1.6_r3.md (미해결 0)
   - Zustand + persist(localStorage, 실패 시 메모리로 대체): `lang`(T0.2 골격 확장), `cart{placeId: {menuId: n}}`, `takeout`, `saved`, `reports`, `events`
   - 장소가 바뀔 때 기존 주문이 있으면 비울지 확인하는 액션(`switchPlace` → `needsConfirm`)
   - `switchPlace`와 문장 생성 시 `takeout:false` 장소면 `takeout=false`로 강제 (PRD F-05 '매장으로 고정')
@@ -199,7 +199,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - Button, Pill, Card, IconButton, TopBar, TabBar, Sheet(바텀시트), Toast, 아이콘 세트(SVG)
   - `ui/ListenButton`: 공용 듣기 버튼. TTS `no-korean-voice`·`unsupported` 안내 UI 담당 (F-07)
   - `ui/Pronunciation`: 발음 표기 공용 표시. EN·ZH는 로마자, JA는 가타카나 (F-01)
-  - 라우트 표: `/lang` `/` `/course` `/place/:id` `/order` `/practice` `/result` `/staff` `/reply` `/phrases` `/saved` `/settings` `/report`. 각 라우트는 `screens/<이름>/index.tsx`를 lazy import(빈 화면 placeholder)
+  - 라우트 표: `/lang` `/` `/course` `/place/:id` `/order` `/practice` `/result` `/staff` `/reply` `/phrases` `/saved` `/settings` `/report`. 각 라우트는 `screens/<이름>/index.tsx`를 lazy import(빈 화면 placeholder). 라우트 → `ScreenKey`(events.ts의 `SCREEN_KEYS`, S00~S13) 매핑 표를 라우터에 두고 `screen_view`는 이 키로 기록(라우트 경로를 그대로 넘기면 기록이 버려짐 — T1.6 R2)
   - 연습·직원 화면 입력 상태 계약: `{ src: 'order'|'phrase', phraseId? }`
   - 첫 실행(언어 미선택) → `/lang` 리다이렉트
   - 데스크톱에서 폰 폭(430px) 가운데 정렬, `/report`만 예외
@@ -312,7 +312,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | Phase | task 수 | 완료 | 병렬 |
 |---|---|---|---|
 | 0 기반 | 4 | 4 | 순차 |
-| 1 데이터·도메인 | 6 | 4 | 6개 동시 |
+| 1 데이터·도메인 | 6 | 5 | 6개 동시 |
 | 2 화면 | 7 | 0 | T2.0 후 6개 동시 |
 | 2.5 시연 영상 | 1 | 0 | Phase 3과 병렬 |
 | 3 오프라인·배포 | 3 | 0 | T3.1 → T3.2 순차, T3.3 병렬 |
