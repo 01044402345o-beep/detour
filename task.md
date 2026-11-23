@@ -283,7 +283,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - "오프라인 준비 완료" 조건: 프리캐시 목록 전부 캐시됨 → 설정 화면에 표시
   - 새 버전 배포 시 캐시 갱신(업데이트 토스트)
   - 완료 조건 [배포 전]: preview에서 ① "오프라인 준비 완료" 표시 → 네트워크 차단 → 새로고침 → 미방문 화면 포함 전 화면 열림, ② 업데이트 토스트 확인(빌드 A preview 접속 → 빌드 B로 다시 build·preview → 새로고침 시 토스트 → 새 버전 적용, 수동 확인). [배포 후] 조건 없음 → 이 시점에 체크
-- [ ] **T3.2 성능·접근성 점검** — T3.1 후 고정한 빌드를 측정. 수정이 필요하면 coordinator가 해당 파일 담당 task로 되돌림
+- [x] **T3.2 성능·접근성 점검** — T3.1 후 고정한 빌드를 측정. 수정이 필요하면 coordinator가 해당 파일 담당 task로 되돌림 — 2026-11-23 · reviews/T3.2_metrics.md 4회차(커밋 5f88faa) 기준 미달 0 · reviews/T3.2_r2_verdict.md (미해결 0)
   - 첫 로드 JS gzip 200KB 이하(빌드 리포트), Fast 4G·캐시 없음 기준 첫 화면 3초 이내, Lighthouse 접근성 90 이상
   - axe 검사(대비) + 모든 버튼 44px 자동 검사 스크립트를 Lighthouse와 함께 실행
   - 완료 조건: 측정 결과를 `reviews/T3.2_metrics.md`에 기록, 기준 미달 0

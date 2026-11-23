@@ -1,0 +1,272 @@
+{
+  "commit": "5f88faa2ffd41cee0d9ee7dcd1f8c392939109f1",
+  "digest": "983f2786aa8639ec0a0f3fd13030d192f07b1f6e3c7a3e90e16c51b900e71d11",
+  "count": 53,
+  "files": [
+    {
+      "path": "assets/Course-BnuaEj6A.js",
+      "bytes": 158031,
+      "sha256": "c5c1782194c2986db88b20ff67d045e04075a6bc3651464e123eaca2a3f764a6"
+    },
+    {
+      "path": "assets/Course-CI48-jVE.css",
+      "bytes": 18878,
+      "sha256": "58d9475022e2162b5a66507502cb1609eb6338ef70de118711fb617631ca6745"
+    },
+    {
+      "path": "assets/data-N-_f8IT5.js",
+      "bytes": 18990,
+      "sha256": "524adb2c2e44c0c0024ce28f2584de87b4e3ba46a31dd5bf5905d7b3363cf5af"
+    },
+    {
+      "path": "assets/externalMap-CrF5rUqS.js",
+      "bytes": 327,
+      "sha256": "ec4efcd752a91210697fa6171328fa5c3f89f49e44edd24d027c68953368b6b0"
+    },
+    {
+      "path": "assets/Home-D9OSLlFI.css",
+      "bytes": 3215,
+      "sha256": "07baa32baf7073a208cd0b4cf4d1bee48e25c2a269dac9eb5433ee1f60fb88c0"
+    },
+    {
+      "path": "assets/Home-HkznEJ11.js",
+      "bytes": 6665,
+      "sha256": "0e97965b80cf05d586c18baa56c7752e2f8818728acffc51765d481d8e19a3b4"
+    },
+    {
+      "path": "assets/index-_UcCwkH2.js",
+      "bytes": 307080,
+      "sha256": "f15526472eba72920d0ea45dca39be5d8bd7a80418662a3137aa41bae2239034"
+    },
+    {
+      "path": "assets/index-DkHd6Vx4.css",
+      "bytes": 6816,
+      "sha256": "fb7b6f9375aa66a3c594f2292736b0071979db23978f95f03380ea9d6cf9ea67"
+    },
+    {
+      "path": "assets/Lang-D_k-MvSX.js",
+      "bytes": 1902,
+      "sha256": "fad45838427739861d37fe3c515afb2178ac8bce28c3658c5abdc0063caa8416"
+    },
+    {
+      "path": "assets/Lang-DsDLQCVo.css",
+      "bytes": 2635,
+      "sha256": "032efe401f1d0d2d5d037abe81ee7e72ea25a2e41e2dacceda1afadf682b8e27"
+    },
+    {
+      "path": "assets/langNames-Ca44eKum.js",
+      "bytes": 124,
+      "sha256": "4208adf36e6e58cceb695639edbc21c838435c1d959f872e78ec682ef3bc9216"
+    },
+    {
+      "path": "assets/logOrWarn-w915zPuq.js",
+      "bytes": 43,
+      "sha256": "064411e3fa67b3415d82c151a880f8bba9d43431751951055b0eea006df77a38"
+    },
+    {
+      "path": "assets/navState-CjcRsB4B.js",
+      "bytes": 294,
+      "sha256": "416956524b6e5dbdd54b7308d8445418cd04e5417285b0131b9f0d9ab3c025fd"
+    },
+    {
+      "path": "assets/Order-CSG093h7.css",
+      "bytes": 2410,
+      "sha256": "3a019ed277fcd3ef87b5449733433bf9b3e34266947e6e5ccd2454e23f018536"
+    },
+    {
+      "path": "assets/Order-DXyNZsdQ.js",
+      "bytes": 3385,
+      "sha256": "825bb93ebd87a4818ec6d73aff1ea44a686bcce6b1e233863d84ea1f4986cb4b"
+    },
+    {
+      "path": "assets/orderSentence-D9zSjO1Y.js",
+      "bytes": 2887,
+      "sha256": "61b98c086e11f140c1ecd807fe68724925a81ed21c633fb2560b9708743ac851"
+    },
+    {
+      "path": "assets/Phrases-Dny2z-Aa.css",
+      "bytes": 1154,
+      "sha256": "3f5ca365082f1b4451f71059f7a72f707bf7c3f9727f512a895ea128812a90ec"
+    },
+    {
+      "path": "assets/Phrases-qPcGuadq.js",
+      "bytes": 1980,
+      "sha256": "b7df6ab4b3b5138fe1c80154e58f6b1e7a908aeea887365a641aa31a00142151"
+    },
+    {
+      "path": "assets/Place-Cb6zWyvI.js",
+      "bytes": 10314,
+      "sha256": "d31ee538ee222cdea615ecc1f9f78bcef0d49e626029a9cdf9800f56cb812ed0"
+    },
+    {
+      "path": "assets/Place-CopcNYds.css",
+      "bytes": 4744,
+      "sha256": "21cbe29af6d01f388267f61ea5a0507ae3cd5faf761b7520d365fc4a1a3ad051"
+    },
+    {
+      "path": "assets/practice-_o82GD9S.js",
+      "bytes": 5649,
+      "sha256": "2e38454a872e22702a6386cb80003a2789fc6fe926b2513a25627791d1eab99a"
+    },
+    {
+      "path": "assets/Practice-DREjNvSR.js",
+      "bytes": 7336,
+      "sha256": "bb7b59d215bd907ee9a2df76be1657665c54c43d083e0ae194a276271753c59e"
+    },
+    {
+      "path": "assets/practice-DSiyspUL.css",
+      "bytes": 3482,
+      "sha256": "04ec72b5bb2ac8936d1c65bb10d7edc30a1979b7d4e1ea648d62cc00df4ec948"
+    },
+    {
+      "path": "assets/Reply-Bc65SJ6D.js",
+      "bytes": 1515,
+      "sha256": "21697044455ae5cf1720554af1ad4e2d1800045cbf77bb7a2a065c89c0209e9b"
+    },
+    {
+      "path": "assets/Reply-DF0wqGRW.css",
+      "bytes": 1140,
+      "sha256": "4cc276a1041a13b8104aceb779f07b39a39ecac98af6e92cfc95c781f79bdf8c"
+    },
+    {
+      "path": "assets/replyState-Bb-n0d3k.js",
+      "bytes": 1582,
+      "sha256": "95fd70b1a520989dd132b8ddab04276794c92dd768fecd18d0de681f946ea032"
+    },
+    {
+      "path": "assets/Report-D1VCM_Jo.css",
+      "bytes": 3376,
+      "sha256": "caab07157a9489ef29c13fee942ceca44717774a00f472df8515e835ee7597f8"
+    },
+    {
+      "path": "assets/Report-DVffL1QE.js",
+      "bytes": 8341,
+      "sha256": "646429a174624dfa69baae6a109870e8e8b6a09dd631b90f5e21135c33eb8850"
+    },
+    {
+      "path": "assets/ReportSheet-BO6y8BT7.css",
+      "bytes": 338,
+      "sha256": "6c2bcee628c0b337b34e86a5f8e566d788d7ef3fcd57b18db89cdc70b8a8b3af"
+    },
+    {
+      "path": "assets/ReportSheet-C0U2rzZP.js",
+      "bytes": 1126,
+      "sha256": "49fa207b90da86788015ebe34d89056350e8d1c1f72ca969a649fd41cbaded0d"
+    },
+    {
+      "path": "assets/Result-DfojUHDE.js",
+      "bytes": 3406,
+      "sha256": "9cefb6ee0f3eb1a58be952c2092f4b43b01e79d220d3352cf55ec351c6ede2a4"
+    },
+    {
+      "path": "assets/Result-DvqlIgll.css",
+      "bytes": 1429,
+      "sha256": "46aae07f1b85b92c9a6e3106c84e0e9a83d2e21d96121b088d36de16ec7ff5d8"
+    },
+    {
+      "path": "assets/Saved-Ba5auLyG.css",
+      "bytes": 1259,
+      "sha256": "7e63b47e1cc480fea31c8fcfc764460be4a98248fd3caf85066107e9897a3869"
+    },
+    {
+      "path": "assets/Saved-CwbA8HS0.js",
+      "bytes": 2984,
+      "sha256": "67413ab0e6126f8e90b28be9a2201d7c056fffe12417c693051a1acd791f31fa"
+    },
+    {
+      "path": "assets/Settings-BQmzlPrX.css",
+      "bytes": 1608,
+      "sha256": "65ec9db6b593a0eb867b52972d529106308bb429cf596501edf95f29ac374ba1"
+    },
+    {
+      "path": "assets/Settings-ChizMnHk.js",
+      "bytes": 2732,
+      "sha256": "8c6fe9d150f6c87929b246e1c1c68e3b28f41d452be2e5123b5750932f40d0f5"
+    },
+    {
+      "path": "assets/Staff-BdHnt2cV.css",
+      "bytes": 2452,
+      "sha256": "8bf935a96cede595bdc5bf159963429fd5832c3215d4e7ac62bc32e4ddca34b5"
+    },
+    {
+      "path": "assets/Staff-DRbdhTWx.js",
+      "bytes": 4315,
+      "sha256": "b952dc52089e681946674116420a5d9262959cfa62e658d2f195bbdfd421334a"
+    },
+    {
+      "path": "assets/ui-DwUnNj_E.js",
+      "bytes": 4472,
+      "sha256": "1fda10cf5cc26fbee2f5e1e3bfd0b90bdec637dee9d51afada86057731124191"
+    },
+    {
+      "path": "assets/useOrder-BfFTF8Fw.js",
+      "bytes": 6169,
+      "sha256": "2cfa3b0da507afbc374dabbd6c4e8fee5d1a632a6fb896e4b8f489dfdcd6028b"
+    },
+    {
+      "path": "assets/useOrder-P7jxGv2T.css",
+      "bytes": 770,
+      "sha256": "ccdf226713dfa8043696981c87209f2204c41e319751d4998bc08e40b7bf2a55"
+    },
+    {
+      "path": "assets/virtual_pwa-register-DgcTGdtd.js",
+      "bytes": 1148,
+      "sha256": "b36bd58bc09cf30343381f8137cb69c499e04b71cd73aaa067df5ff169ac22aa"
+    },
+    {
+      "path": "assets/workbox-window.prod.es5-Bd17z0YL.js",
+      "bytes": 5653,
+      "sha256": "17bcc17d60dc78f927834b880c39649b03af46fd1f5cdbb8c42c5ae2b515dce9"
+    },
+    {
+      "path": "favicon.svg",
+      "bytes": 427,
+      "sha256": "8852a077373bc1b04fdd2f761f27cb3fd113aabea7055a8aab3c4d058d5efa39"
+    },
+    {
+      "path": "icons/apple-touch-icon.png",
+      "bytes": 12962,
+      "sha256": "f33606745a3e6e11fdd4aed93c264362849cfa14106709bc7f0fbbba1197a532"
+    },
+    {
+      "path": "icons/icon-192.png",
+      "bytes": 13780,
+      "sha256": "da0e7cc64a669eea2d30a0446d55235128243d04e09ae1a2ffcbfae0f04e0c9a"
+    },
+    {
+      "path": "icons/icon-512.png",
+      "bytes": 76293,
+      "sha256": "d2b98c1b00046cffc43511059def52869544a73dff13242b3a35dc1ee03a5c1f"
+    },
+    {
+      "path": "icons/maskable-512.png",
+      "bytes": 42634,
+      "sha256": "87b37da538248be6702ef754da703e9ec16a3af3497385062ba1e70443763ad9"
+    },
+    {
+      "path": "index.html",
+      "bytes": 1199,
+      "sha256": "99d96c5a7365019dcc64c4af17d2d98d189ceb82bf61f33be3a2fa2fcd2b0c14"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 800,
+      "sha256": "afb4034a14b44498563208fea2a327d069dc07e288a396f053b2a96e0e7c54f1"
+    },
+    {
+      "path": "qr.png",
+      "bytes": 7323,
+      "sha256": "45cdd9ca77748ad24d410d254e48c6d80ef7e182d5ee88d9e2baed0592fbbae6"
+    },
+    {
+      "path": "qr.svg",
+      "bytes": 1498,
+      "sha256": "16347ba9e3e32b0a6200489e95197631ab96dbea54966affd866c98965687788"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 28107,
+      "sha256": "abf7baef233b0ac2e87fd228d92656d47d0c3f53e2539b11c7994503dcf8322a"
+    }
+  ]
+}
