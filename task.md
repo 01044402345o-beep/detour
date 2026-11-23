@@ -287,7 +287,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 첫 로드 JS gzip 200KB 이하(빌드 리포트), Fast 4G·캐시 없음 기준 첫 화면 3초 이내, Lighthouse 접근성 90 이상
   - axe 검사(대비) + 모든 버튼 44px 자동 검사 스크립트를 Lighthouse와 함께 실행
   - 완료 조건: 측정 결과를 `reviews/T3.2_metrics.md`에 기록, 기준 미달 0
-- [ ] **T3.3 배포·QR** (진행 중 · Claude worker) (병렬) — 소유: `.github/workflows/`, `app/public/qr.png`, `app/public/qr.svg`, `deck/`, `.gitignore`의 `!/deck/` 1줄(0.3절 허용 목록 반영)
+- [x] **T3.3 배포·QR** (병렬) — 소유: `.github/workflows/`, `app/public/qr.png`, `app/public/qr.svg`, `deck/`, `.gitignore`의 `!/deck/` 1줄(0.3절 허용 목록 반영) — 2026-11-23 · reviews/T3.3_r2.md (미해결 0) · [배포 후] 사용자 안드로이드 휴대폰으로 슬라이드 QR 스캔 → 앱 열림 확인(배포 커밋 b352c03)
   - 배포 URL QR 이미지 생성(시연 자료용 PNG·SVG). 배포 URL은 고정값이므로 배포 전에 만듦
   - 완료 조건 [배포 전]: QR 이미지 생성, 시연 자료(발표 슬라이드)에 QR 삽입
   - 완료 조건 [배포 후]: `main` 배포 확인, 슬라이드 화면의 QR을 실제 휴대폰으로 스캔 → 앱 열림 → smoke 뒤 체크 (0.3절 3-f)
