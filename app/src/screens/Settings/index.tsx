@@ -5,6 +5,7 @@
  * - 운영자 리포트(S13) 진입
  * - 데모 데이터 초기화: 확인 시트 → store resetData(주문·저장·제보·기록 비움, 언어 유지)
  *   → 언어 선택 화면에서 시연을 처음부터
+ * - 오프라인 준비 완료 표시(T3.1): 서비스 워커 프리캐시 목록이 전부 캐시됐을 때만 보임 (sw/pwa.ts)
  * - 하단: 가게 정보 정정·삭제 안내와 연락처 자리(PRD 10장, 값은 contact.ts)
  */
 import { useState } from 'react';
@@ -13,6 +14,7 @@ import { DEFAULT_LANG, useT } from '../../i18n';
 import { LANG_NAMES } from '../../i18n/langNames';
 import { PATHS } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
+import { usePwaStore } from '../../sw/pwa';
 import { LANGS } from '../../types';
 import { Button, Card, CardButton, Icon, Pill, Sheet, cx, useToast } from '../../ui';
 import { TAKEDOWN_CONTACT } from './contact';
@@ -25,6 +27,7 @@ export default function SettingsScreen() {
   const lang = useAppStore((s) => s.lang) ?? DEFAULT_LANG;
   const setLang = useAppStore((s) => s.setLang);
   const resetData = useAppStore((s) => s.resetData);
+  const offlineReady = usePwaStore((s) => s.offlineReady);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const doReset = () => {
@@ -74,6 +77,13 @@ export default function SettingsScreen() {
           <Icon name="lock" size={16} />
           <span>{t('settings.privacy')}</span>
         </Card>
+
+        {offlineReady && (
+          <Card className="set-offline" data-testid="offline-ready">
+            <Icon name="check" size={16} />
+            <span>{t('pwa.offlineReady')}</span>
+          </Card>
+        )}
 
         <CardButton
           className="set-row"

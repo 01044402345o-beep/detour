@@ -1,0 +1,41 @@
+빌드 A: assets/index-D9fEGu6V.js / assets/index-DkHd6Vx4.css
+오프라인 준비 완료 표시: 317ms 안에 보임 — "Ready to use offline"
+SW scope=http://localhost:4180/detour/ script=http://localhost:4180/detour/sw.js controlled=true precache={"total":52,"cached":52}
+manifest /detour/manifest.webmanifest: start_url=/detour/ scope=/detour/ icons=4
+첫 방문·새로고침 없이 오프라인 → #/phrases: 열림
+첫 방문·새로고침 없이 오프라인 → #/place/mus: 열림
+첫 방문·새로고침 없이 오프라인 → #/report: 열림
+오프라인 새로고침: 운영자 리포트 화면 열림
+코스 지도 오프라인: map-sketch 보임=true, map-tiles 개수=0
+오프라인 주문 흐름: 내 주문 문장 "튀김소보로 한 개 주세요."
+오프라인 연습 결과 점수: 100
+
+| 경로 | 보인 화면 | 결과 |
+|---|---|---|
+| `#/` | screen-home | 열림 |
+| `#/course` | screen-course | 열림 |
+| `#/place/ssd` | screen-place | 열림 |
+| `#/place/eun` | screen-place | 열림 |
+| `#/place/mus` | screen-place | 열림 |
+| `#/place/gwc` | screen-place | 열림 |
+| `#/phrases` | screen-phrases | 열림 |
+| `#/saved` | screen-saved | 열림 |
+| `#/settings` | screen-settings | 열림 |
+| `#/report` | screen-report | 열림 |
+| `#/lang` | screen-lang | 열림 |
+| 성심당 담기 → 내 주문 (UI) | screen-order | 열림 |
+| 내 주문 → 연습 (UI) | screen-practice | 열림 |
+| 연습 → 결과 (UI, STT 목) | screen-result | 열림 |
+| 결과 → 직원 화면 (UI) | screen-staff | 열림 |
+| 직원 화면 → 응답 (UI) | screen-reply | 열림 |
+| `#/order` 새로고침 | screen-order | 열림 |
+| `#/staff` 새로고침 | screen-staff | 열림 |
+빌드 B: assets/index-CMjE8R1t.js / assets/index-UIjGjIpQ.css (A와 CSS 다름=true)
+새로고침 후 업데이트 토스트: "A new version is available. Later Update"
+토스트 시점 화면의 CSS: /detour/assets/index-DkHd6Vx4.css (아직 A)
+390px 토스트 2개: 업데이트 토스트 하단~일반 토스트("Saved") 상단 간격 27px, 탭바 위=true, 업데이트 버튼 클릭 가능=true (72×44)
+360px 토스트 2개: 업데이트 토스트 하단~일반 토스트("Removed") 상단 간격 27px, 탭바 위=true, 업데이트 버튼 클릭 가능=true (72×44)
+'Update' 클릭 → 새로고침 → CSS: /detour/assets/index-UIjGjIpQ.css (B 적용=true), 토스트 사라짐=true
+새 버전에서도 오프라인 준비 완료 표시
+잡히지 않은 페이지 오류: 0건 
+결과: PASS

@@ -9,6 +9,7 @@
 !/.gitignore
 !/README.md
 !/video/
+!/deck/
 
 # 허용 경로 안에서도 빌드 산출물·비밀값은 제외
 **/node_modules/

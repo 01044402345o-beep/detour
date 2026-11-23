@@ -75,6 +75,22 @@
   margin-top: 2px;
 }
 
+/* 오프라인 준비 완료 (T3.1) */
+.set-offline.ui-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 14px 16px;
+  color: var(--sea-d);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.set-offline .ui-icon {
+  flex: none;
+}
+
 .set-row.ui-card {
   margin-top: 14px;
 }

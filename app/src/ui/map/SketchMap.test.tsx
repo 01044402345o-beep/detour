@@ -90,6 +90,15 @@ describe('SketchMap (SVG 약도)', () => {
     }
   });
 
+  it('약도 모드에는 OSM 데이터·링크가 없음 → 누를 수 있는 요소는 44px 이상 핀뿐 (T3.2 → R3)', () => {
+    const { container } = render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
+    expect(container.querySelectorAll('a')).toHaveLength(0);
+    expect(container.textContent).not.toContain('OpenStreetMap');
+    const pressables = container.querySelectorAll('[role="button"], [tabindex]');
+    expect(pressables).toHaveLength(STOPS.length);
+    pressables.forEach((el) => expect(el.getAttribute('data-testid')).toMatch(/^map-pin-/));
+  });
+
   it('정류장 연결선이 정류장 수만큼 꼭짓점을 가짐', () => {
     render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
     const d = screen.getByTestId('map-line').getAttribute('d') ?? '';

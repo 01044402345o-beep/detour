@@ -1,0 +1,49 @@
+/* 업데이트 토스트 (T3.1). 기본 모양은 .ui-toast(styles/ui.css)를 쓰고,
+   버튼을 누를 수 있도록 사라지는 애니메이션·pointer-events:none만 덮어씁니다.
+   위치: 일반 토스트(.ui-toast, bottom = 탭바 + 32px)와 겹치지 않도록 그 위로 64px 올립니다
+   (일반 토스트 1줄 ≈ 40px, 2줄 ≈ 58px + 간격). 일반 토스트가 없을 때도 같은 자리라 위치가 튀지 않습니다 (R1 M-02). */
+.ui-toast.ui-toast--update {
+  bottom: calc(var(--tabbar-h) + 32px + 64px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  z-index: 81;
+  padding: 8px 8px 8px 18px;
+  border-radius: 22px;
+  text-align: left;
+  animation: ui-fadein 0.2s ease;
+  pointer-events: auto;
+}
+
+.ui-toast__actions {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.ui-toast__btn {
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ui-toast__btn--primary {
+  background: #fff;
+  color: var(--ink);
+}
+
+.ui-toast__btn:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-toast.ui-toast--update {
+    animation: none;
+  }
+}

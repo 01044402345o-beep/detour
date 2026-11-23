@@ -1,7 +1,9 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import L2 from 'leaflet';
 import type L from 'leaflet';
-import { LeafletMap, TILE_TIMEOUT_MS } from './LeafletMap';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { ATTRIBUTION_H, LeafletMap, TILE_TIMEOUT_MS } from './LeafletMap';
 import type { MapStop } from './types';
 
 const STOPS: MapStop[] = [
@@ -353,5 +355,47 @@ describe('LeafletMap (OSM 타일)', () => {
     act(() => vi.advanceTimersByTime(TILE_TIMEOUT_MS * 2));
     expect(onFail).not.toHaveBeenCalled();
     expect(document.querySelector('.leaflet-container')).toBeNull();
+  });
+});
+
+describe('OSM 출처 링크 터치 영역 (T3.2 → R3)', () => {
+  const css = readFileSync(join(process.cwd(), 'src/ui/map/map.css'), 'utf8');
+  /** 선택자 블록 본문 (선택자 문자열이 정확히 일치하는 첫 규칙) */
+  const block = (sel: string) => {
+    const at = css.indexOf(`\n${sel} {`);
+    return at < 0 ? '' : css.slice(at, css.indexOf('}', at));
+  };
+
+  it('링크 상자 자체가 44×44px 이상 (min-width·min-height = --touch, inline-flex)', () => {
+    const a = block('.cmap .leaflet-control-attribution a');
+    expect(a).toMatch(/display:\s*inline-flex;/);
+    expect(a).toMatch(/min-width:\s*var\(--touch\);/);
+    expect(a).toMatch(/min-height:\s*var\(--touch\);/);
+    const tokens = readFileSync(join(process.cwd(), 'src/styles/tokens.css'), 'utf8');
+    expect(tokens).toMatch(/--touch:\s*44px;/);
+  });
+
+  it('보이는 글자 크기 10px 유지, 출처 막대도 44px 높이', () => {
+    const bar = block('.cmap .leaflet-control-attribution');
+    expect(bar).toMatch(/font-size:\s*10px;/);
+    expect(bar).toMatch(/min-height:\s*var\(--touch\);/);
+  });
+
+  it('출처 막대만큼 fitBounds 아래 여백을 둠 (핀이 막대에 가리지 않게)', () => {
+    const bar = block('.cmap .leaflet-bottom.leaflet-right .leaflet-control-attribution');
+    const mb = Number(/margin-bottom:\s*(\d+)px;/.exec(bar)?.[1]);
+    expect(ATTRIBUTION_H).toBeGreaterThanOrEqual(44 + mb);
+  });
+
+  it('렌더된 출처 링크는 위 규칙이 걸리는 자리(.cmap 안 출처 컨트롤)에 있음', () => {
+    const { container } = render(
+      <div className="cmap">
+        <LeafletMap stops={STOPS} onSelect={() => {}} onFail={() => {}} label="Course" />
+      </div>,
+    );
+    const links = container.querySelectorAll('a');
+    expect(links).toHaveLength(1);
+    expect(links[0].closest('.cmap .leaflet-control-attribution')).not.toBeNull();
+    expect(links[0].textContent).toBe('OpenStreetMap');
   });
 });

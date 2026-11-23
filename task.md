@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v0.5 (2026-11-23) · 변경 내용은 맨 끝 '변경 이력' 참고 |
+| 문서 버전 | v0.6 (2026-11-23) · 변경 내용은 맨 끝 '변경 이력' 참고 |
 | 기준 문서 | `prd.md` v0.5 (v0.3까지 Codex 교차 검증 미해결 0건, v0.4·v0.5 변경분은 `reviews/docs_review_phase1.md`·판정으로 검토), `mockup/index.html` |
 | 저장소 | https://github.com/01044402345o-beep/detour |
 | 배포 URL | https://01044402345o-beep.github.io/detour/ |
@@ -40,7 +40,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - **E2E 파일:** Playwright 테스트는 `app/e2e/`에 두고, phase E2E는 coordinator가 작성·실행합니다.
 
 ### 0.3 Git·배포 규칙
-- 저장소 루트 = 이 폴더(`29_로컬`). `.gitignore`를 **허용 목록 방식**으로 써서 `app/`, `prd.md`, `task.md`, `mockup/`, `reviews/`, `.github/`, `.gitignore`, `README.md`, `video/`(T2.7 이후, 소스 코드만)만 올립니다. (HWP·영상·신청서 등 개인 자료는 올리지 않음)
+- 저장소 루트 = 이 폴더(`29_로컬`). `.gitignore`를 **허용 목록 방식**으로 써서 `app/`, `prd.md`, `task.md`, `mockup/`, `reviews/`, `.github/`, `.gitignore`, `README.md`, `video/`(T2.7 이후, 소스 코드만), `deck/`(T3.3 시연 슬라이드 HTML, QR은 `app/public/qr.svg` 참조)만 올립니다. (HWP·영상·신청서 등 개인 자료는 올리지 않음)
 - 허용 목록 아래에 빌드 산출물을 명시 제외합니다: `**/node_modules/`, `**/dist/`, `**/coverage/`, `**/test-results/`, `**/playwright-report/`, `**/.env*`.
 - 브랜치: `main`(배포) / `dev`(작업). task는 `dev`에 커밋합니다. 커밋 메시지는 `T1.3: 주문 문장 생성 모듈` 형식.
 - 커밋은 coordinator 한 명이 task 소유 파일만 `git add <경로>`로 stage해 수행합니다. task 체크 시 `dev`에 push합니다.
@@ -254,7 +254,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 > Phase 2 E2E 통과 후 시작합니다. 앱 코드(`app/`)를 바꾸지 않고 앱 배포와 무관하므로(0.3절 Phase 2.5) **Phase 3과 병렬로 진행**합니다. Phase 4에서 콘텐츠가 바뀌면 T4.1a로 바뀐 화면이 나오는 장면을 Phase 4 배포 커밋에서 **다시 녹화**한 뒤 렌더링합니다(T2.7 재실행).
 
-- [ ] **T2.7 Remotion 시연 영상** — 소유: `video/` 전체(렌더 결과 `video/out/`은 git 제외)
+- [x] **T2.7 Remotion 시연 영상** — 소유: `video/` 전체(렌더 결과 `video/out/`은 git 제외) — 2026-11-23 · reviews/T2.7_r2.md (미해결 0) · 렌더 video/out/detour-demo-ko·en.mp4 88.8초 · 남은 [사용자] 항목: edge-tts 이용 조건 확인, 음성 청취
   - 준비: Remotion 에이전트 스킬 설치, `video/`에 Remotion 프로젝트 생성. Remotion 라이선스 조건(개인·소규모 무료 여부)을 확인해 `reviews/T2.7_license.md`에 기록
   - 장면 구성(약 90초, 폰 프레임 390×844 + 자막): 문제 제기(빵집 한 곳 집중) → 언어 선택 → 원도심 코스 → 성심당 메뉴 담기 → 한국어 주문 카드 → 듣고 따라 말하기·인식 일치도 → 직원에게 보여주기·직원 응답 → 광천식당(매장 식사) → 운영자 리포트("빵집 다음은 어디였나") → 마무리(QR·배포 URL)
   - 앱 화면은 **Phase 2 배포 커밋의 `vite preview`에서 Playwright로 자동 녹화**한 클립을 사용합니다. 컴포넌트 import는 쓰지 않습니다(**사용자 결정 U-1**). 앱 쪽 수정이 필요하면 coordinator에 요청합니다
@@ -269,7 +269,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 ## Phase 3 — 오프라인·성능·배포 (순차: T3.1 → 빌드 고정 → T3.2, T3.3은 병렬. 순서는 0.3절 3-a~3-f)
 
-- [ ] **T3.1 PWA·오프라인** — 소유: `app/public/manifest.webmanifest`, `app/src/sw/`, `vite.config.ts`, `screens/Settings*`의 오프라인 표시 부분, `ui/Toast` 연결, `package.json`·lock(플러그인 추가 시)
+- [x] **T3.1 PWA·오프라인** — 소유: `app/public/manifest.webmanifest`, `app/src/sw/`, `vite.config.ts`, `screens/Settings*`의 오프라인 표시 부분, `ui/Toast` 연결, `package.json`·lock(플러그인 추가 시) — 2026-11-23 · reviews/T3.1_r4.md (미해결 0) · 오프라인 검증 PASS(reviews/T3.1_offline.md)
   - manifest(start_url·scope `/detour/`, 아이콘), service worker 프리캐시: 앱 셸 + 3개 언어 사전 + 원도심 JSON + SVG 약도. OSM 타일은 프리캐시 제외
   - "오프라인 준비 완료" 조건: 프리캐시 목록 전부 캐시됨 → 설정 화면에 표시
   - 새 버전 배포 시 캐시 갱신(업데이트 토스트)
@@ -278,7 +278,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 첫 로드 JS gzip 200KB 이하(빌드 리포트), Fast 4G·캐시 없음 기준 첫 화면 3초 이내, Lighthouse 접근성 90 이상
   - axe 검사(대비) + 모든 버튼 44px 자동 검사 스크립트를 Lighthouse와 함께 실행
   - 완료 조건: 측정 결과를 `reviews/T3.2_metrics.md`에 기록, 기준 미달 0
-- [ ] **T3.3 배포·QR** (병렬) — 소유: `.github/workflows/`, `app/public/qr.png`
+- [ ] **T3.3 배포·QR** (진행 중 · Claude worker) (병렬) — 소유: `.github/workflows/`, `app/public/qr.png`, `app/public/qr.svg`, `deck/`, `.gitignore`의 `!/deck/` 1줄(0.3절 허용 목록 반영)
   - 배포 URL QR 이미지 생성(시연 자료용 PNG·SVG). 배포 URL은 고정값이므로 배포 전에 만듦
   - 완료 조건 [배포 전]: QR 이미지 생성, 시연 자료(발표 슬라이드)에 QR 삽입
   - 완료 조건 [배포 후]: `main` 배포 확인, 슬라이드 화면의 QR을 실제 휴대폰으로 스캔 → 앱 열림 → smoke 뒤 체크 (0.3절 3-f)
@@ -338,3 +338,4 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | v0.3 | 2026-11-23 | Codex 검토 R2(`reviews/task_review_r2.md`)와 판정(`reviews/task_review_r2_verdict.md`) 반영. 반영 항목: H-01(배포 게이트 Phase 0~4 순서, 완료 조건 [배포 전]/[배포 후] 분리), R2-M-01(smoke SW 항목 Phase 3 이후로 한정), R2-M-02(T4.2 검수 반영 대상 확대), R2-M-03(T2.0 placeholder 소유). T0.1a GitHub Pages 활성화 추가(coordinator가 gh api로 수행, 실패 시에만 [사용자]). 사용자 결정 반영: 저장소 PUBLIC 전환(T0.1, 첫 push 직전, `git ls-files` 개인 자료 0건 선행). 상세는 `reviews/task_fix_r2.md` |
 | v0.4 | 2026-11-23 | T1.5 `unsupported`는 `showStaff`만(T0.2 R1 판정). 사용자 요청으로 Phase 2.5 T2.7 Remotion 시연 영상 추가 (Codex 교차 검증 대상). 이어서 v0.4 검토(`reviews/task_review_v04.md`)·판정(`reviews/task_review_v04_verdict.md`) 반영: M-01(Phase 2.5 앱 배포 게이트 제외), M-02(Playwright 녹화 클립·녹화 커밋 기록·재녹화), L-01(상단 버전 v0.4, 진행 표 Phase 0 완료 3), A-1(영상 상호 표기·소재 재사용 금지·`video/` 공개 범위). 사용자 결정 U-1(preview 녹화), U-2(`video/` 소스만 공개), U-3(Kokoro·edge-tts 내레이션, edge-tts 조건 [사용자] 확인). 상세는 `reviews/task_fix_v04.md` |
 | v0.5 | 2026-11-23 | Phase 1 판정 후속 반영: T1.2 R1(S13 한국어 고정·operatorKo), T1.5 R1~R3(requesting 15초, T2.0 ListenButton TTS 계약, T4.3 실측 시나리오), T1.6 R1·R2(effectiveTakeout, ScreenKey 매핑, 리포트 ssd·500건·reports 기준), T1.1 R1(확인 전 표시, T1.1b 신설), T1.3 R1(T4.2 수량 칩). 교차 검증 `reviews/docs_review_phase1.md`, 판정 `reviews/docs_review_phase1_verdict.md` |
+| v0.6 | 2026-11-23 | Phase 1·2 진행 중 판정 반영(T2.0~T2.6 화면 계약, T4.3 실측 ⑥⑦ 추가), T3.3 R1 판정: 0.3절 허용 목록·T3.3 소유에 `deck/`·`qr.svg` 추가 |

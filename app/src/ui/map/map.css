@@ -77,14 +77,45 @@
   border-radius: 50%;
 }
 
+/*
+ * OSM 출처 표시 (T3.2 측정 → R3): 글자 크기(10px)는 그대로 두고 링크 상자 자체를 44×44px 이상으로 키웁니다.
+ * (측정은 링크의 getBoundingClientRect 기준이라 ::before 확장은 세지 않음)
+ * 둥근 모서리(24px)에 글자가 잘리지 않도록 오른쪽·아래 여백을 둡니다.
+ * 높아진 막대가 핀을 가리지 않게 LeafletMap의 fitBounds 아래 여백(ATTRIBUTION_H)을 늘렸습니다.
+ */
 .cmap .leaflet-control-attribution {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch);
+  margin: 0 14px 4px 0;
+  padding: 0 8px;
+  border-radius: var(--r-sm);
   font-size: 10px;
+  line-height: 1.2;
   color: var(--ink2);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.cmap .leaflet-bottom.leaflet-right .leaflet-control-attribution {
+  margin-right: 14px;
+  margin-bottom: 4px;
 }
 
 .cmap .leaflet-control-attribution a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 0 4px;
   color: var(--ink2);
   text-decoration: underline;
+}
+
+.cmap .leaflet-control-attribution a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -3px;
+  border-radius: var(--r-xs);
 }
 
 .cmap-note {

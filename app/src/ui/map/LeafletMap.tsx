@@ -23,6 +23,10 @@ export const OSM_ATTRIBUTION =
 
 /** 타일 묶음 하나가 이 시간 안에 다 처리되지 않으면 실패로 봅니다 */
 export const TILE_TIMEOUT_MS = 8000;
+/** fitBounds 기본 여백 (px) */
+const FIT_PAD = 36;
+/** 출처 표시 막대 높이(터치 44px) + 아래 여백 4px — map.css와 맞춤 */
+export const ATTRIBUTION_H = 48;
 const TILE_MIN_ZOOM = 0;
 const TILE_MAX_ZOOM = 19;
 
@@ -70,7 +74,12 @@ export function LeafletMap({ stops, onSelect, onFail, label, onMapReady }: Leafl
     map.attributionControl.setPrefix(false);
     // 뷰를 먼저 정해야 핀이 바로 DOM에 붙습니다(접근성 속성 지정)
     const latlngs = stops.map((s) => L.latLng(s.geo.lat, s.geo.lng));
-    map.fitBounds(L.latLngBounds(latlngs), { padding: [36, 36], maxZoom: 17 });
+    map.fitBounds(L.latLngBounds(latlngs), {
+      paddingTopLeft: [FIT_PAD, FIT_PAD],
+      // 아래쪽은 출처 표시 막대(44px + 여백) 위로 핀이 오게
+      paddingBottomRight: [FIT_PAD, FIT_PAD + ATTRIBUTION_H],
+      maxZoom: 17,
+    });
 
     let failed = false;
     let everLoaded = false;

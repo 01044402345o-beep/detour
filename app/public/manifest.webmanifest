@@ -1,0 +1,24 @@
+{
+  "id": "/detour/",
+  "name": "Daejeon Detour",
+  "short_name": "Detour",
+  "description": "Walk Daejeon's old downtown and order in Korean with confidence.",
+  "start_url": "/detour/",
+  "scope": "/detour/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbf7ef",
+  "theme_color": "#ee6a3c",
+  "lang": "en",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
