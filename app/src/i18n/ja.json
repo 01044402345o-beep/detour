@@ -1,0 +1,209 @@
+{
+  "common": {
+    "back": "戻る",
+    "close": "閉じる",
+    "done": "完了",
+    "cancel": "キャンセル",
+    "comingSoon": "近日公開",
+    "demoBadge": "デモ"
+  },
+  "lang": {
+    "choose": "言語を選んでください",
+    "welcomeTitle": "大田を、もう一歩先へ。",
+    "welcomeSub": "ルート・実際のメニュー・使える韓国語を、インストール不要で。",
+    "start": "はじめる",
+    "pronRoman": "発音は韓国語のローマ字表記(国語のローマ字表記法)で示します。読み方の目安で、ピンインではありません。",
+    "pronKana": "発音はカタカナで示します。カタカナは近似表記です。"
+  },
+  "nav": {
+    "explore": "探す",
+    "course": "コース",
+    "phrases": "フレーズ",
+    "saved": "保存",
+    "me": "設定"
+  },
+  "home": {
+    "location": "韓国・大田",
+    "hi": "こんにちは 👋",
+    "whereTo": "今日はどこへ?",
+    "search": "場所・グルメ・フレーズを検索",
+    "pickHub": "エリアを選ぶ",
+    "seeMap": "地図",
+    "hubDown": "旧都心",
+    "hubDownSub": "パン・歴史・ご当地グルメ",
+    "hubStation": "大田駅・ソジェドン",
+    "hubStationSub": "カフェ・路地・荷物預け",
+    "hubYuseong": "儒城温泉",
+    "hubYuseongSub": "温泉・1泊",
+    "spots": "{count}か所",
+    "minutes": "{count}分",
+    "overnightKicker": "1泊してみる",
+    "overnightTitle": "儒城温泉・1号線で乗り換えなし",
+    "todayPhrase": "今日のフレーズ",
+    "todayCourse": "今日のコース",
+    "soonToast": "近日公開 — デモでは旧都心のみ利用できます。"
+  },
+  "course": {
+    "title": "旧都心 半日コース",
+    "meta": "{stops}か所・{km}km・約{hours}時間",
+    "from": "出発・中央路駅(1号線)",
+    "checked": "確認日 {date}",
+    "startWalk": "1か所目から出発",
+    "walkMin": "徒歩{min}分",
+    "stopOf": "{total}か所中 {n}か所目",
+    "dirFirst": "NAVER地図で1か所目への徒歩ルートが開きます",
+    "lineNote": "線は立ち寄り先を順に結んだもので、実際の徒歩ルートではありません。",
+    "mapOffline": "地図タイルを読み込めないため、簡易地図を表示しています。",
+    "mapStation": "中央路駅",
+    "mapStream": "大田川",
+    "mapToDaejeonStn": "大田駅へ →"
+  },
+  "place": {
+    "food": "グルメ",
+    "sight": "見どころ",
+    "openNow": "営業中",
+    "closedNow": "営業時間外",
+    "statusNote": "登録された営業時間(韓国時間)にもとづく参考情報です。",
+    "unverified": "現地確認前・参考情報",
+    "hours": "営業時間",
+    "closedOn": "定休日:{days}",
+    "tabMenu": "メニュー",
+    "tabHow": "注文方法",
+    "tabVisit": "見学方法",
+    "tabPhrases": "フレーズ",
+    "allergyTitle": "アレルギー情報",
+    "contains": "アレルギー",
+    "allergyUnknown": "アレルギー:要確認",
+    "directions": "道順",
+    "dirToast": "地図アプリが開きます",
+    "disclaimer": "各店舗と提携していない独自の案内です。公式の注文サービスではありません。",
+    "takedown": "店舗の方へ:情報の訂正・削除をご希望の場合はご連絡ください。すぐに対応します。",
+    "save": "この場所を保存",
+    "unsave": "保存を解除"
+  },
+  "menu": {
+    "signature": "看板",
+    "spicy": "辛い",
+    "addHint": "+ で注文に追加",
+    "viewOrder": "注文を見る",
+    "est": "目安 {price}",
+    "perPerson": "1人前",
+    "samplePrices": "価格は参考値",
+    "priceTbd": "価格要確認",
+    "totalTbd": "合計はレジで要確認",
+    "items": "{count}点",
+    "increase": "1つ増やす",
+    "decrease": "1つ減らす",
+    "maxQty": "1品につき9個まで",
+    "switchTitle": "ここで新しく注文しますか?",
+    "switchBody": "{place}の注文は消去されます。",
+    "switchConfirm": "消去して続ける",
+    "switchKeep": "注文を残す"
+  },
+  "order": {
+    "title": "わたしの注文",
+    "togo": "持ち帰り",
+    "here": "店内",
+    "dineInOnly": "店内飲食のみ",
+    "sayThis": "レジでこう言いましょう",
+    "practice": "話す練習",
+    "showStaff": "スタッフに見せる",
+    "empty": "注文が空です",
+    "emptyHint": "注文カードを作るには、1品以上追加してください。"
+  },
+  "audio": {
+    "listen": "聞く",
+    "listenSlow": "ゆっくり聞く(0.75倍)",
+    "noKoreanVoice": "この端末では韓国語音声が使えません。",
+    "ttsUnsupported": "このブラウザは音声の読み上げに対応していません。"
+  },
+  "practice": {
+    "title": "話す練習",
+    "tapWord": "単語をタップ",
+    "tapMic": "マイクを押して話してください",
+    "requesting": "マイクの使用を許可してください",
+    "listening": "聞いています…どうぞ",
+    "processing": "聞き取った内容を確認しています…",
+    "micStart": "録音を始める",
+    "micStop": "録音を止める",
+    "voiceNotice": "このアプリは音声も認識結果も保存しません。音声認識はブラウザの音声サービスで処理される場合があります。"
+  },
+  "stt": {
+    "failTitle": "うまく聞き取れませんでした",
+    "noSpeech": "音声を認識できませんでした。静かな場所でもう一度試すか、画面をスタッフに見せてください。",
+    "timeout": "時間内に音声が聞き取れませんでした。もう一度試すか、画面をスタッフに見せてください。",
+    "network": "音声サービスに接続できませんでした。通信状態を確認するか、画面をスタッフに見せてください。",
+    "error": "エラーのため音声認識が止まりました。もう一度試すか、画面をスタッフに見せてください。",
+    "aborted": "録音が中止されました。もう一度試すか、画面をスタッフに見せてください。",
+    "deniedTitle": "マイクが許可されていません",
+    "denied": "マイクがないと話す練習の確認ができません。代わりに画面をスタッフに見せてください。",
+    "unsupportedTitle": "音声認識が使えません",
+    "unsupported": "このブラウザは音声認識に対応していません。代わりに画面をスタッフに見せてください。",
+    "empty": "何も認識されなかったため、スコアはありません。もう一度試してください。",
+    "retry": "もう一度"
+  },
+  "result": {
+    "match": "認識一致度",
+    "matchNote": "認識された文がフレーズとどれだけ一致したかを示します。発音の評価ではありません。",
+    "great": "よくできました!🎉",
+    "almost": "あと少し!",
+    "closeMatch": "認識された文はフレーズとよく一致しました。",
+    "heard": "聞き取った内容",
+    "tip": "「{word}」があまり一致しませんでした。一音ずつゆっくり言ってみましょう。",
+    "again": "もう一度",
+    "next": "次のフレーズ",
+    "instead": "代わりにスタッフに見せる"
+  },
+  "staff": {
+    "staffReply": "スタッフの返事",
+    "play": "読み上げ",
+    "bigger": "拡大",
+    "smaller": "縮小"
+  },
+  "reply": {
+    "yesTitle": "はい!👍",
+    "yesBody": "スタッフに伝わりました。",
+    "soldTitle": "品切れです",
+    "soldBody": "別のメニューを選んでください。",
+    "waitTitle": "少々お待ちください",
+    "waitBody": "スタッフがすぐ対応します。",
+    "payTitle": "レジでお支払いください",
+    "payBody": "レジへどうぞ。",
+    "edit": "注文を変更",
+    "backToStaff": "もう一度スタッフに見せる"
+  },
+  "phrases": {
+    "title": "フレーズ",
+    "practice": "練習する"
+  },
+  "saved": {
+    "title": "保存",
+    "savedToast": "保存しました",
+    "removedToast": "削除しました",
+    "empty": "まだ保存がありません"
+  },
+  "report": {
+    "open": "情報が違う?",
+    "title": "何が違いますか?",
+    "closed": "閉店・移転",
+    "menu": "メニューが違う",
+    "price": "価格が違う",
+    "other": "その他",
+    "thanks": "ありがとうございます!再確認します。"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "privacy": "音声は保存しません。利用履歴はこの端末にのみ保存されます。",
+    "operatorReport": "運営者レポート",
+    "reset": "デモデータをリセット",
+    "resetConfirm": "この端末のデモデータをすべて削除して最初からやり直しますか?",
+    "resetDone": "デモデータをリセットしました。"
+  },
+  "pwa": {
+    "offlineReady": "オフラインで使えます",
+    "updateAvailable": "新しいバージョンがあります。",
+    "update": "更新",
+    "later": "あとで"
+  }
+}

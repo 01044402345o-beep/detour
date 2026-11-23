@@ -1,0 +1,209 @@
+{
+  "common": {
+    "back": "Back",
+    "close": "Close",
+    "done": "Done",
+    "cancel": "Cancel",
+    "comingSoon": "Coming soon",
+    "demoBadge": "DEMO"
+  },
+  "lang": {
+    "choose": "Choose your language",
+    "welcomeTitle": "Daejeon, one detour at a time.",
+    "welcomeSub": "Routes, real menus and the Korean you need — no app install.",
+    "start": "Get started",
+    "pronRoman": "Pronunciation is shown in romanized Korean (Revised Romanization). It is a reading guide, not pinyin.",
+    "pronKana": "Pronunciation is shown in katakana, which is only an approximation."
+  },
+  "nav": {
+    "explore": "Explore",
+    "course": "Course",
+    "phrases": "Phrases",
+    "saved": "Saved",
+    "me": "Me"
+  },
+  "home": {
+    "location": "Daejeon, Korea",
+    "hi": "Hi there 👋",
+    "whereTo": "Where to today?",
+    "search": "Search places, food, phrases",
+    "pickHub": "Pick a hub",
+    "seeMap": "See map",
+    "hubDown": "Old Downtown",
+    "hubDownSub": "Bakery · History · Local food",
+    "hubStation": "Station & Sojedong",
+    "hubStationSub": "Cafés · Alleys · Luggage",
+    "hubYuseong": "Yuseong Spa",
+    "hubYuseongSub": "Hot springs · Overnight",
+    "spots": "{count} spots",
+    "minutes": "{count} min",
+    "overnightKicker": "MAKE IT AN OVERNIGHT",
+    "overnightTitle": "Yuseong Spa · Line 1, no transfer",
+    "todayPhrase": "Phrase of the day",
+    "todayCourse": "Today's course",
+    "soonToast": "Coming soon — Old Downtown is open in this demo."
+  },
+  "course": {
+    "title": "Old Downtown Half-day",
+    "meta": "{stops} stops · {km} km · about {hours} hrs",
+    "from": "Start · Jungang-ro Stn (Line 1)",
+    "checked": "Checked {date}",
+    "startWalk": "Start with stop 1",
+    "walkMin": "{min} min walk",
+    "stopOf": "STOP {n} OF {total}",
+    "dirFirst": "Opens walking directions to stop 1 in Naver Map",
+    "lineNote": "Lines connect the stops in order. They are not actual walking routes.",
+    "mapOffline": "Map tiles are unavailable, so a simplified map is shown.",
+    "mapStation": "Jungang-ro Stn",
+    "mapStream": "Daejeoncheon Stream",
+    "mapToDaejeonStn": "To Daejeon Stn →"
+  },
+  "place": {
+    "food": "FOOD",
+    "sight": "SIGHTS",
+    "openNow": "Open now",
+    "closedNow": "Closed now",
+    "statusNote": "Based on the listed hours (Korea time). For reference only.",
+    "unverified": "Not yet verified on site · sample info",
+    "hours": "Hours",
+    "closedOn": "Closed: {days}",
+    "tabMenu": "Menu",
+    "tabHow": "How to order",
+    "tabVisit": "How to visit",
+    "tabPhrases": "Phrases",
+    "allergyTitle": "Allergy info",
+    "contains": "Contains",
+    "allergyUnknown": "Allergens: to be confirmed",
+    "directions": "Directions",
+    "dirToast": "Opens your map app",
+    "disclaimer": "Independent guide — not affiliated with this store and not an official ordering service.",
+    "takedown": "Store owners: if you want this information corrected or removed, please contact us and we will act right away.",
+    "save": "Save this place",
+    "unsave": "Remove from saved"
+  },
+  "menu": {
+    "signature": "Signature",
+    "spicy": "Spicy",
+    "addHint": "Tap + to build your order",
+    "viewOrder": "View my order",
+    "est": "Est. {price}",
+    "perPerson": "per person",
+    "samplePrices": "Sample prices",
+    "priceTbd": "Price to be confirmed",
+    "totalTbd": "Total: to be confirmed at the counter",
+    "items": "{count} items",
+    "increase": "Add one",
+    "decrease": "Remove one",
+    "maxQty": "Up to 9 per item",
+    "switchTitle": "Start a new order here?",
+    "switchBody": "Your order at {place} will be cleared.",
+    "switchConfirm": "Clear and continue",
+    "switchKeep": "Keep my order"
+  },
+  "order": {
+    "title": "My order",
+    "togo": "To go",
+    "here": "For here",
+    "dineInOnly": "Dine-in only",
+    "sayThis": "SAY THIS AT THE COUNTER",
+    "practice": "Practice saying it",
+    "showStaff": "Show to staff",
+    "empty": "Your order is empty",
+    "emptyHint": "Add at least one item to create an order card."
+  },
+  "audio": {
+    "listen": "Listen",
+    "listenSlow": "Listen slowly (0.75×)",
+    "noKoreanVoice": "Korean voice is not available on this device.",
+    "ttsUnsupported": "Audio playback is not supported in this browser."
+  },
+  "practice": {
+    "title": "Speaking practice",
+    "tapWord": "TAP A WORD",
+    "tapMic": "Tap the mic and say it",
+    "requesting": "Allow microphone access to start",
+    "listening": "Listening… say it now",
+    "processing": "Checking what we heard…",
+    "micStart": "Start recording",
+    "micStop": "Stop recording",
+    "voiceNotice": "This app does not save your voice or what was recognized. Speech may be processed by your browser’s speech service."
+  },
+  "stt": {
+    "failTitle": "We couldn’t hear you",
+    "noSpeech": "No speech was recognized. Try again in a quieter spot, or simply show the screen to the staff.",
+    "timeout": "Time ran out before we heard anything. Try again, or show the screen to the staff.",
+    "network": "The speech service could not be reached. Check your connection, or show the screen to the staff.",
+    "error": "Speech recognition stopped because of an error. Try again, or show the screen to the staff.",
+    "aborted": "Recording was cancelled. Try again, or show the screen to the staff.",
+    "deniedTitle": "Microphone access is off",
+    "denied": "Without the microphone we can’t check your speaking. Show the screen to the staff instead.",
+    "unsupportedTitle": "Speech recognition isn’t available",
+    "unsupported": "This browser does not support speech recognition. Show the screen to the staff instead.",
+    "empty": "Nothing was recognized, so there is no score. Please try again.",
+    "retry": "Try again"
+  },
+  "result": {
+    "match": "Recognition match",
+    "matchNote": "This shows how closely the recognized text matched the phrase. It is not a pronunciation grade.",
+    "great": "Great job! 🎉",
+    "almost": "Almost there!",
+    "closeMatch": "The recognized text matched the phrase closely.",
+    "heard": "WHAT WE HEARD",
+    "tip": "“{word}” didn’t match well. Say it slowly, one syllable at a time.",
+    "again": "Try again",
+    "next": "Next phrase",
+    "instead": "Show this to staff instead"
+  },
+  "staff": {
+    "staffReply": "Staff reply",
+    "play": "Play aloud",
+    "bigger": "Bigger",
+    "smaller": "Smaller"
+  },
+  "reply": {
+    "yesTitle": "Yes! 👍",
+    "yesBody": "The staff understood you.",
+    "soldTitle": "Sold out",
+    "soldBody": "Please choose something else.",
+    "waitTitle": "Please wait a moment",
+    "waitBody": "The staff will be right with you.",
+    "payTitle": "Please pay at the counter",
+    "payBody": "Head to the cashier to pay.",
+    "edit": "Change my order",
+    "backToStaff": "Show to staff again"
+  },
+  "phrases": {
+    "title": "Phrases",
+    "practice": "Practice"
+  },
+  "saved": {
+    "title": "Saved",
+    "savedToast": "Saved",
+    "removedToast": "Removed",
+    "empty": "Nothing saved yet"
+  },
+  "report": {
+    "open": "Info looks wrong?",
+    "title": "What is different?",
+    "closed": "Closed or moved",
+    "menu": "Menu changed",
+    "price": "Price changed",
+    "other": "Something else",
+    "thanks": "Thanks! We'll re-check it."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "privacy": "Your voice is never saved. Your usage history stays only on this device.",
+    "operatorReport": "Operator report",
+    "reset": "Reset demo data",
+    "resetConfirm": "Delete all demo data on this device and start over?",
+    "resetDone": "Demo data has been reset."
+  },
+  "pwa": {
+    "offlineReady": "Ready to use offline",
+    "updateAvailable": "A new version is available.",
+    "update": "Update",
+    "later": "Later"
+  }
+}

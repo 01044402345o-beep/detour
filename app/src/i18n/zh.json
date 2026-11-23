@@ -1,0 +1,209 @@
+{
+  "common": {
+    "back": "返回",
+    "close": "关闭",
+    "done": "完成",
+    "cancel": "取消",
+    "comingSoon": "即将上线",
+    "demoBadge": "演示"
+  },
+  "lang": {
+    "choose": "请选择语言",
+    "welcomeTitle": "多走一步,遇见大田。",
+    "welcomeSub": "路线、真实菜单和用得上的韩语——无需安装。",
+    "start": "开始",
+    "pronRoman": "发音以韩语罗马字(国语罗马字标记法)标注,仅作读音参考,并非汉语拼音。",
+    "pronKana": "发音以片假名标注,仅为近似读音。"
+  },
+  "nav": {
+    "explore": "探索",
+    "course": "路线",
+    "phrases": "短句",
+    "saved": "收藏",
+    "me": "我的"
+  },
+  "home": {
+    "location": "韩国·大田",
+    "hi": "你好 👋",
+    "whereTo": "今天去哪儿?",
+    "search": "搜索地点、美食、短句",
+    "pickHub": "选择区域",
+    "seeMap": "地图",
+    "hubDown": "老城区",
+    "hubDownSub": "面包·历史·本地美食",
+    "hubStation": "大田站·小堤洞",
+    "hubStationSub": "咖啡·小巷·行李寄存",
+    "hubYuseong": "儒城温泉",
+    "hubYuseongSub": "温泉·住一晚",
+    "spots": "{count}处",
+    "minutes": "{count}分钟",
+    "overnightKicker": "住一晚吧",
+    "overnightTitle": "儒城温泉·1号线直达",
+    "todayPhrase": "今日短句",
+    "todayCourse": "今日路线",
+    "soonToast": "即将上线——演示版仅开放老城区。"
+  },
+  "course": {
+    "title": "老城区半日游",
+    "meta": "{stops}站·{km}公里·约{hours}小时",
+    "from": "起点·中央路站(1号线)",
+    "checked": "核实于 {date}",
+    "startWalk": "从第1站出发",
+    "walkMin": "步行{min}分钟",
+    "stopOf": "第 {n} 站 / 共 {total} 站",
+    "dirFirst": "将在NAVER地图中打开前往第1站的步行路线",
+    "lineNote": "连线仅按顺序连接各站,并非实际步行路线。",
+    "mapOffline": "地图图块无法加载,已显示简易地图。",
+    "mapStation": "中央路站",
+    "mapStream": "大田川",
+    "mapToDaejeonStn": "往大田站 →"
+  },
+  "place": {
+    "food": "美食",
+    "sight": "景点",
+    "openNow": "营业中",
+    "closedNow": "非营业时间",
+    "statusNote": "根据登记的营业时间(韩国时间)判断,仅供参考。",
+    "unverified": "尚未实地确认·示例信息",
+    "hours": "营业时间",
+    "closedOn": "休息日:{days}",
+    "tabMenu": "菜单",
+    "tabHow": "点餐方法",
+    "tabVisit": "参观方法",
+    "tabPhrases": "短句",
+    "allergyTitle": "过敏原信息",
+    "contains": "过敏原",
+    "allergyUnknown": "过敏原:待确认",
+    "directions": "导航",
+    "dirToast": "将打开地图应用",
+    "disclaimer": "本信息为独立整理,与该店铺无合作关系,并非官方点餐服务。",
+    "takedown": "致店家:如需更正或删除本信息,请与我们联系,我们会立即处理。",
+    "save": "收藏此地点",
+    "unsave": "取消收藏"
+  },
+  "menu": {
+    "signature": "招牌",
+    "spicy": "辣",
+    "addHint": "点 + 加入点单",
+    "viewOrder": "查看点单",
+    "est": "约 {price}",
+    "perPerson": "每人份",
+    "samplePrices": "价格仅供参考",
+    "priceTbd": "价格待确认",
+    "totalTbd": "总价请在柜台确认",
+    "items": "{count}件",
+    "increase": "加一份",
+    "decrease": "减一份",
+    "maxQty": "每样最多9份",
+    "switchTitle": "要在这里重新点单吗?",
+    "switchBody": "{place}的点单将被清空。",
+    "switchConfirm": "清空并继续",
+    "switchKeep": "保留点单"
+  },
+  "order": {
+    "title": "我的点单",
+    "togo": "打包",
+    "here": "堂食",
+    "dineInOnly": "仅限堂食",
+    "sayThis": "在柜台这样说",
+    "practice": "练习说",
+    "showStaff": "给店员看",
+    "empty": "点单为空",
+    "emptyHint": "请至少添加一样,才能生成点单卡。"
+  },
+  "audio": {
+    "listen": "听",
+    "listenSlow": "慢速听(0.75倍)",
+    "noKoreanVoice": "此设备不支持韩语语音。",
+    "ttsUnsupported": "此浏览器不支持语音朗读。"
+  },
+  "practice": {
+    "title": "口语练习",
+    "tapWord": "点击单词",
+    "tapMic": "点麦克风开始说",
+    "requesting": "请允许使用麦克风",
+    "listening": "正在听…请说",
+    "processing": "正在核对识别内容…",
+    "micStart": "开始录音",
+    "micStop": "停止录音",
+    "voiceNotice": "本应用不保存你的语音和识别结果。语音识别可能由浏览器的语音服务处理。"
+  },
+  "stt": {
+    "failTitle": "没有听清",
+    "noSpeech": "未识别到语音。请到安静的地方再试一次,或直接把屏幕给店员看。",
+    "timeout": "规定时间内没有听到声音。请再试一次,或直接把屏幕给店员看。",
+    "network": "无法连接语音服务。请检查网络,或直接把屏幕给店员看。",
+    "error": "语音识别因错误而中断。请再试一次,或直接把屏幕给店员看。",
+    "aborted": "录音已取消。请再试一次,或直接把屏幕给店员看。",
+    "deniedTitle": "麦克风未获授权",
+    "denied": "没有麦克风就无法核对你的发音练习。请直接把屏幕给店员看。",
+    "unsupportedTitle": "无法使用语音识别",
+    "unsupported": "此浏览器不支持语音识别。请直接把屏幕给店员看。",
+    "empty": "没有识别到任何内容,因此没有分数。请再试一次。",
+    "retry": "再试一次"
+  },
+  "result": {
+    "match": "识别一致度",
+    "matchNote": "表示识别出的文字与短句的一致程度,并非发音评分。",
+    "great": "太棒了!🎉",
+    "almost": "差一点!",
+    "closeMatch": "识别出的文字与短句非常接近。",
+    "heard": "识别结果",
+    "tip": "“{word}”不太一致,请一个音一个音慢慢说。",
+    "again": "再试一次",
+    "next": "下一句",
+    "instead": "直接给店员看"
+  },
+  "staff": {
+    "staffReply": "店员回复",
+    "play": "朗读",
+    "bigger": "放大",
+    "smaller": "缩小"
+  },
+  "reply": {
+    "yesTitle": "好的!👍",
+    "yesBody": "店员明白了。",
+    "soldTitle": "已售罄",
+    "soldBody": "请换一样吧。",
+    "waitTitle": "请稍等",
+    "waitBody": "店员马上就来。",
+    "payTitle": "请到柜台付款",
+    "payBody": "请前往收银台。",
+    "edit": "修改点单",
+    "backToStaff": "再次给店员看"
+  },
+  "phrases": {
+    "title": "短句",
+    "practice": "练习"
+  },
+  "saved": {
+    "title": "收藏",
+    "savedToast": "已收藏",
+    "removedToast": "已取消收藏",
+    "empty": "还没有收藏"
+  },
+  "report": {
+    "open": "信息有误?",
+    "title": "哪里不一样?",
+    "closed": "已关门或搬迁",
+    "menu": "菜单变了",
+    "price": "价格变了",
+    "other": "其他",
+    "thanks": "谢谢!我们会重新核实。"
+  },
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "privacy": "不会保存语音。使用记录只保存在本机。",
+    "operatorReport": "运营报告",
+    "reset": "重置演示数据",
+    "resetConfirm": "要删除本机上的全部演示数据并重新开始吗?",
+    "resetDone": "演示数据已重置。"
+  },
+  "pwa": {
+    "offlineReady": "已可离线使用",
+    "updateAvailable": "有新版本可用。",
+    "update": "更新",
+    "later": "稍后"
+  }
+}
