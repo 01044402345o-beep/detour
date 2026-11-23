@@ -80,13 +80,13 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 ## Phase 0 — 기반 준비 (순차)
 
-- [ ] **T0.1 저장소 초기화** (진행 중 · Claude worker) — 소유: `.gitignore`, `README.md`, `.github/`
+- [x] **T0.1 저장소 초기화** — 소유: `.gitignore`, `README.md`, `.github/` — 2026-11-23 · reviews/T0.1_r2.md (미해결 0) · PUBLIC 전환·push 완료
   - git init, 허용 목록 `.gitignore`(0.3절 제외 목록 포함), 원격 `origin` 연결, `main`/`dev` 브랜치 생성
   - 현재 저장소 `01044402345o-beep/detour`는 PRIVATE·빈 저장소. 무료 GitHub Pages를 쓰기 위해 **첫 push 직전**에 coordinator가 `gh repo edit 01044402345o-beep/detour --visibility public --accept-visibility-change-consequences`로 PUBLIC 전환
   - 공개 전환의 선행 조건: `git ls-files` 목록 검사에서 허용 경로만 있고 개인 자료(HWP, mp4, 신청서 PDF 등) 0건
   - README: 프로젝트 한 줄 소개, 실행 방법, 문서 링크(prd/task/mockup)
   - 완료 조건: 첫 커밋 전 `git ls-files` 전체 목록을 `reviews/T0.1_files.txt`에 남기고, 허용 경로만 있음(개인 자료 0건). 그 뒤 저장소 PUBLIC 전환 확인(`gh repo view --json visibility`가 `PUBLIC`). 원격 push 성공.
-- [ ] **T0.1a GitHub Pages 활성화** — 담당: coordinator (실패 시에만 **[사용자]**). T0.1의 공개 전환 후 수행
+- [x] **T0.1a GitHub Pages 활성화** — 담당: coordinator (실패 시에만 **[사용자]**). T0.1의 공개 전환 후 수행 — 2026-11-23 · build_type=workflow 확인
   - coordinator가 `gh api -X POST repos/01044402345o-beep/detour/pages -f build_type=workflow`로 Pages 소스를 'GitHub Actions'로 설정합니다
   - `gh`로 안 되면 이 task를 **[사용자]**로 바꾸고, 사용자가 저장소 Settings → Pages → Source를 'GitHub Actions'로 설정합니다
   - 완료 조건: `gh api repos/01044402345o-beep/detour/pages`의 `build_type`이 `workflow`
