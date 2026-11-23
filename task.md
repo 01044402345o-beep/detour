@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v0.3 (2026-11-23) · 변경 내용은 맨 끝 '변경 이력' 참고 |
+| 문서 버전 | v0.4 (2026-11-23) · 변경 내용은 맨 끝 '변경 이력' 참고 |
 | 기준 문서 | `prd.md` v0.3 (Codex 교차 검증 미해결 0건), `mockup/index.html` |
 | 저장소 | https://github.com/01044402345o-beep/detour |
 | 배포 URL | https://01044402345o-beep.github.io/detour/ |
@@ -14,6 +14,7 @@
 - **완료(체크) 조건:** ① 아래 "완료 조건"을 모두 충족하고, ② 9.2절 검토 루프가 미해결 0건으로 끝난 상태. 둘 중 하나라도 아니면 체크하지 않습니다. 완료 조건이 [배포 전]/[배포 후]로 나뉜 task는 [배포 후] 조건까지 충족한 뒤(0.3절 배포 게이트) 체크합니다.
 - 진행 중인 task는 제목 끝에 `(진행 중 · 담당 worker)`를 붙이고, 막힌 task는 `(보류: 사유)`를 붙입니다.
 - 사용자가 직접 해야 하는 task에는 **[사용자]** 표시가 있습니다.
+- task를 체크할 때마다 coordinator가 맨 끝 '진행 현황 요약' 표의 완료 수를 같이 갱신합니다.
 - **PRD 우선:** `prd.md`와 목업(`mockup/index.html`)이 충돌하면 PRD를 따릅니다. 목업은 디자인(값·간격·색) 기준입니다.
 
 ### 0.1 검토 루프 (task마다)
@@ -39,7 +40,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - **E2E 파일:** Playwright 테스트는 `app/e2e/`에 두고, phase E2E는 coordinator가 작성·실행합니다.
 
 ### 0.3 Git·배포 규칙
-- 저장소 루트 = 이 폴더(`29_로컬`). `.gitignore`를 **허용 목록 방식**으로 써서 `app/`, `prd.md`, `task.md`, `mockup/`, `reviews/`, `.github/`, `.gitignore`, `README.md`만 올립니다. (HWP·영상·신청서 등 개인 자료는 올리지 않음)
+- 저장소 루트 = 이 폴더(`29_로컬`). `.gitignore`를 **허용 목록 방식**으로 써서 `app/`, `prd.md`, `task.md`, `mockup/`, `reviews/`, `.github/`, `.gitignore`, `README.md`, `video/`(T2.7 이후, 소스 코드만)만 올립니다. (HWP·영상·신청서 등 개인 자료는 올리지 않음)
 - 허용 목록 아래에 빌드 산출물을 명시 제외합니다: `**/node_modules/`, `**/dist/`, `**/coverage/`, `**/test-results/`, `**/playwright-report/`, `**/.env*`.
 - 브랜치: `main`(배포) / `dev`(작업). task는 `dev`에 커밋합니다. 커밋 메시지는 `T1.3: 주문 문장 생성 모듈` 형식.
 - 커밋은 coordinator 한 명이 task 소유 파일만 `git add <경로>`로 stage해 수행합니다. task 체크 시 `dev`에 push합니다.
@@ -61,6 +62,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 0-e. 공통 4~6: 최초 배포 + smoke(200·콘솔 오류 0).
   - 0-f. [배포 후] T0.3 [배포 후] 조건 "배포 URL에서 빈 앱이 열림(HTTPS)" 확인 → T0.3 체크.
 - **Phase 1·2:** 공통 1~7을 그대로 따릅니다. Phase 1은 앱 변경이 없으므로 3단계를 "실제 모듈 연결 단위 테스트 + 타입 검사 + build 성공"으로 대신합니다. Phase 1·2 smoke에는 service worker 항목이 없습니다.
+- **Phase 2.5 (시연 영상):** 앱 배포 게이트(공통 2~7)를 적용하지 않습니다. T2.7은 `video/`의 타입 검사·린트(설정한 경우) + `npx remotion render` 성공 + `reviews/T2.7_render.md` 기록 + 검토 미해결 0건이면 체크합니다. `video/` 커밋은 `dev`에만 하고 `main` 병합을 일으키지 않습니다.
 - **Phase 3 (PWA 후보)**
   - 3-a. [배포 전] T3.1 구현. [배포 전] 완료 조건: preview에서 ① "오프라인 준비 완료" 표시 → 네트워크 차단 → 새로고침 → 미방문 화면 열림, ② 업데이트 토스트 확인(빌드 A preview 접속 → 빌드 B로 다시 build·preview → 새로고침 시 토스트 → 새 버전 적용). 배포가 필요 없으므로 T3.1은 이 시점에 체크합니다.
   - 3-b. [배포 전] T3.3 QR 생성(배포 URL은 고정값)과 슬라이드 삽입. T3.1과 병렬. [배포 후] 조건(스캔)이 남으므로 아직 체크하지 않습니다.
@@ -245,17 +247,18 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 ## Phase 2.5 — 시연 영상 (Remotion · 사용자 요청 2026-11-23)
 
-> Phase 2 E2E 통과 후 시작합니다. 앱 코드(`app/`)를 바꾸지 않으므로 **Phase 3과 병렬로 진행**합니다. Phase 4에서 콘텐츠가 바뀌면 다시 렌더링합니다(T2.7 재실행).
+> Phase 2 E2E 통과 후 시작합니다. 앱 코드(`app/`)를 바꾸지 않고 앱 배포와 무관하므로(0.3절 Phase 2.5) **Phase 3과 병렬로 진행**합니다. Phase 4에서 콘텐츠가 바뀌면 T4.1a로 바뀐 화면이 나오는 장면을 Phase 4 배포 커밋에서 **다시 녹화**한 뒤 렌더링합니다(T2.7 재실행).
 
 - [ ] **T2.7 Remotion 시연 영상** — 소유: `video/` 전체(렌더 결과 `video/out/`은 git 제외)
   - 준비: Remotion 에이전트 스킬 설치, `video/`에 Remotion 프로젝트 생성. Remotion 라이선스 조건(개인·소규모 무료 여부)을 확인해 `reviews/T2.7_license.md`에 기록
   - 장면 구성(약 90초, 폰 프레임 390×844 + 자막): 문제 제기(빵집 한 곳 집중) → 언어 선택 → 원도심 코스 → 성심당 메뉴 담기 → 한국어 주문 카드 → 듣고 따라 말하기·인식 일치도 → 직원에게 보여주기·직원 응답 → 광천식당(매장 식사) → 운영자 리포트("빵집 다음은 어디였나") → 마무리(QR·배포 URL)
-  - 앱 화면은 `app/src/` 컴포넌트를 읽기 전용으로 import하거나 Playwright 녹화본을 넣습니다. 앱 쪽 수정이 필요하면 coordinator에 요청합니다
+  - 앱 화면은 **Phase 2 배포 커밋의 `vite preview`에서 Playwright로 자동 녹화**한 클립을 사용합니다. 컴포넌트 import는 쓰지 않습니다(**사용자 결정 U-1**). 앱 쪽 수정이 필요하면 coordinator에 요청합니다
   - 음성 인식 장면은 재현 장면임을 화면에 작게 표시합니다(실제 인식 화면은 T4.3 기기 녹화로 교체 가능)
   - 자막 언어: 한국어 기본 + 영어 버전(일본어·중국어는 선택)
-  - 내레이션: 기존 홍보영상(`daejeon-detour-film/`)의 음성 제작 방식을 참고하되 새로 만듭니다. 기존 파일은 수정하지 않습니다
-  - 완료 조건: `npx remotion render`로 1080×1920(세로) mp4 생성, 길이 120초 이하, 자막·화면 문구가 PRD(비제휴 안내, 인식 일치도 용어, 예시 데이터 표기)와 일치, 렌더 결과 경로와 길이를 `reviews/T2.7_render.md`에 기록, 검토 미해결 0건
-  - Git: `.gitignore` 허용 목록에 `video/`를 추가하고 `video/out/`, `video/node_modules/`는 제외 (coordinator)
+  - 내레이션: 기존 홍보영상(`daejeon-detour-film/`)과 같은 방식으로 새로 만듭니다(**사용자 결정 U-3**): 영어는 Kokoro 오프라인 TTS, 한국어는 edge-tts 온라인 음성. 기존 파일은 수정하지 않고, 기존 홍보영상의 영상·이미지 소재는 재사용하지 않습니다(음성 제작 방식만 참고)
+    - [ ] **[사용자]** edge-tts 이용 조건(시연·공개 영상에 써도 되는지) 확인
+  - 완료 조건: `npx remotion render`로 1080×1920(세로) mp4 생성, 길이 120초 이하, 자막·화면 문구가 PRD(비제휴 안내, 인식 일치도 용어, 예시 데이터 표기, 가게 로고·간판·실사 사진 미사용(일러스트만))와 일치, 렌더 결과 경로와 길이 + 녹화에 쓴 앱 커밋 해시와 장면별 클립 목록을 `reviews/T2.7_render.md`에 기록, 검토 미해결 0건
+  - Git (coordinator): 공개 범위는 **사용자 결정 U-2**에 따라 소스 코드(Remotion 코드·자막)만 올립니다. `.gitignore` 허용 목록에 `video/`를 추가하고 `video/out/`, `video/node_modules/`, `video/public/clips/`(녹화 클립), `video/public/vo/`(내레이션 음성)를 제외합니다. 완성 mp4도 올리지 않습니다
 
 ---
 
@@ -297,7 +300,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 실제 사용한 기기·OS·브라우저 버전 기록
   - 실제 음성 경로 증거는 이 문서가 유일하며, 자동 E2E는 목 기반임을 명시
 - [ ] **T4.5 시연 리허설** [배포 후] — T4.3과 같은 커밋(해시 기록) 대상. 리허설에서 수정이 생기면 0.3절 4-b로 돌아감
-  - 합격 조건: 안내 없이 180초 이내 완주, 진행자 음성 경로와 심사위원 텍스트 경로 각 1회
+  - 합격 조건: 안내 없이 180초 이내 완주, 진행자 음성 경로와 심사위원 텍스트 경로 각 1회, 시연 영상의 녹화 커밋 = T4.1a 배포 커밋(또는 '영향 장면 없음'을 `reviews/T2.7_render.md`에 기록)
   - 비상 시나리오(인식 실패 → 직원 화면) 연습
 - [ ] **T4.6 심사 일정 확정 [사용자]** — 일정에 맞춰 Phase 3·4 일정 역산
 
@@ -307,7 +310,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 | Phase | task 수 | 완료 | 병렬 |
 |---|---|---|---|
-| 0 기반 | 4 | 0 | 순차 |
+| 0 기반 | 4 | 3 | 순차 |
 | 1 데이터·도메인 | 6 | 0 | 6개 동시 |
 | 2 화면 | 7 | 0 | T2.0 후 6개 동시 |
 | 2.5 시연 영상 | 1 | 0 | Phase 3과 병렬 |
@@ -320,4 +323,4 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | v0.1 | 2026-11-23 | 최초 작성 (prd.md v0.3 기준) |
 | v0.2 | 2026-11-23 | Codex 검토 R1(`reviews/task_review_r1.md`)과 판정(`reviews/task_review_r1_verdict.md`) 반영. 반영 항목: H-01, H-02, M-01, M-02, M-03, M-04, M-05, M-06, M-07, M-08, M-09, M-10, A-1, A-2. 사용자 결정 반영: M-10 저장소 공개 범위, A-1 네이버 지도 기본, M-09 실기기 범위(iOS 사파리 미검증). 상세는 `reviews/task_fix_r1.md` |
 | v0.3 | 2026-11-23 | Codex 검토 R2(`reviews/task_review_r2.md`)와 판정(`reviews/task_review_r2_verdict.md`) 반영. 반영 항목: H-01(배포 게이트 Phase 0~4 순서, 완료 조건 [배포 전]/[배포 후] 분리), R2-M-01(smoke SW 항목 Phase 3 이후로 한정), R2-M-02(T4.2 검수 반영 대상 확대), R2-M-03(T2.0 placeholder 소유). T0.1a GitHub Pages 활성화 추가(coordinator가 gh api로 수행, 실패 시에만 [사용자]). 사용자 결정 반영: 저장소 PUBLIC 전환(T0.1, 첫 push 직전, `git ls-files` 개인 자료 0건 선행). 상세는 `reviews/task_fix_r2.md` |
-| v0.4 | 2026-11-23 | T1.5 `unsupported`는 `showStaff`만(T0.2 R1 판정). 사용자 요청으로 Phase 2.5 T2.7 Remotion 시연 영상 추가 (Codex 교차 검증 대상) |
+| v0.4 | 2026-11-23 | T1.5 `unsupported`는 `showStaff`만(T0.2 R1 판정). 사용자 요청으로 Phase 2.5 T2.7 Remotion 시연 영상 추가 (Codex 교차 검증 대상). 이어서 v0.4 검토(`reviews/task_review_v04.md`)·판정(`reviews/task_review_v04_verdict.md`) 반영: M-01(Phase 2.5 앱 배포 게이트 제외), M-02(Playwright 녹화 클립·녹화 커밋 기록·재녹화), L-01(상단 버전 v0.4, 진행 표 Phase 0 완료 3), A-1(영상 상호 표기·소재 재사용 금지·`video/` 공개 범위). 사용자 결정 U-1(preview 녹화), U-2(`video/` 소스만 공개), U-3(Kokoro·edge-tts 내레이션, edge-tts 조건 [사용자] 확인). 상세는 `reviews/task_fix_v04.md` |

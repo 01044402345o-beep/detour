@@ -8,6 +8,7 @@
 !/.github/
 !/.gitignore
 !/README.md
+!/video/
 
 # 허용 경로 안에서도 빌드 산출물·비밀값은 제외
 **/node_modules/
@@ -16,3 +17,11 @@
 **/test-results/
 **/playwright-report/
 **/.env*
+
+# video/ 는 소스 코드만 공개 (task.md T2.7, 사용자 결정 U-2)
+video/out/
+video/public/clips/
+video/public/vo/
+video/**/*.mp4
+video/**/*.wav
+video/**/*.mp3
