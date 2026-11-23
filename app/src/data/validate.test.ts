@@ -117,6 +117,15 @@ describe('PRD 4장·목업과 내용 일치', () => {
   it('확인일은 YYYY-MM-DD', () => {
     for (const p of c.places) expect(p.checkedAt).toBe('2026-11-10');
   });
+
+  it('T1.1b: 4곳 모두 장소 verified:false (현장 확인 전)', () => {
+    expect(c.places.map((p) => [p.id, p.verified])).toEqual([
+      ['ssd', false],
+      ['eun', false],
+      ['mus', false],
+      ['gwc', false],
+    ]);
+  });
 });
 
 describe('validateContent 오류 검출', () => {
@@ -180,6 +189,26 @@ describe('validateContent 오류 검출', () => {
         '$.places[1].phrases[0].kana',
       ]),
     );
+  });
+
+  it('T1.1b: 장소 verified 누락·boolean 아님은 오류, 메뉴 verified와 별개로 검사', () => {
+    const d = fresh();
+    delete d.places[1].verified; // 메뉴 없는 장소도 필수
+    d.places[2].verified = 'false';
+    d.places[3].verified = null;
+    expect(paths(d)).toEqual([
+      '$.places[1].verified',
+      '$.places[2].verified',
+      '$.places[3].verified',
+    ]);
+
+    const menuOnly = fresh();
+    delete menuOnly.places[0].menu[0].verified;
+    expect(paths(menuOnly)).toEqual(['$.places[0].menu[0].verified']);
+
+    const ok = fresh();
+    ok.places[0].verified = true;
+    expect(validateContent(ok)).toEqual([]);
   });
 
   it('허용값 밖 (counter·category·allergenStatus)', () => {

@@ -33,6 +33,7 @@
       },
       "hours": "08:00–22:00",
       "checkedAt": "2026-11-10",
+      "verified": false,
       "walkMinFromPrev": 5,
       "transitHint": {
         "en": "About 5 min walk from Jungang-ro Station (Line 1)",
@@ -291,6 +292,7 @@
       },
       "hours": "00:00–24:00",
       "checkedAt": "2026-11-10",
+      "verified": false,
       "walkMinFromPrev": 2,
       "transitHint": {
         "en": "About 2 min walk from Sungsimdang",
@@ -454,6 +456,7 @@
       "hours": "10:00–18:00",
       "closedOn": "mon",
       "checkedAt": "2026-11-10",
+      "verified": false,
       "walkMinFromPrev": 12,
       "transitHint": {
         "en": "About 12 min walk from Euneungjeongi Culture Street",
@@ -608,6 +611,7 @@
       },
       "hours": "11:00–21:00",
       "checkedAt": "2026-11-10",
+      "verified": false,
       "walkMinFromPrev": 10,
       "transitHint": {
         "en": "About 10 min walk from Daejeon Modern History Hall",

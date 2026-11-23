@@ -193,6 +193,8 @@ function checkPlace(c: Checker, p: unknown, path: string): void {
     c.fail(`${path}.closedOn`, "'mon' 또는 'sat,sun' 형식 아님");
   }
   if (!isValidIsoDate(p.checkedAt)) c.fail(`${path}.checkedAt`, "'YYYY-MM-DD' 날짜 아님");
+  // 장소 현장 확인 여부 (메뉴 verified와 별개, T1.1b). false면 화면은 확인일 대신 '현장 확인 전' 표시
+  c.bool(p, 'verified', path);
   c.nonNegInt(p, 'walkMinFromPrev', path);
   c.l10n(p.transitHint, `${path}.transitHint`);
   c.bool(p, 'orderable', path);

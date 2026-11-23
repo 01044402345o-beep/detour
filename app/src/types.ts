@@ -68,6 +68,7 @@ export type Place = {
   hours: string;
   closedOn?: string;
   checkedAt: IsoDate;
+  verified: boolean; // 장소 영업시간·주소·주문 방식 현장 확인 여부 (메뉴 verified와 별개, T1.1b)
   walkMinFromPrev: number;
   transitHint: L10n;
   orderable: boolean;
