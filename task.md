@@ -139,7 +139,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - `t(lang, key)`는 순수 함수, `useT()`는 store의 `lang` 계약만 import. 키 누락 시 개발 모드 경고
   - 하드코딩 검사 예외 목록: 한국어 콘텐츠 JSON(학습 문장·메뉴명), 직원 화면 고정 문구(한국어 안내·응답 버튼), 상호명
   - 완료 조건: 세 파일의 키 집합이 같음(테스트), 빈 문자열·영어 fallback 없음(ja·zh), 예외 목록 밖 하드코딩 문구 없음(린트 규칙 또는 검사 스크립트)
-- [ ] **T1.3 주문 문장 생성 + 수사 검수표** (진행 중 · Claude worker) — 소유: `app/src/domain/orderSentence.ts`, `numerals.ts`
+- [x] **T1.3 주문 문장 생성 + 수사 검수표** — 소유: `app/src/domain/orderSentence.ts`, `numerals.ts` — 2026-11-23 · reviews/T1.3_r2.md (미해결 0)
   - PRD F-06 규칙: `{메뉴} {수사} {단위}, … 주세요.` + 포장 시 ` 포장해 주세요.`, 수량 1~9, 0개 제외, 빈 주문이면 `null`
   - 단위별 수사: `개`·`공기` → 고유어(한·두·세·네·다섯·여섯·일곱·여덟·아홉), `인분` → 아라비아 숫자 + 인분(읽기: 일·이·삼·사·오·육·칠·팔·구)
   - 출력: T0.2의 `OrderSentence` 타입 (`{ ko, roman, kana, meaning: L10n, words[] }`)
@@ -159,7 +159,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
     표의 가타카나는 근사 표기이며 원어민 검수(T4.2) 대상.
   - 완료 조건: 검수표 27칸 + 포장/매장 + 여러 품목 + 빈 주문 테스트 통과
-- [ ] **T1.4 채점 모듈** (진행 중 · Claude worker) — 소유: `app/src/domain/scoring.ts`
+- [x] **T1.4 채점 모듈** — 소유: `app/src/domain/scoring.ts` — 2026-11-23 · reviews/T1.4_r2.md (미해결 0)
   - 정규화: 공백·문장부호 제거, 숫자 → 한글 수사(뒤따르는 단위 기준: 개·공기·명 → 고유어, 인분 → 한자어. `numerals.ts` 시그니처만 의존하고 fixture로 테스트), 소문자화
   - 한글 음절 → 자모 분해, 레벤슈타인 거리 → "인식 일치도" 점수 = `round(100 × (1 − 거리 / max(목표 자모 수, 인식 자모 수)))`, 하한 0
   - 단어별 일치 여부(목표 단어 기준 정렬), 가장 약한 단어 1개 반환. 출력은 T0.2의 `ScoreResult` 타입
@@ -173,7 +173,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
                     ↘ denied      ↘ no-speech / timeout(8초) / network / aborted / error
     unsupported (API 없음)
     ```
-    모든 실패 상태는 `{ retry, showStaff }` 두 선택지를 UI에 넘김(단, `unsupported`는 재시도가 의미 없으므로 `showStaff`만 — T0.2 R1 판정). 인식 원문은 결과로만 반환하고 저장·로그하지 않음
+    모든 실패 상태는 `{ retry, showStaff }` 두 선택지를 UI에 넘김(단, `unsupported`는 재시도가 의미 없으므로 `showStaff`만 — T0.2 R1 판정). 권한 대기(requesting)는 15초 기한 후 실패 처리(T1.5 R1 판정). 인식 원문은 결과로만 반환하고 저장·로그하지 않음
   - 테스트: Web Speech API 목(mock)으로 상태 전이 전부 검증
   - 완료 조건: 상태 전이 테스트 통과, 타임아웃 8초 테스트(가짜 타이머)
 - [ ] **T1.6 앱 상태·이용 기록** (진행 중 · Claude worker) — 소유: `app/src/store/`, `app/src/domain/events.ts`
@@ -287,7 +287,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 > 순서: 0.3절 4-a~4-e를 따르며, 0.1절 'phase 단위 검증'보다 우선합니다. T4.1·T4.2·T4.4 결과 수령 → T4.1a 반영·체크 → Phase 4 E2E(preview) → 배포·smoke → T4.3·T4.5
 
 - [ ] **T4.1 현장 확인 [사용자]** — PRD 11장: 4곳 메뉴·가격·영업시간·휴무일·주문 방식, 주소·좌표, 광천식당 사리 명칭·단독 주문 여부
-- [ ] **T4.2 번역 원어민 검수 [사용자]** — 일본어·중국어 UI 문구, 문장 뜻, 가타카나 표기
+- [ ] **T4.2 번역 원어민 검수 [사용자]** — 일본어·중국어 UI 문구, 문장 뜻, 가타카나 표기, 수량 칩 뜻(人前·杯·碗·人份 — T1.3 R1)
 - [ ] **T4.4 가게 안내 [사용자]** — 실제 상호 사용 안내·동의 여부 확인, 정정·삭제 연락처 확정
 - [ ] **T4.1a 검증 결과 반영** — 담당: coordinator (검토 루프 적용)
   - T4.1 결과 → `downtown.json` 갱신(`verified:true`, `checkedAt` 갱신), 주소·좌표 확정 후 도보 시간·총거리 재계산
@@ -299,6 +299,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - iOS 사파리는 **미검증**으로 기록. 심사위원 iPhone은 텍스트·직원 화면 완주 경로로 대응
   - 실제 사용한 기기·OS·브라우저 버전 기록
   - 실제 음성 경로 증거는 이 문서가 유일하며, 자동 E2E는 목 기반임을 명시
+  - 실측 기록(T1.5 R1 판정 이관): 마이크 권한 응답 소요 시간, `voiceschanged` 도착 시점, TTS `interrupted` 이벤트 순서, `navigator.userActivation` 지원 여부
 - [ ] **T4.5 시연 리허설** [배포 후] — T4.3과 같은 커밋(해시 기록) 대상. 리허설에서 수정이 생기면 0.3절 4-b로 돌아감
   - 합격 조건: 안내 없이 180초 이내 완주, 진행자 음성 경로와 심사위원 텍스트 경로 각 1회, 시연 영상의 녹화 커밋 = T4.1a 배포 커밋(또는 '영향 장면 없음'을 `reviews/T2.7_render.md`에 기록)
   - 비상 시나리오(인식 실패 → 직원 화면) 연습
@@ -311,7 +312,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | Phase | task 수 | 완료 | 병렬 |
 |---|---|---|---|
 | 0 기반 | 4 | 4 | 순차 |
-| 1 데이터·도메인 | 6 | 0 | 6개 동시 |
+| 1 데이터·도메인 | 6 | 2 | 6개 동시 |
 | 2 화면 | 7 | 0 | T2.0 후 6개 동시 |
 | 2.5 시연 영상 | 1 | 0 | Phase 3과 병렬 |
 | 3 오프라인·배포 | 3 | 0 | T3.1 → T3.2 순차, T3.3 병렬 |
