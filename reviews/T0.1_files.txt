@@ -5,6 +5,7 @@ prd.md
 reviews/T0.1_files.txt
 reviews/T0.1_r1.md
 reviews/T0.1_r1_verdict.md
+reviews/T0.1_r2.md
 reviews/prd_fix_r1.md
 reviews/prd_fix_r2.md
 reviews/prd_review_r1.md
