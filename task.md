@@ -2,8 +2,8 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v0.4 (2026-11-23) · 변경 내용은 맨 끝 '변경 이력' 참고 |
-| 기준 문서 | `prd.md` v0.3 (Codex 교차 검증 미해결 0건), `mockup/index.html` |
+| 문서 버전 | v0.5 (2026-11-23) · 변경 내용은 맨 끝 '변경 이력' 참고 |
+| 기준 문서 | `prd.md` v0.5 (v0.3까지 Codex 교차 검증 미해결 0건, v0.4·v0.5 변경분은 `reviews/docs_review_phase1.md`·판정으로 검토), `mockup/index.html` |
 | 저장소 | https://github.com/01044402345o-beep/detour |
 | 배포 URL | https://01044402345o-beep.github.io/detour/ |
 
@@ -133,11 +133,16 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 장소별 문장의 `words`(단어 칩)와 3개 언어 뜻, 로마자·가타카나
   - `validate.ts`: 타입·필수 필드·L10n 3개 언어 누락·좌표 범위 검사
   - 완료 조건: 검증 테스트 통과(누락 0), 목업 데이터와 내용 일치
-- [ ] **T1.2 다국어 사전** (진행 중 · Claude worker) — 소유: `app/src/i18n/`
+- [x] **T1.1b 장소 확인 상태 필드** — 소유: `app/src/data/`, `app/src/types.ts`(Place) — 2026-11-23 · reviews/T1.1b_r1.md (미해결 0)
+  - `Place.verified: boolean` 추가(장소의 영업시간·주소·주문 방식 현장 확인 여부. 메뉴의 `verified`와 별개), `downtown.json` 4곳 모두 `false`, `validate.ts` 필수 검사·테스트
+  - `i18n` 3개 사전에 확인 전 표시 키 1개 추가(한국어 원문 "현장 확인 전 · 예시 정보", 번역은 T4.2 검수) — T1.2 소유 파일이므로 같은 커밋에서 coordinator 승인으로 수정
+  - 완료 조건: 데이터·i18n 테스트, 타입 검사 통과 (docs_review_phase1 판정 DOC-M-02)
+- [x] **T1.2 다국어 사전** — 소유: `app/src/i18n/` — 2026-11-23 · reviews/T1.2_r3.md (미해결 0)
   - `en.json`·`ja.json`·`zh.json`: 목업의 UI 문구 전체 + PRD에 정한 고지 문구(비제휴 안내, 음성 처리 안내, 가격 확인 필요, 총액 확인 필요, 인식 실패 메시지 등)
   - **PRD 우선:** PRD와 목업이 충돌하면 PRD를 따릅니다. 목업 `privacy` 키는 '이용 기록은 이 기기에만 저장됩니다(음성은 저장하지 않음)' 취지로 교체합니다(PRD F-08·7장)
   - `t(lang, key)`는 순수 함수, `useT()`는 store의 `lang` 계약만 import. 키 누락 시 개발 모드 경고
   - 하드코딩 검사 예외 목록: 한국어 콘텐츠 JSON(학습 문장·메뉴명), 직원 화면 고정 문구(한국어 안내·응답 버튼), 운영자 리포트 문구(S13, `operatorKo.ts` — T1.2 R1), 상호명
+  - T1.1b 확인 전 표시 키 1개 추가(예: `place.unverified`, 한국어 원문 "현장 확인 전 · 예시 정보", en·ja·zh 번역은 T4.2 검수 대상) — T1.1b가 coordinator 승인으로 같은 커밋에서 수정 (docs_review_phase1 판정 DOC-M-02)
   - 완료 조건: 세 파일의 키 집합이 같음(테스트), 빈 문자열·영어 fallback 없음(ja·zh), 예외 목록 밖 하드코딩 문구 없음(린트 규칙 또는 검사 스크립트)
 - [x] **T1.3 주문 문장 생성 + 수사 검수표** — 소유: `app/src/domain/orderSentence.ts`, `numerals.ts` — 2026-11-23 · reviews/T1.3_r2.md (미해결 0)
   - PRD F-06 규칙: `{메뉴} {수사} {단위}, … 주세요.` + 포장 시 ` 포장해 주세요.`, 수량 1~9, 0개 제외, 빈 주문이면 `null`
@@ -197,7 +202,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - [ ] **T2.0 공용 컴포넌트·레이아웃** — 소유: `app/src/ui/`(`ui/ReportSheet`, `ui/map/` 제외), `app/src/styles/`, `app/src/App.tsx`, 라우터, `screens/*/index.tsx` placeholder(최초 생성만)
   - T2.0 체크 시점에 각 placeholder의 소유는 해당 화면 task로 넘어갑니다
   - Button, Pill, Card, IconButton, TopBar, TabBar, Sheet(바텀시트), Toast, 아이콘 세트(SVG)
-  - `ui/ListenButton`: 공용 듣기 버튼. TTS `no-korean-voice`·`unsupported` 안내 UI 담당 (F-07)
+  - `ui/ListenButton`: 공용 듣기 버튼. TTS `no-korean-voice`·`unsupported` 안내 UI 담당 (F-07). TTS 사용 계약(T1.5 R2·R3 판정): ① 마운트 시 `tts.init()`을 호출하고, 완료되면 `getState()`로 안내를 갱신(언마운트 뒤 도착한 결과는 무시) ② 탭 핸들러에서는 `init()`을 기다리지 않고 `speak()`를 동기로 호출 ③ `onEnd`는 선점·취소된 요청에도 1회 오므로 자기 요청의 재생 표시만 끔 ④ 화면 이탈 시 effect cleanup에서 `cancel()`, `bindAutoCancel()`은 앱 루트(`App.tsx`)에서 1회 등록
   - `ui/Pronunciation`: 발음 표기 공용 표시. EN·ZH는 로마자, JA는 가타카나 (F-01)
   - 라우트 표: `/lang` `/` `/course` `/place/:id` `/order` `/practice` `/result` `/staff` `/reply` `/phrases` `/saved` `/settings` `/report`. 각 라우트는 `screens/<이름>/index.tsx`를 lazy import(빈 화면 placeholder). 라우트 → `ScreenKey`(events.ts의 `SCREEN_KEYS`, S00~S13) 매핑 표를 라우터에 두고 `screen_view`는 이 키로 기록(라우트 경로를 그대로 넘기면 기록이 버려짐 — T1.6 R2)
   - 연습·직원 화면 입력 상태 계약: `{ src: 'order'|'phrase', phraseId? }`
@@ -212,10 +217,10 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - [ ] **T2.2 코스 지도 (S02)** — 소유: `screens/Course*`, `ui/map/`
   - Leaflet + OSM 타일, OSM 출처 표시 상시 노출, 번호 핀 4개 + 정류장 연결선(보행 경로 아님 표기)
   - 타일 로드 실패·오프라인 → SVG 약도로 자동 전환
-  - 정류장 목록에 이동 시간·확인일 표시, 핀·목록 클릭 → 장소 상세 (F-03)
+  - 정류장 목록에 이동 시간·확인 상태 표시: 장소 `verified:true`면 "확인일 YYYY-MM-DD", `false`면 날짜 없이 "현장 확인 전 · 예시 정보"(T1.1b). 핀·목록 클릭 → 장소 상세 (F-03)
   - "Start walking" → 다음 정류장의 **네이버 지도 웹 길찾기 URL**(기본) 열기. Google Maps는 장소 보기용 보조 링크
 - [ ] **T2.3 장소 상세·메뉴 담기·내 주문 (S03·S04·S05)** — 소유: `screens/Place*`, `screens/Order*`
-  - 탭(메뉴/이용 방법/문장), `orderable:false`면 메뉴 탭 없이 이용 방법 탭으로 열림, 확인일 배지(`verified:false` 정보가 있는 장소는 "확인일" 대신 "현장 확인 전 · 예시 정보"로 표시 — T1.1 R1 판정, coordinator 결정), 영업 상태(Asia/Seoul 기준 참고값), 알레르기(미확인은 "확인 필요"), 비제휴 안내 문구
+  - 탭(메뉴/이용 방법/문장), `orderable:false`면 메뉴 탭 없이 이용 방법 탭으로 열림, 확인일 배지(장소 `verified:false`면 "확인일" 대신 "현장 확인 전 · 예시 정보". 메뉴가 없는 장소도 같음. 메뉴의 `verified`는 메뉴·가격에만 해당하며 장소 확인 여부로 쓰지 않음 — T1.1 R1, T1.1b), 영업 상태(Asia/Seoul 기준 참고값), 알레르기(미확인은 "확인 필요"), 비제휴 안내 문구
   - 길찾기 버튼: 네이버 지도 웹 길찾기(기본), Google Maps 장소 보기(보조) (F-04)
   - 장소 북마크 추가·해제, 새로고침 후 유지 (F-13)
   - "정보가 달라요" → `ui/ReportSheet`(T2.6) import
@@ -223,7 +228,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 다른 장소에서 담으려 하면 기존 주문 비울지 확인 시트
   - 내 주문: 주문 카드(문장·발음·번역), 포장/매장(`takeout:false`면 숨기고 매장 고정, 표시·문장 생성에는 store의 `effectiveTakeout` 헬퍼 사용 — T1.6 R1), 빈 주문이면 버튼 비활성
 - [ ] **T2.4 말하기 연습·채점 결과 (S06·S07)** — 소유: `screens/Practice*`, `screens/Result*`
-  - 마이크 켜기 전 음성 처리 안내(3개 언어), STT 상태 머신 UI 연결, 실패 시 재시도/직원에게 보여주기. 권한 대기(requesting) 중에도 취소 버튼과 "직원에게 보여주기"를 노출(기한: requesting 15초, listening·processing 각 8초 — T1.5 R1). 듣기 버튼은 첫 사용자 탭에서 `tts.init()`을 호출한 뒤 상태(`unsupported`·`no-korean-voice`)에 따라 안내 — T1.5 R3
+  - 마이크 켜기 전 음성 처리 안내(3개 언어), STT 상태 머신 UI 연결, 실패 시 재시도/직원에게 보여주기. 권한 대기(requesting) 중에도 취소 버튼과 "직원에게 보여주기"를 노출(기한: requesting 15초, listening·processing 각 8초 — T1.5 R1). 문장·단어 칩 듣기는 `ui/ListenButton`을 사용(TTS 계약은 T2.0 참조 — T1.5 R3)
   - 단어 칩 TTS, 0.75배속, 진행률, 결과 화면 "인식 일치도" 점수·약한 단어·팁
   - 단어별 일치 여부를 색으로 표시, 팁은 사용자 언어 (F-09)
 - [ ] **T2.5 직원에게 보여주기·직원 응답 (S08·S09)** — 소유: `screens/Staff*`, `screens/Reply*`
@@ -232,7 +237,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 화면 켜짐 유지(Wake Lock API, 미지원 시 무시)
 - [ ] **T2.6 문장 모음·저장·제보·운영자 리포트 (S10·S11·S13)** — 소유: `screens/Phrases*`, `screens/Saved*`, `screens/Report*`, `ui/ReportSheet`
   - 문장 모음(듣기·연습), 문장 북마크 추가·해제(새로고침 후 유지), 저장 목록, 제보 시트(4종) → 이벤트 기록
-  - 운영자 리포트(한국어 고정, 문구는 `i18n/operatorKo.ts` — T1.2 R1): 지표 4종(추가 방문 비율·성심당 다음 방문지 분포·많이 쓴 문장·제보 현황), 예시 데이터 + "예시 데이터" 표기, 내 기기 기록은 따로 표시하고 합산하지 않음(F-16a), 휴대폰에서는 1열. 내 기기 지표의 기준 장소(성심당 id `ssd`)를 명시하고, 기록이 최근 500건 범위임을 표기 — T1.6 R1
+  - 운영자 리포트(한국어 고정, 문구는 `i18n/operatorKo.ts` — T1.2 R1): 지표 4종(추가 방문 비율·성심당 다음 방문지 분포·많이 쓴 문장·제보 현황), 예시 데이터 + "예시 데이터" 표기, 내 기기 기록은 따로 표시하고 합산하지 않음(F-16a), 휴대폰에서는 1열. 내 기기 지표의 기준 장소(성심당 id `ssd`)를 `extraVisitRate`·`nextPlaceDistribution`에 넘기고, 이벤트 기반 지표(추가 방문 비율·다음 방문지·많이 쓴 문장·이용 기록 수)는 "최근 500건 기준"으로 표기. 내 기기 제보 건수는 `reports.length` 기준(이벤트 500건 상한과 무관, `report_sent` 이벤트 수로 세지 않음) — T1.6 R1
 
 **Phase 2 E2E (Playwright, 0.1절 뷰포트, 3개 언어 각각, `vite preview` 대상):**
 1. 언어 선택 → 홈 → 원도심 → 성심당 → 튀김소보로 2·판타롱부추빵 1 담기 → 내 주문 문장이 검수표 기대값과 일치
@@ -290,7 +295,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - [ ] **T4.2 번역 원어민 검수 [사용자]** — 일본어·중국어 UI 문구, 문장 뜻, 가타카나 표기, 수량 칩 뜻(人前·杯·碗·人份 — T1.3 R1)
 - [ ] **T4.4 가게 안내 [사용자]** — 실제 상호 사용 안내·동의 여부 확인, 정정·삭제 연락처 확정
 - [ ] **T4.1a 검증 결과 반영** — 담당: coordinator (검토 루프 적용)
-  - T4.1 결과 → `downtown.json` 갱신(`verified:true`, `checkedAt` 갱신), 주소·좌표 확정 후 도보 시간·총거리 재계산
+  - T4.1 결과 → `downtown.json` 갱신: 확인한 장소만 장소 `verified:true`와 `checkedAt`(실제 확인일), 확인한 메뉴만 메뉴 `verified:true`. 확인 못 한 항목은 `false` 유지. 주소·좌표 확정 후 도보 시간·총거리 재계산
   - T4.2 결과 → 영향받는 곳에 모두 반영: ① `i18n/*.json`(UI 문구) ② `downtown.json`의 해당 `meaning`·`words[].meaning`·`kana` ③ 수사 표기 변경 시 task.md 검수표 + `numerals.ts`·`orderSentence.ts`와 대응 테스트 기대값. 변경 없는 파일은 건드리지 않음
   - T4.4 결과 → 정정·삭제 연락처를 T2.1의 표시 자리에 반영
   - 완료 조건 [배포 전]: 반영 완료, 교정 항목별 반영 파일을 `reviews/T4.1a_fix.md`에 기록, 검토 미해결 0건. 배포는 완료 조건이 아니며 0.3절 4-c에서 수행
@@ -299,7 +304,12 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - iOS 사파리는 **미검증**으로 기록. 심사위원 iPhone은 텍스트·직원 화면 완주 경로로 대응
   - 실제 사용한 기기·OS·브라우저 버전 기록
   - 실제 음성 경로 증거는 이 문서가 유일하며, 자동 E2E는 목 기반임을 명시
-  - 실측 기록(T1.5 R1 판정 이관): 마이크 권한 응답 소요 시간, `voiceschanged` 도착 시점, TTS `interrupted` 이벤트 순서, `navigator.userActivation` 지원 여부
+  - 실측 시나리오(T1.5 R1·R2 판정 이관). 각 항목의 조건·결과·소요 시간을 기록:
+    ① 마이크 권한 첫 요청과 재방문(허용 기억) 각각 `start()` 호출 → `onstart`까지 전체 시간(requesting 15초 기한 적정성 판단)
+    ② 콜드 스타트(브라우저 새로 열기) 직후 첫 화면에서 한국어 음성 검출 여부, `voiceschanged` 도착 시점, 안내 표시가 맞는지
+    ③ 단어 칩 연속 탭(3회 이상 빠르게)에서 이전 발화가 끊기고 재생 표시가 마지막 칩에만 남는지, TTS `interrupted` 이벤트 순서
+    ④ 기내 모드(오프라인)에서 말하기 연습 → 실제 STT 실패 → "직원에게 보여주기" → 응답까지 완주
+    ⑤ `navigator.userActivation` 지원 여부(지원 여부는 trusted tap 발화 성공을 대신하지 않으므로 ③에서 실제 발화로 확인)
 - [ ] **T4.5 시연 리허설** [배포 후] — T4.3과 같은 커밋(해시 기록) 대상. 리허설에서 수정이 생기면 0.3절 4-b로 돌아감
   - 합격 조건: 안내 없이 180초 이내 완주, 진행자 음성 경로와 심사위원 텍스트 경로 각 1회, 시연 영상의 녹화 커밋 = T4.1a 배포 커밋(또는 '영향 장면 없음'을 `reviews/T2.7_render.md`에 기록)
   - 비상 시나리오(인식 실패 → 직원 화면) 연습
@@ -312,7 +322,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | Phase | task 수 | 완료 | 병렬 |
 |---|---|---|---|
 | 0 기반 | 4 | 4 | 순차 |
-| 1 데이터·도메인 | 6 | 5 | 6개 동시 |
+| 1 데이터·도메인 | 7 | 7 | 6개 동시 |
 | 2 화면 | 7 | 0 | T2.0 후 6개 동시 |
 | 2.5 시연 영상 | 1 | 0 | Phase 3과 병렬 |
 | 3 오프라인·배포 | 3 | 0 | T3.1 → T3.2 순차, T3.3 병렬 |
@@ -325,3 +335,4 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | v0.2 | 2026-11-23 | Codex 검토 R1(`reviews/task_review_r1.md`)과 판정(`reviews/task_review_r1_verdict.md`) 반영. 반영 항목: H-01, H-02, M-01, M-02, M-03, M-04, M-05, M-06, M-07, M-08, M-09, M-10, A-1, A-2. 사용자 결정 반영: M-10 저장소 공개 범위, A-1 네이버 지도 기본, M-09 실기기 범위(iOS 사파리 미검증). 상세는 `reviews/task_fix_r1.md` |
 | v0.3 | 2026-11-23 | Codex 검토 R2(`reviews/task_review_r2.md`)와 판정(`reviews/task_review_r2_verdict.md`) 반영. 반영 항목: H-01(배포 게이트 Phase 0~4 순서, 완료 조건 [배포 전]/[배포 후] 분리), R2-M-01(smoke SW 항목 Phase 3 이후로 한정), R2-M-02(T4.2 검수 반영 대상 확대), R2-M-03(T2.0 placeholder 소유). T0.1a GitHub Pages 활성화 추가(coordinator가 gh api로 수행, 실패 시에만 [사용자]). 사용자 결정 반영: 저장소 PUBLIC 전환(T0.1, 첫 push 직전, `git ls-files` 개인 자료 0건 선행). 상세는 `reviews/task_fix_r2.md` |
 | v0.4 | 2026-11-23 | T1.5 `unsupported`는 `showStaff`만(T0.2 R1 판정). 사용자 요청으로 Phase 2.5 T2.7 Remotion 시연 영상 추가 (Codex 교차 검증 대상). 이어서 v0.4 검토(`reviews/task_review_v04.md`)·판정(`reviews/task_review_v04_verdict.md`) 반영: M-01(Phase 2.5 앱 배포 게이트 제외), M-02(Playwright 녹화 클립·녹화 커밋 기록·재녹화), L-01(상단 버전 v0.4, 진행 표 Phase 0 완료 3), A-1(영상 상호 표기·소재 재사용 금지·`video/` 공개 범위). 사용자 결정 U-1(preview 녹화), U-2(`video/` 소스만 공개), U-3(Kokoro·edge-tts 내레이션, edge-tts 조건 [사용자] 확인). 상세는 `reviews/task_fix_v04.md` |
+| v0.5 | 2026-11-23 | Phase 1 판정 후속 반영: T1.2 R1(S13 한국어 고정·operatorKo), T1.5 R1~R3(requesting 15초, T2.0 ListenButton TTS 계약, T4.3 실측 시나리오), T1.6 R1·R2(effectiveTakeout, ScreenKey 매핑, 리포트 ssd·500건·reports 기준), T1.1 R1(확인 전 표시, T1.1b 신설), T1.3 R1(T4.2 수량 칩). 교차 검증 `reviews/docs_review_phase1.md`, 판정 `reviews/docs_review_phase1_verdict.md` |
