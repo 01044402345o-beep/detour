@@ -21,7 +21,12 @@ import {
 } from 'workbox-precaching';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { MSG_PRECACHE_STATUS, MSG_SKIP_WAITING, type PrecacheStatus } from './messages';
+import {
+  MSG_PRECACHE_STATUS,
+  MSG_SKIP_WAITING,
+  MSG_WORKER_ACTIVATED,
+  type PrecacheStatus,
+} from './messages';
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -82,4 +87,13 @@ self.addEventListener('message', (event) => {
       ),
     );
   }
+});
+
+// 활성화(= 프리캐시 설치 완료) 뒤 열린 페이지 모두에 알림 — 페이지가 준비 판정 시점을 놓치지 않게 합니다 (R2)
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clients) => clients.forEach((c) => c.postMessage({ type: MSG_WORKER_ACTIVATED }))),
+  );
 });

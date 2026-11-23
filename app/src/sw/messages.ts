@@ -3,6 +3,8 @@
 /** workbox-window의 messageSkipWaiting()이 보내는 값과 같습니다 */
 export const MSG_SKIP_WAITING = 'SKIP_WAITING';
 export const MSG_PRECACHE_STATUS = 'DETOUR_PRECACHE_STATUS';
+/** 워커 → 페이지: 활성화(프리캐시 설치 완료) 알림. 페이지는 받으면 준비 판정을 다시 합니다 */
+export const MSG_WORKER_ACTIVATED = 'DETOUR_WORKER_ACTIVATED';
 
 export type PrecacheStatus = { total: number; cached: number };
 

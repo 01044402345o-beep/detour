@@ -22,11 +22,13 @@ export default defineConfig({
   retries: 0,
   timeout: 60_000,
   expect: { timeout: 7_000 },
-  reporter: [['list'], ['json', { outputFile: 'test-results/phase2-e2e.json' }]],
+  reporter: [['list'], ['json', { outputFile: 'test-results/e2e.json' }]],
   use: {
     baseURL: 'http://localhost:4173/detour/',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    // Phase 3: 서비스 워커(오프라인 프리캐시) 동작 허용
+    serviceWorkers: 'allow',
   },
   webServer: {
     command: 'npm run build && npm run preview -- --port 4173 --strictPort',

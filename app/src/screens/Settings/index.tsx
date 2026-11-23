@@ -8,13 +8,13 @@
  * - 오프라인 준비 완료 표시(T3.1): 서비스 워커 프리캐시 목록이 전부 캐시됐을 때만 보임 (sw/pwa.ts)
  * - 하단: 가게 정보 정정·삭제 안내와 연락처 자리(PRD 10장, 값은 contact.ts)
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEFAULT_LANG, useT } from '../../i18n';
 import { LANG_NAMES } from '../../i18n/langNames';
 import { PATHS } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
-import { usePwaStore } from '../../sw/pwa';
+import { ensureOfflineCheck, usePwaStore } from '../../sw/pwa';
 import { LANGS } from '../../types';
 import { Button, Card, CardButton, Icon, Pill, Sheet, cx, useToast } from '../../ui';
 import { TAKEDOWN_CONTACT } from './contact';
@@ -28,6 +28,8 @@ export default function SettingsScreen() {
   const setLang = useAppStore((s) => s.setLang);
   const resetData = useAppStore((s) => s.resetData);
   const offlineReady = usePwaStore((s) => s.offlineReady);
+  // 설정 화면 진입 시 준비 판정을 다시 확인 (T3.1 R2: 판정 시점 누락 방지)
+  useEffect(() => ensureOfflineCheck(), []);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const doReset = () => {
