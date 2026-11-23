@@ -90,7 +90,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - coordinator가 `gh api -X POST repos/01044402345o-beep/detour/pages -f build_type=workflow`로 Pages 소스를 'GitHub Actions'로 설정합니다
   - `gh`로 안 되면 이 task를 **[사용자]**로 바꾸고, 사용자가 저장소 Settings → Pages → Source를 'GitHub Actions'로 설정합니다
   - 완료 조건: `gh api repos/01044402345o-beep/detour/pages`의 `build_type`이 `workflow`
-- [ ] **T0.2 앱 골격** (진행 중 · Claude worker) — 소유: `app/` 전체 (이 시점에만)
+- [x] **T0.2 앱 골격** — 소유: `app/` 전체 (이 시점에만) — 2026-11-23 · reviews/T0.2_r2.md (미해결 0)
   - `app/`에 Vite + React + TypeScript 생성. 의존성: react-router-dom, zustand, leaflet, vite-plugin-pwa, vitest, @testing-library/react, @playwright/test, eslint, prettier
   - 스타일: **CSS Modules + 전역 토큰 `app/src/styles/tokens.css`** (목업의 색·글꼴·반경 값을 그대로 옮김). Tailwind는 쓰지 않음
   - `vite.config.ts`의 `base: '/detour/'`, HashRouter
@@ -171,7 +171,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
                     ↘ denied      ↘ no-speech / timeout(8초) / network / aborted / error
     unsupported (API 없음)
     ```
-    모든 실패 상태는 `{ retry, showStaff }` 두 선택지를 UI에 넘김. 인식 원문은 결과로만 반환하고 저장·로그하지 않음
+    모든 실패 상태는 `{ retry, showStaff }` 두 선택지를 UI에 넘김(단, `unsupported`는 재시도가 의미 없으므로 `showStaff`만 — T0.2 R1 판정). 인식 원문은 결과로만 반환하고 저장·로그하지 않음
   - 테스트: Web Speech API 목(mock)으로 상태 전이 전부 검증
   - 완료 조건: 상태 전이 테스트 통과, 타임아웃 8초 테스트(가짜 타이머)
 - [ ] **T1.6 앱 상태·이용 기록** — 소유: `app/src/store/`, `app/src/domain/events.ts`
@@ -243,6 +243,22 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 ---
 
+## Phase 2.5 — 시연 영상 (Remotion · 사용자 요청 2026-11-23)
+
+> Phase 2 E2E 통과 후 시작합니다. 앱 코드(`app/`)를 바꾸지 않으므로 **Phase 3과 병렬로 진행**합니다. Phase 4에서 콘텐츠가 바뀌면 다시 렌더링합니다(T2.7 재실행).
+
+- [ ] **T2.7 Remotion 시연 영상** — 소유: `video/` 전체(렌더 결과 `video/out/`은 git 제외)
+  - 준비: Remotion 에이전트 스킬 설치, `video/`에 Remotion 프로젝트 생성. Remotion 라이선스 조건(개인·소규모 무료 여부)을 확인해 `reviews/T2.7_license.md`에 기록
+  - 장면 구성(약 90초, 폰 프레임 390×844 + 자막): 문제 제기(빵집 한 곳 집중) → 언어 선택 → 원도심 코스 → 성심당 메뉴 담기 → 한국어 주문 카드 → 듣고 따라 말하기·인식 일치도 → 직원에게 보여주기·직원 응답 → 광천식당(매장 식사) → 운영자 리포트("빵집 다음은 어디였나") → 마무리(QR·배포 URL)
+  - 앱 화면은 `app/src/` 컴포넌트를 읽기 전용으로 import하거나 Playwright 녹화본을 넣습니다. 앱 쪽 수정이 필요하면 coordinator에 요청합니다
+  - 음성 인식 장면은 재현 장면임을 화면에 작게 표시합니다(실제 인식 화면은 T4.3 기기 녹화로 교체 가능)
+  - 자막 언어: 한국어 기본 + 영어 버전(일본어·중국어는 선택)
+  - 내레이션: 기존 홍보영상(`daejeon-detour-film/`)의 음성 제작 방식을 참고하되 새로 만듭니다. 기존 파일은 수정하지 않습니다
+  - 완료 조건: `npx remotion render`로 1080×1920(세로) mp4 생성, 길이 120초 이하, 자막·화면 문구가 PRD(비제휴 안내, 인식 일치도 용어, 예시 데이터 표기)와 일치, 렌더 결과 경로와 길이를 `reviews/T2.7_render.md`에 기록, 검토 미해결 0건
+  - Git: `.gitignore` 허용 목록에 `video/`를 추가하고 `video/out/`, `video/node_modules/`는 제외 (coordinator)
+
+---
+
 ## Phase 3 — 오프라인·성능·배포 (순차: T3.1 → 빌드 고정 → T3.2, T3.3은 병렬. 순서는 0.3절 3-a~3-f)
 
 - [ ] **T3.1 PWA·오프라인** — 소유: `app/public/manifest.webmanifest`, `app/src/sw/`, `vite.config.ts`, `screens/Settings*`의 오프라인 표시 부분, `ui/Toast` 연결, `package.json`·lock(플러그인 추가 시)
@@ -294,6 +310,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | 0 기반 | 4 | 0 | 순차 |
 | 1 데이터·도메인 | 6 | 0 | 6개 동시 |
 | 2 화면 | 7 | 0 | T2.0 후 6개 동시 |
+| 2.5 시연 영상 | 1 | 0 | Phase 3과 병렬 |
 | 3 오프라인·배포 | 3 | 0 | T3.1 → T3.2 순차, T3.3 병렬 |
 | 4 검증·시연 | 7 | 0 | 사용자 task 포함 |
 
@@ -303,3 +320,4 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | v0.1 | 2026-11-23 | 최초 작성 (prd.md v0.3 기준) |
 | v0.2 | 2026-11-23 | Codex 검토 R1(`reviews/task_review_r1.md`)과 판정(`reviews/task_review_r1_verdict.md`) 반영. 반영 항목: H-01, H-02, M-01, M-02, M-03, M-04, M-05, M-06, M-07, M-08, M-09, M-10, A-1, A-2. 사용자 결정 반영: M-10 저장소 공개 범위, A-1 네이버 지도 기본, M-09 실기기 범위(iOS 사파리 미검증). 상세는 `reviews/task_fix_r1.md` |
 | v0.3 | 2026-11-23 | Codex 검토 R2(`reviews/task_review_r2.md`)와 판정(`reviews/task_review_r2_verdict.md`) 반영. 반영 항목: H-01(배포 게이트 Phase 0~4 순서, 완료 조건 [배포 전]/[배포 후] 분리), R2-M-01(smoke SW 항목 Phase 3 이후로 한정), R2-M-02(T4.2 검수 반영 대상 확대), R2-M-03(T2.0 placeholder 소유). T0.1a GitHub Pages 활성화 추가(coordinator가 gh api로 수행, 실패 시에만 [사용자]). 사용자 결정 반영: 저장소 PUBLIC 전환(T0.1, 첫 push 직전, `git ls-files` 개인 자료 0건 선행). 상세는 `reviews/task_fix_r2.md` |
+| v0.4 | 2026-11-23 | T1.5 `unsupported`는 `showStaff`만(T0.2 R1 판정). 사용자 요청으로 Phase 2.5 T2.7 Remotion 시연 영상 추가 (Codex 교차 검증 대상) |
