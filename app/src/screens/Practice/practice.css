@@ -1,0 +1,309 @@
+/* S06 말하기 연습 (T2.4) — 목업 practice 블록 값. 누르는 요소는 모두 44px 이상. */
+.pr-screen {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 상단: 닫기 · 진행률 · n/전체 */
+.pr-top {
+  min-height: 0;
+  padding: 8px 18px 10px;
+}
+
+.pr-prog {
+  flex: 1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--line);
+}
+
+.pr-prog > i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--acc);
+  transition: width 0.3s;
+}
+
+.pr-count {
+  width: 40px;
+  font-size: 13px;
+  text-align: right;
+}
+
+.pr-kicker,
+.pr-label {
+  padding: 0 22px;
+  color: var(--soft);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.pr-label {
+  margin-top: 18px;
+  letter-spacing: 1px;
+}
+
+.pr-label--flush {
+  margin-top: 0;
+  padding: 0;
+}
+
+/* 문장 카드 */
+.pr-card {
+  margin: 14px 18px 0;
+  padding: 22px 18px 18px;
+  text-align: center;
+}
+
+.pr-ko {
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.pr-pron {
+  display: block;
+  margin-top: 10px;
+}
+
+.pr-mn {
+  margin-top: 4px;
+  color: var(--sea-d);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pr-ctrl {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pr-ctrl .ui-listen-notice {
+  flex-basis: 100%;
+  margin-top: 0;
+}
+
+/* 듣기 컨트롤 묶음 (인식 중 disabled) — fieldset 기본 테두리·여백 제거 */
+fieldset.pr-ctrl,
+fieldset.pr-words {
+  min-width: 0;
+  border: 0;
+  margin-inline: 0;
+}
+
+fieldset.pr-ctrl {
+  padding: 0;
+}
+
+fieldset.pr-words {
+  padding-block: 0;
+}
+
+/* 0.75배속은 목업처럼 흰 바탕 알약 */
+.pr-ctrl .pr-slow:not([aria-pressed='true']) {
+  border: 1px solid var(--line2);
+  background: #fff;
+  color: var(--ink);
+}
+
+/* 단어 칩 (목업 .words button: 높이 36px → 44px) */
+.pr-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 18px;
+  padding: 0 18px;
+}
+
+.pr-word {
+  padding: 8px 11px;
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pr-word small {
+  margin-left: -1px;
+  color: var(--soft);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pr-word[aria-pressed='true'] small {
+  color: #fff;
+}
+
+/* 하단 마이크 패널 */
+.pr-mic {
+  margin-top: auto;
+  padding: 18px 22px 34px;
+  border-top: 1px solid var(--line);
+  border-radius: 28px 28px 0 0;
+  background: #fff;
+  box-shadow: 0 -10px 30px -20px rgba(21, 26, 38, 0.25);
+  text-align: center;
+}
+
+.pr-status {
+  color: var(--soft);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pr-status.on {
+  color: var(--acc-d);
+}
+
+.pr-fail {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--sun-s);
+  text-align: left;
+}
+
+.pr-fail b {
+  font-size: 14px;
+}
+
+.pr-fail p {
+  margin-top: 3px;
+  color: #5e4610;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.pr-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.pr-acts--center {
+  justify-content: center;
+}
+
+.pr-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 0 14px;
+  border: 1px solid var(--line2);
+  border-radius: var(--r-pill);
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pr-act--ink {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.pr-act:focus-visible,
+.pr-micb:focus-visible,
+.pr-word:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+
+.pr-wave {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 46px;
+}
+
+.pr-wave > i {
+  width: 4px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--line2);
+}
+
+.pr-wave.on > i {
+  background: var(--acc);
+  animation: pr-wv 0.9s ease-in-out infinite;
+}
+
+@keyframes pr-wv {
+  0%,
+  100% {
+    height: 8px;
+  }
+  50% {
+    height: var(--h, 30px);
+  }
+}
+
+.pr-micb {
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 74px;
+  margin: 10px auto 0;
+  border-radius: 50%;
+  background: var(--acc); /* 아이콘만(글자 없음): 흰 아이콘 3.1:1 — 비텍스트 3:1 기준 */
+  color: #fff;
+  box-shadow:
+    0 0 0 10px var(--acc-s),
+    0 14px 26px -10px rgba(238, 106, 60, 0.8);
+}
+
+.pr-micb:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.pr-micb.on {
+  animation: pr-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pr-pulse {
+  50% {
+    box-shadow:
+      0 0 0 18px rgba(253, 230, 220, 0.6),
+      0 14px 26px -10px rgba(238, 106, 60, 0.8);
+  }
+}
+
+.pr-notice {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--soft);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.pr-notice .ui-icon {
+  margin-top: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-wave.on > i,
+  .pr-micb.on {
+    animation: none;
+  }
+  .pr-wave.on > i {
+    height: var(--h, 30px);
+  }
+}

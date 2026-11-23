@@ -1,0 +1,94 @@
+/* S10 문장 모음 (목업 R.phrases · .prow) */
+.phr {
+  padding-bottom: 20px;
+}
+.phr-head {
+  padding: 6px 22px 6px;
+}
+.phr-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+.phr-sub {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--soft);
+}
+.phr-sec__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 22px 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+.phr-no {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+/* 흰 글자 대비 4.5:1: 목업 --acc(3.1:1) 대신 --acc-d */
+.phr-no--food {
+  background: var(--acc-d);
+}
+.phr-no--sight {
+  background: var(--plum);
+}
+.phr-list {
+  list-style: none;
+  padding: 0 18px;
+}
+.phr-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 8px 6px 6px;
+}
+.phr-row__main {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--touch);
+  padding: 8px 10px;
+  text-align: left;
+  border-radius: var(--r-lg);
+}
+.phr-row__main:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+.phr-ko {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.phr-meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--soft);
+}
+.phr-bm {
+  color: var(--soft);
+  background: transparent;
+  border-color: transparent;
+}
+.phr-bm.is-on {
+  color: var(--acc-d);
+}
+.phr-bm.is-on svg {
+  fill: currentColor;
+}
+.phr-play.ui-listen--round {
+  width: 44px;
+  height: 44px;
+}

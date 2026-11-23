@@ -56,7 +56,10 @@
     "mapOffline": "Map tiles are unavailable, so a simplified map is shown.",
     "mapStation": "Jungang-ro Stn",
     "mapStream": "Daejeoncheon Stream",
-    "mapToDaejeonStn": "To Daejeon Stn →"
+    "mapToDaejeonStn": "To Daejeon Stn →",
+    "walkToStop": "Walk to stop {n}",
+    "dirNext": "Opens walking directions to stop {n} in NAVER Map",
+    "googleMaps": "View stop {n} in Google Maps"
   },
   "place": {
     "food": "FOOD",
@@ -79,7 +82,8 @@
     "disclaimer": "Independent guide — not affiliated with this store and not an official ordering service.",
     "takedown": "Store owners: if you want this information corrected or removed, please contact us and we will act right away.",
     "save": "Save this place",
-    "unsave": "Remove from saved"
+    "unsave": "Remove from saved",
+    "googleMaps": "View in Google Maps"
   },
   "menu": {
     "signature": "Signature",
@@ -152,7 +156,9 @@
     "tip": "“{word}” didn’t match well. Say it slowly, one syllable at a time.",
     "again": "Try again",
     "next": "Next phrase",
-    "instead": "Show this to staff instead"
+    "instead": "Show this to staff instead",
+    "wordMatched": "Matched",
+    "wordUnmatched": "Not matched"
   },
   "staff": {
     "staffReply": "Staff reply",
@@ -174,13 +180,15 @@
   },
   "phrases": {
     "title": "Phrases",
-    "practice": "Practice"
+    "practice": "Practice",
+    "save": "Save this phrase"
   },
   "saved": {
     "title": "Saved",
     "savedToast": "Saved",
     "removedToast": "Removed",
-    "empty": "Nothing saved yet"
+    "empty": "Nothing saved yet",
+    "places": "Places"
   },
   "report": {
     "open": "Info looks wrong?",

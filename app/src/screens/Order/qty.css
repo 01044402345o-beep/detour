@@ -1,0 +1,64 @@
+/* 수량 −/+ (목업 .qty·.addb). 누름 영역 44px, 보이는 원은 목업 크기 */
+.qty {
+  display: flex;
+  flex: none;
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+}
+
+.qty__btn,
+.addb {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--touch);
+  height: var(--touch);
+  min-width: var(--touch);
+  min-height: var(--touch);
+  border-radius: 50%;
+  color: var(--ink);
+}
+
+.qty__btn > svg,
+.addb > svg {
+  position: relative;
+  z-index: 1;
+}
+
+.qty__btn--plus,
+.addb {
+  color: #fff;
+}
+
+.qty__btn--plus::before,
+.addb::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.qty__btn--plus::before {
+  inset: 7px;
+}
+
+.addb::before {
+  inset: 4px;
+}
+
+.qty__btn:focus-visible,
+.addb:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 1px;
+}
+
+.qty__n {
+  min-width: 14px;
+  font-size: 14px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}

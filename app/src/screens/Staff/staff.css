@@ -1,0 +1,184 @@
+/* S08 직원에게 보여주기 (목업 .staff). 누를 수 있는 요소는 44px 이상. */
+.staff {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #fffdf8;
+}
+
+.staff__title {
+  color: var(--soft); /* #fffdf8 위 5.14:1 */
+  font-size: 13px;
+}
+
+.staff__note {
+  margin: 4px 18px 0;
+  padding: 11px 14px;
+  border-radius: var(--r-lg);
+  background: var(--sea-s);
+  color: var(--sea-d); /* 7.07:1 */
+  font-size: 13.5px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.staff__big {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 24px;
+  text-align: center;
+}
+
+.staff__ko {
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.3;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  transition: font-size 0.25s;
+}
+
+.staff__lines {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 14px auto 0;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: #fff;
+  color: var(--ink2);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left;
+  list-style: none;
+}
+
+.staff__qty {
+  color: var(--acc-d); /* 목업 --acc(#fff 위 3.0:1) → --acc-d 5.51:1 */
+}
+
+.staff__rule {
+  width: 44px;
+  height: 4px;
+  margin: 22px auto;
+  border: 0;
+  border-radius: 4px;
+  background: var(--acc);
+}
+
+.staff__meaning {
+  color: var(--soft);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.staff__prompt {
+  margin-bottom: 8px;
+  color: var(--soft);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.staff__replies {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 18px;
+}
+
+.staff__reply {
+  min-width: var(--touch);
+  min-height: 56px;
+  padding: 12px 6px;
+  border: 1.5px solid var(--line2);
+  border-radius: var(--r-xl);
+  background: #fff;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+  word-break: keep-all;
+}
+
+.staff__reply small {
+  display: block;
+  margin-top: 3px;
+  color: var(--soft); /* #fff 위 5.23:1 */
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.staff__reply--yes {
+  border-color: var(--sea);
+  background: var(--sea);
+  color: #fff; /* 4.75:1 */
+}
+
+.staff__reply--yes small {
+  color: #fff; /* 목업 #cdeeea 3.85:1 → 흰색 */
+}
+
+.staff__reply:active {
+  transform: scale(0.98);
+}
+
+.staff__ctrls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px 34px;
+}
+
+.staff__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 0 14px;
+  border: 1px solid var(--line2);
+  border-radius: var(--r-pill);
+  background: #fff;
+  color: var(--ink2); /* 12.6:1 */
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.staff__toggle[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.staff__reply:focus-visible,
+.staff__toggle:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+
+.staff__empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+}
+
+.staff__empty-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.staff__empty-hint {
+  margin-bottom: 8px;
+  color: var(--soft);
+  font-size: 14px;
+}

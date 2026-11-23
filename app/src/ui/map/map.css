@@ -1,0 +1,102 @@
+/* 코스 지도 (T2.2) — 목업 .mapbox: 좌우 16px, 반경 24px, 선 --line, 배경 #f1ebde */
+.cmap {
+  margin: 0 16px;
+}
+
+.cmap-box {
+  position: relative;
+  border-radius: var(--r-3xl);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #f1ebde;
+  /* 목업 약도 360×290 비율 */
+  aspect-ratio: 360 / 290;
+  isolation: isolate;
+}
+
+.cmap-leaflet,
+.cmap-sketch {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cmap-leaflet {
+  background: #f1ebde;
+  font-family: var(--kfont);
+}
+
+.cmap-sketch__pin {
+  cursor: pointer;
+}
+
+.cmap-sketch__pin:hover .cmap-sketch__dot {
+  r: 17;
+}
+
+.cmap-sketch__pin:focus {
+  outline: none;
+}
+
+.cmap-sketch__pin:focus-visible .cmap-sketch__dot {
+  stroke: var(--ink);
+}
+
+/* Leaflet 번호 핀: 터치 영역 44px, 보이는 원 30px */
+.cmap-pin {
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+}
+
+.cmap-pin__dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(21, 26, 38, 0.3);
+}
+
+.cmap-pin--food .cmap-pin__dot {
+  background: var(--acc-d);
+}
+
+.cmap-pin--sight .cmap-pin__dot {
+  background: var(--plum);
+}
+
+.cmap-pin:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -4px;
+  border-radius: 50%;
+}
+
+.cmap .leaflet-control-attribution {
+  font-size: 10px;
+  color: var(--ink2);
+}
+
+.cmap .leaflet-control-attribution a {
+  color: var(--ink2);
+  text-decoration: underline;
+}
+
+.cmap-note {
+  margin-top: 8px;
+  padding: 0 6px;
+  font-size: 11.5px;
+  color: var(--soft);
+  line-height: 1.45;
+}
+
+.cmap-note--offline {
+  margin-top: 4px;
+  color: var(--ink2);
+  font-weight: 600;
+}

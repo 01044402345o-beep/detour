@@ -1,0 +1,106 @@
+import { fireEvent, render, screen } from '@testing-library/react';
+import { t } from '../../i18n';
+import { useAppStore } from '../../store/useAppStore';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { places } from '../../data';
+import { SketchMap } from './SketchMap';
+import { MAP_INSET_PX, PIN_HIT_R, SKETCH_W } from './sketchConstants';
+import type { MapStop } from './types';
+
+const STOPS: MapStop[] = [
+  { id: 'ssd', no: 1, name: 'Sungsimdang', category: 'food', geo: { lat: 36.3277, lng: 127.4273 } },
+  {
+    id: 'eun',
+    no: 2,
+    name: 'Euneungjeongi',
+    category: 'sight',
+    geo: { lat: 36.3289, lng: 127.4262 },
+  },
+  { id: 'mus', no: 3, name: 'Museum', category: 'sight', geo: { lat: 36.3273, lng: 127.4206 } },
+];
+
+beforeEach(() => useAppStore.setState({ lang: 'en' }));
+afterEach(() => useAppStore.setState({ lang: null }));
+
+describe('SketchMap (SVG 약도)', () => {
+  it('번호 핀이 순서대로, 이름은 "번호. 장소명"', () => {
+    render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
+    const pins = screen.getAllByRole('button');
+    expect(pins.map((p) => p.getAttribute('aria-label'))).toEqual([
+      '1. Sungsimdang',
+      '2. Euneungjeongi',
+      '3. Museum',
+    ]);
+    expect(screen.getByRole('group', { name: 'Course' })).toBeInTheDocument();
+  });
+
+  it('핀 클릭·Enter·Space → onSelect(장소 ID)', () => {
+    const onSelect = vi.fn();
+    render(<SketchMap stops={STOPS} onSelect={onSelect} label="Course" />);
+    fireEvent.click(screen.getByTestId('map-pin-eun'));
+    fireEvent.keyDown(screen.getByTestId('map-pin-mus'), { key: 'Enter' });
+    fireEvent.keyDown(screen.getByTestId('map-pin-ssd'), { key: ' ' });
+    fireEvent.keyDown(screen.getByTestId('map-pin-ssd'), { key: 'a' });
+    expect(onSelect.mock.calls).toEqual([['eun'], ['mus'], ['ssd']]);
+  });
+
+  it('핀은 Tab으로 갈 수 있고, 최소 폭 360px에서 실제 표시되는 히트 지름이 44px 이상 (R1 M-02)', () => {
+    render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
+    const pin = screen.getByTestId('map-pin-ssd');
+    expect(pin).toHaveAttribute('tabindex', '0');
+    const r = Number(pin.querySelector('circle')?.getAttribute('r'));
+    expect(r).toBe(PIN_HIT_R);
+    expect(PIN_HIT_R).toBe(25);
+    for (const vw of [360, 390, 430]) {
+      const shownW = vw - MAP_INSET_PX;
+      expect((r * 2 * shownW) / SKETCH_W).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  it('MAP_INSET_PX가 map.css의 실제 여백·테두리와 일치', () => {
+    const css = readFileSync(join(process.cwd(), 'src/ui/map/map.css'), 'utf8');
+    const block = (sel: string) => {
+      const at = css.indexOf(`\n${sel} {`);
+      return at < 0 ? '' : css.slice(at, css.indexOf('}', at));
+    };
+    expect(block('.cmap')).toMatch(/margin:\s*0 16px;/);
+    expect(block('.cmap-box')).toMatch(/border:\s*1px solid/);
+    expect(MAP_INSET_PX).toBe(16 * 2 + 1 * 2);
+  });
+
+  it('실제 코스 4곳의 히트 원이 서로 겹치지 않음', () => {
+    const real: MapStop[] = places.map((p, i) => ({
+      id: p.id,
+      no: i + 1,
+      name: p.name.en,
+      category: p.category,
+      geo: p.geo,
+    }));
+    render(<SketchMap stops={real} onSelect={() => {}} label="Course" />);
+    const centers = real.map((p) => {
+      const c = screen.getByTestId(`map-pin-${p.id}`).querySelector('circle')!;
+      return { x: Number(c.getAttribute('cx')), y: Number(c.getAttribute('cy')) };
+    });
+    for (let i = 0; i < centers.length; i += 1) {
+      for (let j = i + 1; j < centers.length; j += 1) {
+        const d = Math.hypot(centers[i].x - centers[j].x, centers[i].y - centers[j].y);
+        expect(d).toBeGreaterThan(PIN_HIT_R * 2);
+      }
+    }
+  });
+
+  it('정류장 연결선이 정류장 수만큼 꼭짓점을 가짐', () => {
+    render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
+    const d = screen.getByTestId('map-line').getAttribute('d') ?? '';
+    expect(d.match(/[ML]/g)).toEqual(['M', 'L', 'L']);
+  });
+
+  it('약도 문구는 사용자 언어 (하천·대전역 방향)', () => {
+    useAppStore.setState({ lang: 'ja' });
+    const { container } = render(<SketchMap stops={STOPS} onSelect={() => {}} label="x" />);
+    expect(container.textContent).toContain(t('ja', 'course.mapStream'));
+    expect(container.textContent).toContain(t('ja', 'course.mapToDaejeonStn'));
+    expect(container.textContent).not.toContain(t('en', 'course.mapStream'));
+  });
+});

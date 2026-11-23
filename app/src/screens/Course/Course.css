@@ -1,0 +1,167 @@
+/* S02 코스 지도 (T2.2) — 목업 .cmeta .stop .walkseg 값 */
+.course {
+  padding-bottom: 30px;
+}
+
+.course-meta {
+  padding: 16px 22px 6px;
+}
+
+.course-meta__title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+
+.course-meta__sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--soft);
+}
+
+.course-meta__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.course-stops {
+  list-style: none;
+}
+
+.course-walk {
+  margin-left: 36px;
+  padding: 2px 22px;
+  font-size: 11.5px;
+  color: var(--soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.course-walk::before {
+  content: '';
+  width: 2px;
+  height: 18px;
+  background: repeating-linear-gradient(var(--line2) 0 3px, transparent 3px 6px);
+  margin-right: 8px;
+}
+
+.course-stop {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 22px;
+  text-align: left;
+  width: 100%;
+  min-height: var(--touch);
+}
+
+.course-stop:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -3px;
+  border-radius: var(--r-md);
+}
+
+.course-stop__n {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  flex: none;
+  margin-top: 2px;
+}
+
+/* 흰 글자 대비 4.5:1: 목업 #ee6a3c(3.1:1) 대신 --acc-d */
+.course-stop__n--food {
+  background: var(--acc-d);
+}
+
+.course-stop__n--sight {
+  background: var(--plum);
+}
+
+.course-stop__body {
+  flex: 1;
+  min-width: 0;
+  display: block;
+}
+
+.course-stop__name {
+  display: block;
+  font-size: 15.5px;
+}
+
+.course-stop__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--soft);
+}
+
+.course-stop__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.course-stop__check {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink2);
+}
+
+.course-stop__check.is-verified {
+  color: var(--sea-d);
+}
+
+.course-stop__chev {
+  color: var(--soft);
+  margin-top: 8px;
+}
+
+.course-actions {
+  padding: 14px 22px 0;
+}
+
+.course-actions__hint {
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--soft);
+  text-align: center;
+}
+
+.course-actions__google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--touch);
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sea-d);
+  text-decoration: underline;
+}
+
+.course-actions__google:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* 링크(a)로 만든 큰 버튼: 전역 a 밑줄 제거 */
+.course-actions .ui-btn {
+  text-decoration: none;
+}

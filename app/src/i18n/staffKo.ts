@@ -14,6 +14,8 @@ export const STAFF_KO = {
   replyPrompt: '직원분 응답',
   /** 응답 결과 화면의 한국어 머리말 */
   replyResultPrefix: '직원 응답',
+  /** 주문 목록 끝 포장 표시 (목업 S08, 포장 선택 시에만) */
+  takeoutLine: '포장',
   /** 직원 응답 버튼 (F-11) */
   replies: {
     yes: '네',

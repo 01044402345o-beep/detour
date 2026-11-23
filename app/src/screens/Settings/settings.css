@@ -1,0 +1,130 @@
+/* S12 설정 (T2.1). 값은 mockup/index.html R.settings·.ropt 기준.
+   대비: 선택 표시 체크·초기화 글자는 --acc-d(흰 카드 위 5.9:1, 목업 --acc는 3.0:1) */
+.set-screen {
+  padding-top: calc(6px + env(safe-area-inset-top, 0px));
+}
+
+.set-title {
+  padding: 14px 22px 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+
+.set-body {
+  padding: 10px 18px 20px;
+}
+
+.set-label {
+  margin: 10px 4px;
+  color: var(--soft);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.set-langs.ui-card {
+  padding: 6px;
+}
+
+.set-opt,
+.set-row.ui-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--touch);
+  padding: 15px 16px;
+  font-size: 14.5px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.set-opt {
+  border-radius: 14px;
+}
+
+.set-opt--on {
+  background: var(--paper);
+}
+
+.set-opt__name,
+.set-row__name {
+  flex: 1;
+}
+
+.set-opt__check {
+  color: var(--acc-d);
+}
+
+.set-privacy.ui-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  color: var(--ink2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.set-privacy .ui-icon {
+  flex: none;
+  margin-top: 2px;
+}
+
+.set-row.ui-card {
+  margin-top: 14px;
+}
+
+.set-row--danger.ui-card {
+  margin-top: 10px;
+  color: var(--acc-d);
+}
+
+.set-row__chev {
+  color: var(--soft);
+}
+
+.set-takedown {
+  margin-top: 22px;
+  padding: 0 4px;
+  color: var(--soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.set-takedown p + p {
+  margin-top: 6px;
+}
+
+.set-takedown__contact {
+  color: var(--ink2);
+  font-weight: 700;
+}
+
+.set-confirm__body {
+  margin-top: 10px;
+  color: var(--ink2);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.set-confirm__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.set-opt {
+  position: relative;
+  cursor: pointer;
+}
+
+/* 숨긴 radio에 키보드 포커스가 있으면 라벨에 표시 (R1 M-01) */
+.set-opt:has(input:focus-visible) {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}

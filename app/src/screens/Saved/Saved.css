@@ -1,0 +1,103 @@
+/* S11 저장 · 제보 (목업 R.saved) */
+.sav-head {
+  padding: 6px 22px 0;
+}
+.sav-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+.sav-body {
+  padding: 6px 18px 20px;
+}
+.sav-empty {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--soft);
+}
+.sav-sec {
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink2);
+}
+.sav-list {
+  list-style: none;
+}
+.sav-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px;
+}
+.sav-no {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+}
+/* 흰 글자 대비 4.5:1: 목업 --acc 대신 --acc-d */
+.sav-no--food {
+  background: var(--acc-d);
+}
+.sav-no--sight {
+  background: var(--plum);
+}
+.sav-row__main {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--touch);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--ink);
+  text-decoration: none;
+  border-radius: var(--r-md);
+}
+.sav-row__main:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+.sav-name {
+  font-size: 15px;
+  font-weight: 800;
+}
+.sav-ko {
+  letter-spacing: -0.3px;
+}
+.sav-meta {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--soft);
+}
+.sav-bm {
+  color: var(--acc-d);
+  background: transparent;
+  border-color: transparent;
+}
+.sav-bm svg {
+  fill: currentColor;
+}
+.sav-report {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 15px 16px;
+  font-weight: 700;
+  font-size: 14.5px;
+}
+.sav-report__label {
+  flex: 1;
+}
+.sav-chev {
+  color: var(--soft);
+}

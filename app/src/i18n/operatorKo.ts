@@ -12,6 +12,8 @@ import { fillTemplate, type Params } from './format';
 
 export const OPERATOR_KO = {
   sampleBadge: '예시 데이터 · 시연용',
+  deviceBasis: '최근 {max}건 기준',
+  back: '뒤로',
   title: '운영자 리포트 — 원도심',
   subtitle: '“빵집 다음은 어디였나” · {period} · 대전시·자치구·관광기관 제공용',
   kpiUsers: '이용자 (QR 접속)',

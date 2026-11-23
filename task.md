@@ -199,7 +199,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 > T2.1~T2.6 공통 완료 조건: 명시된 동작 각각의 컴포넌트 테스트 통과 + 목업과 시각 대조 캡처 `reviews/T2.x_screens.png`. 각 화면은 자기 화면의 이용 기록 이벤트를 store 액션으로 남깁니다.
 
 ### 2-1 공용 UI (순차, 먼저)
-- [ ] **T2.0 공용 컴포넌트·레이아웃** — 소유: `app/src/ui/`(`ui/ReportSheet`, `ui/map/` 제외), `app/src/styles/`, `app/src/App.tsx`, 라우터, `screens/*/index.tsx` placeholder(최초 생성만)
+- [x] **T2.0 공용 컴포넌트·레이아웃** — 소유: `app/src/ui/`(`ui/ReportSheet`, `ui/map/` 제외), `app/src/styles/`, `app/src/App.tsx`, 라우터, `screens/*/index.tsx` placeholder(최초 생성만) — 2026-11-23 · reviews/T2.0_r3.md (미해결 0) · 커밋은 화면 placeholder가 T2.1~T2.6과 얽혀 Phase 2 통합 커밋에 포함
   - T2.0 체크 시점에 각 placeholder의 소유는 해당 화면 task로 넘어갑니다
   - Button, Pill, Card, IconButton, TopBar, TabBar, Sheet(바텀시트), Toast, 아이콘 세트(SVG)
   - `ui/ListenButton`: 공용 듣기 버튼. TTS `no-korean-voice`·`unsupported` 안내 UI 담당 (F-07). TTS 사용 계약(T1.5 R2·R3 판정): ① 마운트 시 `tts.init()`을 호출하고, 완료되면 `getState()`로 안내를 갱신(언마운트 뒤 도착한 결과는 무시) ② 탭 핸들러에서는 `init()`을 기다리지 않고 `speak()`를 동기로 호출 ③ `onEnd`는 선점·취소된 요청에도 1회 오므로 자기 요청의 재생 표시만 끔 ④ 화면 이탈 시 effect cleanup에서 `cancel()`, `bindAutoCancel()`은 앱 루트(`App.tsx`)에서 1회 등록
@@ -211,15 +211,15 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 완료 조건: 모든 라우트가 빈 화면으로 열림, 터치 영역 44px 이상, 대비 4.5:1 검사 통과
 
 ### 2-2 화면 (병렬 묶음 B: 6개 동시, T2.0 완료 후)
-- [ ] **T2.1 언어 선택·홈·설정 (S00·S01·S12)** — 소유: `screens/Lang*`, `screens/Home*`, `screens/Settings*`
+- [x] **T2.1 언어 선택·홈·설정 (S00·S01·S12)** — 소유: `screens/Lang*`, `screens/Home*`, `screens/Settings*` — 2026-11-23 · reviews/T2.1_r2.md (미해결 0) · 토스트 폭은 T2.0 R4에서 해소 · 커밋은 Phase 2 통합 커밋
   - 언어 즉시 전환, 잠긴 거점·1박 배너는 "Coming soon" 토스트, 오늘의 코스(F-02), 오늘의 문장 듣기, 설정 → 운영자 리포트 진입, 데모 데이터 초기화
   - 설정 하단에 정정·삭제 연락처 표시 자리(PRD 10장). 값은 T4.4에서 확정해 T4.1a에서 반영
-- [ ] **T2.2 코스 지도 (S02)** — 소유: `screens/Course*`, `ui/map/`
+- [x] **T2.2 코스 지도 (S02)** — 소유: `screens/Course*`, `ui/map/` — 2026-11-23 · reviews/T2.2_r3.md (미해결 0) · 네이버 URL은 T4.3 이관 · 커밋은 Phase 2 통합 커밋
   - Leaflet + OSM 타일, OSM 출처 표시 상시 노출, 번호 핀 4개 + 정류장 연결선(보행 경로 아님 표기)
   - 타일 로드 실패·오프라인 → SVG 약도로 자동 전환
   - 정류장 목록에 이동 시간·확인 상태 표시: 장소 `verified:true`면 "확인일 YYYY-MM-DD", `false`면 날짜 없이 "현장 확인 전 · 예시 정보"(T1.1b). 핀·목록 클릭 → 장소 상세 (F-03)
   - "Start walking" → 다음 정류장의 **네이버 지도 웹 길찾기 URL**(기본) 열기. Google Maps는 장소 보기용 보조 링크
-- [ ] **T2.3 장소 상세·메뉴 담기·내 주문 (S03·S04·S05)** — 소유: `screens/Place*`, `screens/Order*`
+- [x] **T2.3 장소 상세·메뉴 담기·내 주문 (S03·S04·S05)** — 소유: `screens/Place*`, `screens/Order*` — 2026-11-23 · reviews/T2.3_r2.md (미해결 0) · 커밋은 Phase 2 통합 커밋
   - 탭(메뉴/이용 방법/문장), `orderable:false`면 메뉴 탭 없이 이용 방법 탭으로 열림, 확인일 배지(장소 `verified:false`면 "확인일" 대신 "현장 확인 전 · 예시 정보". 메뉴가 없는 장소도 같음. 메뉴의 `verified`는 메뉴·가격에만 해당하며 장소 확인 여부로 쓰지 않음 — T1.1 R1, T1.1b), 영업 상태(Asia/Seoul 기준 참고값), 알레르기(미확인은 "확인 필요"), 비제휴 안내 문구
   - 길찾기 버튼: 네이버 지도 웹 길찾기(기본), Google Maps 장소 보기(보조) (F-04)
   - 장소 북마크 추가·해제, 새로고침 후 유지 (F-13)
@@ -227,15 +227,15 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - +/− 수량(1~9), 1에서 −를 누르면 항목 삭제, 주문 바(수량, 모든 가격 확인 시 합계 예시가), 가격 미확인 → "가격 확인 필요"·"총액 확인 필요" (F-05)
   - 다른 장소에서 담으려 하면 기존 주문 비울지 확인 시트
   - 내 주문: 주문 카드(문장·발음·번역), 포장/매장(`takeout:false`면 숨기고 매장 고정, 표시·문장 생성에는 store의 `effectiveTakeout` 헬퍼 사용 — T1.6 R1), 빈 주문이면 버튼 비활성
-- [ ] **T2.4 말하기 연습·채점 결과 (S06·S07)** — 소유: `screens/Practice*`, `screens/Result*`
+- [x] **T2.4 말하기 연습·채점 결과 (S06·S07)** — 소유: `screens/Practice*`, `screens/Result*` — 2026-11-23 · reviews/T2.4_r2.md (미해결 0) · 단어 칩 한국어 낭독은 T4.3 이관 · 커밋은 Phase 2 통합 커밋
   - 마이크 켜기 전 음성 처리 안내(3개 언어), STT 상태 머신 UI 연결, 실패 시 재시도/직원에게 보여주기. 권한 대기(requesting) 중에도 취소 버튼과 "직원에게 보여주기"를 노출(기한: requesting 15초, listening·processing 각 8초 — T1.5 R1). 문장·단어 칩 듣기는 `ui/ListenButton`을 사용(TTS 계약은 T2.0 참조 — T1.5 R3)
   - 단어 칩 TTS, 0.75배속, 진행률, 결과 화면 "인식 일치도" 점수·약한 단어·팁
   - 단어별 일치 여부를 색으로 표시, 팁은 사용자 언어 (F-09)
-- [ ] **T2.5 직원에게 보여주기·직원 응답 (S08·S09)** — 소유: `screens/Staff*`, `screens/Reply*`
+- [x] **T2.5 직원에게 보여주기·직원 응답 (S08·S09)** — 소유: `screens/Staff*`, `screens/Reply*` — 2026-11-23 · reviews/T2.5_r1.md (지적 0) · 커밋은 Phase 2 통합 커밋
   - 전체 화면 표시, 한국어 고정 안내(주문/요청 구분), 주문 항목 목록(`src:'phrase'`면 목록 숨기고 안내는 "외국인 손님의 요청입니다") (F-10)
   - 큰 글씨 토글, 읽어주기, 응답 4종 → 손님 언어로 크게 표시, 품절 → 주문 수정
   - 화면 켜짐 유지(Wake Lock API, 미지원 시 무시)
-- [ ] **T2.6 문장 모음·저장·제보·운영자 리포트 (S10·S11·S13)** — 소유: `screens/Phrases*`, `screens/Saved*`, `screens/Report*`, `ui/ReportSheet`
+- [x] **T2.6 문장 모음·저장·제보·운영자 리포트 (S10·S11·S13)** — 소유: `screens/Phrases*`, `screens/Saved*`, `screens/Report*`, `ui/ReportSheet` — 2026-11-23 · reviews/T2.6_r2.md (미해결 0) · 커밋은 Phase 2 통합 커밋
   - 문장 모음(듣기·연습), 문장 북마크 추가·해제(새로고침 후 유지), 저장 목록, 제보 시트(4종) → 이벤트 기록
   - 운영자 리포트(한국어 고정, 문구는 `i18n/operatorKo.ts` — T1.2 R1): 지표 4종(추가 방문 비율·성심당 다음 방문지 분포·많이 쓴 문장·제보 현황), 예시 데이터 + "예시 데이터" 표기, 내 기기 기록은 따로 표시하고 합산하지 않음(F-16a), 휴대폰에서는 1열. 내 기기 지표의 기준 장소(성심당 id `ssd`)를 `extraVisitRate`·`nextPlaceDistribution`에 넘기고, 이벤트 기반 지표(추가 방문 비율·다음 방문지·많이 쓴 문장·이용 기록 수)는 "최근 500건 기준"으로 표기. 내 기기 제보 건수는 `reports.length` 기준(이벤트 500건 상한과 무관, `report_sent` 이벤트 수로 세지 않음) — T1.6 R1
 
@@ -310,6 +310,8 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
     ③ 단어 칩 연속 탭(3회 이상 빠르게)에서 이전 발화가 끊기고 재생 표시가 마지막 칩에만 남는지, TTS `interrupted` 이벤트 순서
     ④ 기내 모드(오프라인)에서 말하기 연습 → 실제 STT 실패 → "직원에게 보여주기" → 응답까지 완주
     ⑤ `navigator.userActivation` 지원 여부(지원 여부는 trusted tap 발화 성공을 대신하지 않으므로 ③에서 실제 발화로 확인)
+    ⑥ 접근성(T2.0 R2 판정): 안드로이드 TalkBack에서 토스트 문구가 읽히는지, 바텀시트가 열렸을 때 뒤 화면으로 초점이 가지 않는지. 단어 칩·듣기 버튼의 한국어 이름이 TalkBack에서 한국어로 읽히는지(T2.4 R1 이관 — 안 되면 공용 ListenButton에 lang 지원 추가)
+    ⑦ 네이버 지도 웹 도보 길찾기(T2.2 R1 판정): 안드로이드 크롬에서 네이버 지도 앱이 설치된 경우와 없는 경우 각각 "다음 정류장" 링크가 도보 경로로 열리는지
 - [ ] **T4.5 시연 리허설** [배포 후] — T4.3과 같은 커밋(해시 기록) 대상. 리허설에서 수정이 생기면 0.3절 4-b로 돌아감
   - 합격 조건: 안내 없이 180초 이내 완주, 진행자 음성 경로와 심사위원 텍스트 경로 각 1회, 시연 영상의 녹화 커밋 = T4.1a 배포 커밋(또는 '영향 장면 없음'을 `reviews/T2.7_render.md`에 기록)
   - 비상 시나리오(인식 실패 → 직원 화면) 연습
@@ -323,7 +325,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 |---|---|---|---|
 | 0 기반 | 4 | 4 | 순차 |
 | 1 데이터·도메인 | 7 | 7 | 6개 동시 |
-| 2 화면 | 7 | 0 | T2.0 후 6개 동시 |
+| 2 화면 | 7 | 7 | T2.0 후 6개 동시 |
 | 2.5 시연 영상 | 1 | 0 | Phase 3과 병렬 |
 | 3 오프라인·배포 | 3 | 0 | T3.1 → T3.2 순차, T3.3 병렬 |
 | 4 검증·시연 | 7 | 0 | 사용자 task 포함 |

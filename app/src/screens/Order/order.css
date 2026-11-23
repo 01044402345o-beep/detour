@@ -1,0 +1,204 @@
+/* S05 내 주문 (목업 .okcard .toggle .olist .oi) */
+.order {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-place {
+  padding: 0 22px 6px;
+  color: var(--soft);
+  font-size: 11.5px;
+}
+
+.okcard {
+  position: relative;
+  margin: 6px 18px 0;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--ink);
+  color: #fff;
+}
+
+.okcard::after {
+  content: '';
+  position: absolute;
+  top: -90px;
+  right: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(238, 106, 60, 0.35), transparent 65%);
+  pointer-events: none;
+}
+
+.okcard__k {
+  color: var(--gold-l);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.okcard__ko {
+  position: relative;
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.35;
+}
+
+.okcard .okcard__pr {
+  position: relative;
+  display: block;
+  margin-top: 8px;
+  color: #aeb5c6;
+  font-size: 12.5px;
+}
+
+.okcard__mn {
+  position: relative;
+  margin-top: 6px;
+  color: #7ee0d7;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.okcard__ctrl {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.okcard .okcard__listen {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.okcard .okcard__listen[aria-pressed='true'] {
+  background: var(--sea);
+}
+
+.okcard .ui-listen-notice {
+  flex-basis: 100%;
+  color: #ffd2bf;
+}
+
+.order-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 18px 0;
+  padding: 30px 20px;
+  color: var(--soft);
+  font-size: 13px;
+  text-align: center;
+}
+
+.order-empty b {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.order-body {
+  margin-top: 18px;
+  padding: 0 22px;
+}
+
+.toggle {
+  display: flex;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.toggle button {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--touch);
+  border-radius: 11px;
+  color: var(--soft);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.toggle button.is-on {
+  background: var(--ink);
+  color: #fff;
+}
+
+.toggle button:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+
+.olist {
+  margin-top: 8px;
+  list-style: none;
+}
+
+.oi {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--line2);
+}
+
+.oi .menu-art {
+  border-radius: 12px;
+}
+
+.oi__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.oi__nm {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.oi__sub {
+  color: var(--soft);
+  font-size: 11.5px;
+}
+
+.order .price-tbd {
+  color: var(--acc-d);
+}
+
+.order-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 2px;
+  color: var(--soft);
+  font-size: 13px;
+}
+
+.order-total b {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.order-total b.is-tbd {
+  font-size: 14px;
+  text-align: right;
+}
+
+.order-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding: 12px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+}

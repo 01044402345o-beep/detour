@@ -1,0 +1,412 @@
+/* S03·S04 장소 상세 (목업 .phero .psheet .tabs .mitem .allergy .steps .prow .orderbar) */
+.place {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ───── 머리 그림 ───── */
+.place-hero {
+  position: relative;
+  flex: none;
+  height: 236px;
+}
+
+.place-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.place-hero__bar {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  left: 18px;
+  right: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.place-hero__right {
+  display: flex;
+  gap: 8px;
+}
+
+.place-hero .ui-icb {
+  background: rgba(255, 255, 255, 0.92);
+  border: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.place-hero .ui-icb.is-on {
+  color: var(--acc-d);
+}
+
+.place-hero .ui-icb.is-on svg {
+  fill: currentColor;
+}
+
+/* ───── 본문 ───── */
+.place-sheet {
+  position: relative;
+  flex: 1;
+  margin-top: -26px;
+  padding: 20px 22px 0;
+  background: var(--paper);
+  border-radius: 26px 26px 0 0;
+}
+
+.place-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.place-name {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+
+.place-sub {
+  margin-top: 3px;
+  color: var(--soft);
+  font-size: 13px;
+}
+
+.place-sub .is-open {
+  color: var(--sea-d);
+}
+
+.place-sub .is-closed {
+  color: var(--acc-d);
+}
+
+.place-status-note {
+  margin-top: 4px;
+  color: var(--soft);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* ───── 탭 ───── */
+.place-tabs {
+  display: flex;
+  gap: 22px;
+  margin-top: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.place-tab {
+  position: relative;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 10px 0;
+  color: var(--soft);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.place-tab.is-on {
+  color: var(--ink);
+}
+
+.place-tab.is-on::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--acc);
+}
+
+.place-tab:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+
+/* ───── 메뉴 ───── */
+.menu-tab__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.menu-tab__hint {
+  color: var(--soft);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.mitem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 12px;
+}
+
+.menu-art {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border-radius: 16px;
+}
+
+.mitem__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mitem__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.mitem__nm {
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.mitem__tag {
+  padding: 2px 7px;
+  font-size: 10px;
+}
+
+.mitem__ko {
+  margin-top: 1px;
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.mitem__ds {
+  margin-top: 3px;
+  color: var(--soft);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
+.price-tbd {
+  color: var(--acc-d);
+}
+
+.allergy {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--acc-s);
+  color: var(--acc-d);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.allergy__line {
+  display: block;
+}
+
+/* ───── 이용 방법 ───── */
+.steps {
+  margin-top: 14px;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 0;
+}
+
+.step__n {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: var(--sun-s);
+  color: #7a560e;
+  font-weight: 800;
+}
+
+.step__t {
+  padding-top: 6px;
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.hours-card {
+  margin-top: 6px;
+  padding: 14px 16px;
+}
+
+.hours-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hours-card__k {
+  color: var(--soft);
+  font-size: 11.5px;
+}
+
+.hours-card__v {
+  margin-top: 2px;
+  font-weight: 800;
+}
+
+.dir-btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 0 16px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.dir-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--touch);
+  margin-top: 4px;
+  color: var(--sea-d);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.dir-btn:focus-visible,
+.dir-sub:focus-visible,
+.prow__main:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+
+/* ───── 문장 ───── */
+.prow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 6px 16px 6px 6px;
+}
+
+.prow__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: var(--touch);
+  padding: 8px 10px;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.prow__ko {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.prow__pr {
+  margin-top: 3px;
+  font-size: 11.5px;
+}
+
+.prow__mn {
+  margin-top: 3px;
+  color: var(--sea-d);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.prow__play {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 40%;
+}
+
+/* ───── 안내 문구 ───── */
+.place-disclaimer {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border: 1px dashed var(--line2);
+  border-radius: 12px;
+  color: var(--soft);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+/* ───── 하단 주문 바 ───── */
+.orderbar {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(251, 247, 239, 0), var(--paper) 30%);
+}
+
+.orderbar__btn {
+  justify-content: space-between;
+}
+
+.orderbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orderbar__cnt {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: var(--r-pill);
+  background: var(--acc-d);
+  font-size: 13px;
+}
+
+.orderbar__sum {
+  font-size: 13.5px;
+}
+
+/* ───── 장소 전환 확인 시트 ───── */
+.switch-sheet__body {
+  margin-top: 8px;
+  color: var(--ink2);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.switch-sheet__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}

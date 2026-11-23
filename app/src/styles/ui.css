@@ -1,0 +1,417 @@
+/*
+ * 공용 UI 스타일 (T2.0). 값은 mockup/index.html 기준.
+ * - 터치 영역: 누를 수 있는 요소는 min-width/min-height var(--touch)(44px) 이상 (ui/a11y.test.ts 검사)
+ * - 색 조합: 글자/배경 쌍은 ui/a11y.ts COLOR_PAIRS에 등록하고 4.5:1 이상 (같은 테스트가 검사)
+ */
+
+/* ───────── 앱 틀: 데스크톱에서 폰 폭 가운데 정렬 (PRD 7장) ───────── */
+.app-stage {
+  min-height: 100%;
+  background: linear-gradient(160deg, var(--stage1), var(--stage2));
+}
+
+.app-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--frame-w);
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+@media (min-width: 431px) {
+  .app-frame {
+    box-shadow:
+      0 0 0 1px rgba(21, 26, 38, 0.06),
+      0 30px 60px -30px rgba(21, 26, 38, 0.35);
+  }
+}
+
+/* S13 운영자 리포트: 데스크톱 폭 사용 */
+.app-frame--wide {
+  max-width: none;
+  box-shadow: none;
+}
+
+.app-view {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.screen {
+  min-height: 100%;
+}
+
+/* 시트·토스트가 붙는 자리 (앱 틀 안) */
+.app-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+
+.app-overlay > * {
+  pointer-events: auto;
+}
+
+/* ───────── 버튼 ───────── */
+.ui-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  height: 52px;
+  padding: 0 18px;
+  border-radius: var(--r-xl);
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform 0.12s;
+}
+
+.ui-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.ui-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ui-btn--inline {
+  width: auto;
+}
+
+.ui-btn--ink {
+  background: var(--ink);
+  color: #fff;
+}
+
+.ui-btn--acc {
+  background: var(--acc-d);
+  color: #fff;
+  box-shadow: 0 10px 20px -10px rgba(238, 106, 60, 0.7);
+}
+
+.ui-btn--sea {
+  background: var(--sea);
+  color: #fff;
+}
+
+.ui-btn--ghost {
+  background: #fff;
+  border: 1.5px solid var(--line2);
+  color: var(--ink);
+}
+
+/* ───────── 알약 표시 (누를 수 없음) ───────── */
+.ui-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ui-pill--acc {
+  background: var(--acc-s);
+  color: var(--acc-d);
+}
+
+.ui-pill--sea {
+  background: var(--sea-s);
+  color: var(--sea-d);
+}
+
+.ui-pill--plum {
+  background: var(--plum-s);
+  color: var(--plum);
+}
+
+.ui-pill--ink {
+  background: var(--ink);
+  color: #fff;
+}
+
+.ui-pill--line {
+  background: #fff;
+  border: 1px solid var(--line2);
+  color: var(--ink2);
+}
+
+/* ───────── 카드 ───────── */
+.ui-card {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2xl);
+  color: var(--ink);
+}
+
+.ui-card--action {
+  width: 100%;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  text-align: left;
+}
+
+/* ───────── 아이콘 버튼 (목업 40px → 44px) ───────── */
+.ui-icb {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--touch);
+  height: var(--touch);
+  min-width: var(--touch);
+  min-height: var(--touch);
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.ui-icb:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ui-icon {
+  display: block;
+  flex: none;
+}
+
+/* ───────── 상단 바 ───────── */
+.ui-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 8px 18px;
+}
+
+.ui-topbar__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-topbar__side {
+  display: flex;
+  flex: none;
+  justify-content: flex-end;
+  min-width: var(--touch);
+}
+
+/* ───────── 하단 탭바 ───────── */
+.ui-tabbar {
+  display: flex;
+  flex: none;
+  padding: 4px 8px calc(4px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1px solid var(--line);
+}
+
+.ui-tab {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: var(--touch);
+  min-height: 56px;
+  color: var(--soft);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ui-tab[aria-current='page'] {
+  color: var(--acc-d);
+}
+
+/* ───────── 바텀시트 ───────── */
+.ui-sheet-dim {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(14, 18, 27, 0.45);
+  animation: ui-fadein 0.2s;
+}
+
+.ui-sheet {
+  width: 100%;
+  max-height: 90%;
+  overflow-y: auto;
+  padding: 12px 22px calc(28px + env(safe-area-inset-bottom, 0px));
+  background: var(--paper);
+  border-radius: 28px 28px 0 0;
+  animation: ui-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ui-sheet:focus {
+  outline: none;
+}
+
+.ui-sheet__grab {
+  width: 40px;
+  height: 5px;
+  margin: 0 auto 16px;
+  border-radius: 5px;
+  background: var(--line2);
+}
+
+.ui-sheet__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ui-sheet__title {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+/* ───────── 토스트 ───────── */
+.ui-toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--tabbar-h) + 32px + env(safe-area-inset-bottom, 0px));
+  z-index: 80;
+  /* 폭은 내용 기준, 프레임 폭 - 좌우 16px을 넘으면 그 안에서 줄바꿈 (T2.1 R1 L-01).
+     width 없이 left:50%면 shrink-to-fit 상한이 프레임 절반이 됨 */
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 11px 18px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4);
+  transform: translateX(-50%);
+  animation: ui-toast 2.4s ease forwards;
+  pointer-events: none;
+}
+
+/* ───────── 듣기 버튼 ───────── */
+.ui-listen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  color: var(--sea-d);
+  font-weight: 700;
+}
+
+.ui-listen:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ui-listen--round {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--sea-s);
+}
+
+.ui-listen--pill {
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  background: var(--sea-s);
+  font-size: 12.5px;
+}
+
+.ui-listen[aria-pressed='true'] {
+  background: var(--sea);
+  color: #fff;
+}
+
+.ui-listen-notice {
+  display: block;
+  margin-top: 6px;
+  color: var(--acc-d);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ───────── 발음 표기 ───────── */
+.ui-pron {
+  color: var(--soft);
+  font-size: 13px;
+}
+
+/* ───────── 키보드 포커스 ───────── */
+.ui-btn:focus-visible,
+.ui-icb:focus-visible,
+.ui-tab:focus-visible,
+.ui-card--action:focus-visible,
+.ui-listen:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}
+
+@keyframes ui-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes ui-toast {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  10%,
+  85% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-sheet,
+  .ui-sheet-dim,
+  .ui-toast {
+    animation: none;
+  }
+}

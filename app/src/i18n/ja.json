@@ -56,7 +56,10 @@
     "mapOffline": "地図タイルを読み込めないため、簡易地図を表示しています。",
     "mapStation": "中央路駅",
     "mapStream": "大田川",
-    "mapToDaejeonStn": "大田駅へ →"
+    "mapToDaejeonStn": "大田駅へ →",
+    "walkToStop": "{n}か所目へ歩く",
+    "dirNext": "NAVER地図で{n}か所目への徒歩ルートが開きます",
+    "googleMaps": "Google マップで{n}か所目を見る"
   },
   "place": {
     "food": "グルメ",
@@ -79,7 +82,8 @@
     "disclaimer": "各店舗と提携していない独自の案内です。公式の注文サービスではありません。",
     "takedown": "店舗の方へ:情報の訂正・削除をご希望の場合はご連絡ください。すぐに対応します。",
     "save": "この場所を保存",
-    "unsave": "保存を解除"
+    "unsave": "保存を解除",
+    "googleMaps": "Google マップで見る"
   },
   "menu": {
     "signature": "看板",
@@ -152,7 +156,9 @@
     "tip": "「{word}」があまり一致しませんでした。一音ずつゆっくり言ってみましょう。",
     "again": "もう一度",
     "next": "次のフレーズ",
-    "instead": "代わりにスタッフに見せる"
+    "instead": "代わりにスタッフに見せる",
+    "wordMatched": "一致",
+    "wordUnmatched": "不一致"
   },
   "staff": {
     "staffReply": "スタッフの返事",
@@ -174,13 +180,15 @@
   },
   "phrases": {
     "title": "フレーズ",
-    "practice": "練習する"
+    "practice": "練習する",
+    "save": "このフレーズを保存"
   },
   "saved": {
     "title": "保存",
     "savedToast": "保存しました",
     "removedToast": "削除しました",
-    "empty": "まだ保存がありません"
+    "empty": "まだ保存がありません",
+    "places": "スポット"
   },
   "report": {
     "open": "情報が違う?",

@@ -1,0 +1,271 @@
+/* S01 홈 (T2.1). 값은 mockup/index.html 기준(.hello .hubs .hub .banner .phr-day .sec).
+   대비 조정(PRD 7장 4.5:1, 목업과 다름):
+   - "지도 보기" 링크: 목업 --acc(3.0:1) → --acc-d(paper 위 5.4:1)
+   - 잠긴 거점: 목업은 카드 전체 opacity .55(글자 대비 미달) → 그림만 흐리게, 글자는 그대로
+   - 1박 배너 머리글: 목업 흰색 75% → 100% (--sea 위 4.6:1) */
+.home-screen {
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+}
+
+.home-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.home-xs {
+  color: var(--soft);
+  font-size: 11.5px;
+}
+
+.home-s {
+  color: var(--soft);
+  font-size: 13px;
+}
+
+.home-h-m {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.home-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 22px 0;
+}
+
+.home-brand__logo {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #f58a5c, var(--acc-d));
+  color: #fff;
+  font-weight: 800;
+}
+
+.home-brand__name {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.home-brand__sp {
+  flex: 1;
+}
+
+.home-hello {
+  margin-top: 20px;
+  padding: 6px 22px 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.15;
+}
+
+.home-sec {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 22px 0;
+}
+
+.home-link {
+  min-width: var(--touch);
+  min-height: var(--touch);
+  margin: -12px -8px -12px 0;
+  padding: 0 8px;
+  color: var(--acc-d);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.home-hubs {
+  display: flex;
+  gap: 12px;
+  padding: 12px 22px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.home-hubs::-webkit-scrollbar {
+  display: none;
+}
+
+.home-hub {
+  position: relative;
+  flex: none;
+  width: 236px;
+  min-height: var(--touch);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+}
+
+.home-hub__art {
+  display: block;
+  width: 100%;
+  height: 120px;
+}
+
+.home-hub--lock .home-hub__art {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+.home-hub__info {
+  display: block;
+  padding: 12px 15px 14px;
+}
+
+.home-hub__sub {
+  display: block;
+  margin-top: 2px;
+}
+
+.home-hub__meta {
+  gap: 12px;
+  margin-top: 8px;
+  color: var(--ink2);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.home-hub__soon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.home-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: calc(100% - 44px);
+  min-height: var(--touch);
+  margin: 16px 22px 0;
+  padding: 16px;
+  border-radius: 22px;
+  background: linear-gradient(120deg, var(--sea), var(--sea-d));
+  color: #fff;
+  text-align: left;
+}
+
+.home-banner__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 26px;
+}
+
+.home-banner__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.home-banner__k {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.home-banner__t {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.home-course.ui-card {
+  display: block;
+  width: calc(100% - 44px);
+  margin: 10px 22px 0;
+  padding: 16px 18px;
+}
+
+.home-course__title {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.home-course__stops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 10px;
+  list-style: none;
+  color: var(--ink2);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.home-course__stops li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.home-course__no {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.home-phrase.ui-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 22px 0;
+  padding: 16px 18px;
+}
+
+.home-phrase__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.home-phrase__ko {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.home-phrase__sub {
+  margin-top: 3px;
+}
+
+.home-phrase .ui-listen-notice {
+  flex-basis: 100%;
+  margin-top: 0;
+}
+
+.home-end {
+  height: 24px;
+}
+
+.home-hub:focus-visible,
+.home-banner:focus-visible,
+.home-link:focus-visible {
+  outline: 3px solid var(--sea);
+  outline-offset: 2px;
+}

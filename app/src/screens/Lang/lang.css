@@ -1,0 +1,185 @@
+/* S00 언어 선택 (T2.1). 값은 mockup/index.html .lang-hero 기준.
+   어두운 바탕(#151a26~#2a2233) 위 글자 대비: 흰색 15:1+, #b8bfd0 9.6:1, #a3abbf(라벨) 7.4:1 */
+.lang-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(170deg, #151a26 0%, #1d2436 55%, #2a2233 100%);
+  color: #fff;
+}
+
+.lang-glow,
+.lang-glow2 {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.lang-glow {
+  top: -120px;
+  right: -160px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(238, 106, 60, 0.45), transparent 65%);
+}
+
+.lang-glow2 {
+  bottom: 80px;
+  left: -180px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(19, 128, 126, 0.45), transparent 65%);
+}
+
+.lang-in {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: calc(40px + env(safe-area-inset-top, 0px)) 28px 0;
+}
+
+.lang-logo {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 17px;
+  background: linear-gradient(135deg, #f58a5c, var(--acc-d));
+  box-shadow: 0 12px 30px rgba(238, 106, 60, 0.4);
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.lang-name {
+  margin-top: 26px;
+  font-family: var(--dfont);
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+}
+
+.lang-name i {
+  color: var(--gold-l);
+}
+
+.lang-sub {
+  margin-top: 12px;
+  color: #b8bfd0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.lang-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 28px;
+  padding-bottom: calc(46px + env(safe-area-inset-bottom, 0px));
+}
+
+.lang-label {
+  margin-bottom: 4px;
+  color: #a3abbf;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.lang-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lang-opt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: var(--touch);
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  text-align: left;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.lang-opt:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-opt--on,
+.lang-opt--on:hover {
+  border-color: #fff;
+  background: #fff;
+  color: var(--ink);
+}
+
+.lang-opt {
+  position: relative;
+  cursor: pointer;
+}
+
+/* 숨긴 radio에 키보드 포커스가 있으면 라벨에 표시 (R1 M-01) */
+.lang-opt:has(input:focus-visible) {
+  outline: 3px solid var(--gold-l);
+  outline-offset: 2px;
+}
+
+.lang-opt__badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* 흰 글자 / --acc-d 5.6:1 (목업 --acc는 3.1:1이라 --acc-d) */
+.lang-opt--on .lang-opt__badge {
+  background: var(--acc-d);
+  color: #fff;
+}
+
+.lang-opt__name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.lang-opt__check {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-left: auto;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}
+
+.lang-opt--on .lang-opt__check {
+  border-color: var(--acc-d);
+  background: var(--acc-d)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E")
+    center / 13px no-repeat;
+}
+
+.lang-pron {
+  color: #b8bfd0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.lang-start {
+  margin-top: 4px;
+}

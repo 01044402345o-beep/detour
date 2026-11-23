@@ -1,9 +1,11 @@
-/* 디자인 토큰 — mockup/index.html :root 값을 그대로 옮김 */
+/* 디자인 토큰 — mockup/index.html :root 값을 옮김.
+   단 PRD 7장 대비 4.5:1을 위해 --soft·--acc-d는 조금 어둡게 조정(T2.0, ui/a11y.ts 검사).
+   PRD가 목업보다 우선합니다(task.md 0절). */
 :root {
   /* 글자·배경 */
   --ink: #151a26;
   --ink2: #2b3346;
-  --soft: #6b7287;
+  --soft: #656c81; /* 목업 #6b7287: --paper 위 4.48:1 */
   --mute: #9aa0b0;
   --paper: #fbf7ef;
   --card: #ffffff;
@@ -12,7 +14,7 @@
 
   /* 강조색 */
   --acc: #ee6a3c;
-  --acc-d: #c24e22;
+  --acc-d: #b3461c; /* 목업 #c24e22: --acc-s 위 3.98:1. 흰 글자 채움 버튼·강조 글자에 사용 */
   --acc-s: #fde6dc;
   --sea: #13807e;
   --sea-d: #0c5654;
@@ -50,4 +52,9 @@
   --r-2xl: 20px;
   --r-3xl: 24px;
   --r-pill: 99px;
+
+  /* 접근성·레이아웃 (PRD 7장) */
+  --touch: 44px; /* 최소 터치 영역 */
+  --frame-w: 430px; /* 데스크톱에서 가운데 정렬하는 폰 폭 */
+  --tabbar-h: 64px;
 }

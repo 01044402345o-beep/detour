@@ -56,7 +56,10 @@
     "mapOffline": "地图图块无法加载,已显示简易地图。",
     "mapStation": "中央路站",
     "mapStream": "大田川",
-    "mapToDaejeonStn": "往大田站 →"
+    "mapToDaejeonStn": "往大田站 →",
+    "walkToStop": "步行前往第{n}站",
+    "dirNext": "将在NAVER地图中打开前往第{n}站的步行路线",
+    "googleMaps": "在Google地图中查看第{n}站"
   },
   "place": {
     "food": "美食",
@@ -79,7 +82,8 @@
     "disclaimer": "本信息为独立整理,与该店铺无合作关系,并非官方点餐服务。",
     "takedown": "致店家:如需更正或删除本信息,请与我们联系,我们会立即处理。",
     "save": "收藏此地点",
-    "unsave": "取消收藏"
+    "unsave": "取消收藏",
+    "googleMaps": "在 Google 地图中查看"
   },
   "menu": {
     "signature": "招牌",
@@ -152,7 +156,9 @@
     "tip": "“{word}”不太一致,请一个音一个音慢慢说。",
     "again": "再试一次",
     "next": "下一句",
-    "instead": "直接给店员看"
+    "instead": "直接给店员看",
+    "wordMatched": "一致",
+    "wordUnmatched": "不一致"
   },
   "staff": {
     "staffReply": "店员回复",
@@ -174,13 +180,15 @@
   },
   "phrases": {
     "title": "短句",
-    "practice": "练习"
+    "practice": "练习",
+    "save": "收藏这句话"
   },
   "saved": {
     "title": "收藏",
     "savedToast": "已收藏",
     "removedToast": "已取消收藏",
-    "empty": "还没有收藏"
+    "empty": "还没有收藏",
+    "places": "地点"
   },
   "report": {
     "open": "信息有误?",
