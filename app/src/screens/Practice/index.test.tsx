@@ -137,9 +137,41 @@ describe('S06 듣기·단어 칩 (F-07)', () => {
 
   it('단어 칩 → 그 단어만 읽고, 문장 재생 기록은 남기지 않음', () => {
     const { tts } = setup({ state: phraseInput('phrase', 'gwc-2') });
-    fireEvent.click(screen.getByRole('button', { name: '맵게 · spicy' }));
+    fireEvent.click(screen.getByRole('button', { name: '맵게 spicy' }));
     expect(tts.speak).toHaveBeenLastCalledWith('맵게', 1, expect.any(Function));
     expect(events().filter((e) => e.type === 'phrase_play')).toHaveLength(0);
+  });
+});
+
+describe('S06 단어 칩 이름 = 보이는 글자 (WCAG 2.5.3 Label in Name, T3.2 axe)', () => {
+  /** axe label-content-name-mismatch처럼: 기호 제거·공백 정리·소문자 후 포함 여부 */
+  const norm = (v: string) =>
+    v
+      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  /** 보이는 텍스트: 텍스트 노드를 순서대로 이어 붙임 (요소 경계에 공백을 끼우지 않음) */
+  const visible = (el: Element) => el.textContent ?? '';
+
+  it.each(['en', 'ja', 'zh'] as const)('%s: 모든 칩의 접근성 이름이 보이는 글자를 포함', (lang) => {
+    setup({ state: phraseInput('order'), lang });
+    const chips = [...document.querySelectorAll('.pr-word')];
+    expect(chips.length).toBeGreaterThan(0);
+    for (const chip of chips) {
+      const name = chip.getAttribute('aria-label')!;
+      const text = visible(chip);
+      expect(norm(name)).toContain(norm(text));
+      // 이름은 보이는 글자로 시작 (2.5.3 권장: 이름 앞부분이 보이는 글자)
+      expect(norm(name).startsWith(norm(text))).toBe(true);
+    }
+  });
+
+  it('en 예: "튀김소보로 Fried Soboro" (구분 기호 없음, 보이는 글자와 같음)', () => {
+    setup({ state: phraseInput('order') });
+    const chip = screen.getByRole('button', { name: '튀김소보로 Fried Soboro' });
+    expect(chip.textContent).toBe('튀김소보로 Fried Soboro');
+    expect(chip.getAttribute('aria-label')).not.toContain('·');
   });
 });
 
@@ -166,7 +198,7 @@ describe('S06 듣기·인식 상호 배제 (R1 M-01)', () => {
       const buttons = [
         screen.getByRole('button', { name: 'Listen' }),
         screen.getByRole('button', { name: 'Listen slowly (0.75×)' }),
-        screen.getByRole('button', { name: '맵게 · spicy' }),
+        screen.getByRole('button', { name: '맵게 spicy' }),
       ];
       for (const b of buttons) {
         expect(b).toBeDisabled();

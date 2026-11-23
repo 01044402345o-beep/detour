@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { places } from '../../data';
+import { DICTS } from '../../i18n';
 import { PATHS } from '../../router/routes';
 import type { SpeakResult, Tts } from '../../speech/tts';
 import { STORAGE_KEY, useAppStore } from '../../store/useAppStore';
@@ -98,7 +99,7 @@ describe('S10 문장 모음', () => {
 
   it('문장 누르기 → /practice, state { src:"phrase", phraseId }', () => {
     renderPhrases();
-    fireEvent.click(screen.getByRole('button', { name: 'Practice: 덜 맵게 해 주세요' }));
+    fireEvent.click(within(row('gwc-2')).getByRole('button', { description: 'Practice' }));
     expect(screen.getByTestId('screen-practice')).toHaveTextContent(
       JSON.stringify({ src: 'phrase', phraseId: 'gwc-2' }),
     );
@@ -126,6 +127,29 @@ describe('S10 문장 모음', () => {
     const bm = row('mus-1').querySelector('.phr-bm')!;
     expect(bm).toHaveAttribute('aria-pressed', 'true');
   });
+});
+
+describe('연습 버튼 접근성 이름 (WCAG 2.5.3 Label in Name, T3.2 측정 회귀)', () => {
+  const esc = (x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  it.each<Lang>(['en', 'ja', 'zh'])(
+    '%s: 이름 = 보이는 글자(문장으로 시작), 연습은 설명으로',
+    (lang) => {
+      renderPhrases(lang);
+      const buttons = [...document.querySelectorAll<HTMLButtonElement>('.phr-row__main')];
+      expect(buttons).toHaveLength(places.reduce((n, p) => n + p.phrases.length, 0));
+      for (const b of buttons) {
+        // aria-label·aria-labelledby로 보이는 글자를 덮어쓰지 않음
+        expect(b).not.toHaveAttribute('aria-label');
+        expect(b).not.toHaveAttribute('aria-labelledby');
+        const ko = b.querySelector('.phr-ko')!.textContent!;
+        const meta = b.querySelector('.phr-meta')!.textContent!.trim();
+        // 이름이 보이는 글자(문장)로 시작하고, 보이는 글자 전체(문장·발음·뜻)를 순서대로 담음
+        expect(b).toHaveAccessibleName(new RegExp(`^${esc(ko)}\\s*${esc(meta)}$`));
+        expect(b).toHaveAccessibleDescription(DICTS[lang].phrases.practice);
+      }
+    },
+  );
 });
 
 describe('logOrWarn', () => {

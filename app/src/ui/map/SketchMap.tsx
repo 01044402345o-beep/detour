@@ -5,7 +5,7 @@
 import type { KeyboardEvent } from 'react';
 import { useT } from '../../i18n';
 import { projectToBox } from './projection';
-import { PIN_HIT_R, SKETCH_H, SKETCH_W } from './sketchConstants';
+import { PIN_FILL, PIN_HIT_R, SKETCH_BG, SKETCH_H, SKETCH_TEXT, SKETCH_W } from './sketchConstants';
 import type { MapStop } from './types';
 
 const BLOCKS: readonly [number, number, number, number][] = [
@@ -45,13 +45,13 @@ export function SketchMap({ stops, onSelect, label }: SketchMapProps) {
       aria-label={label}
       data-testid="map-sketch"
     >
-      <rect width={SKETCH_W} height={SKETCH_H} fill="#f1ebde" />
+      <rect width={SKETCH_W} height={SKETCH_H} fill={SKETCH_BG.ground} />
       {BLOCKS.map(([x, y, w, h]) => (
-        <rect key={`${x}-${y}`} x={x} y={y} width={w} height={h} rx={8} fill="#e8e0cf" />
+        <rect key={`${x}-${y}`} x={x} y={y} width={w} height={h} rx={8} fill={SKETCH_BG.block} />
       ))}
       <path
         d="M318 0 C300 80 330 150 304 290"
-        stroke="#bcd9e6"
+        stroke={SKETCH_BG.stream}
         strokeWidth={16}
         fill="none"
         strokeLinecap="round"
@@ -60,17 +60,24 @@ export function SketchMap({ stops, onSelect, label }: SketchMapProps) {
         x={323}
         y={270}
         fontSize={9}
-        fill="#4f7385"
+        fill={SKETCH_TEXT.stream.fill}
         fontWeight={700}
         transform="rotate(-80 323 270)"
       >
         {t('course.mapStream')}
       </text>
-      <path d="M0 170 H360" stroke="#fff" strokeWidth={18} />
-      <path d="M250 0 V290" stroke="#fff" strokeWidth={12} />
-      <path d="M150 100 V290" stroke="#fff" strokeWidth={8} />
-      <path d="M0 110 H250" stroke="#fff" strokeWidth={7} />
-      <text x={352} y={160} fontSize={9} textAnchor="end" fill="#0c5654" fontWeight={700}>
+      <path d="M0 170 H360" stroke={SKETCH_BG.road} strokeWidth={18} />
+      <path d="M250 0 V290" stroke={SKETCH_BG.road} strokeWidth={12} />
+      <path d="M150 100 V290" stroke={SKETCH_BG.road} strokeWidth={8} />
+      <path d="M0 110 H250" stroke={SKETCH_BG.road} strokeWidth={7} />
+      <text
+        x={352}
+        y={160}
+        fontSize={9}
+        textAnchor="end"
+        fill={SKETCH_TEXT.toStation.fill}
+        fontWeight={700}
+      >
         {t('course.mapToDaejeonStn')}
       </text>
       <path
@@ -101,7 +108,7 @@ export function SketchMap({ stops, onSelect, label }: SketchMapProps) {
             cx={xy[i].x}
             cy={xy[i].y}
             r={15}
-            fill={s.category === 'food' ? 'var(--acc-d)' : 'var(--plum)'}
+            fill={PIN_FILL[s.category]}
             stroke="#fff"
             strokeWidth={3.5}
           />
@@ -110,7 +117,7 @@ export function SketchMap({ stops, onSelect, label }: SketchMapProps) {
             y={xy[i].y + 5}
             fontSize={14}
             fontWeight={800}
-            fill="#fff"
+            fill={SKETCH_TEXT.pin.fill}
             textAnchor="middle"
             aria-hidden="true"
           >

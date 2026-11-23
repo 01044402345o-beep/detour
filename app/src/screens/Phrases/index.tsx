@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { course, places } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
@@ -21,6 +22,10 @@ export default function PhrasesScreen() {
   const toggleSavedPhrase = useAppStore((s) => s.toggleSavedPhrase);
   const logEvent = useAppStore((s) => s.logEvent);
 
+  // 연습 버튼 이름은 보이는 글자(문장·발음·뜻) 그대로 두고, '연습' 동작은 설명으로 붙입니다
+  // (WCAG 2.5.3 Label in Name — aria-label로 이름을 덮어쓰지 않음, T3.2 측정)
+  const practiceHintId = useId();
+
   const toggle = (phraseId: string) => {
     const on = toggleSavedPhrase(phraseId);
     toast(t(on ? 'saved.savedToast' : 'saved.removedToast'));
@@ -31,6 +36,9 @@ export default function PhrasesScreen() {
       <header className="phr-head">
         <h1 className="phr-title">{t('phrases.title')}</h1>
         <p className="phr-sub">{pickL10n(lang, course.title)}</p>
+        <span id={practiceHintId} hidden>
+          {t('phrases.practice')}
+        </span>
       </header>
       {places.map((place) => (
         <section key={place.id} className="phr-sec" aria-labelledby={`phr-${place.id}`}>
@@ -48,7 +56,7 @@ export default function PhrasesScreen() {
                   <button
                     type="button"
                     className="phr-row__main"
-                    aria-label={`${t('phrases.practice')}: ${ph.ko}`}
+                    aria-describedby={practiceHintId}
                     onClick={() =>
                       navigate(PATHS.practice, { state: phraseInput('phrase', ph.id) })
                     }

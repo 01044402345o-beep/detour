@@ -5,7 +5,15 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { places } from '../../data';
 import { SketchMap } from './SketchMap';
-import { MAP_INSET_PX, PIN_HIT_R, SKETCH_W } from './sketchConstants';
+import { contrastRatio, parseTokens, resolveColor } from '../a11y';
+import {
+  MAP_INSET_PX,
+  PIN_FILL,
+  PIN_HIT_R,
+  SKETCH_BG,
+  SKETCH_TEXT,
+  SKETCH_W,
+} from './sketchConstants';
 import type { MapStop } from './types';
 
 const STOPS: MapStop[] = [
@@ -111,5 +119,48 @@ describe('SketchMap (SVG 약도)', () => {
     expect(container.textContent).toContain(t('ja', 'course.mapStream'));
     expect(container.textContent).toContain(t('ja', 'course.mapToDaejeonStn'));
     expect(container.textContent).not.toContain(t('en', 'course.mapStream'));
+  });
+});
+
+describe('약도 글자 대비 4.5:1 (T3.2)', () => {
+  const tokens = parseTokens(readFileSync(join(process.cwd(), 'src/styles/tokens.css'), 'utf8'));
+  const hex = (c: string) => resolveColor(c, tokens);
+
+  it('표의 모든 글자 색 × 놓일 수 있는 바탕이 4.5:1 이상', () => {
+    for (const [name, { fill, on }] of Object.entries(SKETCH_TEXT)) {
+      for (const bg of on) {
+        const ratio = contrastRatio(hex(fill), hex(bg));
+        expect({ name, bg, ok: ratio >= 4.5 }).toEqual({ name, bg, ok: true });
+      }
+    }
+  });
+
+  it('하천 이름은 하천·바탕·블록·도로 모두를 바탕으로 검사하고, 옛 색 #4f7385는 쓰지 않음', () => {
+    expect([...SKETCH_TEXT.stream.on].sort()).toEqual(Object.values(SKETCH_BG).sort());
+    expect(SKETCH_TEXT.stream.fill.toLowerCase()).not.toBe('#4f7385');
+    expect(SKETCH_TEXT.stream.fill).toBe(hex('var(--sea-d)'));
+  });
+
+  it('핀 채움은 표의 핀 바탕과 같음 (흰 번호 대비)', () => {
+    expect([...SKETCH_TEXT.pin.on].sort()).toEqual(Object.values(PIN_FILL).sort());
+  });
+
+  it('렌더된 약도의 모든 <text>가 표에 등록된 글자 색을 씀 (표 밖 글자 금지)', () => {
+    const { container } = render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
+    const allowed = new Set<string>(Object.values(SKETCH_TEXT).map((x) => x.fill));
+    const texts = container.querySelectorAll('text');
+    expect(texts.length).toBe(2 + STOPS.length);
+    texts.forEach((el) => expect(allowed.has(el.getAttribute('fill') ?? '')).toBe(true));
+    // 하천 이름 글자가 실제로 표의 색을 씀
+    const stream = [...texts].find((el) => el.textContent === t('en', 'course.mapStream'));
+    expect(stream?.getAttribute('fill')).toBe(SKETCH_TEXT.stream.fill);
+  });
+
+  it('핀 원은 카테고리별 PIN_FILL을 씀', () => {
+    render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
+    const dot = (id: string) =>
+      screen.getByTestId(`map-pin-${id}`).querySelector('.cmap-sketch__dot')?.getAttribute('fill');
+    expect(dot('ssd')).toBe(PIN_FILL.food);
+    expect(dot('eun')).toBe(PIN_FILL.sight);
   });
 });

@@ -248,12 +248,12 @@ function PracticeView({ session, Recognition, tts }: ViewProps) {
               text={w.ko}
               variant="bare"
               className="pr-word"
-              label={`${w.ko} · ${meaning}`}
+              // 이름 = 보이는 글자 그대로 (WCAG 2.5.3 Label in Name, T3.2 axe). 구분 기호를 넣지 않습니다
+              label={`${w.ko} ${meaning}`}
               showNotice={false}
               tts={tts}
             >
-              <span lang="ko">{w.ko}</span>
-              <small>{meaning}</small>
+              <span lang="ko">{w.ko}</span> <small>{meaning}</small>
             </ListenButton>
           );
         })}
