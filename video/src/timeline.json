@@ -1,0 +1,192 @@
+{
+  "fps": 30,
+  "durationInFrames": 2664,
+  "seconds": 88.8,
+  "recordedCommit": "cfc8097",
+  "hasVo": {
+    "ko": true,
+    "en": true
+  },
+  "scenes": [
+    {
+      "id": "s01_problem",
+      "clip": null,
+      "from": 0,
+      "durationInFrames": 260,
+      "clipFrames": null,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s01_problem.mp3",
+          "frames": 227
+        },
+        "en": {
+          "file": "vo/en/s01_problem.wav",
+          "frames": 168
+        }
+      }
+    },
+    {
+      "id": "s02_lang",
+      "clip": "s02_lang",
+      "from": 260,
+      "durationInFrames": 239,
+      "clipFrames": 165,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s02_lang.mp3",
+          "frames": 206
+        },
+        "en": {
+          "file": "vo/en/s02_lang.wav",
+          "frames": 160
+        }
+      }
+    },
+    {
+      "id": "s03_course",
+      "clip": "s03_course",
+      "from": 499,
+      "durationInFrames": 210,
+      "clipFrames": 183,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s03_course.mp3",
+          "frames": 177
+        },
+        "en": {
+          "file": "vo/en/s03_course.wav",
+          "frames": 105
+        }
+      }
+    },
+    {
+      "id": "s04_ssd_menu",
+      "clip": "s04_ssd_menu",
+      "from": 709,
+      "durationInFrames": 282,
+      "clipFrames": 282,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s04_ssd_menu.mp3",
+          "frames": 176
+        },
+        "en": {
+          "file": "vo/en/s04_ssd_menu.wav",
+          "frames": 147
+        }
+      }
+    },
+    {
+      "id": "s05_order_card",
+      "clip": "s05_order_card",
+      "from": 991,
+      "durationInFrames": 171,
+      "clipFrames": 171,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s05_order_card.mp3",
+          "frames": 128
+        },
+        "en": {
+          "file": "vo/en/s05_order_card.wav",
+          "frames": 118
+        }
+      }
+    },
+    {
+      "id": "s06_practice",
+      "clip": "s06_practice",
+      "from": 1162,
+      "durationInFrames": 312,
+      "clipFrames": 311,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s06_practice.mp3",
+          "frames": 274
+        },
+        "en": {
+          "file": "vo/en/s06_practice.wav",
+          "frames": 137
+        }
+      }
+    },
+    {
+      "id": "s07_staff",
+      "clip": "s07_staff",
+      "from": 1474,
+      "durationInFrames": 252,
+      "clipFrames": 203,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s07_staff.mp3",
+          "frames": 219
+        },
+        "en": {
+          "file": "vo/en/s07_staff.wav",
+          "frames": 129
+        }
+      }
+    },
+    {
+      "id": "s08_gwc",
+      "clip": "s08_gwc",
+      "from": 1726,
+      "durationInFrames": 324,
+      "clipFrames": 323,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s08_gwc.mp3",
+          "frames": 222
+        },
+        "en": {
+          "file": "vo/en/s08_gwc.wav",
+          "frames": 163
+        }
+      }
+    },
+    {
+      "id": "s09_report",
+      "clip": "s09_report",
+      "from": 2050,
+      "durationInFrames": 351,
+      "clipFrames": 351,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s09_report.mp3",
+          "frames": 241
+        },
+        "en": {
+          "file": "vo/en/s09_report.wav",
+          "frames": 198
+        }
+      }
+    },
+    {
+      "id": "s10_outro",
+      "clip": null,
+      "from": 2401,
+      "durationInFrames": 263,
+      "clipFrames": null,
+      "voDelayFrames": 12,
+      "vo": {
+        "ko": {
+          "file": "vo/ko/s10_outro.mp3",
+          "frames": 155
+        },
+        "en": {
+          "file": "vo/en/s10_outro.wav",
+          "frames": 97
+        }
+      }
+    }
+  ]
+}

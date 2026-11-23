@@ -1,0 +1,39 @@
+1
+00:00:00,400 --> 00:00:08,633
+Visitors to Daejeon crowd into one famous bakery, and rarely go on to the next stop.
+
+2
+00:00:09,067 --> 00:00:16,600
+Daejeon Detour is a web app you open from a QR code. First, pick your language.
+
+3
+00:00:17,033 --> 00:00:23,600
+The Old Downtown half-day course links four stops on foot.
+
+4
+00:00:24,033 --> 00:00:33,000
+Check the store info and the not-affiliated notice, then tap plus to add items.
+
+5
+00:00:33,433 --> 00:00:38,700
+Your items turn into a Korean order sentence, with a reading guide.
+
+6
+00:00:39,133 --> 00:00:49,100
+Say it back, and see the recognition match. It is not a pronunciation grade.
+
+7
+00:00:49,533 --> 00:00:57,500
+Stuck? Show the screen. Staff reply with one tap, shown in your language.
+
+8
+00:00:57,933 --> 00:01:08,300
+Next stop, Gwangcheon Sikdang. It is dine-in only, so the to-go line is left out.
+
+9
+00:01:08,733 --> 00:01:20,000
+For the city, an operator report shows where visitors went after the bakery. The numbers are sample data.
+
+10
+00:01:20,433 --> 00:01:28,767
+Daejeon Detour. After the bakery, one more stop.

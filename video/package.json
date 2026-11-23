@@ -1,0 +1,47 @@
+{
+  "name": "detour-video",
+  "version": "1.0.0",
+  "description": "Daejeon Detour demo video (T2.7)",
+  "repository": {},
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.545",
+    "@remotion/google-fonts": "4.0.545",
+    "@remotion/media": "4.0.545",
+    "@remotion/transitions": "4.0.545",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.545",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.545",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "19.3.0",
+    "@types/web": "0.0.166",
+    "eslint": "10.12.0",
+    "playwright-core": "1.65.1",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion bundle",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc",
+    "typecheck": "tsc --noEmit",
+    "record": "node scripts/record.mjs",
+    "cut": "node scripts/cut.mjs",
+    "vo": ".tts/venv/Scripts/python scripts/vo.py",
+    "timeline": "node scripts/timeline.mjs && node scripts/srt.mjs",
+    "render:ko": "remotion render DetourDemoKo out/detour-demo-ko.mp4",
+    "render:en": "remotion render DetourDemoEn out/detour-demo-en.mp4"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}

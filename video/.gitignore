@@ -1,0 +1,15 @@
+node_modules
+dist
+.DS_Store
+.env
+
+# T2.7 (사용자 결정 U-2): 소스 코드·자막만 공개. 렌더 결과·녹화 클립·내레이션 음성·TTS 모델은 git 제외
+out
+public/clips/
+public/vo/
+.tts/
+*.mp4
+*.wav
+*.mp3
+# Remotion 에이전트 스킬 본문은 skills-lock.json으로 복원 (npx skills experimental_install)
+.claude/
