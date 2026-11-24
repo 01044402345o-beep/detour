@@ -32,7 +32,7 @@
     "hubDown": "旧都心",
     "hubDownSub": "パン・歴史・ご当地グルメ",
     "hubStation": "大田駅・ソジェドン",
-    "hubStationSub": "カフェ・路地・荷物預け",
+    "hubStationSub": "伝統市場・屋台グルメ",
     "hubYuseong": "儒城温泉",
     "hubYuseongSub": "温泉・1泊",
     "spots": "{count}か所",
@@ -41,7 +41,7 @@
     "overnightTitle": "儒城温泉・1号線で乗り換えなし",
     "todayPhrase": "今日のフレーズ",
     "todayCourse": "今日のコース",
-    "soonToast": "近日公開 — デモでは旧都心のみ利用できます。"
+    "soonToast": "近日公開 — デモでは旧都心と中央市場を利用できます。"
   },
   "course": {
     "title": "旧都心 半日コース",
@@ -50,11 +50,12 @@
     "checked": "確認日 {date}",
     "startWalk": "1か所目から出発",
     "walkMin": "徒歩{min}分",
-    "walkFromStart": "大田駅から徒歩{min}分・または地下鉄1号線で1駅(中央路駅)",
+    "walkFromStart": "{start}から徒歩{min}分",
     "stopOf": "{total}か所中 {n}か所目",
     "dirFirst": "NAVER地図アプリで1か所目への徒歩ルートが開きます",
     "lineNote": "線は立ち寄り先を順に結んだもので、実際の徒歩ルートではありません。",
     "routeNote": "線はおすすめの徒歩ルートで、参考用です。詳しい道案内はNAVER地図をご利用ください。",
+    "routeSource": "徒歩ルートのデータ：",
     "mapOffline": "地図タイルを読み込めないため、簡易地図を表示しています。",
     "mapStation": "大田駅",
     "mapStream": "大田川",
@@ -63,6 +64,19 @@
     "dirNext": "NAVER地図アプリで{n}か所目への徒歩ルートが開きます",
     "noApp": "NAVER地図アプリがない場合は、上の地図の番号順に、一覧の徒歩時間を目安に進んでください。",
     "googleMaps": "Google マップで{n}か所目を見る"
+  },
+  "season": {
+    "kicker": "期間限定イベント",
+    "openPill": "開催中",
+    "whenLabel": "日時",
+    "whereLabel": "場所",
+    "schedule": "毎週{days} {hours}・{start}〜{end}",
+    "open": "開催中・{close}まで",
+    "today": "本日開催・{hours}",
+    "next": "次回:{date}・{hours}",
+    "upcoming": "{date}から開催",
+    "ended": "今シーズンは{date}に終了しました。次のシーズンの日程は未定です。",
+    "note": "日程は東区の告知(2026年8月)に基づきます。お出かけ前にご確認ください。"
   },
   "place": {
     "food": "グルメ",

@@ -1,4 +1,5 @@
 import raw from './downtown.json';
+import marketRaw from './market.json';
 import { validateContent, parseContent, isDowntownContent } from './validate';
 
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -340,5 +341,40 @@ describe('validateContent 오류 검출', () => {
     const d = fresh();
     delete d.places[0].name.zh;
     expect(() => parseContent(d)).toThrow(/\$\.places\[0\]\.name\.zh: L10n zh 누락/);
+  });
+});
+
+describe('market.json 검증·행사 규칙 (T5.1, R1 L-2·L-3)', () => {
+  const market = (): Json => structuredClone(marketRaw) as Json;
+
+  it('전통시장 코스 데이터는 검증 통과 (hub station·theme market·행사 1개)', () => {
+    expect(validateContent(marketRaw)).toEqual([]);
+  });
+
+  it('같은 코스 안 행사 ID 중복 → 오류', () => {
+    const d = market();
+    d.course.events.push(structuredClone(d.course.events[0]));
+    expect(paths(d)).toContain('$.course.events');
+  });
+
+  it('자정 넘김 행사 시간(18:00–02:00) → 오류 (상태 계산 미지원)', () => {
+    const d = market();
+    d.course.events[0].hours = '18:00–02:00';
+    expect(paths(d)).toContain('$.course.events[0].hours');
+  });
+
+  it('행사 기간 끝 < 시작, 요일 형식 오류 → 오류', () => {
+    const d = market();
+    d.course.events[0].endDate = '2026-08-01';
+    d.course.events[0].days = 'friday';
+    expect(paths(d)).toEqual(
+      expect.arrayContaining(['$.course.events[0].endDate', '$.course.events[0].days']),
+    );
+  });
+
+  it('묶음 거점과 코스 거점이 다르면 오류', () => {
+    const d = market();
+    d.course.hub = 'downtown';
+    expect(paths(d)).toContain('$.course.hub');
   });
 });

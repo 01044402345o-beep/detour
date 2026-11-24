@@ -9,8 +9,16 @@ import CourseScreen from '.';
 // 확인 상태 두 갈래를 모두 보려고 성심당(ssd)만 verified:true로 바꿉니다(실제 데이터는 4곳 모두 false).
 vi.mock('../../data', async (importOriginal) => {
   const m = await importOriginal<typeof import('../../data')>();
-  const list = m.places.map((p) => (p.id === 'ssd' ? { ...p, verified: true } : p));
-  return { ...m, places: list, getPlace: (id: string) => list.find((p) => p.id === id) };
+  const mark = <T extends { id: string }>(p: T) => (p.id === 'ssd' ? { ...p, verified: true } : p);
+  const list = m.places.map(mark);
+  const bundles = m.bundles.map((b) => ({ ...b, places: b.places.map(mark) }));
+  return {
+    ...m,
+    places: list,
+    bundles,
+    getPlace: (id: string) => list.find((p) => p.id === id),
+    getBundle: (id: string) => bundles.find((b) => b.course.id === id),
+  };
 });
 
 // 타일 지도 대신 약도로 고정 (Leaflet 동작은 ui/map 테스트)
@@ -24,9 +32,9 @@ function Probe() {
   return <div data-testid="probe">{loc.pathname}</div>;
 }
 
-function renderCourse() {
+function renderCourse(url = '/course') {
   return render(
-    <MemoryRouter initialEntries={['/course']}>
+    <MemoryRouter initialEntries={[url]}>
       <Routes>
         <Route path="/course" element={<CourseScreen />} />
         <Route path="*" element={<Probe />} />
@@ -63,10 +71,35 @@ describe('S02 코스 지도', () => {
       const p = byId(id);
       expect(items[i]).toHaveTextContent(p.name.en);
       expect(items[i]).toHaveTextContent(p.nameKo);
-      // 1번은 출발지(대전역)에서의 도보 시간 + 지하철 대안
-      const key = i === 0 ? 'course.walkFromStart' : 'course.walkMin';
-      expect(items[i]).toHaveTextContent(t('en', key, { min: p.walkMinFromPrev }));
+      // 1번은 출발지(대전역)에서의 도보 시간 + 지하철 대안(데이터 start.hint)
+      const walk =
+        i === 0
+          ? `${t('en', 'course.walkFromStart', { min: p.walkMinFromPrev, start: t('en', 'course.mapStation') })} · or Line 1, 1 stop to Jungang-ro`
+          : t('en', 'course.walkMin', { min: p.walkMinFromPrev });
+      expect(items[i]).toHaveTextContent(walk);
     });
+    // 원도심 코스에는 시즌 카드 없음
+    expect(document.querySelector('.season')).toBeNull();
+  });
+
+  it('전통시장 코스(?c=jungang-market): 4곳 순서·대전역 출발 도보 시간·야시장 시즌 카드 (T5.1)', () => {
+    renderCourse('/course?c=jungang-market');
+    expect(screen.getAllByText('Jungang Market Food Walk').length).toBeGreaterThan(0);
+    const items = within(screen.getByRole('list')).getAllByRole('listitem');
+    expect(
+      items.map((li) => li.querySelector('.course-stop')?.getAttribute('data-testid')),
+    ).toEqual(['stop-sy', 'stop-gc', 'stop-sj', 'stop-hg']);
+    // 시장 코스 출발지에는 지하철 대안이 없음
+    expect(items[0].querySelector('.course-walk')?.textContent).toBe(
+      t('en', 'course.walkFromStart', { min: byId('sy').walkMinFromPrev, start: 'Daejeon Stn' }),
+    );
+    expect(screen.getByTestId('season-totojeul-2026')).toHaveTextContent('Totojeul Food Festa');
+    expect(screen.getByTestId('start-walking')).toHaveAttribute('href', naverWalkUrl(byId('sy')));
+  });
+
+  it('모르는 코스 id면 기본 코스(원도심)', () => {
+    renderCourse('/course?c=nope');
+    expect(screen.getAllByText('Old Downtown Half-day').length).toBeGreaterThan(0);
   });
 
   it('확인 상태: verified면 "확인일 YYYY-MM-DD", 아니면 날짜 없이 "현장 확인 전 · 예시 정보"', () => {

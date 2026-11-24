@@ -30,7 +30,11 @@ const koOfPhrase = (id: string): string => phraseKo.get(id) ?? id;
 /** 장소 ID → 한국어 이름 (데이터에 없으면 ID) */
 const koOfPlace = (id: string): string => getPlace(id)?.nameKo ?? id;
 
-const placeOrder = (id: string): number => getPlace(id)?.order ?? Number.MAX_SAFE_INTEGER;
+/** 정렬 순서: 코스 순서 → 방문 순서 (코스가 여러 개라 order만으로는 겹침, T5.1) */
+const placeOrder = (id: string): number => {
+  const i = places.findIndex((p) => p.id === id);
+  return i >= 0 ? i : Number.MAX_SAFE_INTEGER;
+};
 
 const nextLabel = (n: SampleNext): string =>
   'placeId' in n ? koOfPlace(n.placeId) : OPERATOR_KO[n.labelKey];

@@ -1,14 +1,15 @@
 /**
  * S01 홈 (T2.1, PRD F-02).
- * - 거점 카드: 원도심만 열림(→ 코스 지도). 대전역·소제동, 유성온천과 1박 배너는 "Coming soon" 토스트.
+ * - 거점 카드: 원도심(→ 원도심 코스), 대전역·소제동(→ 전통시장 코스, T5.1)이 열림.
+ *   유성온천과 1박 배너는 "Coming soon" 토스트.
  * - 오늘의 코스: 원도심 반나절 코스 요약(→ 코스 지도).
  * - 오늘의 문장: 한국어 듣기(ListenButton). 재생되면 phrase_play를 실제 데이터 ID로 기록.
  * screen_view는 라우터가 기록합니다.
  */
 import { useNavigate } from 'react-router-dom';
-import { course, getPlace, places } from '../../data';
+import { bundles, course, getBundle, getPlace, type CourseBundle } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
-import { PATHS } from '../../router/routes';
+import { coursePath } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
 import { CardButton, Icon, ListenButton, Pill, Pronunciation, useToast } from '../../ui';
 import { HubArt } from './HubArt';
@@ -18,8 +19,13 @@ import './home.css';
 const TODAY_PLACE_ID = 'ssd';
 const TODAY_PHRASE_ID = 'ssd-2';
 
-/** 코스 정류장 사이 도보 시간 합계 (분) */
-const WALK_MIN = places.reduce((sum, p) => sum + p.walkMinFromPrev, 0);
+/** 대전역·소제동 거점 안의 전통시장 코스 (T5.1) */
+const MARKET_COURSE_ID = 'jungang-market';
+const DOWNTOWN = bundles[0];
+const MARKET = getBundle(MARKET_COURSE_ID);
+
+/** 코스 정류장 사이 도보 시간 합계 (분, 출발지 → 1번 포함) */
+const walkMin = (b: CourseBundle) => b.places.reduce((sum, p) => sum + p.walkMinFromPrev, 0);
 
 export default function HomeScreen() {
   const t = useT();
@@ -29,7 +35,7 @@ export default function HomeScreen() {
   const logEvent = useAppStore((s) => s.logEvent);
 
   const soon = () => toast(t('home.soonToast'));
-  const toCourse = () => navigate(PATHS.course);
+  const toCourse = () => navigate(coursePath());
 
   const todayPhrase = getPlace(TODAY_PLACE_ID)?.phrases.find((p) => p.id === TODAY_PHRASE_ID);
   const stops = course.stops.map((id) => getPlace(id)).filter((p) => p !== undefined);
@@ -71,12 +77,7 @@ export default function HomeScreen() {
         </button>
       </div>
       <div className="home-hubs" data-testid="home-hubs">
-        <button
-          type="button"
-          className="home-hub"
-          onClick={toCourse}
-          data-testid="hub-downtown"
-        >
+        <button type="button" className="home-hub" onClick={toCourse} data-testid="hub-downtown">
           <HubArt kind="down" />
           <span className="home-hub__info">
             <span className="home-row">
@@ -88,30 +89,43 @@ export default function HomeScreen() {
             <span className="home-row home-hub__meta">
               <span className="home-row">
                 <Icon name="pin" size={14} />
-                {t('home.spots', { count: course.stops.length })}
+                {t('home.spots', { count: DOWNTOWN.places.length })}
               </span>
               <span className="home-row">
                 <Icon name="walk" size={14} />
-                {t('home.minutes', { count: WALK_MIN })}
+                {t('home.minutes', { count: walkMin(DOWNTOWN) })}
               </span>
             </span>
           </span>
         </button>
-        <button
-          type="button"
-          className="home-hub home-hub--lock"
-          onClick={soon}
-          data-testid="hub-station"
-        >
-          <HubArt kind="station" />
-          <Pill tone="ink" className="home-hub__soon">
-            {t('common.comingSoon')}
-          </Pill>
-          <span className="home-hub__info">
-            <span className="home-h-m">{t('home.hubStation')}</span>
-            <span className="home-xs home-hub__sub">{t('home.hubStationSub')}</span>
-          </span>
-        </button>
+        {MARKET ? (
+          <button
+            type="button"
+            className="home-hub"
+            onClick={() => navigate(coursePath(MARKET.course.id))}
+            data-testid="hub-station"
+          >
+            <HubArt kind="station" />
+            <span className="home-hub__info">
+              <span className="home-row">
+                <span className="home-h-m">{t('home.hubStation')}</span>
+                <span className="home-brand__sp" />
+                <Pill tone="acc">{t('common.demoBadge')}</Pill>
+              </span>
+              <span className="home-xs home-hub__sub">{t('home.hubStationSub')}</span>
+              <span className="home-row home-hub__meta">
+                <span className="home-row">
+                  <Icon name="pin" size={14} />
+                  {t('home.spots', { count: MARKET.places.length })}
+                </span>
+                <span className="home-row">
+                  <Icon name="walk" size={14} />
+                  {t('home.minutes', { count: walkMin(MARKET) })}
+                </span>
+              </span>
+            </span>
+          </button>
+        ) : null}
         <button
           type="button"
           className="home-hub home-hub--lock"

@@ -4,6 +4,7 @@ import type L from 'leaflet';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ATTRIBUTION_H, LeafletMap, TILE_TIMEOUT_MS } from './LeafletMap';
+import { getBundle } from '../../data';
 import type { MapStop } from './types';
 
 const STOPS: MapStop[] = [
@@ -435,5 +436,132 @@ describe('OSM 출처 링크 터치 영역 (T3.2 → R3)', () => {
     expect(links).toHaveLength(1);
     expect(links[0].closest('.cmap .leaflet-control-attribution')).not.toBeNull();
     expect(links[0].textContent).toBe('OpenStreetMap');
+  });
+});
+
+describe('가까운 핀 겹침 보정 (T5.1 R1 M-1)', () => {
+  const market = getBundle('jungang-market')!;
+  const stops: MapStop[] = market.places.map((p, i) => ({
+    id: p.id,
+    no: i + 1,
+    name: p.name.en,
+    category: p.category,
+    geo: p.geo,
+  }));
+
+  function pins(map: L.Map) {
+    const out: { id: string; at: L.Point; real: L.Point }[] = [];
+    map.eachLayer((layer) => {
+      const el = (layer as L.Marker).getElement?.();
+      const id = el?.getAttribute('data-testid')?.replace('map-pin-', '');
+      const s = stops.find((x) => x.id === id);
+      if (s && el?.getAttribute('data-testid')?.startsWith('map-pin-')) {
+        out.push({
+          id: s.id,
+          at: map.latLngToContainerPoint((layer as L.Marker).getLatLng()),
+          real: map.latLngToContainerPoint([s.geo.lat, s.geo.lng]),
+        });
+      }
+    });
+    return out;
+  }
+
+  function expectSeparated(map: L.Map) {
+    const ps = pins(map);
+    expect(ps).toHaveLength(stops.length);
+    for (let i = 0; i < ps.length; i += 1) {
+      // 실제 지점에서 핀 지름(44px) 남짓 이내
+      expect(ps[i].at.distanceTo(ps[i].real)).toBeLessThanOrEqual(46);
+      for (let j = i + 1; j < ps.length; j += 1) {
+        expect(ps[i].at.distanceTo(ps[j].at)).toBeGreaterThanOrEqual(44);
+      }
+    }
+  }
+
+  it('시장 핀: 처음 줌과 줌을 바꾼 뒤에도 서로 44px 이상, 실제 지점 근처 (줌마다 다시 계산)', () => {
+    let map: L.Map | undefined;
+    render(
+      <LeafletMap
+        stops={stops}
+        onSelect={() => {}}
+        onFail={() => {}}
+        label="Market"
+        onMapReady={(m) => (map = m)}
+      />,
+    );
+    expectSeparated(map!);
+    act(() => {
+      map!.setZoom(map!.getZoom() - 1, { animate: false });
+    });
+    expectSeparated(map!);
+    act(() => {
+      map!.setZoom(map!.getZoom() + 2, { animate: false });
+    });
+    expectSeparated(map!);
+  });
+
+  it('지도를 옮긴 뒤 줌을 바꾸고 되돌아와도 핀이 실제 지점 근처 (화면 가장자리로 끌려오지 않음, R2 M-1)', () => {
+    let map: L.Map | undefined;
+    render(
+      <LeafletMap
+        stops={stops}
+        onSelect={() => {}}
+        onFail={() => {}}
+        label="Market"
+        onMapReady={(m) => (map = m)}
+      />,
+    );
+    const m = map!;
+    // jsdom은 컨테이너 크기가 0이므로 실제 휴대폰 지도 크기를 흉내 냄
+    vi.spyOn(m, 'getSize').mockReturnValue(L2.point(358, 288));
+    act(() => {
+      m.panBy([500, 0], { animate: false });
+      m.setZoom(m.getZoom() - 1, { animate: false });
+    });
+    expectSeparated(m);
+    act(() => {
+      m.panBy([-500, 0], { animate: false });
+    });
+    expectSeparated(m);
+  });
+
+  it.each([9, 8])(
+    '많이 축소해도(줌 %i) 핀이 서로 44px 이상, 실제 지점에서 46px 이내 (R3 M-1)',
+    (z) => {
+      let map: L.Map | undefined;
+      render(
+        <LeafletMap
+          stops={stops}
+          onSelect={() => {}}
+          onFail={() => {}}
+          label="Market"
+          onMapReady={(m) => (map = m)}
+        />,
+      );
+      act(() => {
+        map!.setView([36.329, 127.431], z, { animate: false });
+      });
+      expectSeparated(map!);
+    },
+  );
+});
+
+describe('핀 클릭 영역은 지름 44px 원 (T5.1 R4 M-1)', () => {
+  const css = readFileSync(join(process.cwd(), 'src/ui/map/map.css'), 'utf8');
+  const at = css.indexOf('\n.cmap-pin {');
+  const block = at < 0 ? '' : css.slice(at, css.indexOf('}', at));
+
+  it('기본 규칙(포커스와 무관)에 border-radius: 50% → 중심 44px 이상이면 대각선 배치에서도 겹치지 않음', () => {
+    expect(block).toMatch(/border-radius:\s*50%;/);
+  });
+
+  it('마커 아이콘 크기 = 원 지름 44px, 앵커는 가운데', () => {
+    render(<LeafletMap stops={STOPS} onSelect={() => {}} onFail={() => {}} label="Course" />);
+    const pin = screen.getByTestId('map-pin-eun');
+    expect(pin).toHaveClass('cmap-pin');
+    expect(pin.style.width).toBe('44px');
+    expect(pin.style.height).toBe('44px');
+    expect(pin.style.marginLeft).toBe('-22px');
+    expect(pin.style.marginTop).toBe('-22px');
   });
 });

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { t } from '../../i18n';
 import { useAppStore } from '../../store/useAppStore';
 import { CourseMap } from './CourseMap';
@@ -101,5 +101,38 @@ describe('CourseMap 전환', () => {
     fireEvent.click(screen.getByText('fail'));
     fireEvent.click(screen.getByTestId('map-pin-eun'));
     expect(onSelect.mock.calls).toEqual([['ssd'], ['eun']]);
+  });
+});
+
+describe('약도의 경로 출처 (R1 M-3)', () => {
+  const route = [
+    { lat: 36.3277, lng: 127.4273 },
+    { lat: 36.3289, lng: 127.4262 },
+  ];
+
+  it('경로가 있는 약도: OSM 출처 링크(새 창), 타일 지도에서는 Leaflet 출처를 쓰므로 표시 안 함', () => {
+    render(<CourseMap stops={STOPS} onSelect={() => {}} label="x" route={route} />);
+    expect(screen.queryByTestId('map-route-source')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'fail' }));
+    const src = screen.getByTestId('map-route-source');
+    expect(src).toHaveTextContent(t('en', 'course.routeSource'));
+    const a = within(src).getByRole('link', { name: '© OpenStreetMap contributors' });
+    expect(a).toHaveAttribute('href', 'https://www.openstreetmap.org/copyright');
+    expect(a).toHaveAttribute('target', '_blank');
+  });
+
+  it('경로가 없는 약도(직선)에는 출처 없음', () => {
+    render(<CourseMap stops={STOPS} onSelect={() => {}} label="x" />);
+    fireEvent.click(screen.getByRole('button', { name: 'fail' }));
+    expect(screen.queryByTestId('map-route-source')).toBeNull();
+  });
+});
+
+describe('출처 고정 표기 (R2)', () => {
+  it('OSM 출처 상수는 하드코딩 예외 목록에 등록된 고정 표기', async () => {
+    const { OSM_CREDIT } = await import('./osm');
+    const { ALLOWED_LITERALS } = await import('../../i18n/hardcodeCheck');
+    expect(OSM_CREDIT).toBe('© OpenStreetMap contributors');
+    expect(ALLOWED_LITERALS.has(OSM_CREDIT)).toBe(true);
   });
 });

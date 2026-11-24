@@ -72,8 +72,8 @@ describe('Phase 1 통합: 데이터 → store → 주문 문장 → 채점 → �
     expect(extraVisitRate(store.getState().events, 'ssd').rate).toBe(1);
   });
 
-  it('데이터·사전 연결: 4곳 모두 현장 확인 전이며 확인 전 문구가 3개 언어로 있음', () => {
-    expect(places.map((p) => p.id)).toEqual(['ssd', 'eun', 'mus', 'gwc']);
+  it('데이터·사전 연결: 2개 코스 8곳 모두 현장 확인 전이며 확인 전 문구가 3개 언어로 있음', () => {
+    expect(places.map((p) => p.id)).toEqual(['ssd', 'eun', 'mus', 'gwc', 'sy', 'gc', 'sj', 'hg']);
     expect(places.every((p) => p.verified === false)).toBe(true);
     for (const lang of ['en', 'ja', 'zh'] as const) {
       const text = t(lang, 'place.unverified');

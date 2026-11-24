@@ -4,11 +4,12 @@
  * - 정류장 목록: 이동 시간·확인 상태(verified면 확인일, 아니면 "현장 확인 전 · 예시 정보")
  * - 핀·목록 → 장소 상세. place_view는 장소 상세(T2.3)가 기록하므로 여기서는 남기지 않습니다.
  * - Start walking → 다음 정류장의 네이버 지도 웹 도보 길찾기(기본) + Google Maps 장소 보기(보조)
+ * - 코스 여러 개(T5.1): `/course?c=<코스 id>`. 없거나 모르는 id면 기본 코스(원도심).
+ *   코스에 시즌 행사(야시장 등)가 있으면 지도 아래 시즌 카드로 일정을 안내합니다.
  */
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { course, courseRoute, getPlace } from '../../data';
-import type { ContentPlace } from '../../data';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { bundles, getBundle, type CourseBundle } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, placePath } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
@@ -16,16 +17,16 @@ import { Icon, IconButton, Pill, TopBar } from '../../ui';
 import { CourseMap, type MapStop } from '../../ui/map';
 import { googlePlaceUrl, naverWalkUrl } from '../../ui/map/externalMap';
 import { nextStopIndex } from './nextStop';
+import { SeasonCard } from './SeasonCard';
 import './Course.css';
 
-const STOPS: ContentPlace[] = course.stops.map((id) => {
-  const p = getPlace(id);
-  if (!p) throw new Error(`course stop "${id}" not found`);
-  return p;
-});
-
 /** 지도에 그릴 도보 경로: 구간을 이어 한 줄로 (구간 이음매의 중복 정류장 좌표는 한 번만) */
-const ROUTE = courseRoute.legs.flatMap((leg, i) => (i === 0 ? leg.path : leg.path.slice(1)));
+const ROUTES = new Map(
+  bundles.map((b) => [
+    b.course.id,
+    b.route.legs.flatMap((leg, i) => (i === 0 ? leg.path : leg.path.slice(1))),
+  ]),
+);
 
 function fmtHours(min: number): string {
   const h = min / 60;
@@ -33,10 +34,19 @@ function fmtHours(min: number): string {
 }
 
 export default function CourseScreen() {
+  const [params] = useSearchParams();
+  const b = getBundle(params.get('c') ?? '') ?? bundles[0];
+  // 코스가 바뀌면 지도·목록을 새로 그립니다
+  return <CourseView key={b.course.id} bundle={b} />;
+}
+
+function CourseView({ bundle }: { bundle: CourseBundle }) {
   const t = useT();
   const lang = useLang();
   const navigate = useNavigate();
   const events = useAppStore((s) => s.events);
+  const { course, places: STOPS } = bundle;
+  const ROUTE = ROUTES.get(course.id);
 
   const mapStops = useMemo<MapStop[]>(
     () =>
@@ -47,10 +57,13 @@ export default function CourseScreen() {
         category: p.category,
         geo: p.geo,
       })),
-    [lang],
+    [lang, STOPS],
   );
 
-  const mapStart = useMemo(() => ({ label: t('course.mapStation'), geo: course.start.geo }), [t]);
+  const mapStart = useMemo(
+    () => ({ label: t('course.mapStation'), geo: course.start.geo }),
+    [t, course.start.geo],
+  );
   const open = (id: string) => navigate(placePath(id));
   const title = pickL10n(lang, course.title);
   const allVerified = STOPS.every((p) => p.verified);
@@ -104,13 +117,23 @@ export default function CourseScreen() {
         </div>
       </div>
 
+      {course.events?.map((ev) => (
+        <SeasonCard key={ev.id} event={ev} />
+      ))}
+
       <ol className="course-stops">
         {STOPS.map((p, i) => (
           <li key={p.id}>
             <div className="course-walk">
               <Icon name="walk" size={14} />
               {i === 0
-                ? t('course.walkFromStart', { min: p.walkMinFromPrev })
+                ? [
+                    t('course.walkFromStart', {
+                      min: p.walkMinFromPrev,
+                      start: t('course.mapStation'),
+                    }),
+                    ...(course.start.hint ? [pickL10n(lang, course.start.hint)] : []),
+                  ].join(' · ')
                 : t('course.walkMin', { min: p.walkMinFromPrev })}
             </div>
             <button

@@ -173,3 +173,74 @@
 .course-actions .ui-btn {
   text-decoration: none;
 }
+
+/* 시즌 행사 카드 (야시장·축제, T5.1) */
+.season {
+  margin: 14px 22px 0;
+  padding: 14px 16px;
+}
+
+.season__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.season__k {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--acc-d);
+}
+
+.season__title {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.season__desc {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--soft);
+}
+
+.season__rows {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.season__rows > div {
+  display: flex;
+  gap: 8px;
+}
+
+.season__rows dt {
+  flex: none;
+  min-width: 48px;
+  font-weight: 700;
+  color: var(--soft);
+}
+
+.season__state {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--paper, #f7f2e9);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.season__note {
+  margin-top: 6px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--soft);
+}

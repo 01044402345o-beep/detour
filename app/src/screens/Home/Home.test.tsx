@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import { course } from '../../data';
 import { AppRoutes } from '../../router/AppRoutes';
 import type { SpeakResult, Tts } from '../../speech/tts';
@@ -35,11 +35,18 @@ vi.mock('../../router/screens', async () => {
   };
 });
 
+/** 현재 경로 (다른 화면이 가짜라 이동 확인용) */
+function Loc() {
+  const l = useLocation();
+  return <div data-testid="loc">{l.pathname + l.search}</div>;
+}
+
 async function renderHome(lang: Lang = 'en') {
   useAppStore.setState({ lang, events: [] });
   render(
     <MemoryRouter initialEntries={['/']}>
       <AppRoutes />
+      <Loc />
     </MemoryRouter>,
   );
   return screen.findByTestId('screen-home');
@@ -79,13 +86,29 @@ describe('S01 홈 — 거점·배너', () => {
     expect(hub).toHaveTextContent('DEMO');
   });
 
-  it.each(['hub-station', 'hub-yuseong', 'overnight-banner'])(
+  it('대전역·소제동 카드 = 전통시장 코스 (DEMO·4곳·도보 10분) → 시장 코스 지도 (T5.1)', async () => {
+    await renderHome();
+    const hub = screen.getByTestId('hub-station');
+    expect(hub).toHaveTextContent('Traditional Market');
+    expect(hub).toHaveTextContent('4 spots');
+    expect(hub).toHaveTextContent('10 min');
+    expect(hub).toHaveTextContent('DEMO');
+    expect(hub).not.toHaveTextContent('Coming soon');
+    fireEvent.click(hub);
+    expect(await screen.findByTestId('screen-course')).toBeInTheDocument();
+    // 다른 화면은 이 파일에서 가짜이므로 이동 경로(?c=)로 확인 (실제 코스 화면은 Course.test)
+    expect(screen.getByTestId('loc')).toHaveTextContent('/course?c=jungang-market');
+  });
+
+  it.each(['hub-yuseong', 'overnight-banner'])(
     '잠긴 거점·1박 배너(%s) → "Coming soon" 토스트, 이동 없음',
     async (id) => {
       await renderHome();
       vi.useFakeTimers();
       fireEvent.click(screen.getByTestId(id));
-      expect(toastText()).toBe('Coming soon — Old Downtown is open in this demo.');
+      expect(toastText()).toBe(
+        'Coming soon — Old Downtown and Jungang Market are open in this demo.',
+      );
       expect(screen.getByTestId('screen-home')).toBeInTheDocument();
       act(() => vi.advanceTimersByTime(TOAST_MS));
       expect(toastText()).toBe('');
@@ -94,9 +117,7 @@ describe('S01 홈 — 거점·배너', () => {
 
   it('잠긴 카드의 이름에 Coming soon이 포함 (화면 낭독기)', async () => {
     await renderHome();
-    expect(screen.getByRole('button', { name: /Station & Sojedong/ })).toHaveAccessibleName(
-      /Coming soon/,
-    );
+    expect(screen.getByTestId('hub-yuseong')).toHaveAccessibleName(/Coming soon/);
   });
 });
 

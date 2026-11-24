@@ -2,11 +2,12 @@
  * 코스 도보 경로 미리 계산 (T2.2b). 개발할 때 한 번 실행하고, 결과 JSON을 커밋합니다.
  * 앱은 실행 중에 경로 API를 부르지 않습니다(오프라인·외부 호출 없음 유지).
  *
- *   node scripts/gen-course-route.mjs
+ *   node scripts/gen-course-route.mjs downtown   → src/data/downtown.route.json
+ *   node scripts/gen-course-route.mjs market     → src/data/market.route.json
  *
  * - 경로: OpenStreetMap 데이터 기반 OSRM 도보 프로필 (FOSSGIS 공개 서버, 가벼운 사용만 허용)
- * - 입력: src/data/downtown.json 의 course.start(출발지) + course.stops 순서와 각 장소 geo
- * - 출력: src/data/courseRoute.json (구간마다 [위도, 경도] 목록. 양 끝은 정류장 좌표로 맞춤)
+ * - 입력: src/data/<코스>.json 의 course.start(출발지) + course.stops 순서와 각 장소 geo
+ * - 출력: src/data/<코스>.route.json (구간마다 [위도, 경도] 목록. 양 끝은 정류장 좌표로 맞춤)
  * - 좌표가 바뀌거나 현장 확인으로 길이 달라지면 다시 실행하고, 결과를 지도로 확인합니다.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -14,8 +15,13 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DATA = join(ROOT, 'src', 'data', 'downtown.json');
-const OUT = join(ROOT, 'src', 'data', 'courseRoute.json');
+const PACK = process.argv[2];
+if (!PACK || !/^[a-z0-9-]+$/.test(PACK)) {
+  console.error('usage: node scripts/gen-course-route.mjs <pack>   (예: downtown, market)');
+  process.exit(1);
+}
+const DATA = join(ROOT, 'src', 'data', `${PACK}.json`);
+const OUT = join(ROOT, 'src', 'data', `${PACK}.route.json`);
 const ENDPOINT = 'https://routing.openstreetmap.de/routed-foot/route/v1/foot';
 const SOURCE = 'OSRM foot profile (routing.openstreetmap.de) · © OpenStreetMap contributors';
 

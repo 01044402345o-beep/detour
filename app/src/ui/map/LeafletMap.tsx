@@ -17,6 +17,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef } from 'react';
 import type { GeoPoint } from '../../types';
+import { separate } from './projection';
 import type { MapStart, MapStop } from './types';
 
 export const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -25,6 +26,8 @@ export const OSM_ATTRIBUTION =
 
 /** 타일 묶음 하나가 이 시간 안에 다 처리되지 않으면 실패로 봅니다 */
 export const TILE_TIMEOUT_MS = 8000;
+/** 핀 터치 영역 지름 (px, pinIcon iconSize와 같음) */
+const PIN_TOUCH_PX = 44;
 /** fitBounds 기본 여백 (px) */
 const FIT_PAD = 36;
 /** 출처 표시 막대 높이(터치 44px) + 아래 여백 4px — map.css와 맞춤 */
@@ -206,14 +209,33 @@ export function LeafletMap({
       marker.getElement()?.setAttribute('data-testid', 'map-start');
     }
 
-    for (const s of stops) {
-      const marker = L.marker([s.geo.lat, s.geo.lng], {
+    // 핀 터치 영역(지름 44px 원, map.css .cmap-pin)이 겹치면 지금 줌의 화면 좌표에서 벌려 놓습니다
+    // (시장처럼 수십 m 간격, T5.1). 실제 좌표(s.geo)는 그대로 두고 줌이 바뀔 때마다 다시 계산합니다(R1 M-1).
+    // 경로선은 실제 좌표를 지나고, 핀은 실제 지점 근처(반발은 핀 지름 이내, 그래도 겹치면 무리를 원 위에 펼침)에 둡니다.
+    const pinPositions = (): L.LatLng[] =>
+      // 뷰포트 상자로 제한하지 않음: 화면 밖 지점이 가장자리로 끌려오지 않게 (R2 M-1).
+      // 반발 단계 이동량은 핀 지름 이내. 낮은 줌에서 무리가 한 점에 모이면 원 위에 펼칩니다(R3 M-1).
+      separate(
+        stops.map((s) => map.latLngToContainerPoint([s.geo.lat, s.geo.lng])),
+        PIN_TOUCH_PX + 2,
+        { maxMove: PIN_TOUCH_PX },
+      ).map((p) => map.containerPointToLatLng(L.point(p.x, p.y)));
+    const pinAt = pinPositions();
+    const markers: L.Marker[] = [];
+    map.on('zoomend', () => {
+      const next = pinPositions();
+      markers.forEach((m, i) => m.setLatLng(next[i]));
+    });
+
+    for (const [i, s] of stops.entries()) {
+      const marker = L.marker(pinAt[i] ?? [s.geo.lat, s.geo.lng], {
         icon: pinIcon(s),
         keyboard: true,
         riseOnHover: true,
       })
         .on('click', () => selectRef.current(s.id))
         .addTo(map);
+      markers.push(marker);
       const el = marker.getElement();
       if (el) {
         el.setAttribute('aria-label', `${s.no}. ${s.name}`);

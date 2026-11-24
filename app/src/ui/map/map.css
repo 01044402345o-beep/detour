@@ -42,12 +42,15 @@
   stroke: var(--ink);
 }
 
-/* Leaflet 번호 핀: 터치 영역 44px, 보이는 원 30px */
+/* Leaflet 번호 핀: 터치 영역 지름 44px 원, 보이는 원 30px.
+ * border-radius로 클릭 영역을 원으로 제한합니다(곡선 밖은 포인터를 받지 않음). 사각형이면 대각선으로
+ * 붙은 핀의 모서리가 겹치므로, 보정(핀 중심 44px 이상)과 함께 원형이어야 겹치지 않습니다 (T5.1 R4 M-1). */
 .cmap-pin {
   display: grid;
   place-items: center;
   background: none;
   border: 0;
+  border-radius: 50%;
 }
 
 .cmap-pin__dot {
@@ -165,6 +168,15 @@
   font-size: 11.5px;
   color: var(--soft);
   line-height: 1.45;
+}
+
+/* 약도 경로 출처 링크: 터치 44px (T3.2 기준) */
+.cmap-src a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--soft);
+  text-decoration: underline;
 }
 
 .cmap-note--offline {

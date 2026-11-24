@@ -1,11 +1,11 @@
 /**
- * 원도심 콘텐츠 JSON 검증 (T1.1).
+ * 코스 콘텐츠 JSON 검증 (T1.1, 코스 여러 개 — T5.1). 원도심(downtown.json)·중앙시장(market.json) 등 같은 형식.
  * 타입(app/src/types.ts)·필수 필드·L10n 3개 언어 누락·좌표 범위·교차 참조를 검사합니다.
  * JSON import는 리터럴 타입(예: counter)이 string으로 넓어지므로, 이 검증을 통과한 값만
  * 계약 타입으로 취급합니다.
  */
-import { LANGS } from '../types';
-import type { Course, MenuItem, Place } from '../types';
+import { COURSE_THEMES, HUB_IDS, LANGS } from '../types';
+import type { Course, HubId, MenuItem, Place } from '../types';
 
 /** 데이터 전용 메모. 현장 미확인 항목은 '확인 필요'로 적습니다 (task.md T1.1). */
 type WithNote = { note?: string };
@@ -14,12 +14,15 @@ export type ContentMenuItem = MenuItem & WithNote;
 export type ContentPlace = Omit<Place, 'menu'> & WithNote & { menu?: ContentMenuItem[] };
 export type ContentCourse = Omit<Course, 'start'> &
   WithNote & { start: Course['start'] & WithNote };
-export type DowntownContent = {
-  hub: 'downtown';
+/** 코스 하나의 콘텐츠 묶음 (거점·코스·장소) */
+export type ContentPack = {
+  hub: HubId;
   note?: string;
   course: ContentCourse;
   places: ContentPlace[];
 };
+/** 이전 이름 (원도심 하나일 때) */
+export type DowntownContent = ContentPack;
 
 export type ValidationError = { path: string; message: string };
 
@@ -232,13 +235,27 @@ function checkPlace(c: Checker, p: unknown, path: string): void {
 function checkCourse(c: Checker, co: unknown, path: string): void {
   if (!c.obj(co, path)) return;
   c.str(co, 'id', path);
-  if (co.hub !== 'downtown') c.fail(`${path}.hub`, "'downtown' 아님");
+  if (!HUB_IDS.includes(co.hub as HubId)) c.fail(`${path}.hub`, `거점(${HUB_IDS.join('/')}) 아님`);
+  if ('theme' in co && !COURSE_THEMES.includes(co.theme as never))
+    c.fail(`${path}.theme`, `코스 종류(${COURSE_THEMES.join('/')}) 아님`);
+  if ('events' in co && c.array(co.events, `${path}.events`)) {
+    co.events.forEach((e, i) => checkEvent(c, e, `${path}.events[${i}]`));
+    checkDuplicates(
+      c,
+      co.events
+        .filter(isObj)
+        .map((e) => e.id)
+        .filter(isNonEmptyStr),
+      `${path}.events`,
+    );
+  }
   c.l10n(co.title, `${path}.title`);
   if (c.obj(co.start, `${path}.start`)) {
     c.str(co.start, 'id', `${path}.start`);
     c.str(co.start, 'nameKo', `${path}.start`);
     c.l10n(co.start.name, `${path}.start.name`);
     checkGeo(c, co.start.geo, `${path}.start.geo`);
+    if ('hint' in co.start) c.l10n(co.start.hint, `${path}.start.hint`);
     c.optStr(co.start, 'note', `${path}.start`);
   }
   if (c.array(co.stops, `${path}.stops`)) {
@@ -249,6 +266,37 @@ function checkCourse(c: Checker, co: unknown, path: string): void {
   c.positiveNum(co, 'distanceKm', path);
   c.positiveNum(co, 'durationMin', path);
   c.optStr(co, 'note', path);
+}
+
+function checkEvent(c: Checker, e: unknown, path: string): void {
+  if (!c.obj(e, path)) return;
+  c.str(e, 'id', path);
+  c.str(e, 'nameKo', path);
+  c.l10n(e.name, `${path}.name`);
+  c.l10n(e.where, `${path}.where`);
+  c.l10n(e.description, `${path}.description`);
+  if (!isValidIsoDate(e.startDate)) c.fail(`${path}.startDate`, "'YYYY-MM-DD' 날짜 아님");
+  if (!isValidIsoDate(e.endDate)) c.fail(`${path}.endDate`, "'YYYY-MM-DD' 날짜 아님");
+  if (
+    isValidIsoDate(e.startDate) &&
+    isValidIsoDate(e.endDate) &&
+    String(e.startDate) > String(e.endDate)
+  )
+    c.fail(`${path}.endDate`, '시작일보다 이름');
+  if (typeof e.days !== 'string' || !CLOSED_RE.test(e.days))
+    c.fail(`${path}.days`, "'fri,sat' 형식 아님");
+  if (typeof e.hours !== 'string' || !HOURS_RE.test(e.hours)) {
+    c.fail(`${path}.hours`, "'HH:MM–HH:MM' 형식 아님");
+  } else {
+    // 시즌 상태 계산은 같은 날 안에서 열고 닫는 행사만 지원 (자정 넘김 미지원, R1 L-3)
+    const [open, close] = e.hours.split(/[–-]/);
+    if (close <= open)
+      c.fail(`${path}.hours`, '자정을 넘기는 행사 시간은 지원하지 않음 (끝 > 시작)');
+  }
+  c.str(e, 'source', path);
+  if (!isValidIsoDate(e.checkedAt)) c.fail(`${path}.checkedAt`, "'YYYY-MM-DD' 날짜 아님");
+  if (typeof e.verified !== 'boolean') c.fail(`${path}.verified`, 'boolean 아님');
+  c.optStr(e, 'note', path);
 }
 
 function checkDuplicates(c: Checker, ids: string[], path: string): void {
@@ -263,7 +311,9 @@ function checkDuplicates(c: Checker, ids: string[], path: string): void {
 export function validateContent(input: unknown): ValidationError[] {
   const c = new Checker();
   if (!c.obj(input, '$')) return c.errors;
-  if (input.hub !== 'downtown') c.fail('$.hub', "'downtown' 아님");
+  if (!HUB_IDS.includes(input.hub as HubId)) c.fail('$.hub', `거점(${HUB_IDS.join('/')}) 아님`);
+  if (isObj(input.course) && input.course.hub !== input.hub)
+    c.fail('$.course.hub', '묶음 거점($.hub)과 다름');
   c.optStr(input, 'note', '$');
   checkCourse(c, input.course, '$.course');
   if (!c.array(input.places, '$.places')) return c.errors;
@@ -302,11 +352,11 @@ export function isDowntownContent(input: unknown): input is DowntownContent {
 }
 
 /** 검증을 통과하면 계약 타입으로 반환하고, 아니면 오류 목록과 함께 throw */
-export function parseContent(input: unknown): DowntownContent {
+export function parseContent(input: unknown): ContentPack {
   const errors = validateContent(input);
   if (errors.length > 0) {
     const lines = errors.map((e) => `- ${e.path}: ${e.message}`).join('\n');
     throw new Error(`콘텐츠 검증 실패 (${errors.length}건)\n${lines}`);
   }
-  return input as DowntownContent;
+  return input as ContentPack;
 }

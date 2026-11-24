@@ -3,7 +3,7 @@ import { t } from '../../i18n';
 import { useAppStore } from '../../store/useAppStore';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { places } from '../../data';
+import { bundles } from '../../data';
 import { SketchMap } from './SketchMap';
 import { contrastRatio, parseTokens, resolveColor } from '../a11y';
 import {
@@ -78,26 +78,38 @@ describe('SketchMap (SVG 약도)', () => {
     expect(MAP_INSET_PX).toBe(16 * 2 + 1 * 2);
   });
 
-  it('실제 코스 4곳의 히트 원이 서로 겹치지 않음', () => {
-    const real: MapStop[] = places.map((p, i) => ({
-      id: p.id,
-      no: i + 1,
-      name: p.name.en,
-      category: p.category,
-      geo: p.geo,
-    }));
-    render(<SketchMap stops={real} onSelect={() => {}} label="Course" />);
-    const centers = real.map((p) => {
-      const c = screen.getByTestId(`map-pin-${p.id}`).querySelector('circle')!;
-      return { x: Number(c.getAttribute('cx')), y: Number(c.getAttribute('cy')) };
-    });
-    for (let i = 0; i < centers.length; i += 1) {
-      for (let j = i + 1; j < centers.length; j += 1) {
-        const d = Math.hypot(centers[i].x - centers[j].x, centers[i].y - centers[j].y);
-        expect(d).toBeGreaterThan(PIN_HIT_R * 2);
+  it.each(bundles.map((b) => [b.course.id, b] as const))(
+    '실제 코스(%s)의 히트 원이 서로 겹치지 않음 (출발지·경로 포함, 시장처럼 가까운 정류장도)',
+    (_id, b) => {
+      const real: MapStop[] = b.places.map((p, i) => ({
+        id: p.id,
+        no: i + 1,
+        name: p.name.en,
+        category: p.category,
+        geo: p.geo,
+      }));
+      const route = b.route.legs.flatMap((leg, i) => (i === 0 ? leg.path : leg.path.slice(1)));
+      render(
+        <SketchMap
+          stops={real}
+          onSelect={() => {}}
+          label="Course"
+          route={route}
+          start={{ label: 'Daejeon Stn', geo: b.course.start.geo }}
+        />,
+      );
+      const centers = real.map((p) => {
+        const c = screen.getByTestId(`map-pin-${p.id}`).querySelector('circle')!;
+        return { x: Number(c.getAttribute('cx')), y: Number(c.getAttribute('cy')) };
+      });
+      for (let i = 0; i < centers.length; i += 1) {
+        for (let j = i + 1; j < centers.length; j += 1) {
+          const d = Math.hypot(centers[i].x - centers[j].x, centers[i].y - centers[j].y);
+          expect(d).toBeGreaterThan(PIN_HIT_R * 2);
+        }
       }
-    }
-  });
+    },
+  );
 
   it('약도 모드에는 OSM 데이터·링크가 없음 → 누를 수 있는 요소는 44px 이상 핀뿐 (T3.2 → R3)', () => {
     const { container } = render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);

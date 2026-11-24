@@ -32,7 +32,7 @@
     "hubDown": "Old Downtown",
     "hubDownSub": "Bakery · History · Local food",
     "hubStation": "Station & Sojedong",
-    "hubStationSub": "Cafés · Alleys · Luggage",
+    "hubStationSub": "Traditional Market · Street food",
     "hubYuseong": "Yuseong Spa",
     "hubYuseongSub": "Hot springs · Overnight",
     "spots": "{count} spots",
@@ -41,7 +41,7 @@
     "overnightTitle": "Yuseong Spa · Line 1, no transfer",
     "todayPhrase": "Phrase of the day",
     "todayCourse": "Today's course",
-    "soonToast": "Coming soon — Old Downtown is open in this demo."
+    "soonToast": "Coming soon — Old Downtown and Jungang Market are open in this demo."
   },
   "course": {
     "title": "Old Downtown Half-day",
@@ -50,11 +50,12 @@
     "checked": "Checked {date}",
     "startWalk": "Start with stop 1",
     "walkMin": "{min} min walk",
-    "walkFromStart": "{min} min walk from Daejeon Stn · or Line 1, 1 stop to Jungang-ro",
+    "walkFromStart": "{min} min walk from {start}",
     "stopOf": "STOP {n} OF {total}",
     "dirFirst": "Opens walking directions to stop 1 in the NAVER Map app",
     "lineNote": "Lines connect the stops in order. They are not actual walking routes.",
     "routeNote": "The line shows a suggested walking route, for reference only. For step-by-step directions, use NAVER Map.",
+    "routeSource": "Walking route data:",
     "mapOffline": "Map tiles are unavailable, so a simplified map is shown.",
     "mapStation": "Daejeon Stn",
     "mapStream": "Daejeoncheon Stream",
@@ -63,6 +64,19 @@
     "dirNext": "Opens walking directions to stop {n} in the NAVER Map app",
     "noApp": "No NAVER Map app? Follow the numbered stops on the map above, using the walk times in the list.",
     "googleMaps": "View stop {n} in Google Maps"
+  },
+  "season": {
+    "kicker": "SEASONAL EVENT",
+    "openPill": "Open now",
+    "whenLabel": "When",
+    "whereLabel": "Where",
+    "schedule": "Every {days}, {hours} · {start} – {end}",
+    "open": "Open now · until {close}",
+    "today": "Opens today · {hours}",
+    "next": "Next: {date} · {hours}",
+    "upcoming": "Season starts {date}",
+    "ended": "This season ended on {date}. Next season dates are not announced yet.",
+    "note": "Schedule from the Dong-gu district announcement (Aug 2026). Please check before you go."
   },
   "place": {
     "food": "FOOD",

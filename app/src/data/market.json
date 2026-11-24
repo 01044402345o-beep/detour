@@ -1,0 +1,549 @@
+{
+  "hub": "station",
+  "note": "대전중앙시장 전통시장 코스(2026-11-24 추가). 후보는 최근 1년 블로그·맛집 매거진·뉴스 검색으로 선정(인스타그램 등 SNS 원문은 직접 확인 못 함). 메뉴·가격·영업시간·좌표는 현장 확인 전 예시값. 확인 필요",
+  "course": {
+    "id": "jungang-market",
+    "hub": "station",
+    "theme": "market",
+    "title": {
+      "en": "Jungang Market Food Walk",
+      "ja": "中央市場 食べ歩き",
+      "zh": "中央市场美食漫步"
+    },
+    "start": {
+      "id": "djs",
+      "nameKo": "대전역",
+      "name": { "en": "Daejeon Station", "ja": "大田駅", "zh": "大田站" },
+      "geo": { "lat": 36.3315, "lng": 127.4325 },
+      "note": "서광장 출구 기준 예시 좌표(원도심 코스와 같은 출발점). 현장 확인 필요"
+    },
+    "stops": ["sy", "gc", "sj", "hg"],
+    "distanceKm": 0.7,
+    "durationMin": 120,
+    "events": [
+      {
+        "id": "totojeul-2026",
+        "nameKo": "토토즐 푸드페스타",
+        "name": {
+          "en": "Totojeul Food Festa (night market)",
+          "ja": "トトジュル・フードフェスタ(夜市)",
+          "zh": "Totojeul美食节(夜市)"
+        },
+        "where": {
+          "en": "Hwawol-tong area, Jungang Market",
+          "ja": "中央市場 ファウォル通り一帯",
+          "zh": "中央市场 花月通一带"
+        },
+        "description": {
+          "en": "Food stalls, flea market and live music",
+          "ja": "屋台・フリーマーケット・公演",
+          "zh": "美食摊位、跳蚤市场和演出"
+        },
+        "startDate": "2026-08-14",
+        "endDate": "2026-11-28",
+        "days": "fri,sat",
+        "hours": "18:00–22:00",
+        "source": "대전 동구 보도자료·언론 보도(2026-08, 뉴스프리존·굿모닝충청 등)",
+        "checkedAt": "2026-11-24",
+        "verified": false,
+        "note": "행사 일정은 동구 공지로 재확인 필요. 다음 시즌 일정 미정"
+      }
+    ],
+    "note": "총거리 0.7km는 market.route.json 구간 합(352+113+54+159m). 소요시간은 시장 구경·식사 포함 예시값. 확인 필요"
+  },
+  "places": [
+    {
+      "id": "sy",
+      "order": 1,
+      "category": "food",
+      "nameKo": "수연분식",
+      "name": { "en": "Suyeon Bunsik", "ja": "スヨン粉食", "zh": "Suyeon小吃店" },
+      "area": "원동",
+      "areaLocal": { "en": "Won-dong", "ja": "院洞", "zh": "院洞" },
+      "hours": "10:00–20:00",
+      "checkedAt": "2026-11-24",
+      "verified": false,
+      "walkMinFromPrev": 5,
+      "transitHint": {
+        "en": "About 5 min walk from Daejeon Station (West exit)",
+        "ja": "大田駅(西口)から徒歩約5分",
+        "zh": "从大田站(西出口)步行约5分钟"
+      },
+      "orderable": true,
+      "takeout": true,
+      "steps": [
+        {
+          "en": "Point at the fried snacks you want",
+          "ja": "欲しい揚げ物を指さす",
+          "zh": "指出想要的炸物"
+        },
+        {
+          "en": "Say how many & pay",
+          "ja": "数を伝えて支払う",
+          "zh": "说数量并付款"
+        },
+        {
+          "en": "Eat at the stall or take it away",
+          "ja": "店先で食べるか持ち帰る",
+          "zh": "在摊位吃或打包带走"
+        }
+      ],
+      "menu": [
+        {
+          "id": "sy-gt",
+          "ko": "고추튀김",
+          "name": {
+            "en": "Fried Stuffed Chili Pepper",
+            "ja": "唐辛子の天ぷら",
+            "zh": "炸酿辣椒"
+          },
+          "roman": "gochu twigim",
+          "kana": "コチュ トィギム",
+          "counter": "개",
+          "description": {
+            "en": "Crispy fried pepper with filling · market favorite",
+            "ja": "具を詰めたサクサク揚げ唐辛子・市場の人気メニュー",
+            "zh": "填馅的酥脆炸辣椒·市场人气小吃"
+          },
+          "signature": true,
+          "spicy": true,
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "가격·속재료(고기 포함 여부) 미확인. 확인 필요"
+        },
+        {
+          "id": "sy-tb",
+          "ko": "떡볶이",
+          "name": { "en": "Tteokbokki", "ja": "トッポッキ", "zh": "炒年糕" },
+          "roman": "tteokbokki",
+          "kana": "トッポッキ",
+          "counter": "인분",
+          "description": {
+            "en": "Chewy rice cakes in sweet-spicy sauce · per serving",
+            "ja": "甘辛ソースのもちもち餅・1人前",
+            "zh": "甜辣酱炒年糕·每份"
+          },
+          "spicy": true,
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "가격 미확인. 확인 필요"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "sy-1",
+          "ko": "이거 세 개 주세요",
+          "roman": "igeo se gae juseyo",
+          "kana": "イゴ セ ゲ ジュセヨ",
+          "meaning": {
+            "en": "Three of these, please.",
+            "ja": "これを三つください。",
+            "zh": "请给我三个这个。"
+          },
+          "words": [
+            { "ko": "이거", "meaning": { "en": "this", "ja": "これ", "zh": "这个" } },
+            { "ko": "세", "meaning": { "en": "three", "ja": "三つ", "zh": "三" } },
+            { "ko": "개", "meaning": { "en": "pieces", "ja": "個", "zh": "个" } },
+            { "ko": "주세요", "meaning": { "en": "please", "ja": "ください", "zh": "请给我" } }
+          ]
+        },
+        {
+          "id": "sy-2",
+          "ko": "섞어서 주세요",
+          "roman": "seokkeoseo juseyo",
+          "kana": "ソッコソ ジュセヨ",
+          "meaning": {
+            "en": "A mix, please.",
+            "ja": "混ぜてください(盛り合わせで)。",
+            "zh": "请给我混搭的。"
+          },
+          "words": [
+            { "ko": "섞어서", "meaning": { "en": "mixed", "ja": "混ぜて", "zh": "混合" } },
+            { "ko": "주세요", "meaning": { "en": "please", "ja": "ください", "zh": "请给我" } }
+          ]
+        },
+        {
+          "id": "sy-3",
+          "ko": "여기서 먹을게요",
+          "roman": "yeogiseo meogeulgeyo",
+          "kana": "ヨギソ モグルケヨ",
+          "meaning": {
+            "en": "I'll eat here.",
+            "ja": "ここで食べます。",
+            "zh": "我在这里吃。"
+          },
+          "words": [
+            { "ko": "여기서", "meaning": { "en": "here", "ja": "ここで", "zh": "在这里" } },
+            { "ko": "먹을게요", "meaning": { "en": "I'll eat", "ja": "食べます", "zh": "我要吃" } }
+          ]
+        }
+      ],
+      "geo": { "lat": 36.32935, "lng": 127.432 },
+      "note": "주소: 대전 동구 대전로785번길 51(중앙시장 내, 다이닝코드 기준) — 다른 블로그는 대전천동로 534로 적어 출처 불일치. 좌표는 도로(대전로785번길) 기준 근사값. 영업시간 예시값. 확인 필요"
+    },
+    {
+      "id": "gc",
+      "order": 2,
+      "category": "food",
+      "nameKo": "개천식당",
+      "name": { "en": "Gaecheon Sikdang", "ja": "ケチョン食堂", "zh": "Gaecheon食堂" },
+      "area": "원동",
+      "areaLocal": { "en": "Won-dong", "ja": "院洞", "zh": "院洞" },
+      "hours": "10:00–20:00",
+      "checkedAt": "2026-11-24",
+      "verified": false,
+      "walkMinFromPrev": 2,
+      "transitHint": {
+        "en": "About 2 min walk from Suyeon Bunsik",
+        "ja": "スヨン粉食から徒歩約2分",
+        "zh": "从Suyeon小吃店步行约2分钟"
+      },
+      "orderable": true,
+      "takeout": true,
+      "steps": [
+        {
+          "en": "Take a seat & order from the staff",
+          "ja": "席に座ってスタッフに注文",
+          "zh": "入座后向店员点餐"
+        },
+        {
+          "en": "Ask about pork if you avoid it",
+          "ja": "豚肉が苦手なら確認する",
+          "zh": "如不吃猪肉请先询问"
+        },
+        {
+          "en": "Pay at the counter on the way out",
+          "ja": "帰りにレジで支払う",
+          "zh": "离开时在柜台付款"
+        }
+      ],
+      "menu": [
+        {
+          "id": "gc-md",
+          "ko": "만둣국",
+          "name": { "en": "Dumpling Soup", "ja": "マンドゥスープ", "zh": "饺子汤" },
+          "roman": "mandutguk",
+          "kana": "マンドゥックク",
+          "counter": "개",
+          "priceKrw": 6000,
+          "description": {
+            "en": "Northern-style handmade dumplings in broth",
+            "ja": "北部式手作り餃子のスープ",
+            "zh": "北方风味手工饺子汤"
+          },
+          "signature": true,
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "가격은 맛집 매거진 기준 '약 6,000원 선'. 속재료(돼지고기 등) 미확인. 확인 필요"
+        },
+        {
+          "id": "gc-jm",
+          "ko": "찐만두",
+          "name": { "en": "Steamed Dumplings", "ja": "蒸し餃子", "zh": "蒸饺" },
+          "roman": "jjinmandu",
+          "kana": "チンマンドゥ",
+          "counter": "인분",
+          "description": {
+            "en": "Plump steamed dumplings · per serving",
+            "ja": "ふっくら蒸し餃子・1人前",
+            "zh": "饱满的蒸饺·每份"
+          },
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "메뉴명·가격 미확인. 확인 필요"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "gc-1",
+          "ko": "돼지고기 들어가요?",
+          "roman": "dwaejigogi deureogayo?",
+          "kana": "トェジゴギ トゥロガヨ?",
+          "meaning": {
+            "en": "Does it have pork?",
+            "ja": "豚肉は入っていますか?",
+            "zh": "里面有猪肉吗?"
+          },
+          "words": [
+            { "ko": "돼지고기", "meaning": { "en": "pork", "ja": "豚肉", "zh": "猪肉" } },
+            { "ko": "들어가요?", "meaning": { "en": "is it in?", "ja": "入ってますか?", "zh": "有放吗?" } }
+          ]
+        },
+        {
+          "id": "gc-2",
+          "ko": "두 명이에요",
+          "roman": "du myeongieyo",
+          "kana": "トゥ ミョンイエヨ",
+          "meaning": {
+            "en": "Two people.",
+            "ja": "二人です。",
+            "zh": "两个人。"
+          },
+          "words": [
+            { "ko": "두", "meaning": { "en": "two", "ja": "二", "zh": "两" } },
+            { "ko": "명이에요", "meaning": { "en": "people", "ja": "人です", "zh": "个人" } }
+          ]
+        },
+        {
+          "id": "gc-3",
+          "ko": "계산할게요",
+          "roman": "gyesanhalgeyo",
+          "kana": "ケサンハルケヨ",
+          "meaning": {
+            "en": "I'd like to pay.",
+            "ja": "お会計お願いします。",
+            "zh": "我要结账。"
+          },
+          "words": [
+            { "ko": "계산할게요", "meaning": { "en": "I'll pay", "ja": "会計します", "zh": "我要结账" } }
+          ]
+        }
+      ],
+      "geo": { "lat": 36.32863, "lng": 127.43175 },
+      "note": "주소: 대전 동구 대전로779번길 39-2(블로그 기준). 좌표는 OpenStreetMap 식당 지점. 영업시간 예시값. 포장 가능 여부 확인 필요"
+    },
+    {
+      "id": "sj",
+      "order": 3,
+      "category": "food",
+      "nameKo": "생일집",
+      "name": { "en": "Saengiljip", "ja": "センイルチプ", "zh": "生日家" },
+      "area": "중동",
+      "areaLocal": { "en": "Jung-dong", "ja": "中洞", "zh": "中洞" },
+      "hours": "09:00–21:00",
+      "checkedAt": "2026-11-24",
+      "verified": false,
+      "walkMinFromPrev": 1,
+      "transitHint": {
+        "en": "About 1 min walk from Gaecheon Sikdang",
+        "ja": "ケチョン食堂から徒歩約1分",
+        "zh": "从Gaecheon食堂步行约1分钟"
+      },
+      "orderable": true,
+      "takeout": false,
+      "steps": [
+        {
+          "en": "Take a seat & order from the staff",
+          "ja": "席に座ってスタッフに注文",
+          "zh": "入座后向店员点餐"
+        },
+        {
+          "en": "Season the soup with perilla powder & salt",
+          "ja": "エゴマ粉と塩でスープを味付け",
+          "zh": "用紫苏粉和盐给汤调味"
+        },
+        {
+          "en": "Pay at the counter on the way out",
+          "ja": "帰りにレジで支払う",
+          "zh": "离开时在柜台付款"
+        }
+      ],
+      "menu": [
+        {
+          "id": "sj-sg",
+          "ko": "순대국밥",
+          "name": {
+            "en": "Sundae Soup with Rice",
+            "ja": "スンデクッパ",
+            "zh": "米肠汤饭"
+          },
+          "roman": "sundae gukbap",
+          "kana": "スンデ クッパプ",
+          "counter": "개",
+          "description": {
+            "en": "Pork broth with Korean blood sausage & rice · contains pork",
+            "ja": "豚骨スープにスンデとご飯・豚肉を含む",
+            "zh": "猪骨汤配米肠和米饭·含猪肉"
+          },
+          "signature": true,
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "가격 미확인. 확인 필요"
+        },
+        {
+          "id": "sj-gs",
+          "ko": "고기순대",
+          "name": {
+            "en": "Meat Sundae Sausage",
+            "ja": "肉スンデ",
+            "zh": "肉米肠"
+          },
+          "roman": "gogi sundae",
+          "kana": "コギ スンデ",
+          "counter": "인분",
+          "description": {
+            "en": "Sliced Korean sausage filled with meat · contains pork · per serving",
+            "ja": "肉入りスンデの盛り合わせ・豚肉を含む・1人前",
+            "zh": "切片肉馅米肠·含猪肉·每份"
+          },
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "가격 미확인. 확인 필요"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "sj-1",
+          "ko": "다대기 빼 주세요",
+          "roman": "dadaegi ppae juseyo",
+          "kana": "タデギ ッペ ジュセヨ",
+          "meaning": {
+            "en": "No spicy paste, please.",
+            "ja": "薬味(辛いタレ)は抜いてください。",
+            "zh": "请不要放辣酱。"
+          },
+          "words": [
+            { "ko": "다대기", "meaning": { "en": "spicy paste", "ja": "辛い薬味", "zh": "辣酱" } },
+            { "ko": "빼", "meaning": { "en": "leave out", "ja": "抜いて", "zh": "去掉" } },
+            { "ko": "주세요", "meaning": { "en": "please", "ja": "ください", "zh": "请" } }
+          ]
+        },
+        {
+          "id": "sj-2",
+          "ko": "들깨가루 더 주세요",
+          "roman": "deulkkaegaru deo juseyo",
+          "kana": "トゥルッケカル ト ジュセヨ",
+          "meaning": {
+            "en": "More perilla powder, please.",
+            "ja": "エゴマ粉をもう少しください。",
+            "zh": "请再给我一些紫苏粉。"
+          },
+          "words": [
+            { "ko": "들깨가루", "meaning": { "en": "perilla powder", "ja": "エゴマ粉", "zh": "紫苏粉" } },
+            { "ko": "더", "meaning": { "en": "more", "ja": "もっと", "zh": "再" } },
+            { "ko": "주세요", "meaning": { "en": "please", "ja": "ください", "zh": "请给我" } }
+          ]
+        },
+        {
+          "id": "sj-3",
+          "ko": "물은 어디 있어요?",
+          "roman": "mureun eodi isseoyo?",
+          "kana": "ムルン オディ イッソヨ?",
+          "meaning": {
+            "en": "Where is the water?",
+            "ja": "お水はどこですか?",
+            "zh": "水在哪里?"
+          },
+          "words": [
+            { "ko": "물은", "meaning": { "en": "water", "ja": "お水は", "zh": "水" } },
+            { "ko": "어디", "meaning": { "en": "where", "ja": "どこ", "zh": "哪里" } },
+            { "ko": "있어요?", "meaning": { "en": "is it?", "ja": "ありますか?", "zh": "在?" } }
+          ]
+        }
+      ],
+      "geo": { "lat": 36.3289, "lng": 127.4322 },
+      "note": "주소: 대전 동구 중동 82-11(중앙시장 골목 내, 블로그 기준). 좌표는 시장 내 순대 골목 부근 추정 근사값. 영업시간 예시값. 포장 가능 여부 확인 필요. 확인 필요"
+    },
+    {
+      "id": "hg",
+      "order": 4,
+      "category": "food",
+      "nameKo": "홍가네풀빵",
+      "name": { "en": "Honggane Pulppang", "ja": "ホンガネ プルッパン", "zh": "洪家小烤饼" },
+      "area": "원동",
+      "areaLocal": { "en": "Won-dong", "ja": "院洞", "zh": "院洞" },
+      "hours": "10:00–19:00",
+      "checkedAt": "2026-11-24",
+      "verified": false,
+      "walkMinFromPrev": 2,
+      "transitHint": {
+        "en": "About 2 min walk from Saengiljip",
+        "ja": "センイルチプから徒歩約2分",
+        "zh": "从生日家步行约2分钟"
+      },
+      "orderable": true,
+      "takeout": true,
+      "steps": [
+        {
+          "en": "Check the price per bag on the sign",
+          "ja": "看板で1袋の値段を確認",
+          "zh": "看招牌上的每袋价格"
+        },
+        {
+          "en": "Say how many you want & pay",
+          "ja": "欲しい数を伝えて支払う",
+          "zh": "说要几个并付款"
+        },
+        {
+          "en": "Enjoy them warm as you walk",
+          "ja": "温かいうちに食べ歩き",
+          "zh": "趁热边走边吃"
+        }
+      ],
+      "menu": [
+        {
+          "id": "hg-pb",
+          "ko": "풀빵",
+          "name": {
+            "en": "Pulppang (mini red-bean cakes)",
+            "ja": "プルッパン(あん入り小焼き菓子)",
+            "zh": "红豆小烤饼"
+          },
+          "roman": "pulppang",
+          "kana": "プルッパン",
+          "counter": "개",
+          "description": {
+            "en": "Small baked cakes with sweet red bean · often sold by the bag",
+            "ja": "甘いあん入りの小さな焼き菓子・袋売りが多い",
+            "zh": "甜红豆馅小烤饼·多按袋出售"
+          },
+          "signature": true,
+          "verified": false,
+          "allergenStatus": "unknown",
+          "note": "판매 단위(봉지)·가격 미확인. 확인 필요"
+        }
+      ],
+      "phrases": [
+        {
+          "id": "hg-1",
+          "ko": "한 봉지에 얼마예요?",
+          "roman": "han bongjie eolmayeyo?",
+          "kana": "ハン ボンジエ オルマエヨ?",
+          "meaning": {
+            "en": "How much for one bag?",
+            "ja": "1袋いくらですか?",
+            "zh": "一袋多少钱?"
+          },
+          "words": [
+            { "ko": "한", "meaning": { "en": "one", "ja": "一つの", "zh": "一" } },
+            { "ko": "봉지에", "meaning": { "en": "per bag", "ja": "袋で", "zh": "每袋" } },
+            { "ko": "얼마예요?", "meaning": { "en": "how much?", "ja": "いくらですか?", "zh": "多少钱?" } }
+          ]
+        },
+        {
+          "id": "hg-2",
+          "ko": "한 봉지 주세요",
+          "roman": "han bongji juseyo",
+          "kana": "ハン ボンジ ジュセヨ",
+          "meaning": {
+            "en": "One bag, please.",
+            "ja": "1袋ください。",
+            "zh": "请给我一袋。"
+          },
+          "words": [
+            { "ko": "한", "meaning": { "en": "one", "ja": "一つの", "zh": "一" } },
+            { "ko": "봉지", "meaning": { "en": "bag", "ja": "袋", "zh": "袋" } },
+            { "ko": "주세요", "meaning": { "en": "please", "ja": "ください", "zh": "请给我" } }
+          ]
+        },
+        {
+          "id": "hg-3",
+          "ko": "카드 돼요?",
+          "roman": "kadeu dwaeyo?",
+          "kana": "カドゥ ドェヨ?",
+          "meaning": {
+            "en": "Can I pay by card?",
+            "ja": "カード使えますか?",
+            "zh": "可以刷卡吗?"
+          },
+          "words": [
+            { "ko": "카드", "meaning": { "en": "card", "ja": "カード", "zh": "卡" } },
+            { "ko": "돼요?", "meaning": { "en": "is it OK?", "ja": "いいですか?", "zh": "可以吗?" } }
+          ]
+        }
+      ],
+      "geo": { "lat": 36.3292, "lng": 127.4337 },
+      "note": "주소: 대전 동구 대전로 783(원동 51-1, 다이닝코드 기준). 좌표는 대전로 쪽 시장 입구 부근 추정 근사값. 영업시간 예시값. 확인 필요"
+    }
+  ]
+}

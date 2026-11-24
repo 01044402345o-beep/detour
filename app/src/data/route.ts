@@ -1,5 +1,6 @@
 /**
- * 코스 도보 경로 (T2.2b). scripts/gen-course-route.mjs 로 미리 계산한 courseRoute.json 을 검증해 씁니다.
+ * 코스 도보 경로 (T2.2b·T5.1). `node scripts/gen-course-route.mjs <코스>`로 미리 계산한
+ * `<코스>.route.json`(예: downtown.route.json, market.route.json)을 검증해 씁니다.
  * 앱은 실행 중에 경로를 계산하지 않습니다. 정류장 좌표가 예시값이므로 경로도 참고용입니다.
  */
 import type { GeoPoint } from '../types';
@@ -34,6 +35,13 @@ function metersBetween(a: GeoPoint, b: GeoPoint): number {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
+/** 'YYYY-MM-DD'이고 실제 있는 날짜 (예: 2026-02-30 거부) */
+function isRealDate(v: unknown): v is string {
+  if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return false;
+  const d = new Date(`${v}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === v;
+}
+
 const isObj = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
@@ -47,8 +55,8 @@ function toPoint(v: unknown): GeoPoint | null {
 }
 
 /**
- * courseRoute.json 을 검증합니다. 구간은 points(출발지 + 정류장) 순서대로 이어져야 하고(점 수 − 1개),
- * 각 구간의 양 끝은 해당 정류장 좌표여야 합니다. 실패하면 throw 합니다.
+ * `<코스>.route.json`을 검증합니다. 구간은 출발지 + 정류장 순서대로 이어져야 하고(점 수 − 1개,
+ * 현재 두 코스 모두 출발지 대전역 + 4곳 = 4구간), 각 구간의 양 끝은 해당 지점 좌표여야 합니다. 실패하면 throw 합니다.
  */
 export function parseCourseRoute(
   input: unknown,
@@ -59,8 +67,7 @@ export function parseCourseRoute(
   if (!isObj(input)) throw new Error('courseRoute: 객체 아님');
   const { source, computedAt, verified, note, legs } = input;
   if (typeof source !== 'string' || source.trim() === '') fail('$.source', '빈 문자열');
-  if (typeof computedAt !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(computedAt))
-    fail('$.computedAt', 'YYYY-MM-DD 아님');
+  if (!isRealDate(computedAt)) fail('$.computedAt', '실제 YYYY-MM-DD 날짜 아님');
   if (typeof verified !== 'boolean') fail('$.verified', 'boolean 아님');
   if (note !== undefined && typeof note !== 'string') fail('$.note', '문자열 아님');
   const out: RouteLeg[] = [];
@@ -77,8 +84,12 @@ export function parseCourseRoute(
       if (!a || !b) return;
       if (leg.from !== a.id || leg.to !== b.id)
         fail(p, `${String(leg.from)}→${String(leg.to)} ≠ ${a.id}→${b.id}`);
-      if (typeof leg.distanceM !== 'number' || !(leg.distanceM > 0))
-        fail(`${p}.distanceM`, '양수 아님');
+      if (
+        typeof leg.distanceM !== 'number' ||
+        !Number.isFinite(leg.distanceM) ||
+        !(leg.distanceM > 0)
+      )
+        fail(`${p}.distanceM`, '유한한 양수 아님');
       if (!Array.isArray(leg.path) || leg.path.length < 2) return fail(`${p}.path`, '점 2개 미만');
       const pts = leg.path.map(toPoint);
       const bad = pts.findIndex((q) => q === null);

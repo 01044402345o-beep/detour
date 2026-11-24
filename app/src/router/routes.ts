@@ -24,6 +24,16 @@ export const PATHS = {
   report: '/report',
 } as const satisfies Record<ScreenKey, string>;
 
+/**
+ * 코스 화면 경로. 기본 코스(원도심)는 `/course`, 다른 코스는 `/course?c=<코스 id>` (T5.1).
+ * 화면 키는 같은 'course'로 기록됩니다.
+ */
+export function coursePath(courseId?: string, defaultId = 'downtown-halfday'): string {
+  return !courseId || courseId === defaultId
+    ? PATHS.course
+    : `${PATHS.course}?c=${encodeURIComponent(courseId)}`;
+}
+
 /** `/place/:id` 경로 만들기 */
 export function placePath(id: string): string {
   return `/place/${encodeURIComponent(id)}`;

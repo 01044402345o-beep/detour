@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { places } from '../../data';
+import { bundles, places } from '../../data';
 import { DICTS } from '../../i18n';
 import { PATHS } from '../../router/routes';
 import type { SpeakResult, Tts } from '../../speech/tts';
@@ -54,10 +54,12 @@ afterEach(() => {
 });
 
 describe('S10 문장 모음', () => {
-  it('코스 4곳을 순서대로, 장소별 모든 문장(ko·발음·뜻)을 보여 줌', () => {
+  it('코스별(원도심 → 전통시장) 제목 아래 장소를 순서대로, 장소별 모든 문장(ko·발음·뜻)을 보여 줌', () => {
     renderPhrases();
     expect(screen.getByTestId('screen-phrases')).toBeInTheDocument();
-    const heads = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    const courses = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    expect(courses).toEqual(bundles.map((b) => b.course.title.en));
+    const heads = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
     expect(heads).toEqual(places.map((p) => `${p.order}${p.name.en}`));
     const total = places.reduce((n, p) => n + p.phrases.length, 0);
     expect(document.querySelectorAll('[data-phrase-id]')).toHaveLength(total);

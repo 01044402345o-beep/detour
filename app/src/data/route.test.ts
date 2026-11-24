@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import raw from './courseRoute.json';
+import raw from './downtown.route.json';
 import { course, courseRoute, places } from './index';
 import { parseCourseRoute } from './route';
 
@@ -60,5 +60,23 @@ describe('코스 도보 경로 (T2.2b)', () => {
     const r = clone() as unknown as { legs: { path: unknown[] }[] };
     r.legs[0].path[1] = [999, 127];
     expect(() => parseCourseRoute(r, stops)).toThrow(/path\[1\]/);
+  });
+});
+
+describe('경로 검증 경계값 (R1 L-1)', () => {
+  it('없는 날짜(2026-99-99·2026-02-30) → throw', () => {
+    for (const bad of ['2026-99-99', '2026-02-30']) {
+      const r = clone();
+      r.computedAt = bad;
+      expect(() => parseCourseRoute(r, stops)).toThrow(/computedAt/);
+    }
+  });
+
+  it('거리 Infinity·0 → throw', () => {
+    for (const bad of [Infinity, 0]) {
+      const r = clone();
+      r.legs[0].distanceM = bad;
+      expect(() => parseCourseRoute(r, stops)).toThrow(/distanceM/);
+    }
   });
 });

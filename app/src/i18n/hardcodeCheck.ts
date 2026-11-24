@@ -58,12 +58,16 @@ function flattenStrings(value: unknown): string[] {
 }
 
 /** 하드코딩 검사 예외 목록 — 문자열 단위 */
+/** 지도 출처 고정 표기 (번역하지 않음, ui/map/osm.ts — T5.1 R2) */
+export const ATTRIBUTION_TERMS: readonly string[] = ['© OpenStreetMap contributors'];
+
 export const ALLOWED_LITERALS: ReadonlySet<string> = new Set([
   ...flattenStrings(STAFF_KO),
   ...flattenStrings(OPERATOR_KO),
   ...flattenStrings(LANG_NAMES),
   ...BRAND_TERMS,
   ...KOREAN_CONTENT_TERMS,
+  ...ATTRIBUTION_TERMS,
 ]);
 
 /** 사용자에게 보이는 JSX 속성 (value는 isVisibleValue에서 요소별로 판단) */

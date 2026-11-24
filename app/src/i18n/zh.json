@@ -32,7 +32,7 @@
     "hubDown": "老城区",
     "hubDownSub": "面包·历史·本地美食",
     "hubStation": "大田站·小堤洞",
-    "hubStationSub": "咖啡·小巷·行李寄存",
+    "hubStationSub": "传统市场·街头美食",
     "hubYuseong": "儒城温泉",
     "hubYuseongSub": "温泉·住一晚",
     "spots": "{count}处",
@@ -41,7 +41,7 @@
     "overnightTitle": "儒城温泉·1号线直达",
     "todayPhrase": "今日短句",
     "todayCourse": "今日路线",
-    "soonToast": "即将上线——演示版仅开放老城区。"
+    "soonToast": "即将上线——演示版开放老城区和中央市场。"
   },
   "course": {
     "title": "老城区半日游",
@@ -50,11 +50,12 @@
     "checked": "核实于 {date}",
     "startWalk": "从第1站出发",
     "walkMin": "步行{min}分钟",
-    "walkFromStart": "从大田站步行{min}分钟·或乘地铁1号线1站(中央路站)",
+    "walkFromStart": "从{start}步行{min}分钟",
     "stopOf": "第 {n} 站 / 共 {total} 站",
     "dirFirst": "将在NAVER地图App中打开前往第1站的步行路线",
     "lineNote": "连线仅按顺序连接各站,并非实际步行路线。",
     "routeNote": "线条为建议的步行路线，仅供参考。详细导航请使用NAVER地图。",
+    "routeSource": "步行路线数据：",
     "mapOffline": "地图图块无法加载,已显示简易地图。",
     "mapStation": "大田站",
     "mapStream": "大田川",
@@ -63,6 +64,19 @@
     "dirNext": "将在NAVER地图App中打开前往第{n}站的步行路线",
     "noApp": "没有NAVER地图App？请按上方地图的编号顺序，参考列表中的步行时间前往。",
     "googleMaps": "在Google地图中查看第{n}站"
+  },
+  "season": {
+    "kicker": "限时活动",
+    "openPill": "正在举办",
+    "whenLabel": "时间",
+    "whereLabel": "地点",
+    "schedule": "每周{days} {hours} · {start}–{end}",
+    "open": "正在举办 · 至{close}",
+    "today": "今天举办 · {hours}",
+    "next": "下次:{date} · {hours}",
+    "upcoming": "{date}开幕",
+    "ended": "本季已于{date}结束。下一季日期尚未公布。",
+    "note": "日程依据东区公告(2026年8月),出发前请再确认。"
   },
   "place": {
     "food": "美食",

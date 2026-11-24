@@ -86,11 +86,46 @@ export type CourseStart = {
   nameKo: string;
   name: L10n;
   geo: GeoPoint;
+  /** 1번 정류장 도보 시간 옆에 붙이는 대안 (예: 지하철 1정거장) */
+  hint?: L10n;
+};
+
+/** 거점 (홈 거점 카드). 원도심 / 대전역·소제동 */
+export type HubId = 'downtown' | 'station';
+export const HUB_IDS: readonly HubId[] = ['downtown', 'station'];
+
+/** 코스 종류: 골목 산책 / 전통시장 / 축제 (다른 지역 시장·축제로 넓힐 때 같은 구조를 씀) */
+export type CourseTheme = 'walk' | 'market' | 'festival';
+export const COURSE_THEMES: readonly CourseTheme[] = ['walk', 'market', 'festival'];
+
+/**
+ * 기간 한정 행사 (야시장·축제 시즌 카드). 기간·요일·시간은 Asia/Seoul 기준.
+ * 행사 자리가 코스 정류장이 아니어도 됩니다(지도 핀 없음).
+ */
+export type SeasonEvent = {
+  id: string;
+  nameKo: string;
+  name: L10n;
+  where: L10n;
+  description: L10n;
+  /** 'YYYY-MM-DD' (첫날·마지막 날 포함) */
+  startDate: IsoDate;
+  endDate: IsoDate;
+  /** 여는 요일 'fri,sat' (Place.closedOn과 같은 요일 표기) */
+  days: string;
+  /** 'HH:MM–HH:MM' (같은 날 안: 끝 > 시작. 자정 넘김 행사는 지원하지 않음) */
+  hours: string;
+  /** 일정 출처 (데이터 메모, 화면 비표시) */
+  source: string;
+  checkedAt: IsoDate;
+  verified: boolean;
 };
 
 export type Course = {
   id: string;
-  hub: 'downtown';
+  hub: HubId;
+  /** 없으면 'walk' */
+  theme?: CourseTheme;
   title: L10n;
   /** 출발지 (대전역). 1번 정류장 도보 시간은 여기서부터 */
   start: CourseStart;
@@ -98,6 +133,8 @@ export type Course = {
   stops: string[];
   distanceKm: number;
   durationMin: number;
+  /** 시즌 행사 (야시장 등). 기간 밖이면 '시즌 종료'로 안내 */
+  events?: SeasonEvent[];
 };
 
 // ───────── 공유 계약: 주문 문장 (T1.3) ─────────

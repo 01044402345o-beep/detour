@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useT } from '../../i18n';
 import { LeafletMap } from './LeafletMap';
+import { OSM_COPYRIGHT_URL, OSM_CREDIT } from './osm';
 import { SketchMap } from './SketchMap';
 import type { GeoPoint } from '../../types';
 import type { MapMode, MapStart, MapStop } from './types';
@@ -54,6 +55,15 @@ export function CourseMap({ stops, onSelect, label, route, start }: CourseMapPro
       {mode === 'sketch' && (
         <p className="cmap-note cmap-note--offline" role="status">
           {t('course.mapOffline')}
+        </p>
+      )}
+      {/* 약도는 OSM 타일이 없어도 OSM 기반 경로를 그리므로 출처를 따로 표시합니다 (R1 M-3, PRD 8장 OSM 출처 상시) */}
+      {mode === 'sketch' && route && (
+        <p className="cmap-note cmap-src" data-testid="map-route-source">
+          {t('course.routeSource')}{' '}
+          <a href={OSM_COPYRIGHT_URL} target="_blank" rel="noopener noreferrer">
+            {OSM_CREDIT}
+          </a>
         </p>
       )}
     </div>

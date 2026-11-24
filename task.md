@@ -228,9 +228,9 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 타일 로드 실패·오프라인 → SVG 약도로 자동 전환
   - 정류장 목록에 이동 시간·확인 상태 표시: 장소 `verified:true`면 "확인일 YYYY-MM-DD", `false`면 날짜 없이 "현장 확인 전 · 예시 정보"(T1.1b). 핀·목록 클릭 → 장소 상세 (F-03)
   - "Start walking" → 다음 정류장의 **네이버 지도 웹 길찾기 URL**(기본) 열기. Google Maps는 장소 보기용 보조 링크
-- [ ] **T2.2b 도보 경로선·네이버 앱 안내 (사용자 요청 2026-11-24, 4A 기준 커밋 이후 변경)** — 소유: `ui/map/`, `screens/Course*`, `screens/Place/InfoTabs.tsx`, `data/route.ts`·`data/courseRoute.json`, `scripts/gen-course-route.mjs`
-  - 경로는 개발 시 `node scripts/gen-course-route.mjs`로 한 번 계산(OSM 기반 OSRM 도보, routing.openstreetmap.de)해 커밋. 앱 실행 중 경로 API 호출 없음 → 오프라인·외부 호출 없음 유지
-  - `courseRoute.json`: 구간(정류장 수 − 1)별 [위도, 경도] 목록, 양 끝 = 정류장 좌표, 출처·계산일·`verified:false`. 로드 시 검증(순서·구간 수·양 끝 좌표), 정류장 좌표만 바꾸고 재계산하지 않으면 throw
+- [ ] **T2.2b 도보 경로선·네이버 앱 안내 (사용자 요청 2026-11-24, 4A 기준 커밋 이후 변경)** — 소유: `ui/map/`, `screens/Course*`, `screens/Place/InfoTabs.tsx`, `data/route.ts`·`data/downtown.route.json`, `scripts/gen-course-route.mjs`
+  - 경로는 개발 시 `node scripts/gen-course-route.mjs downtown`(T5.1부터 코스 이름 인자 필수)으로 한 번 계산(OSM 기반 OSRM 도보, routing.openstreetmap.de)해 커밋. 앱 실행 중 경로 API 호출 없음 → 오프라인·외부 호출 없음 유지
+  - `downtown.route.json`(T5.1 전 이름 `courseRoute.json`): 출발지 + 정류장 순서의 구간(점 수 − 1개, 현재 대전역 + 4곳 = 4구간)별 [위도, 경도] 목록, 양 끝 = 해당 지점(출발지·정류장) 좌표, 출처·계산일·`verified:false`. 로드 시 검증(순서·구간 수·양 끝 좌표), 정류장 좌표만 바꾸고 재계산하지 않으면 throw
   - 타일 지도: 실선 경로(점선 직선 대체). 약도: 같은 경로를 정류장과 같은 축척으로 투영. 안내 문구 `course.routeNote`(참고용 · 정확한 길 안내는 NAVER Map)
   - 네이버 앱 안내: 코스 버튼 아래 "…in the NAVER Map app" + `course.noApp`(앱이 없으면 번호 지도·도보 시간), 장소 상세 `place.dirHint`
   - 현장 확인(T4.1) 때 경로를 실제로 걸어 보고 다르면 좌표 보정 후 재계산. 정류장 `walkMinFromPrev`(예시값 2·12·10분)와 계산 거리(269·552·596m) 차이 확인
@@ -287,7 +287,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 ## Phase 3 — 오프라인·성능·배포 (순차: T3.1 → 빌드 고정 → T3.2, T3.3은 병렬. 순서는 0.3절 3-a~3-f)
 
 - [x] **T3.1 PWA·오프라인** — 소유: `app/public/manifest.webmanifest`, `app/src/sw/`, `vite.config.ts`, `screens/Settings*`의 오프라인 표시 부분, `ui/Toast` 연결, `package.json`·lock(플러그인 추가 시) — 2026-11-23 · reviews/T3.1_r4.md (미해결 0) · 오프라인 검증 PASS(reviews/T3.1_offline.md)
-  - manifest(start_url·scope `/detour/`, 아이콘), service worker 프리캐시: 앱 셸 + 3개 언어 사전 + 원도심 JSON + SVG 약도. OSM 타일은 프리캐시 제외
+  - manifest(start_url·scope `/detour/`, 아이콘), service worker 프리캐시: 앱 셸 + 3개 언어 사전 + 원도심 JSON + SVG 약도(T5.1부터 전통시장 콘텐츠·두 코스 경로 JSON도 앱 JS에 포함되어 함께 프리캐시). OSM 타일은 프리캐시 제외
   - "오프라인 준비 완료" 조건: 프리캐시 목록 전부 캐시됨 → 설정 화면에 표시
   - 새 버전 배포 시 캐시 갱신(업데이트 토스트)
   - 완료 조건 [배포 전]: preview에서 ① "오프라인 준비 완료" 표시 → 네트워크 차단 → 새로고침 → 미방문 화면 포함 전 화면 열림, ② 업데이트 토스트 확인(빌드 A preview 접속 → 빌드 B로 다시 build·preview → 새로고침 시 토스트 → 새 버전 적용, 수동 확인). [배포 후] 조건 없음 → 이 시점에 체크
@@ -353,6 +353,17 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 합격 조건: 안내 없이 180초 이내 완주, 시연 영상의 녹화 커밋 = T4.1a 배포 커밋(또는 '영향 장면 없음'을 `reviews/T2.7_render.md`에 기록)
 
 ---
+
+## Phase 5 — 확장 데모 (사용자 요청 2026-11-24)
+
+- [ ] **T5.1 전통시장 코스(대전중앙시장)·시즌 카드·코스 여러 개 구조** — 소유: `data/*`, `screens/Course*`, `screens/Home*`, `screens/Phrases*`, `screens/Place/index.tsx`, `screens/Report/index.tsx`, `ui/map/*`, `router/routes.ts`, `types.ts`, `scripts/gen-course-route.mjs`
+  - 근거: 최근 1년 블로그(2025.12 맛집 정리)·맛집 매거진(식신)·뉴스(2026.8 토토즐 푸드페스타) 검색. 인스타그램 등 SNS 원문은 직접 확인 못 함. 메뉴·가격·영업시간·좌표는 현장 확인 전 예시(데이터 note에 출처·불확실성 기록)
+  - 데이터: `data/market.json`(hub station, theme market, start 대전역, events 토토즐) + `data/market.route.json`(`node scripts/gen-course-route.mjs market`, 352+113+54+159m). `courseRoute.json` → `downtown.route.json`. 로드 시 코스별 검증 + 코스 사이 장소·메뉴·문장 ID 중복 검사
+  - 코스 4곳: 수연분식(고추튀김·떡볶이) → 개천식당(만둣국·찐만두) → 생일집(순대국밥·고기순대, 돼지고기 표기) → 홍가네풀빵(풀빵). 장소마다 문장 3개(돼지고기 들어가요? 등)
+  - 화면: 홈 대전역·소제동 카드 열림(DEMO·Traditional Market) → `/course?c=jungang-market`. 코스 화면은 `?c=`로 코스 선택(없거나 모르면 원도심), 시즌 카드(SeasonCard·season.ts). 장소 상세 "STOP n OF 코스 장소 수"·뒤로가기 → 그 코스. 문장 모음 코스별 묶음. 운영자 리포트 정렬은 코스 순서 → 방문 순서
+  - 지도: 시장처럼 가까운 핀은 터치 영역(44px)이 겹치지 않게 화면 좌표로 벌림(약도·타일 지도)
+  - Codex 교차 검증 R1~R5 완료(2026-11-24, 미해결 0): reviews/T5.1_r1~r5.md · 판정·수정 기록 *_verdict.md·*_fix.md (R1 M3 L4 → R2 M1 L1 → R3 M1 → R4 M1 → R5 0). T2.2b 범위 포함
+  - 남은 것: 수량 단위 '그릇'(국밥·만둣국은 현재 '개'), 메뉴 그림(빵 아이콘 공용), 현장 확인(위치·메뉴·가격·영업시간·포장 여부), 행사 다음 시즌 일정, T4.2 번역 시트에 새 문구·데이터 추가, E2E(시장 코스 경로) 추가, Codex 교차 검증
 
 ## 진행 현황 요약
 

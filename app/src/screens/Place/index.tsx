@@ -6,9 +6,9 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { getPlace, places, type ContentPlace } from '../../data';
+import { bundleOfPlace, getPlace, type ContentPlace } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
-import { PATHS } from '../../router/routes';
+import { PATHS, coursePath } from '../../router/routes';
 import { phraseInput } from '../../router/navState';
 import { useAppStore } from '../../store/useAppStore';
 import { Button, IconButton, Pill, cx, useToast } from '../../ui';
@@ -45,13 +45,13 @@ export default function PlaceScreen() {
   return <PlaceView key={`${place.id}:${location.key}`} place={place} />;
 }
 
-/** 앱 안 이전 화면이 있으면 뒤로, 없으면(바로 열기) 코스로 */
-function useBack() {
+/** 앱 안 이전 화면이 있으면 뒤로, 없으면(바로 열기) 이 장소가 속한 코스로 */
+function useBack(placeId: string) {
   const navigate = useNavigate();
   return () => {
     const state = window.history.state as { idx?: unknown } | null;
     if (typeof state?.idx === 'number' && state.idx > 0) navigate(-1);
-    else navigate(PATHS.course, { replace: true });
+    else navigate(coursePath(bundleOfPlace(placeId)?.course.id), { replace: true });
   };
 }
 
@@ -61,7 +61,7 @@ function PlaceView({ place }: { place: ContentPlace }) {
   const toast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  const back = useBack();
+  const back = useBack(place.id);
   const logEvent = useAppStore((s) => s.logEvent);
   const saved = useAppStore((s) => s.saved.places.includes(place.id));
   const toggleSavedPlace = useAppStore((s) => s.toggleSavedPlace);
@@ -111,7 +111,12 @@ function PlaceView({ place }: { place: ContentPlace }) {
 
       <div className="place-sheet">
         <div className="place-badges">
-          <Pill tone="acc">{t('course.stopOf', { n: place.order, total: places.length })}</Pill>
+          <Pill tone="acc">
+            {t('course.stopOf', {
+              n: place.order,
+              total: bundleOfPlace(place.id)?.places.length ?? place.order,
+            })}
+          </Pill>
           {place.verified ? (
             <Pill tone="sea" icon="check" data-testid="verified-badge">
               {t('course.checked', { date: place.checkedAt })}

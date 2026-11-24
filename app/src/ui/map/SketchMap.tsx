@@ -4,7 +4,7 @@
  */
 import type { KeyboardEvent } from 'react';
 import { useT } from '../../i18n';
-import { projectToBox } from './projection';
+import { projectToBox, separate } from './projection';
 import {
   PIN_FILL,
   PIN_HIT_R,
@@ -54,7 +54,11 @@ export function SketchMap({ stops, onSelect, label, route, start }: SketchMapPro
       padding: 40,
     },
   );
-  const xy = all.slice(0, stops.length);
+  // 정류장이 가까우면(시장 등) 핀 터치 영역(지름 PIN_HIT_R×2)이 겹치지 않게 벌립니다.
+  // 벌어진 핀은 경로 끝점에서 몇 px 떨어질 수 있지만 핀 원(반지름 15)이 이음매를 덮습니다.
+  const xy = separate(all.slice(0, stops.length), PIN_HIT_R * 2 + 1, {
+    box: { width: SKETCH_W, height: SKETCH_H, margin: PIN_HIT_R },
+  });
   const startXY = start ? all[stops.length] : null;
   const linePts = hasRoute ? all.slice(stops.length + (start ? 1 : 0)) : xy;
   // 이름표: 출발 지점 위쪽 가운데, 상자 밖으로 나가지 않게
