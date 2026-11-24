@@ -11,5 +11,12 @@ export type MapStop = {
   geo: GeoPoint;
 };
 
+/** 출발지 표시 (번호 없는 이름표. 누를 수 없음) */
+export type MapStart = {
+  /** 화면에 보이는 이름 (사용자 언어, 예: Daejeon Stn) */
+  label: string;
+  geo: GeoPoint;
+};
+
 /** 지도 표시 방식: OSM 타일 지도 / SVG 약도 */
 export type MapMode = 'tiles' | 'sketch';

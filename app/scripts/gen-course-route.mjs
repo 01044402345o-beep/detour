@@ -5,7 +5,7 @@
  *   node scripts/gen-course-route.mjs
  *
  * - 경로: OpenStreetMap 데이터 기반 OSRM 도보 프로필 (FOSSGIS 공개 서버, 가벼운 사용만 허용)
- * - 입력: src/data/downtown.json 의 course.stops 순서와 각 장소 geo
+ * - 입력: src/data/downtown.json 의 course.start(출발지) + course.stops 순서와 각 장소 geo
  * - 출력: src/data/courseRoute.json (구간마다 [위도, 경도] 목록. 양 끝은 정류장 좌표로 맞춤)
  * - 좌표가 바뀌거나 현장 확인으로 길이 달라지면 다시 실행하고, 결과를 지도로 확인합니다.
  */
@@ -23,11 +23,14 @@ const round5 = (n) => Math.round(n * 1e5) / 1e5;
 
 const content = JSON.parse(readFileSync(DATA, 'utf8'));
 const byId = new Map(content.places.map((p) => [p.id, p]));
-const stops = content.course.stops.map((id) => {
-  const p = byId.get(id);
-  if (!p) throw new Error(`stop not found: ${id}`);
-  return p;
-});
+const stops = [
+  content.course.start,
+  ...content.course.stops.map((id) => {
+    const p = byId.get(id);
+    if (!p) throw new Error(`stop not found: ${id}`);
+    return p;
+  }),
+];
 
 const legs = [];
 for (let i = 1; i < stops.length; i += 1) {

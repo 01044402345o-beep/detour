@@ -68,6 +68,23 @@ describe('LeafletMap (OSM 타일)', () => {
     expect(line?.getAttribute('stroke-dasharray')).toBe('7 6');
   });
 
+  it('출발지 이름표: 이름이 보이고 누를 수 없음, 지도 범위에 포함 (대전역)', () => {
+    const start = { label: 'Daejeon Stn', geo: { lat: 36.3315, lng: 127.4325 } };
+    render(
+      <LeafletMap
+        stops={STOPS}
+        onSelect={() => {}}
+        onFail={() => {}}
+        label="Course"
+        start={start}
+      />,
+    );
+    const tag = screen.getByTestId('map-start');
+    expect(tag).toHaveTextContent('Daejeon Stn');
+    expect(tag).not.toHaveAttribute('tabindex');
+    expect(tag).not.toHaveAttribute('role', 'button');
+  });
+
   it('도보 경로가 있으면 직선 점선 대신 경로 실선 하나 (T2.2b)', () => {
     const route = [
       { lat: 36.3277, lng: 127.4273 },

@@ -80,10 +80,20 @@ export type Place = {
   geo: GeoPoint;
 };
 
+/** 코스 출발지 (주문·상세 화면이 없는 위치. 지도와 첫 구간 경로에만 씀) */
+export type CourseStart = {
+  id: string;
+  nameKo: string;
+  name: L10n;
+  geo: GeoPoint;
+};
+
 export type Course = {
   id: string;
   hub: 'downtown';
   title: L10n;
+  /** 출발지 (대전역). 1번 정류장 도보 시간은 여기서부터 */
+  start: CourseStart;
   /** Place.id 목록 (방문 순서) */
   stops: string[];
   distanceKm: number;

@@ -224,9 +224,9 @@ describe('R2-L01: 화면 키·콘텐츠 ID 계약', () => {
     return out;
   }
 
-  it('downtown.json의 실제 ID 27개가 모두 ID 형식을 통과', () => {
+  it('downtown.json의 실제 ID 28개(출발지 djs 포함)가 모두 ID 형식을 통과', () => {
     const ids = collectIds(downtown);
-    expect(ids).toHaveLength(27);
+    expect(ids).toHaveLength(28);
     expect(ids.filter((id) => !isValidId(id))).toEqual([]);
   });
 

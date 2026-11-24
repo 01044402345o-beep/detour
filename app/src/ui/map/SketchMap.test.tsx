@@ -13,6 +13,7 @@ import {
   SKETCH_BG,
   SKETCH_TEXT,
   SKETCH_W,
+  START_FILL,
 } from './sketchConstants';
 import type { MapStop } from './types';
 
@@ -146,6 +147,43 @@ describe('SketchMap (SVG 약도)', () => {
     expect(container.textContent).toContain(t('ja', 'course.mapStream'));
     expect(container.textContent).toContain(t('ja', 'course.mapToDaejeonStn'));
     expect(container.textContent).not.toContain(t('en', 'course.mapStream'));
+  });
+});
+
+describe('약도 출발지 이름표 (대전역)', () => {
+  const start = { label: 'Daejeon Stn', geo: { lat: 36.3315, lng: 127.4325 } };
+
+  it('이름표를 그리고 장식 문구 "대전역 방향 →"은 숨김, 누를 수 있는 요소는 핀뿐', () => {
+    const { container } = render(
+      <SketchMap stops={STOPS} onSelect={() => {}} label="Course" start={start} />,
+    );
+    expect(screen.getByTestId('map-start')).toHaveTextContent('Daejeon Stn');
+    expect(container.textContent).not.toContain(t('en', 'course.mapToDaejeonStn'));
+    // 장식 하천은 고정 위치라 실제 대전역(하천 동쪽)과 어긋나므로 숨김
+    expect(container.textContent).not.toContain(t('en', 'course.mapStream'));
+    expect(container.querySelectorAll('[role="button"], [tabindex]')).toHaveLength(STOPS.length);
+  });
+
+  it('경로 첫 점 = 출발지 위치 (같은 축척 투영)', () => {
+    const route = [start.geo, STOPS[0].geo, STOPS[1].geo, STOPS[2].geo];
+    render(
+      <SketchMap stops={STOPS} onSelect={() => {}} label="Course" start={start} route={route} />,
+    );
+    const d = screen.getByTestId('map-line').getAttribute('d') ?? '';
+    const m = /^M([\d.]+) ([\d.]+)/.exec(d)!;
+    const c = screen.getByTestId('map-start').querySelector('circle')!;
+    expect([Number(c.getAttribute('cx')), Number(c.getAttribute('cy'))]).toEqual([
+      Number(m[1]),
+      Number(m[2]),
+    ]);
+  });
+
+  it('이름표 글자는 표에 등록된 색, 이름표 바탕은 START_FILL', () => {
+    render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" start={start} />);
+    const g = screen.getByTestId('map-start');
+    expect(g.querySelector('text')?.getAttribute('fill')).toBe(SKETCH_TEXT.start.fill);
+    expect(g.querySelector('rect')?.getAttribute('fill')).toBe(START_FILL);
+    expect([...SKETCH_TEXT.start.on]).toEqual([START_FILL]);
   });
 });
 

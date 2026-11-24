@@ -17,7 +17,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef } from 'react';
 import type { GeoPoint } from '../../types';
-import type { MapStop } from './types';
+import type { MapStart, MapStop } from './types';
 
 export const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 export const OSM_ATTRIBUTION =
@@ -41,6 +41,8 @@ export type LeafletMapProps = {
   onMapReady?: (map: L.Map) => void;
   /** 도보 경로 좌표 (CourseMap 참고). 바뀔 때마다 지도를 다시 그리므로 고정값을 넘기세요 */
   route?: readonly GeoPoint[];
+  /** 출발지 이름표 (누를 수 없음, 화면 낭독기에는 이름으로 읽힘) */
+  start?: MapStart;
 };
 
 function pinIcon(stop: MapStop): L.DivIcon {
@@ -56,7 +58,15 @@ function pinIcon(stop: MapStop): L.DivIcon {
   });
 }
 
-export function LeafletMap({ stops, onSelect, onFail, label, onMapReady, route }: LeafletMapProps) {
+export function LeafletMap({
+  stops,
+  onSelect,
+  onFail,
+  label,
+  onMapReady,
+  route,
+  start,
+}: LeafletMapProps) {
   const boxRef = useRef<HTMLDivElement>(null);
   const selectRef = useRef(onSelect);
   const failRef = useRef(onFail);
@@ -80,7 +90,8 @@ export function LeafletMap({ stops, onSelect, onFail, label, onMapReady, route }
     const latlngs = stops.map((s) => L.latLng(s.geo.lat, s.geo.lng));
     const routeLatlngs =
       route && route.length >= 2 ? route.map((g) => L.latLng(g.lat, g.lng)) : null;
-    map.fitBounds(L.latLngBounds([...latlngs, ...(routeLatlngs ?? [])]), {
+    const startLatlng = start ? [L.latLng(start.geo.lat, start.geo.lng)] : [];
+    map.fitBounds(L.latLngBounds([...latlngs, ...startLatlng, ...(routeLatlngs ?? [])]), {
       paddingTopLeft: [FIT_PAD, FIT_PAD],
       // 아래쪽은 출처 표시 막대(44px + 여백) 위로 핀이 오게
       paddingBottomRight: [FIT_PAD, FIT_PAD + ATTRIBUTION_H],
@@ -171,6 +182,30 @@ export function LeafletMap({ stops, onSelect, onFail, label, onMapReady, route }
       }).addTo(map);
     }
 
+    if (start) {
+      // 점(정확한 위치) + 그 위 이름표
+      const el = document.createElement('span');
+      el.className = 'cmap-start__box';
+      const tag = document.createElement('span');
+      tag.className = 'cmap-start__tag';
+      tag.textContent = start.label;
+      const dot = document.createElement('span');
+      dot.className = 'cmap-start__dot';
+      dot.setAttribute('aria-hidden', 'true');
+      el.append(tag, dot);
+      const marker = L.marker([start.geo.lat, start.geo.lng], {
+        icon: L.divIcon({
+          className: 'cmap-start',
+          html: el,
+          iconSize: [0, 0],
+          iconAnchor: [0, 0],
+        }),
+        interactive: false,
+        keyboard: false,
+      }).addTo(map);
+      marker.getElement()?.setAttribute('data-testid', 'map-start');
+    }
+
     for (const s of stops) {
       const marker = L.marker([s.geo.lat, s.geo.lng], {
         icon: pinIcon(s),
@@ -191,7 +226,7 @@ export function LeafletMap({ stops, onSelect, onFail, label, onMapReady, route }
       stopTimer();
       map.remove();
     };
-  }, [stops, route]);
+  }, [stops, route, start]);
 
   return (
     <div

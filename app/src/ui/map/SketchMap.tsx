@@ -5,9 +5,17 @@
 import type { KeyboardEvent } from 'react';
 import { useT } from '../../i18n';
 import { projectToBox } from './projection';
-import { PIN_FILL, PIN_HIT_R, SKETCH_BG, SKETCH_H, SKETCH_TEXT, SKETCH_W } from './sketchConstants';
+import {
+  PIN_FILL,
+  PIN_HIT_R,
+  SKETCH_BG,
+  SKETCH_H,
+  SKETCH_TEXT,
+  SKETCH_W,
+  START_FILL,
+} from './sketchConstants';
 import type { GeoPoint } from '../../types';
-import type { MapStop } from './types';
+import type { MapStart, MapStop } from './types';
 
 const BLOCKS: readonly [number, number, number, number][] = [
   [18, 20, 70, 60],
@@ -25,19 +33,34 @@ export type SketchMapProps = {
   label: string;
   /** 도보 경로 좌표 (CourseMap 참고). 없으면 정류장을 직선 점선으로 잇습니다 */
   route?: readonly GeoPoint[];
+  /** 출발지 이름표. 있으면 장식 문구 "대전역 방향 →" 대신 실제 위치에 이름표를 그립니다 */
+  start?: MapStart;
 };
 
-export function SketchMap({ stops, onSelect, label, route }: SketchMapProps) {
+/** 이름표 글자 크기·여백 (viewBox 단위) */
+const TAG_FONT = 11;
+const TAG_PAD_X = 8;
+const TAG_H = 22;
+
+export function SketchMap({ stops, onSelect, label, route, start }: SketchMapProps) {
   const t = useT();
   const hasRoute = !!route && route.length >= 2;
   // 정류장과 경로를 같은 축척으로 투영해야 핀이 경로 위에 놓입니다
-  const all = projectToBox([...stops.map((s) => s.geo), ...(hasRoute ? route : [])], {
-    width: SKETCH_W - 50,
-    height: SKETCH_H,
-    padding: 40,
-  });
+  const all = projectToBox(
+    [...stops.map((s) => s.geo), ...(start ? [start.geo] : []), ...(hasRoute ? route : [])],
+    {
+      width: SKETCH_W - 50,
+      height: SKETCH_H,
+      padding: 40,
+    },
+  );
   const xy = all.slice(0, stops.length);
-  const linePts = hasRoute ? all.slice(stops.length) : xy;
+  const startXY = start ? all[stops.length] : null;
+  const linePts = hasRoute ? all.slice(stops.length + (start ? 1 : 0)) : xy;
+  // 이름표: 출발 지점 위쪽 가운데, 상자 밖으로 나가지 않게
+  const tagW = start ? Math.round(start.label.length * TAG_FONT * 0.62 + TAG_PAD_X * 2) : 0;
+  const tagX = startXY ? Math.min(Math.max(startXY.x - tagW / 2, 4), SKETCH_W - tagW - 4) : 0;
+  const tagY = startXY ? Math.max(startXY.y - TAG_H - 10, 4) : 0;
   const line = linePts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x} ${p.y}`).join(' ');
   const onKey = (id: string) => (e: KeyboardEvent<SVGGElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -57,37 +80,44 @@ export function SketchMap({ stops, onSelect, label, route }: SketchMapProps) {
       {BLOCKS.map(([x, y, w, h]) => (
         <rect key={`${x}-${y}`} x={x} y={y} width={w} height={h} rx={8} fill={SKETCH_BG.block} />
       ))}
-      <path
-        d="M318 0 C300 80 330 150 304 290"
-        stroke={SKETCH_BG.stream}
-        strokeWidth={16}
-        fill="none"
-        strokeLinecap="round"
-      />
-      <text
-        x={323}
-        y={270}
-        fontSize={9}
-        fill={SKETCH_TEXT.stream.fill}
-        fontWeight={700}
-        transform="rotate(-80 323 270)"
-      >
-        {t('course.mapStream')}
-      </text>
+      {/* 장식 하천은 약도 오른쪽 고정 위치라, 실제 대전역(하천 동쪽)을 그릴 때는 위치가 틀리므로 숨깁니다 */}
+      {!start && (
+        <>
+          <path
+            d="M318 0 C300 80 330 150 304 290"
+            stroke={SKETCH_BG.stream}
+            strokeWidth={16}
+            fill="none"
+            strokeLinecap="round"
+          />
+          <text
+            x={323}
+            y={270}
+            fontSize={9}
+            fill={SKETCH_TEXT.stream.fill}
+            fontWeight={700}
+            transform="rotate(-80 323 270)"
+          >
+            {t('course.mapStream')}
+          </text>
+        </>
+      )}
       <path d="M0 170 H360" stroke={SKETCH_BG.road} strokeWidth={18} />
       <path d="M250 0 V290" stroke={SKETCH_BG.road} strokeWidth={12} />
       <path d="M150 100 V290" stroke={SKETCH_BG.road} strokeWidth={8} />
       <path d="M0 110 H250" stroke={SKETCH_BG.road} strokeWidth={7} />
-      <text
-        x={352}
-        y={160}
-        fontSize={9}
-        textAnchor="end"
-        fill={SKETCH_TEXT.toStation.fill}
-        fontWeight={700}
-      >
-        {t('course.mapToDaejeonStn')}
-      </text>
+      {!start && (
+        <text
+          x={352}
+          y={160}
+          fontSize={9}
+          textAnchor="end"
+          fill={SKETCH_TEXT.toStation.fill}
+          fontWeight={700}
+        >
+          {t('course.mapToDaejeonStn')}
+        </text>
+      )}
       <path
         d={line}
         fill="none"
@@ -100,6 +130,29 @@ export function SketchMap({ stops, onSelect, label, route }: SketchMapProps) {
         data-route={hasRoute ? 'walk' : 'straight'}
         data-testid="map-line"
       />
+      {start && startXY && (
+        <g data-testid="map-start">
+          <circle
+            cx={startXY.x}
+            cy={startXY.y}
+            r={6}
+            fill={START_FILL}
+            stroke="#fff"
+            strokeWidth={2.5}
+          />
+          <rect x={tagX} y={tagY} width={tagW} height={TAG_H} rx={TAG_H / 2} fill={START_FILL} />
+          <text
+            x={tagX + tagW / 2}
+            y={tagY + TAG_H / 2 + TAG_FONT * 0.36}
+            fontSize={TAG_FONT}
+            fontWeight={800}
+            fill={SKETCH_TEXT.start.fill}
+            textAnchor="middle"
+          >
+            {start.label}
+          </text>
+        </g>
+      )}
       {stops.map((s, i) => (
         <g
           key={s.id}

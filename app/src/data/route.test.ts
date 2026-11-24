@@ -3,14 +3,24 @@ import raw from './courseRoute.json';
 import { course, courseRoute, places } from './index';
 import { parseCourseRoute } from './route';
 
-const stops = course.stops.map((id) => {
-  const p = places.find((q) => q.id === id)!;
-  return { id: p.id, geo: p.geo };
-});
+/** 출발지(대전역) + 정류장 순서 */
+const stops = [
+  { id: course.start.id, geo: course.start.geo },
+  ...course.stops.map((id) => {
+    const p = places.find((q) => q.id === id)!;
+    return { id: p.id, geo: p.geo };
+  }),
+];
 const clone = () => JSON.parse(JSON.stringify(raw)) as typeof raw;
 
 describe('코스 도보 경로 (T2.2b)', () => {
-  it('구간 = 정류장 순서대로 (정류장 수 − 1), 양 끝은 정류장 좌표', () => {
+  it('첫 구간은 대전역 → 1번 정류장', () => {
+    expect(course.start.nameKo).toBe('대전역');
+    expect(courseRoute.legs[0].from).toBe(course.start.id);
+    expect(courseRoute.legs[0].to).toBe(course.stops[0]);
+  });
+
+  it('구간 = 출발지 + 정류장 순서대로 (점 수 − 1), 양 끝은 해당 좌표', () => {
     expect(courseRoute.legs.map((l) => `${l.from}>${l.to}`)).toEqual(
       stops.slice(1).map((s, i) => `${stops[i].id}>${s.id}`),
     );
@@ -41,7 +51,7 @@ describe('코스 도보 경로 (T2.2b)', () => {
 
   it('경로 끝이 정류장 좌표가 아니면 throw (좌표만 바꾸고 경로를 다시 계산하지 않은 경우)', () => {
     const moved = stops.map((s, i) =>
-      i === 1 ? { ...s, geo: { lat: s.geo.lat + 0.001, lng: s.geo.lng } } : s,
+      i === 2 ? { ...s, geo: { lat: s.geo.lat + 0.001, lng: s.geo.lng } } : s,
     );
     expect(() => parseCourseRoute(raw, moved)).toThrow(/eun 좌표 아님/);
   });

@@ -9,10 +9,17 @@
       "ja": "旧市街 半日コース",
       "zh": "老城区半日游"
     },
+    "start": {
+      "id": "djs",
+      "nameKo": "대전역",
+      "name": { "en": "Daejeon Station", "ja": "大田駅", "zh": "大田站" },
+      "geo": { "lat": 36.3315, "lng": 127.4325 },
+      "note": "서광장(원도심 쪽) 출구 기준 예시 좌표. 현장 확인 필요"
+    },
     "stops": ["ssd", "eun", "mus", "gwc"],
-    "distanceKm": 2,
+    "distanceKm": 2.2,
     "durationMin": 180,
-    "note": "총거리·소요시간은 4곳 주소·좌표 확정 후 재검증. 확인 필요"
+    "note": "출발 = 대전역(2026-11-24 변경). 총거리 2.2km는 courseRoute.json 구간 합(812+269+552+596m). 소요시간·각 장소 도보 시간은 4곳 주소·좌표 확정 후 재검증. 확인 필요"
   },
   "places": [
     {
@@ -34,11 +41,11 @@
       "hours": "08:00–22:00",
       "checkedAt": "2026-11-10",
       "verified": false,
-      "walkMinFromPrev": 5,
+      "walkMinFromPrev": 11,
       "transitHint": {
-        "en": "About 5 min walk from Jungang-ro Station (Line 1)",
-        "ja": "地下鉄1号線 中央路駅から徒歩約5分",
-        "zh": "从地铁1号线中央路站步行约5分钟"
+        "en": "About 11 min walk from Daejeon Station, or 1 stop on Line 1 to Jungang-ro",
+        "ja": "大田駅から徒歩約11分(または地下鉄1号線で1駅、中央路駅下車)",
+        "zh": "从大田站步行约11分钟(或乘地铁1号线1站至中央路站)"
       },
       "orderable": true,
       "takeout": true,

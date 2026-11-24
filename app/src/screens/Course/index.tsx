@@ -50,6 +50,7 @@ export default function CourseScreen() {
     [lang],
   );
 
+  const mapStart = useMemo(() => ({ label: t('course.mapStation'), geo: course.start.geo }), [t]);
   const open = (id: string) => navigate(placePath(id));
   const title = pickL10n(lang, course.title);
   const allVerified = STOPS.every((p) => p.verified);
@@ -76,7 +77,7 @@ export default function CourseScreen() {
         }
       />
 
-      <CourseMap stops={mapStops} onSelect={open} label={title} route={ROUTE} />
+      <CourseMap stops={mapStops} onSelect={open} label={title} route={ROUTE} start={mapStart} />
 
       <div className="course-meta">
         <h2 className="course-meta__title">{title}</h2>
@@ -108,7 +109,9 @@ export default function CourseScreen() {
           <li key={p.id}>
             <div className="course-walk">
               <Icon name="walk" size={14} />
-              {t('course.walkMin', { min: p.walkMinFromPrev })}
+              {i === 0
+                ? t('course.walkFromStart', { min: p.walkMinFromPrev })
+                : t('course.walkMin', { min: p.walkMinFromPrev })}
             </div>
             <button
               type="button"

@@ -71,11 +71,11 @@ describe('S01 홈 — 거점·배너', () => {
     expect(await screen.findByTestId('screen-course')).toBeInTheDocument();
   });
 
-  it('원도심 카드에 정류장 수·도보 합계(29분)·DEMO 표시', async () => {
+  it('원도심 카드에 정류장 수·도보 합계(35분, 대전역 출발)·DEMO 표시', async () => {
     await renderHome();
     const hub = screen.getByTestId('hub-downtown');
     expect(hub).toHaveTextContent(`${course.stops.length} spots`);
-    expect(hub).toHaveTextContent('29 min');
+    expect(hub).toHaveTextContent('35 min');
     expect(hub).toHaveTextContent('DEMO');
   });
 
@@ -105,7 +105,7 @@ describe('S01 홈 — 오늘의 코스 (F-02)', () => {
     await renderHome();
     const card = screen.getByTestId('today-course');
     expect(card).toHaveTextContent('Old Downtown Half-day');
-    expect(card).toHaveTextContent('4 stops · 2 km · about 3 hrs');
+    expect(card).toHaveTextContent('4 stops · 2.2 km · about 3 hrs');
     const items = within(card).getAllByRole('listitem');
     expect(items).toHaveLength(4);
     expect(items[0]).toHaveTextContent('1');

@@ -47,7 +47,7 @@ function toPoint(v: unknown): GeoPoint | null {
 }
 
 /**
- * courseRoute.json 을 검증합니다. 구간은 stops 순서대로 이어져야 하고(정류장 수 − 1개),
+ * courseRoute.json 을 검증합니다. 구간은 points(출발지 + 정류장) 순서대로 이어져야 하고(점 수 − 1개),
  * 각 구간의 양 끝은 해당 정류장 좌표여야 합니다. 실패하면 throw 합니다.
  */
 export function parseCourseRoute(

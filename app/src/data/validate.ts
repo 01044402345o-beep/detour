@@ -12,7 +12,8 @@ type WithNote = { note?: string };
 
 export type ContentMenuItem = MenuItem & WithNote;
 export type ContentPlace = Omit<Place, 'menu'> & WithNote & { menu?: ContentMenuItem[] };
-export type ContentCourse = Course & WithNote;
+export type ContentCourse = Omit<Course, 'start'> &
+  WithNote & { start: Course['start'] & WithNote };
 export type DowntownContent = {
   hub: 'downtown';
   note?: string;
@@ -233,6 +234,13 @@ function checkCourse(c: Checker, co: unknown, path: string): void {
   c.str(co, 'id', path);
   if (co.hub !== 'downtown') c.fail(`${path}.hub`, "'downtown' 아님");
   c.l10n(co.title, `${path}.title`);
+  if (c.obj(co.start, `${path}.start`)) {
+    c.str(co.start, 'id', `${path}.start`);
+    c.str(co.start, 'nameKo', `${path}.start`);
+    c.l10n(co.start.name, `${path}.start.name`);
+    checkGeo(c, co.start.geo, `${path}.start.geo`);
+    c.optStr(co.start, 'note', `${path}.start`);
+  }
   if (c.array(co.stops, `${path}.stops`)) {
     co.stops.forEach((s, i) => {
       if (!isNonEmptyStr(s)) c.fail(`${path}.stops[${i}]`, '빈 문자열');

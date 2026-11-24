@@ -50,7 +50,7 @@ describe('S02 코스 지도', () => {
     expect(root.tagName).toBe('SECTION');
     expect(screen.getAllByText('Old Downtown Half-day').length).toBeGreaterThan(0);
     expect(
-      screen.getByText(t('en', 'course.meta', { stops: 4, km: '2.0', hours: '3' })),
+      screen.getByText(t('en', 'course.meta', { stops: 4, km: '2.2', hours: '3' })),
     ).toBeInTheDocument();
     expect(screen.getByText(t('en', 'course.from'))).toBeInTheDocument();
   });
@@ -63,7 +63,9 @@ describe('S02 코스 지도', () => {
       const p = byId(id);
       expect(items[i]).toHaveTextContent(p.name.en);
       expect(items[i]).toHaveTextContent(p.nameKo);
-      expect(items[i]).toHaveTextContent(t('en', 'course.walkMin', { min: p.walkMinFromPrev }));
+      // 1번은 출발지(대전역)에서의 도보 시간 + 지하철 대안
+      const key = i === 0 ? 'course.walkFromStart' : 'course.walkMin';
+      expect(items[i]).toHaveTextContent(t('en', key, { min: p.walkMinFromPrev }));
     });
   });
 
@@ -105,7 +107,10 @@ describe('S02 코스 지도', () => {
   it('오프라인이면 약도, 핀 이름은 "번호. 사용자 언어 장소명"', () => {
     renderCourse();
     expect(screen.getByTestId('map-sketch')).toBeInTheDocument();
-    expect(screen.getByTestId('map-pin-ssd')).toHaveAttribute('aria-label', `1. ${byId('ssd').name.en}`);
+    expect(screen.getByTestId('map-pin-ssd')).toHaveAttribute(
+      'aria-label',
+      `1. ${byId('ssd').name.en}`,
+    );
   });
 
   it('Start walking: 기록이 없으면 1번 정류장 네이버 도보 길찾기 + Google 장소 보기', () => {
@@ -138,7 +143,10 @@ describe('S02 코스 지도', () => {
     expect(screen.getByTestId('start-walking')).toHaveTextContent(t('ja', 'course.startWalk'));
     act(() => useAppStore.setState({ lang: 'zh' }));
     expect(screen.getByTestId('check-eun')).toHaveTextContent(t('zh', 'place.unverified'));
-    expect(screen.getByTestId('map-pin-ssd')).toHaveAttribute('aria-label', `1. ${byId('ssd').name.zh}`);
+    expect(screen.getByTestId('map-pin-ssd')).toHaveAttribute(
+      'aria-label',
+      `1. ${byId('ssd').name.zh}`,
+    );
   });
 
   it('상단 문장 모음 버튼 → /phrases', () => {
@@ -154,4 +162,3 @@ describe('S02 코스 지도', () => {
     expect(screen.getByTestId('google-maps')).toHaveClass('course-actions__google');
   });
 });
-

@@ -27,12 +27,13 @@ describe('PRD 4장·목업과 내용 일치', () => {
 
   it('코스 순서·분류·주문 가능·도보 시간', () => {
     expect(c.course.title.en).toBe('Old Downtown Half-day');
-    expect(c.course.distanceKm).toBe(2);
+    expect(c.course.distanceKm).toBe(2.2); // 대전역 출발 (courseRoute 구간 합)
+    expect(c.course.start.nameKo).toBe('대전역');
     expect(c.course.durationMin).toBe(180);
     expect(
       c.places.map((p) => [p.order, p.nameKo, p.category, p.orderable, p.walkMinFromPrev]),
     ).toEqual([
-      [1, '성심당 본점', 'food', true, 5],
+      [1, '성심당 본점', 'food', true, 11], // 대전역에서 도보
       [2, '으능정이 문화의거리', 'sight', false, 2],
       [3, '대전근현대사전시관', 'sight', false, 12],
       [4, '광천식당', 'food', true, 10],

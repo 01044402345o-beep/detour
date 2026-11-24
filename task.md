@@ -234,7 +234,8 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 타일 지도: 실선 경로(점선 직선 대체). 약도: 같은 경로를 정류장과 같은 축척으로 투영. 안내 문구 `course.routeNote`(참고용 · 정확한 길 안내는 NAVER Map)
   - 네이버 앱 안내: 코스 버튼 아래 "…in the NAVER Map app" + `course.noApp`(앱이 없으면 번호 지도·도보 시간), 장소 상세 `place.dirHint`
   - 현장 확인(T4.1) 때 경로를 실제로 걸어 보고 다르면 좌표 보정 후 재계산. 정류장 `walkMinFromPrev`(예시값 2·12·10분)와 계산 거리(269·552·596m) 차이 확인
-  - 후속: T4.3 ⑦a·⑦b 재점검, T4.2 번역 시트에 새 문구(noApp·dirHint·routeNote) 추가, T4.5 영상 장면 비교
+  - 출발지 = 대전역 서광장(2026-11-24 사용자 결정, 도보 기본 + 1호선 1정거장 대안 문구). `course.start`(예시 좌표, 현장 확인 필요), 대전역→성심당 812m → 1번 도보 11분, 총거리 2.2km. 지도: 번호 없는 이름표(누를 수 없음), 전체가 한 화면에 들어가도록 맞춤. 약도의 장식 하천·"대전역 방향 →"은 출발지가 있을 때 숨김(장식 하천 위치가 실제와 반대)
+  - 후속: T4.3 ⑦a·⑦b 재점검, T4.2 번역 시트에 새 문구(noApp·dirHint·routeNote·walkFromStart, from·mapStation 변경) 추가, T4.5 영상 장면 비교
 - [x] **T2.3 장소 상세·메뉴 담기·내 주문 (S03·S04·S05)** — 소유: `screens/Place*`, `screens/Order*` — 2026-11-23 · reviews/T2.3_r2.md (미해결 0) · 커밋은 Phase 2 통합 커밋
   - 탭(메뉴/이용 방법/문장), `orderable:false`면 메뉴 탭 없이 이용 방법 탭으로 열림, 확인일 배지(장소 `verified:false`면 "확인일" 대신 "현장 확인 전 · 예시 정보". 메뉴가 없는 장소도 같음. 메뉴의 `verified`는 메뉴·가격에만 해당하며 장소 확인 여부로 쓰지 않음 — T1.1 R1, T1.1b), 영업 상태(Asia/Seoul 기준 참고값), 알레르기(미확인은 "확인 필요"), 비제휴 안내 문구
   - 길찾기 버튼: 네이버 지도 웹 길찾기(기본), Google Maps 장소 보기(보조) (F-04)

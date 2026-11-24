@@ -33,7 +33,12 @@ export const SKETCH_TEXT = {
   stream: { fill: '#0c5654', on: Object.values(SKETCH_BG) },
   toStation: { fill: '#0c5654', on: Object.values(SKETCH_BG) },
   pin: { fill: '#fff', on: ['var(--acc-d)', 'var(--plum)'] },
+  /** 출발지 이름표 (대전역): 흰 글자, 이름표 채움 START_FILL */
+  start: { fill: '#fff', on: ['#151a26'] },
 } as const;
+
+/** 출발지 이름표 채움 (SKETCH_TEXT.start 바탕과 같음) */
+export const START_FILL = '#151a26';
 
 /** 핀 채움 (흰 번호 글자 대비 4.5:1) */
 export const PIN_FILL = { food: 'var(--acc-d)', sight: 'var(--plum)' } as const;
