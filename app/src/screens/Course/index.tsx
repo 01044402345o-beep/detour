@@ -7,7 +7,7 @@
  */
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { course, getPlace } from '../../data';
+import { course, courseRoute, getPlace } from '../../data';
 import type { ContentPlace } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, placePath } from '../../router/routes';
@@ -23,6 +23,9 @@ const STOPS: ContentPlace[] = course.stops.map((id) => {
   if (!p) throw new Error(`course stop "${id}" not found`);
   return p;
 });
+
+/** 지도에 그릴 도보 경로: 구간을 이어 한 줄로 (구간 이음매의 중복 정류장 좌표는 한 번만) */
+const ROUTE = courseRoute.legs.flatMap((leg, i) => (i === 0 ? leg.path : leg.path.slice(1)));
 
 function fmtHours(min: number): string {
   const h = min / 60;
@@ -73,7 +76,7 @@ export default function CourseScreen() {
         }
       />
 
-      <CourseMap stops={mapStops} onSelect={open} label={title} />
+      <CourseMap stops={mapStops} onSelect={open} label={title} route={ROUTE} />
 
       <div className="course-meta">
         <h2 className="course-meta__title">{title}</h2>
@@ -117,7 +120,9 @@ export default function CourseScreen() {
                 {i + 1}
               </span>
               <span className="course-stop__body">
-                <span className="sr-only">{t('course.stopOf', { n: i + 1, total: STOPS.length })}</span>
+                <span className="sr-only">
+                  {t('course.stopOf', { n: i + 1, total: STOPS.length })}
+                </span>
                 <b className="course-stop__name">{pickL10n(lang, p.name)}</b>
                 <span className="course-stop__sub">
                   {p.nameKo} · {pickL10n(lang, p.areaLocal)}
@@ -163,6 +168,9 @@ export default function CourseScreen() {
             <Icon name="forward" size={18} />
           </a>
           <p className="course-actions__hint">{t('course.dirNext', { n: nextNo })}</p>
+          <p className="course-actions__noapp" data-testid="course-noapp">
+            {t('course.noApp')}
+          </p>
           <a
             className="course-actions__google"
             href={googlePlaceUrl(nextPlace)}

@@ -111,6 +111,33 @@ describe('SketchMap (SVG 약도)', () => {
     render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
     const d = screen.getByTestId('map-line').getAttribute('d') ?? '';
     expect(d.match(/[ML]/g)).toEqual(['M', 'L', 'L']);
+    expect(screen.getByTestId('map-line')).toHaveAttribute('data-route', 'straight');
+  });
+
+  it('도보 경로가 있으면 경로 점 수만큼 꼭짓점, 실선, 핀은 경로 양 끝과 같은 위치 (T2.2b)', () => {
+    const route = [
+      STOPS[0].geo,
+      { lat: 36.3284, lng: 127.4271 },
+      STOPS[1].geo,
+      { lat: 36.3281, lng: 127.4231 },
+      STOPS[2].geo,
+    ];
+    const { container } = render(
+      <SketchMap stops={STOPS} onSelect={() => {}} label="Course" route={route} />,
+    );
+    const line = screen.getByTestId('map-line');
+    const d = line.getAttribute('d') ?? '';
+    expect(d.match(/[ML]/g)).toHaveLength(route.length);
+    expect(line).toHaveAttribute('data-route', 'walk');
+    expect(line.getAttribute('stroke-dasharray')).toBeNull();
+    const pts = [...d.matchAll(/[ML]([\d.]+) ([\d.]+)/g)].map((m) => [Number(m[1]), Number(m[2])]);
+    const dot = (id: string) => {
+      const c = container.querySelector(`[data-testid="map-pin-${id}"] .cmap-sketch__dot`)!;
+      return [Number(c.getAttribute('cx')), Number(c.getAttribute('cy'))];
+    };
+    expect(dot('ssd')).toEqual(pts[0]);
+    expect(dot('eun')).toEqual(pts[2]);
+    expect(dot('mus')).toEqual(pts[4]);
   });
 
   it('약도 문구는 사용자 언어 (하천·대전역 방향)', () => {

@@ -192,6 +192,9 @@ describe('길찾기 (F-04)', () => {
     const google = screen.getByTestId('dir-google');
     expect(google).toHaveAttribute('href', googlePlaceUrl(p));
     expect(google).toHaveTextContent('View in Google Maps');
+    expect(screen.getByTestId('dir-hint')).toHaveTextContent(
+      'Directions open in the NAVER Map app. No app? Use the course map and walk times.',
+    );
   });
 });
 

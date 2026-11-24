@@ -68,6 +68,27 @@ describe('LeafletMap (OSM 타일)', () => {
     expect(line?.getAttribute('stroke-dasharray')).toBe('7 6');
   });
 
+  it('도보 경로가 있으면 직선 점선 대신 경로 실선 하나 (T2.2b)', () => {
+    const route = [
+      { lat: 36.3277, lng: 127.4273 },
+      { lat: 36.3282, lng: 127.427 },
+      { lat: 36.3289, lng: 127.4262 },
+    ];
+    render(
+      <LeafletMap
+        stops={STOPS}
+        onSelect={() => {}}
+        onFail={() => {}}
+        label="Course"
+        route={route}
+      />,
+    );
+    const lines = document.querySelectorAll('path.cmap-line');
+    expect(lines).toHaveLength(1);
+    expect(lines[0]).toHaveClass('cmap-line--route');
+    expect(lines[0].getAttribute('stroke-dasharray')).toBeNull();
+  });
+
   it('첫 타일이 오기 전 실패 → onFail 한 번', () => {
     const onFail = vi.fn();
     render(<LeafletMap stops={STOPS} onSelect={() => {}} onFail={onFail} label="Course" />);

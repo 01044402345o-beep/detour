@@ -58,6 +58,9 @@ export function HowTab({ place }: { place: ContentPlace }) {
           <Icon name="external" size={14} />
           {t('place.googleMaps')}
         </a>
+        <p className="dir-hint" data-testid="dir-hint">
+          {t('place.dirHint')}
+        </p>
       </Card>
     </div>
   );

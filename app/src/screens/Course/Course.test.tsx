@@ -119,6 +119,7 @@ describe('S02 코스 지도', () => {
     const g = screen.getByTestId('google-maps');
     expect(g).toHaveAttribute('href', googlePlaceUrl(byId('ssd')));
     expect(g).toHaveTextContent(t('en', 'course.googleMaps', { n: 1 }));
+    expect(screen.getByTestId('course-noapp')).toHaveTextContent(t('en', 'course.noApp'));
   });
 
   it('Start walking: 2번을 본 뒤면 3번 정류장으로', () => {

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useT } from '../../i18n';
 import { LeafletMap } from './LeafletMap';
 import { SketchMap } from './SketchMap';
+import type { GeoPoint } from '../../types';
 import type { MapMode, MapStop } from './types';
 
 export type CourseMapProps = {
@@ -13,13 +14,15 @@ export type CourseMapProps = {
   stops: readonly MapStop[];
   onSelect: (id: string) => void;
   label: string;
+  /** 정류장 사이 도보 경로 (1번→마지막, 한 줄로 이은 좌표). 없으면 정류장을 직선 점선으로 잇습니다 */
+  route?: readonly GeoPoint[];
 };
 
 function initialMode(): MapMode {
   return typeof navigator !== 'undefined' && navigator.onLine === false ? 'sketch' : 'tiles';
 }
 
-export function CourseMap({ stops, onSelect, label }: CourseMapProps) {
+export function CourseMap({ stops, onSelect, label, route }: CourseMapProps) {
   const t = useT();
   const [mode, setMode] = useState<MapMode>(initialMode);
 
@@ -38,12 +41,13 @@ export function CourseMap({ stops, onSelect, label }: CourseMapProps) {
             onSelect={onSelect}
             onFail={() => setMode('sketch')}
             label={label}
+            route={route}
           />
         ) : (
-          <SketchMap stops={stops} onSelect={onSelect} label={label} />
+          <SketchMap stops={stops} onSelect={onSelect} label={label} route={route} />
         )}
       </div>
-      <p className="cmap-note">{t('course.lineNote')}</p>
+      <p className="cmap-note">{t(route ? 'course.routeNote' : 'course.lineNote')}</p>
       {mode === 'sketch' && (
         <p className="cmap-note cmap-note--offline" role="status">
           {t('course.mapOffline')}

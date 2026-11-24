@@ -18,6 +18,23 @@ vi.mock('./LeafletMap', () => ({
   ),
 }));
 
+describe('선 안내 문구 (T2.2b)', () => {
+  it('도보 경로가 있으면 경로 안내, 없으면 직선 안내', () => {
+    const route = [
+      { lat: 36.3277, lng: 127.4273 },
+      { lat: 36.3289, lng: 127.4262 },
+    ];
+    const { unmount } = render(
+      <CourseMap stops={STOPS} onSelect={() => {}} label="x" route={route} />,
+    );
+    expect(screen.getByText(t('en', 'course.routeNote'))).toBeInTheDocument();
+    expect(screen.queryByText(t('en', 'course.lineNote'))).toBeNull();
+    unmount();
+    render(<CourseMap stops={STOPS} onSelect={() => {}} label="x" />);
+    expect(screen.getByText(t('en', 'course.lineNote'))).toBeInTheDocument();
+  });
+});
+
 const STOPS: MapStop[] = [
   { id: 'ssd', no: 1, name: 'Sungsimdang', category: 'food', geo: { lat: 36.3277, lng: 127.4273 } },
   {

@@ -1,7 +1,8 @@
 /**
  * Leaflet + OSM 타일 지도 (T2.2, PRD 8장 '지도').
  * - OSM 출처는 Leaflet 출처 표시 컨트롤로 상시 노출합니다(접을 수 없음).
- * - 번호 핀(키보드 Tab·Enter 가능) + 정류장 연결선(점선, 실제 보행 경로 아님).
+ * - 번호 핀(키보드 Tab·Enter 가능) + 선: route가 있으면 미리 계산한 도보 경로(실선, 참고용, T2.2b),
+ *   없으면 정류장 연결선(점선, 실제 보행 경로 아님).
  * - 타일이 실패하면 onFail()을 한 번 부릅니다 → CourseMap이 SVG 약도로 바꿉니다.
  *   판정은 Leaflet 타일 묶음 단위입니다(R1 M-01). `loading`(현재 뷰의 새 묶음 시작)마다 묶음 오류 수를 0으로
  *   되돌리고 TILE_TIMEOUT_MS 타이머를 겁니다. `load`(묶음 처리 끝, 오류 타일 포함)에서 타이머를 풀고,
@@ -15,6 +16,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef } from 'react';
+import type { GeoPoint } from '../../types';
 import type { MapStop } from './types';
 
 export const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -37,6 +39,8 @@ export type LeafletMapProps = {
   label: string;
   /** 지도 인스턴스가 준비되면 한 번 (테스트에서 이동·확대로 새 타일 묶음을 만들 때 사용) */
   onMapReady?: (map: L.Map) => void;
+  /** 도보 경로 좌표 (CourseMap 참고). 바뀔 때마다 지도를 다시 그리므로 고정값을 넘기세요 */
+  route?: readonly GeoPoint[];
 };
 
 function pinIcon(stop: MapStop): L.DivIcon {
@@ -52,7 +56,7 @@ function pinIcon(stop: MapStop): L.DivIcon {
   });
 }
 
-export function LeafletMap({ stops, onSelect, onFail, label, onMapReady }: LeafletMapProps) {
+export function LeafletMap({ stops, onSelect, onFail, label, onMapReady, route }: LeafletMapProps) {
   const boxRef = useRef<HTMLDivElement>(null);
   const selectRef = useRef(onSelect);
   const failRef = useRef(onFail);
@@ -74,7 +78,9 @@ export function LeafletMap({ stops, onSelect, onFail, label, onMapReady }: Leafl
     map.attributionControl.setPrefix(false);
     // 뷰를 먼저 정해야 핀이 바로 DOM에 붙습니다(접근성 속성 지정)
     const latlngs = stops.map((s) => L.latLng(s.geo.lat, s.geo.lng));
-    map.fitBounds(L.latLngBounds(latlngs), {
+    const routeLatlngs =
+      route && route.length >= 2 ? route.map((g) => L.latLng(g.lat, g.lng)) : null;
+    map.fitBounds(L.latLngBounds([...latlngs, ...(routeLatlngs ?? [])]), {
       paddingTopLeft: [FIT_PAD, FIT_PAD],
       // 아래쪽은 출처 표시 막대(44px + 여백) 위로 핀이 오게
       paddingBottomRight: [FIT_PAD, FIT_PAD + ATTRIBUTION_H],
@@ -143,15 +149,27 @@ export function LeafletMap({ stops, onSelect, onFail, label, onMapReady }: Leafl
     };
     map.on('zoomend moveend', onViewChange);
 
-    L.polyline(latlngs, {
-      color: '#151a26',
-      weight: 3,
-      opacity: 0.75,
-      dashArray: '7 6',
-      lineCap: 'round',
-      interactive: false,
-      className: 'cmap-line',
-    }).addTo(map);
+    if (routeLatlngs) {
+      L.polyline(routeLatlngs, {
+        color: '#151a26',
+        weight: 4,
+        opacity: 0.7,
+        lineCap: 'round',
+        lineJoin: 'round',
+        interactive: false,
+        className: 'cmap-line cmap-line--route',
+      }).addTo(map);
+    } else {
+      L.polyline(latlngs, {
+        color: '#151a26',
+        weight: 3,
+        opacity: 0.75,
+        dashArray: '7 6',
+        lineCap: 'round',
+        interactive: false,
+        className: 'cmap-line',
+      }).addTo(map);
+    }
 
     for (const s of stops) {
       const marker = L.marker([s.geo.lat, s.geo.lng], {
@@ -173,7 +191,7 @@ export function LeafletMap({ stops, onSelect, onFail, label, onMapReady }: Leafl
       stopTimer();
       map.remove();
     };
-  }, [stops]);
+  }, [stops, route]);
 
   return (
     <div

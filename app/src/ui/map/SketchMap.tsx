@@ -6,6 +6,7 @@ import type { KeyboardEvent } from 'react';
 import { useT } from '../../i18n';
 import { projectToBox } from './projection';
 import { PIN_FILL, PIN_HIT_R, SKETCH_BG, SKETCH_H, SKETCH_TEXT, SKETCH_W } from './sketchConstants';
+import type { GeoPoint } from '../../types';
 import type { MapStop } from './types';
 
 const BLOCKS: readonly [number, number, number, number][] = [
@@ -22,15 +23,22 @@ export type SketchMapProps = {
   onSelect: (id: string) => void;
   /** 그림 전체의 이름 (예: 코스 제목) */
   label: string;
+  /** 도보 경로 좌표 (CourseMap 참고). 없으면 정류장을 직선 점선으로 잇습니다 */
+  route?: readonly GeoPoint[];
 };
 
-export function SketchMap({ stops, onSelect, label }: SketchMapProps) {
+export function SketchMap({ stops, onSelect, label, route }: SketchMapProps) {
   const t = useT();
-  const xy = projectToBox(
-    stops.map((s) => s.geo),
-    { width: SKETCH_W - 50, height: SKETCH_H, padding: 40 },
-  );
-  const line = xy.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x} ${p.y}`).join(' ');
+  const hasRoute = !!route && route.length >= 2;
+  // 정류장과 경로를 같은 축척으로 투영해야 핀이 경로 위에 놓입니다
+  const all = projectToBox([...stops.map((s) => s.geo), ...(hasRoute ? route : [])], {
+    width: SKETCH_W - 50,
+    height: SKETCH_H,
+    padding: 40,
+  });
+  const xy = all.slice(0, stops.length);
+  const linePts = hasRoute ? all.slice(stops.length) : xy;
+  const line = linePts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x} ${p.y}`).join(' ');
   const onKey = (id: string) => (e: KeyboardEvent<SVGGElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -84,10 +92,12 @@ export function SketchMap({ stops, onSelect, label }: SketchMapProps) {
         d={line}
         fill="none"
         stroke="#151a26"
-        strokeWidth={3}
-        strokeDasharray="7 6"
+        strokeWidth={hasRoute ? 3.5 : 3}
+        strokeDasharray={hasRoute ? undefined : '7 6'}
         strokeLinecap="round"
-        opacity={0.75}
+        strokeLinejoin="round"
+        opacity={hasRoute ? 0.7 : 0.75}
+        data-route={hasRoute ? 'walk' : 'straight'}
         data-testid="map-line"
       />
       {stops.map((s, i) => (
