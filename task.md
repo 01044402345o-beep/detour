@@ -428,7 +428,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 운영자 리포트(S13, 한국어 고정·데스크톱)는 색만 새 토큰으로
   - 완료 조건: 해당 화면 단위 테스트 갱신·통과(사진 출처 시트 열기·닫기·뒤로가기·초점 복귀 포함)
 
-- [ ] **T6.7 Phase 6 검증·배포 (coordinator)** (배포 전 검증 완료 2026-11-26 · reviews/T6.7_verify.md·T6.7_fix.md·T6.7_r1~r2.md (R2 미해결 0) · Vitest 1036·E2E 75·detect 0 — 남은 것: 사용자 요청 시 커밋·main 병합·배포·smoke) — 소유: `e2e/*`, `README.md`, `i18n/*.json`(패치 일괄 재적용)
+- [x] **T6.7 Phase 6 검증·배포 (coordinator)** — 2026-11-26 · reviews/T6.7_verify.md·T6.7_fix.md·T6.7_r1~r2.md (R2 미해결 0) · Vitest 1036·E2E 75·detect 0 · 커밋 39da3a4 → main 배포(Deploy·CI 성공) · smoke: HTTPS 200, 사진·아이콘·manifest·CREDITS 200, SW 범위 /edulleo/, 온라인 콘솔 오류 0, 오프라인 새로고침 시 사진 표시(오프라인 때 Google Fonts 요청 실패 1건은 시스템 글꼴 대체로 의도된 동작) — 소유: `e2e/*`, `README.md`, `i18n/*.json`(패치 일괄 재적용)
   - 번역 패치 전부 재적용 → 3개 언어 키 일치 검사 → tsc·lint·Vitest 전체
   - Playwright E2E 전체(75개) 갱신·통과. 바뀐 동작만 갱신
   - **검증표(EN/JA/ZH × 360×780·430×932 스크린샷):** 인트로 3장면·재생/정지·시작 버튼 / 홈 3권역(야시장 기간 안·밖) / 코스 두 종류 × 온라인 지도·오프라인 약도 × 첫/중간/마지막 버튼 / 장소 사진 있음·없음·비주문 장소·긴 이름·가격 미정 / 주문·직원(여러 메뉴 긴 문장·큰 글씨) / 응답 4종 / 설정 사진 출처 시트. 판단 기준: 가로 넘침 없음, 고정 버튼이 내용을 가리지 않음, 세로 스크롤로 모두 닿음, JA·ZH 끝 글자 하나만 떨어지는 줄바꿈 없음
@@ -449,7 +449,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | 3 오프라인·배포 | 3 | 1 | T3.1 → T3.2 순차, T3.3 병렬 |
 | 4A 시연 준비 | 6 | 0 | 사용자 task 포함(T4.4c 연락처), T4.2a는 결과 도착 시 |
 | 4B 콘텐츠 확정 | 6 | 0 | 현장 확인 후, 순차 |
-| 6 디자인 개편 | 9 | 8 | T6.D → T6.0 → 6개 동시 → T6.7 |
+| 6 디자인 개편 | 9 | 9 | T6.D → T6.0 → 6개 동시 → T6.7 |
 
 ## 변경 이력
 | 버전 | 날짜 | 내용 |
