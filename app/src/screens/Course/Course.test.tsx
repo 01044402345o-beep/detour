@@ -59,7 +59,7 @@ const byId = (id: string) => places.find((p) => p.id === id)!;
 
 beforeEach(() => {
   onLine = false;
-  useAppStore.setState({ lang: 'en', events: [] });
+  useAppStore.setState({ lang: 'en', events: [], walkPicks: {} });
 });
 afterEach(() => useAppStore.setState({ lang: null, events: [] }));
 
@@ -380,7 +380,9 @@ describe('S02 코스 지도', () => {
     expect(walk).toHaveAttribute('href', naverWalkUrl(byId('ssd')));
     expect(walk).toHaveAttribute('target', '_blank');
     expect(walk.getAttribute('rel')).toContain('noopener');
-    expect(screen.getByText(t('en', 'course.dirNext', { n: 1 }))).toBeInTheDocument();
+    expect(screen.getByTestId('walk-hint')).toHaveTextContent(
+      t('en', 'course.dirTo', { n: 1, name: byId('ssd').name.en }),
+    );
     const g = screen.getByTestId('google-maps');
     expect(g).toHaveAttribute('href', googlePlaceUrl(byId('ssd')));
     expect(g).toHaveTextContent(t('en', 'course.googleMaps', { n: 1 }));
@@ -408,7 +410,9 @@ describe('S02 코스 지도', () => {
       expect(walk).toHaveTextContent(t('en', 'course.startWalk'));
       expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[0])));
       expect(walk.closest('.course-dock')).not.toBeNull();
-      expect(screen.getByText(t('en', 'course.dirNext', { n: 1 }))).toBeInTheDocument();
+      expect(screen.getByTestId('walk-hint')).toHaveTextContent(
+        t('en', 'course.dirTo', { n: 1, name: byId(ids[0]).name.en }),
+      );
       expect(screen.getByTestId('google-maps')).toHaveAttribute(
         'href',
         googlePlaceUrl(byId(ids[0])),
@@ -422,7 +426,9 @@ describe('S02 코스 지도', () => {
       expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 2 }));
       expect(walk).not.toHaveTextContent(t('en', 'course.startWalk'));
       expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[1])));
-      expect(screen.getByText(t('en', 'course.dirNext', { n: 2 }))).toBeInTheDocument();
+      expect(screen.getByTestId('walk-hint')).toHaveTextContent(
+        t('en', 'course.dirTo', { n: 2, name: byId(ids[1]).name.en }),
+      );
       expect(screen.getByTestId('google-maps')).toHaveTextContent(
         t('en', 'course.googleMaps', { n: 2 }),
       );
@@ -439,6 +445,92 @@ describe('S02 코스 지도', () => {
         googlePlaceUrl(byId(ids[3])),
       );
       expect(screen.getByTestId('course-noapp')).toHaveTextContent(t('en', 'course.noApp'));
+    });
+
+    it('행선지 선택 (T6.13): 처음엔 다음 정류장, 다른 곳을 고르면 버튼·네이버·Google·안내가 그곳으로', () => {
+      useAppStore.setState({ events: [view(ids[0])] });
+      renderCourse(url);
+      const group = screen.getByRole('group', { name: t('en', 'course.pickLabel') });
+      const radios = within(group).getAllByRole('radio');
+      expect(radios).toHaveLength(4);
+      // 처음 선택 = 다음 정류장(2번), '다음' 표시도 2번에만
+      expect(radios[1]).toBeChecked();
+      expect(within(screen.getByTestId(`pick-${ids[1]}`)).getByText(t('en', 'course.nextTag'))).toBeInTheDocument();
+      expect(group.querySelectorAll('.course-pick__next')).toHaveLength(1);
+      // 4번을 고름
+      fireEvent.click(radios[3]);
+      expect(radios[3]).toBeChecked();
+      expect(radios[1]).not.toBeChecked();
+      const walk = screen.getByTestId('start-walking');
+      expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 4 }));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[3])));
+      expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId(ids[3])));
+      expect(screen.getByTestId('google-maps')).toHaveTextContent(t('en', 'course.googleMaps', { n: 4 }));
+      expect(screen.getByTestId('walk-hint')).toHaveTextContent(
+        t('en', 'course.dirTo', { n: 4, name: byId(ids[3]).name.en }),
+      );
+      // '다음' 표시는 그대로 2번 (선택과 별개)
+      expect(within(screen.getByTestId(`pick-${ids[1]}`)).getByText(t('en', 'course.nextTag'))).toBeInTheDocument();
+    });
+
+    it('행선지 선택: 기록이 없을 때 1번이 아닌 곳을 고르면 "Start with stop 1" 대신 "Walk to stop n"', () => {
+      renderCourse(url);
+      expect(screen.getByTestId('start-walking')).toHaveTextContent(t('en', 'course.startWalk'));
+      fireEvent.click(within(screen.getByTestId(`pick-${ids[2]}`)).getByRole('radio'));
+      const walk = screen.getByTestId('start-walking');
+      expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 3 }));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[2])));
+      // 다시 1번을 고르면 처음 문구
+      fireEvent.click(within(screen.getByTestId(`pick-${ids[0]}`)).getByRole('radio'));
+      expect(screen.getByTestId('start-walking')).toHaveTextContent(t('en', 'course.startWalk'));
+    });
+
+    it('행선지 선택 유지 (R1 M-01): 고른 곳의 상세를 보고 돌아와도 선택·네이버·Google 그대로, Next만 기록대로 이동', () => {
+      renderCourse(url);
+      fireEvent.click(within(screen.getByTestId(`pick-${ids[2]}`)).getByRole('radio'));
+      // 3번 상세로 갔다 돌아옴 = 코스 화면이 사라졌다 다시 그려지고, 상세가 place_view를 남김
+      cleanup();
+      useAppStore.setState({ events: [view(ids[2])] });
+      renderCourse(url);
+      expect(within(screen.getByTestId(`pick-${ids[2]}`)).getByRole('radio')).toBeChecked();
+      expect(screen.getByTestId('start-walking')).toHaveAttribute('href', naverWalkUrl(byId(ids[2])));
+      expect(screen.getByTestId('start-walking')).toHaveTextContent(t('en', 'course.walkToStop', { n: 3 }));
+      expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId(ids[2])));
+      // 'Next'는 기록대로 4번으로
+      expect(
+        within(screen.getByTestId(`pick-${ids[3]}`)).getByText(t('en', 'course.nextTag')),
+      ).toBeInTheDocument();
+    });
+
+    it('데모 초기화(resetData)하면 고른 행선지도 비워져 다시 1번부터 (R2 M-01)', () => {
+      renderCourse(url);
+      fireEvent.click(within(screen.getByTestId(`pick-${ids[2]}`)).getByRole('radio'));
+      act(() => useAppStore.getState().setWalkPick('jungang-market', 'hg'));
+      act(() => useAppStore.getState().setWalkPick('downtown-halfday', 'gwc'));
+      cleanup();
+      act(() => useAppStore.getState().resetData());
+      expect(useAppStore.getState().walkPicks).toEqual({});
+      renderCourse(url);
+      expect(within(screen.getByTestId(`pick-${ids[0]}`)).getByRole('radio')).toBeChecked();
+      const walk = screen.getByTestId('start-walking');
+      expect(walk).toHaveTextContent(t('en', 'course.startWalk'));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[0])));
+      expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId(ids[0])));
+      expect(
+        within(screen.getByTestId(`pick-${ids[0]}`)).getByText(t('en', 'course.nextTag')),
+      ).toBeInTheDocument();
+    });
+
+    it('행선지 라디오 낭독 이름: "Stop n of 4, 정류장 전체 이름(, Next)" 쉼표로 구분', () => {
+      renderCourse(url);
+      const group = screen.getByRole('group', { name: t('en', 'course.pickLabel') });
+      ids.forEach((id, i) => {
+        const radio = within(screen.getByTestId(`pick-${id}`)).getByRole('radio');
+        expect(within(group).getByRole('radio', { name: new RegExp(byId(id).name.en) })).toBe(radio);
+        expect(radio).toHaveAccessibleName(
+          `${t('en', 'course.stopOf', { n: i + 1, total: 4 })}, ${byId(id).name.en}${i === 0 ? `, ${t('en', 'course.nextTag')}` : ''}`,
+        );
+      });
     });
   });
 

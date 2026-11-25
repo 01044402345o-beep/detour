@@ -99,7 +99,10 @@
     "minShort": "{min}分",
     "metaFrom": "出発: {start}",
     "startTag": "出発",
-    "photoCredits": "写真: {list} · ウィキメディア・コモンズ"
+    "photoCredits": "写真: {list} · ウィキメディア・コモンズ",
+    "pickLabel": "どこまで歩きますか？",
+    "nextTag": "次",
+    "dirTo": "NAVER地図アプリで{n}か所目「{name}」への徒歩ルートが開きます"
   },
   "season": {
     "kicker": "期間限定イベント",

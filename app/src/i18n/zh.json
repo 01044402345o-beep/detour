@@ -99,7 +99,10 @@
     "minShort": "{min}分钟",
     "metaFrom": "出发：{start}",
     "startTag": "出发",
-    "photoCredits": "照片：{list} · 维基共享资源"
+    "photoCredits": "照片：{list} · 维基共享资源",
+    "pickLabel": "想步行去哪里？",
+    "nextTag": "下一站",
+    "dirTo": "将在NAVER地图App中打开前往第{n}站“{name}”的步行路线"
   },
   "season": {
     "kicker": "限时活动",

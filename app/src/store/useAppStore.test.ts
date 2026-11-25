@@ -218,6 +218,7 @@ describe('이용 기록·제보', () => {
     s().increment('ssd', 'm1');
     s().toggleSavedPlace('ssd');
     s().addReport('closed', 'ssd');
+    s().setWalkPick('downtown-halfday', 'mus'); // T6.13 고른 행선지
     s().clearEvents();
     expect(s().events).toEqual([]);
     expect(s().reports).toHaveLength(1);
@@ -230,6 +231,7 @@ describe('이용 기록·제보', () => {
       saved: { places: [], phrases: [] },
       reports: [],
       events: [],
+      walkPicks: {},
     });
   });
 });
@@ -339,6 +341,14 @@ describe('기본 store', () => {
   it('jsdom localStorage에 저장한다', () => {
     useAppStore.getState().setLang('en');
     expect(JSON.parse(localStorage.getItem(STORAGE_KEY) as string).state.lang).toBe('en');
+  });
+
+  it('고른 행선지(walkPicks, T6.13)는 저장하지 않음 — 새로 열면 다음 정류장부터', () => {
+    useAppStore.getState().setWalkPick('downtown-halfday', 'mus');
+    expect(useAppStore.getState().walkPicks).toEqual({ 'downtown-halfday': 'mus' });
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) as string).state;
+    expect(saved).not.toHaveProperty('walkPicks');
+    useAppStore.setState({ walkPicks: {} });
   });
 });
 

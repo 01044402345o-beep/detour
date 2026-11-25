@@ -84,8 +84,14 @@ export type RecordSlice = {
   addReport: (kind: ReportKind, placeId?: string) => void;
   /** 이용 기록만 비우기 */
   clearEvents: () => void;
-  /** 데모 데이터 초기화: 주문·저장·제보·기록을 비웁니다. 언어는 유지 */
+  /** 데모 데이터 초기화: 주문·저장·제보·기록·고른 행선지를 비웁니다. 언어는 유지 */
   resetData: () => void;
+  /**
+   * 코스 화면에서 고른 행선지 (코스 id → 정류장 id, T6.13). 저장하지 않음(새로 열면 다음 정류장부터).
+   * 장소 상세를 보고 돌아와도 유지되고(R1 M-01), 데모 초기화로 비워집니다(R2 M-01).
+   */
+  walkPicks: Record<string, string>;
+  setWalkPick: (courseId: string, placeId: string) => void;
 };
 
 export type AppState = LangSlice & OrderSlice & SavedSlice & RecordSlice;
@@ -258,6 +264,9 @@ export function createAppStore({
 
           ...emptyData(),
           pendingPlace: null,
+          walkPicks: {},
+          setWalkPick: (courseId, placeId) =>
+            set((s) => ({ walkPicks: { ...s.walkPicks, [courseId]: placeId } })),
           switchPlace: (place) => {
             const s = get();
             if (s.currentPlaceId === place.id) {
@@ -318,7 +327,7 @@ export function createAppStore({
             }));
           },
           clearEvents: () => set({ events: [] }),
-          resetData: () => set({ ...emptyData(), pendingPlace: null }),
+          resetData: () => set({ ...emptyData(), pendingPlace: null, walkPicks: {} }),
         };
       },
       {

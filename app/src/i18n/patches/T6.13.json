@@ -1,0 +1,26 @@
+{
+  "$override": [
+    "course.pickLabel"
+  ],
+  "en": {
+    "course": {
+      "pickLabel": "Where do you want to walk?",
+      "nextTag": "Next",
+      "dirTo": "Opens walking directions to stop {n}, {name}, in the NAVER Map app"
+    }
+  },
+  "ja": {
+    "course": {
+      "pickLabel": "どこまで歩きますか？",
+      "nextTag": "次",
+      "dirTo": "NAVER地図アプリで{n}か所目「{name}」への徒歩ルートが開きます"
+    }
+  },
+  "zh": {
+    "course": {
+      "pickLabel": "想步行去哪里？",
+      "nextTag": "下一站",
+      "dirTo": "将在NAVER地图App中打开前往第{n}站“{name}”的步行路线"
+    }
+  }
+}

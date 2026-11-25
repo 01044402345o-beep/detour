@@ -99,7 +99,10 @@
     "minShort": "{min} min",
     "metaFrom": "Start: {start}",
     "startTag": "Start",
-    "photoCredits": "Photos: {list} · Wikimedia Commons"
+    "photoCredits": "Photos: {list} · Wikimedia Commons",
+    "pickLabel": "Where do you want to walk?",
+    "nextTag": "Next",
+    "dirTo": "Opens walking directions to stop {n}, {name}, in the NAVER Map app"
   },
   "season": {
     "kicker": "SEASONAL EVENT",
