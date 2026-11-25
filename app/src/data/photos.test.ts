@@ -6,6 +6,10 @@ import { getPlace } from './index';
 import { creditsText } from './photoCredits';
 import {
   isDishExample,
+  isOwnPhoto,
+  OWN_AUTHOR,
+  OWN_PHOTO_LICENSE,
+  photoCreditKey,
   LICENSE_URLS,
   PHOTOS,
   photoCreditParams,
@@ -37,9 +41,7 @@ describe('photos.ts', () => {
         'file',
         'title',
         'author',
-        'sourceUrl',
         'licenseId',
-        'licenseUrl',
         'changes',
         'review',
       ] as const) {
@@ -47,13 +49,20 @@ describe('photos.ts', () => {
       }
       expect(p.placeId ?? p.areaId, `${p.id}: placeId 또는 areaId`).toBeTruthy();
       for (const lang of ['en', 'ja', 'zh'] as const) expect(p.alt[lang].trim()).not.toBe('');
-      expect(p.sourceUrl).toMatch(/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+      if (isOwnPhoto(p)) {
+        // 운영자 직접 촬영(T6.10): 외부 원본·라이선스 링크 없음
+        expect(p.sourceUrl).toBeUndefined();
+        expect(p.licenseUrl).toBeUndefined();
+      } else {
+        expect(p.sourceUrl).toMatch(/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+      }
       if (p.year !== undefined) expect(p.year).toBeGreaterThan(1990);
     }
   });
 
   it('라이선스 URL이 licenseId와 맞음 (BY와 BY-SA, 국가판 KR 구분)', () => {
     for (const p of PHOTOS) {
+      if (p.licenseUrl === undefined) continue; // 운영자 직접 촬영은 아래 별도 검사
       expect(p.licenseUrl).toBe(LICENSE_URLS[p.licenseId]);
       const [, kind, ver, kr] = /^CC (BY|BY-SA) (\d\.\d)( KR)?$/.exec(p.licenseId)!;
       expect(p.licenseUrl).toBe(
@@ -67,7 +76,41 @@ describe('photos.ts', () => {
     expect(lic['dish-gukhwappang']).toBe('https://creativecommons.org/licenses/by-sa/2.0/kr/');
   });
 
-  it('kind: 기존 6장은 place, 음식 예시 3장은 dish-example(음식 이름 3개 언어·가게 사진 아님 기록)', () => {
+  it('운영자 직접 촬영 2장(T6.10): 광천식당·수연분식 실제 가게 사진, CC 아님, 개인 이름 없음', () => {
+    const own = PHOTOS.filter((p) => isOwnPhoto(p));
+    expect(own.map((p) => [p.id, p.placeId, p.file, p.kind])).toEqual([
+      ['own-gwangcheon-sikdang', 'gwc', 'photos/gwangcheon-sikdang.webp', 'place'],
+      ['own-suyeon-bunsik', 'sy', 'photos/suyeon-bunsik.webp', 'place'],
+    ]);
+    for (const p of own) {
+      expect(p.author).toBe(OWN_AUTHOR);
+      expect(p.author).toBe('Edulleo 운영자 (직접 촬영)');
+      expect(p.licenseId).toBe(OWN_PHOTO_LICENSE);
+      expect(p.licenseId).toMatch(/not a Creative Commons license/);
+      expect(p.licenseId).not.toMatch(/^CC /);
+      expect(p.year).toBeUndefined(); // 근거 없는 연도는 적지 않음 (T6.10 R1 L-01)
+      expect(p.notice).toBeUndefined();
+      expect(p.review).toMatch(/user confirmed on 2026-11-26 that they took this photo themselves/);
+      expect(p.review).toMatch(/non-affiliation notice/);
+      expect(p.changes).toMatch(/converted to WebP/);
+      expect(photoCreditKey(p)).toBe('photo.creditOwn');
+    }
+    const gwc = own[0];
+    expect(gwc.review).toMatch(/own photo that they posted on the blog they run/);
+    expect(gwc.review).toMatch(/One passer-by \(far right edge\) blurred/);
+    expect(gwc.changes).toMatch(/passer-by .* blurred/);
+    expect(own[1].changes).toMatch(/No blur/);
+    // 다른 사진은 CC
+    for (const p of PHOTOS.filter((x) => !isOwnPhoto(x))) expect(p.licenseId).toMatch(/^CC /);
+  });
+
+  it('출처 문구 키: 직접 촬영 / 음식 예시 / 그 밖', () => {
+    expect(photoCreditKey(photoForPlace('gwc')!)).toBe('photo.creditOwn');
+    expect(photoCreditKey(photoForPlace('gc')!)).toBe('photo.creditDish');
+    expect(photoCreditKey(photoForPlace('ssd')!)).toBe('photo.credit');
+  });
+
+  it('kind: 장소 사진 8장(CC 6 + 직접 촬영 2)은 place, 음식 예시 3장은 dish-example(음식 이름 3개 언어·가게 사진 아님 기록)', () => {
     const places = PHOTOS.filter((p) => p.kind === 'place').map((p) => p.id);
     expect(places).toEqual([
       'sungsimdang',
@@ -76,6 +119,8 @@ describe('photos.ts', () => {
       'daejeon-station',
       'jungang-market',
       'yuseong-footbath',
+      'own-gwangcheon-sikdang',
+      'own-suyeon-bunsik',
     ]);
     const dishes = PHOTOS.filter((p) => p.kind === 'dish-example');
     expect(dishes.map((p) => [p.placeId, p.file])).toEqual([
@@ -112,14 +157,15 @@ describe('photos.ts', () => {
     for (const p of PHOTOS.filter((x) => x.kind === 'place')) expect(isDishExample(p)).toBe(false);
   });
 
-  it('허락 근거 미확인으로 뺀 2장(R1 H-01)은 기록·public·CREDITS에 없고, 그 장소는 사진 없음', () => {
+  it('허락 근거 미확인으로 뺀 블로그 출처 음식 사진 2장(T6.9 R1 H-01)은 기록·public·CREDITS에 없음', () => {
     for (const f of ['dish-dubu-duruchigi.webp', 'dish-gochu-twigim.webp']) {
       expect(fs.existsSync(path.join(PUBLIC, 'photos', f)), f).toBe(false);
       expect(PHOTOS.some((p) => p.file.endsWith(f))).toBe(false);
     }
-    expect(photoForPlace('gwc')).toBeUndefined();
-    expect(photoForPlace('sy')).toBeUndefined();
-    expect(PHOTOS).toHaveLength(9);
+    // 광천식당·수연분식은 그 2장과 별개인 운영자 직접 촬영 사진(T6.10)
+    expect(photoForPlace('gwc')?.id).toBe('own-gwangcheon-sikdang');
+    expect(photoForPlace('sy')?.id).toBe('own-suyeon-bunsik');
+    expect(PHOTOS).toHaveLength(11);
     const txt = fs.readFileSync(path.join(PUBLIC, 'photos/CREDITS.txt'), 'utf8');
     expect(txt).not.toMatch(/dubu|gochu|이랑이랑|굿바이/);
   });
@@ -170,9 +216,8 @@ describe('photos.ts', () => {
       for (const v of [
         p.title,
         p.author,
-        p.sourceUrl,
+        ...(p.sourceUrl ? [p.sourceUrl, p.licenseUrl] : []),
         p.licenseId,
-        p.licenseUrl,
         p.changes,
         p.review,
         p.alt.en,
@@ -185,7 +230,15 @@ describe('photos.ts', () => {
       if (p.kind === 'dish-example') expect(txt).toContain(`Dish:     ${p.dish.en}`);
     }
     expect(txt.match(/Kind: {5}dish example \(NOT taken at this shop\)/g)).toHaveLength(3);
-    expect(txt.match(/Kind: {5}place$/gm)).toHaveLength(6);
+    expect(txt.match(/Kind: {5}place$/gm)).toHaveLength(8);
+    // 운영자 직접 촬영(T6.10): CC가 아님·외부 원본 없음을 적고 링크 줄 없음
+    expect(txt).toMatch(/own photos taken by the Edulleo team/);
+    expect(
+      txt.match(
+        /License: {2}Owner photo — used with permission \(not a Creative Commons license\)$/gm,
+      ),
+    ).toHaveLength(2);
+    expect(txt.match(/Source: {3}none \(own photo, no external source page\)$/gm)).toHaveLength(2);
     expect(txt).toMatch(/CC BY \(Attribution\) and CC BY-SA \(Attribution-ShareAlike\)/);
     expect(txt).toMatch(/NOT taken at that shop/);
   });
@@ -202,9 +255,10 @@ describe('photos.ts', () => {
     expect(photoForPlace('gc')?.id).toBe('dish-manduguk');
     expect(photoForPlace('sj')?.id).toBe('dish-sundae-gukbap');
     expect(photoForPlace('hg')?.id).toBe('dish-gukhwappang');
-    // 사진 없는 장소 → 글자 타일 (gwc·sy는 R1 H-01로 사진 제외)
-    expect(photoForPlace('gwc')).toBeUndefined();
-    expect(photoForPlace('sy')).toBeUndefined();
+    // 운영자 직접 촬영 (T6.10)
+    expect(photoForPlace('gwc')?.id).toBe('own-gwangcheon-sikdang');
+    expect(photoForPlace('sy')?.id).toBe('own-suyeon-bunsik');
+    // 사진 없는 장소 → 글자 타일
     expect(photoForPlace('nope')).toBeUndefined();
     for (const p of PHOTOS)
       if (p.placeId && p.placeId !== 'djs') expect(getPlace(p.placeId)).toBeDefined();

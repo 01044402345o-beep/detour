@@ -196,21 +196,31 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     return row;
   };
 
-  it('행을 누르면 시트가 열리고, 사진 9장(장소 6 + 음식 예시 3, T6.9)의 장소·제목·저작자·라이선스 링크·원본 링크·고지·변경 내역', async () => {
+  it('행을 누르면 시트가 열리고, 사진 11장(장소 CC 6 + 직접 촬영 2 + 음식 예시 3)의 장소·제목·저작자·라이선스 링크·원본 링크·고지·변경 내역', async () => {
     await renderSettings();
     openCredits();
     const dialog = screen.getByRole('dialog', { name: 'Photo credits' });
     expect(dialog).toHaveTextContent('These licenses apply only to the photo files.');
     const items = within(dialog).getAllByRole('listitem');
     expect(items).toHaveLength(PHOTOS.length);
-    expect(PHOTOS).toHaveLength(9);
+    expect(PHOTOS).toHaveLength(11);
     PHOTOS.forEach((p, i) => {
       const it = items[i];
       expect(it).toHaveAttribute('data-photo-id', p.id);
       expect(it).toHaveTextContent(p.title);
-      expect(it).toHaveTextContent(p.author);
       expect(it).toHaveTextContent(p.changes);
       if (p.notice) expect(it).toHaveTextContent(p.notice);
+      if (p.sourceUrl === undefined) {
+        // 운영자 직접 촬영(T6.10): CC 아님 → 라이선스·원본 링크 없이 화면 언어 문구
+        expect(it).toHaveTextContent('Edulleo team (own photo)');
+        expect(within(it).getByTestId('credit-license-own')).toHaveTextContent(
+          'Own photo, used with permission (not a Creative Commons license)',
+        );
+        expect(within(it).queryAllByRole('link')).toHaveLength(0);
+        expect(it).not.toHaveTextContent('Original file');
+        return;
+      }
+      expect(it).toHaveTextContent(p.author);
       const license = within(it).getByRole('link', { name: p.licenseId });
       expect(license).toHaveAttribute('href', p.licenseUrl);
       expect(license).toHaveAttribute('target', '_blank');
@@ -227,10 +237,14 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     const places = within(dialog)
       .getAllByRole('heading', { level: 3 })
       .map((h) => h.textContent);
-    expect(places).toHaveLength(9);
+    expect(places).toHaveLength(11);
     expect(places[0]).toMatch(/Sungsimdang/);
     expect(places).toEqual(
-      expect.arrayContaining(['Daejeon Station', 'Daejeon Jungang Market', 'Yuseong Spa foot bath']),
+      expect.arrayContaining([
+        'Daejeon Station',
+        'Daejeon Jungang Market',
+        'Yuseong Spa foot bath',
+      ]),
     );
     // 새 경로를 만들지 않음
     expect(screen.getByTestId('screen-settings')).toBeInTheDocument();
@@ -240,8 +254,8 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     await renderSettings('ja');
     fireEvent.click(screen.getByTestId('open-photo-credits'));
     const dialog = screen.getByRole('dialog', { name: '写真のクレジット' });
-    expect(within(dialog).getAllByText('撮影者')).toHaveLength(9);
-    expect(within(dialog).getAllByText('元の題名')).toHaveLength(9);
+    expect(within(dialog).getAllByText('撮影者')).toHaveLength(11);
+    expect(within(dialog).getAllByText('元の題名')).toHaveLength(11);
     expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 4.0' })).toHaveLength(5);
     expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 2.5' })).toHaveLength(1);
     expect(within(dialog).getByRole('heading', { name: '大田中央市場' })).toBeInTheDocument();
@@ -255,6 +269,31 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     expect(within(dialog).getAllByTestId('credit-dish-example')[0]).toHaveTextContent(
       'マンドゥスープのイメージ写真 · この店で撮影したものではありません',
     );
+    // 운영자 직접 촬영(T6.10): 일본어 저작자·이용 조건 문구, 링크 없음
+    const own = within(dialog).getAllByTestId('credit-license-own');
+    expect(own).toHaveLength(2);
+    expect(own[0]).toHaveTextContent(
+      '運営チームが撮影し、許可を得て使用(クリエイティブ・コモンズではありません)',
+    );
+    expect(dialog).toHaveTextContent('Edulleo運営チーム(自ら撮影)');
+    expect(dialog).not.toHaveTextContent('Edulleo 운영자');
+  });
+
+  it('운영자 직접 촬영(T6.10): 광천식당·수연분식 항목은 장소 사진(kind place), 예시 표시 없음', async () => {
+    await renderSettings();
+    openCredits();
+    const dialog = screen.getByRole('dialog', { name: 'Photo credits' });
+    for (const [id, name] of [
+      ['own-gwangcheon-sikdang', 'Gwangcheon Sikdang'],
+      ['own-suyeon-bunsik', 'Suyeon Bunsik'],
+    ]) {
+      const item = dialog.querySelector(`[data-photo-id="${id}"]`)!;
+      expect(item).toHaveAttribute('data-photo-kind', 'place');
+      expect(within(item as HTMLElement).getByRole('heading', { level: 3 })).toHaveTextContent(
+        name,
+      );
+      expect(within(item as HTMLElement).queryByTestId('credit-dish-example')).toBeNull();
+    }
   });
 
   it('음식 예시 사진(T6.9): 시트에서 장소 사진과 구분 표시(음식 이름 + 이 가게 사진 아님)', async () => {

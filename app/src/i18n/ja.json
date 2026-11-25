@@ -310,6 +310,9 @@
     "dishExample": "料理のイメージ写真 · この店の写真ではありません",
     "creditDish": "イメージ写真: {author} · {license}",
     "dishCredits": "料理のイメージ写真(各店で撮影したものではありません): {list} · ウィキメディア・コモンズ",
-    "dishExampleOf": "{dish}のイメージ写真 · この店で撮影したものではありません"
+    "dishExampleOf": "{dish}のイメージ写真 · この店で撮影したものではありません",
+    "creditOwn": "写真: Edulleo運営チーム撮影",
+    "ownAuthor": "Edulleo運営チーム(自ら撮影)",
+    "ownLicense": "運営チームが撮影し、許可を得て使用(クリエイティブ・コモンズではありません)"
   }
 }

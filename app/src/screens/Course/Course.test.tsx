@@ -201,7 +201,8 @@ describe('S02 코스 지도', () => {
   });
 
   it('썸네일: 사진이 있으면 사진(빈 alt, lazy), 없으면 파란 글자 타일(한글 2~3자)', () => {
-    // 광천식당(gwc)은 실제 데이터에 사진 없음 (T6.9 R1 H-01로 제외)
+    // 사진 없는 경우는 mock으로 만듦 (T6.10 이후 광천식당에도 직접 촬영 사진이 있음)
+    noPhoto.add('gwc');
     renderCourse();
     const thumb = (id: string) => screen.getByTestId(`stop-${id}`).querySelector('.course-thumb')!;
     for (const id of ['ssd', 'eun', 'mus']) {
@@ -226,12 +227,22 @@ describe('S02 코스 지도', () => {
     expect(origin).toHaveTextContent('or Line 1, 1 stop to Jungang-ro');
   });
 
-  it('시장 코스(T6.9): 수연분식은 글자 타일, 나머지 세 가게는 음식 예시 사진, 출발지는 대전역 사진', () => {
+  it('원도심 코스(T6.10): 광천식당은 직접 촬영 가게 사진 썸네일(kind place)', () => {
+    renderCourse();
+    const el = screen.getByTestId('stop-gwc').querySelector('.course-thumb')!;
+    expect(el).toHaveAttribute('data-kind', 'photo');
+    expect(el).toHaveAttribute('data-photo-kind', 'place');
+    expect(el.querySelector('img')).toHaveAttribute('src', photoUrl(photoForPlace('gwc')!));
+    expect(el.querySelector('img')!.getAttribute('src')).toMatch(/gwangcheon-sikdang.webp$/);
+  });
+
+  it('시장 코스: 수연분식은 직접 촬영 가게 사진(T6.10), 나머지 세 가게는 음식 예시 사진, 출발지는 대전역 사진', () => {
     renderCourse('/course?c=jungang-market');
     const thumb = (id: string) => screen.getByTestId(`stop-${id}`).querySelector('.course-thumb')!;
-    expect(thumb('sy')).toHaveAttribute('data-kind', 'tile');
-    expect(thumb('sy').querySelector('img')).toBeNull();
-    expect(thumb('sy').querySelector('.course-thumb__tile')).toHaveTextContent('수연');
+    expect(thumb('sy')).toHaveAttribute('data-kind', 'photo');
+    expect(thumb('sy')).toHaveAttribute('data-photo-kind', 'place');
+    expect(thumb('sy').querySelector('img')!.getAttribute('src')).toMatch(/suyeon-bunsik.webp$/);
+    expect(thumb('sy').querySelector('.course-thumb__tile')).toBeNull();
     for (const id of ['gc', 'sj', 'hg']) {
       expect(thumb(id)).toHaveAttribute('data-kind', 'photo');
       expect(thumb(id)).toHaveAttribute('data-photo-kind', 'dish-example');
@@ -253,8 +264,9 @@ describe('S02 코스 지도', () => {
         expect.stringContaining(t('en', 'photo.dishExample')),
       );
     }
+    // 수연분식: 직접 촬영 가게 사진이라 안내 없음 (T6.10)
     expect(screen.queryByTestId('dish-note-sy')).toBeNull();
-    // 원도심: 실제 장소 사진(ssd·eun·mus)과 글자 타일(gwc)에는 안내 없음
+    // 원도심: 실제 장소 사진(ssd·eun·mus, 직접 촬영 gwc)에는 안내 없음
     cleanup();
     renderCourse();
     for (const id of ['ssd', 'eun', 'mus', 'gwc']) {
@@ -283,18 +295,39 @@ describe('S02 코스 지도', () => {
     expect(screen.queryByTestId('dish-note-gc')).toBeNull();
   });
 
-  it('사진 출처(원도심): 음식 예시 사진이 없으면 장소 사진 줄만', () => {
+  it('사진 출처(원도심): 위키미디어 장소 사진 줄 + 직접 촬영 줄(CC 아님), 음식 예시 줄 없음', () => {
     renderCourse();
     expect(screen.getByTestId('course-photo-credit')).toHaveTextContent(
       t('en', 'course.photoCredits', {
         list: 'Minseong Kim, Trainholic (CC BY-SA 4.0), Yoo Chung (CC BY-SA 2.5)',
       }),
     );
+    expect(screen.getByTestId('course-photo-credit')).not.toHaveTextContent(/Edulleo|운영자/);
+    expect(screen.getByTestId('course-own-credit')).toHaveTextContent(
+      'Photo: Edulleo team (own photo)',
+    );
     expect(screen.queryByTestId('course-dish-credit')).toBeNull();
   });
 
-  it('사진 출처(시장 코스): 대전역 사진 줄 + 음식 예시 3장 줄(BY·BY-SA 구분, 이 가게들에서 찍지 않음)', () => {
+  it('직접 촬영 출처 줄 (ja)', () => {
+    useAppStore.setState({ lang: 'ja' });
+    renderCourse();
+    expect(screen.getByTestId('course-own-credit')).toHaveTextContent(
+      '写真: Edulleo運営チーム撮影',
+    );
+  });
+
+  it('사진이 모두 위키미디어 사진이면 직접 촬영 줄 없음', () => {
+    noPhoto.add('gwc');
+    renderCourse();
+    expect(screen.queryByTestId('course-own-credit')).toBeNull();
+  });
+
+  it('사진 출처(시장 코스): 대전역 사진 줄 + 직접 촬영 줄 + 음식 예시 3장 줄(BY·BY-SA 구분, 이 가게들에서 찍지 않음)', () => {
     renderCourse('/course?c=jungang-market');
+    expect(screen.getByTestId('course-own-credit')).toHaveTextContent(
+      'Photo: Edulleo team (own photo)',
+    );
     expect(screen.getByTestId('course-photo-credit')).toHaveTextContent(
       t('en', 'course.photoCredits', { list: 'Minseong Kim (CC BY-SA 4.0)' }),
     );

@@ -61,10 +61,6 @@ type PhotoBase = {
   author: string;
   /** 촬영 연도 — 원본 날짜가 확실할 때만 */
   year?: number;
-  /** 원본 파일 페이지 */
-  sourceUrl: string;
-  licenseId: PhotoLicenseId;
-  licenseUrl: string;
   /** 원본에 있는 고지 (EXIF Copyright 값 그대로) */
   notice?: string;
   /** 실제로 한 변경만 */
@@ -75,7 +71,29 @@ type PhotoBase = {
   alt: L10n;
 };
 
+/**
+ * 운영자 직접 촬영 사진(T6.10)의 이용 조건 표기. CC 라이선스가 아니며(앱 사용 허락), 라이선스 원문 링크·원본 파일 페이지가 없습니다.
+ * 화면에는 이 값 대신 번역 키(`photo.creditOwn`·`photo.ownAuthor`·`photo.ownLicense`)로 표시합니다.
+ */
+export const OWN_PHOTO_LICENSE =
+  'Owner photo — used with permission (not a Creative Commons license)';
+
+/** 출처 갈래: 위키미디어 공용 CC 사진(라이선스 링크·원본 페이지 있음) / 운영자 직접 촬영(링크 없음) */
+type PhotoSource =
+  | {
+      /** 원본 파일 페이지 */
+      sourceUrl: string;
+      licenseId: PhotoLicenseId;
+      licenseUrl: string;
+    }
+  | {
+      sourceUrl?: undefined;
+      licenseId: typeof OWN_PHOTO_LICENSE;
+      licenseUrl?: undefined;
+    };
+
 export type Photo = PhotoBase &
+  PhotoSource &
   (
     | { kind: 'place' }
     | {
@@ -101,6 +119,12 @@ const DISH_SOURCE_OK =
   'Source page: no personality-rights or trademark templates; Restrictions field empty; no EXIF copyright or credit notice.';
 const dishNote = (shop: string) =>
   `No people; no shop signs or logos. A general photo of the dish, not taken at ${shop} and unrelated to it. Why: the user asked (2026-11-26) for SNS photos of the shops without a photo; SNS photos cannot be republished in the public repository and app, so a freely licensed Wikimedia Commons photo of the shop’s signature dish is used instead and labeled on screen as an example photo, not this shop.`;
+/** 운영자 직접 촬영 사진(T6.10)의 저작자 표기 — 개인 이름 없이 */
+export const OWN_AUTHOR = 'Edulleo 운영자 (직접 촬영)';
+const OWN_CONFIRMED =
+  'Own photo: the user confirmed on 2026-11-26 that they took this photo themselves and allow its use in the app (not a Creative Commons license; no external source page).';
+const OWN_SIGNS =
+  'The shop’s sign is the subject; shown in context with the app’s non-affiliation notice (place screen).';
 const USER_DECISION =
   'User decision 2026-11-26: use after blurring faces; shop signs are shown in context with the app’s non-affiliation notice.';
 
@@ -227,6 +251,48 @@ export const PHOTOS: readonly Photo[] = [
     },
   },
 
+  // ───── 운영자 직접 촬영 (T6.10) — 그 가게를 실제로 찍은 사진(kind 'place'), CC 라이선스 아님 ─────
+  // 광천식당 사진은 아래 '음식 예시 사진' 구역 주석의 '블로그 출처 2장 제외'(T6.9 R1 H-01, 위키미디어
+  // 공용에 올라온 제3자 블로그 음식 사진 = 허락 근거 미확인)와 **별개**입니다. 이번 사진은 사용자 본인이 찍은
+  // 가게 정면 사진이고(사용자가 운영하는 블로그에 올린 본인 사진임을 사용자가 2026-11-26 확인), 앱에서 쓰도록 허락함.
+  // 개인 이름은 기록하지 않습니다(저작자 = Edulleo 운영자).
+  {
+    id: 'own-gwangcheon-sikdang',
+    kind: 'place',
+    file: 'photos/gwangcheon-sikdang.webp',
+    placeId: 'gwc',
+    title: 'Gwangcheon Sikdang storefront (own photo)',
+    author: OWN_AUTHOR,
+    // 촬영 연도: 근거 기록이 없어 적지 않음 (확실한 값만, T6.10 R1 L-01)
+    licenseId: OWN_PHOTO_LICENSE,
+    changes:
+      'Own photo: one passer-by at the far right edge blurred; resized to 800px on the long side (800×601) and converted to WebP. No crop, no color correction; signage unchanged.',
+    review: `${OWN_CONFIRMED} The user also confirmed this is their own photo that they posted on the blog they run. One passer-by (far right edge) blurred; no other identifiable people. ${OWN_SIGNS} Window lettering also shows TV-channel names (KBS, MBC, SBS) and a TV show title as part of the shop’s own signage, incidental.`,
+    alt: {
+      en: 'Gwangcheon Sikdang storefront from below, with its large red sign and a tall vertical sign',
+      ja: '下から見たクァンチョン食堂の店先。大きな赤い看板と縦長の看板',
+      zh: '从下方看广川食堂的店面，有大大的红色招牌和竖长招牌',
+    },
+  },
+  {
+    id: 'own-suyeon-bunsik',
+    kind: 'place',
+    file: 'photos/suyeon-bunsik.webp',
+    placeId: 'sy',
+    title: 'Suyeon Bunsik sign (own photo)',
+    author: OWN_AUTHOR,
+    // 촬영 연도: 근거 기록이 없어 적지 않음 (확실한 값만, T6.10 R1 L-01)
+    licenseId: OWN_PHOTO_LICENSE,
+    changes:
+      'Own photo: resized to 800px on the long side (800×601) and converted to WebP. No blur, no crop, no color correction.',
+    review: `${OWN_CONFIRMED} No people. ${OWN_SIGNS} The sign includes the shop’s public phone number.`,
+    alt: {
+      en: 'Suyeon Bunsik’s orange and red shop signs under the market roof, with lamps below',
+      ja: '市場の屋根の下にあるスヨン粉食のオレンジと赤の看板と、その下の照明',
+      zh: '市场顶棚下Suyeon小吃店的橙色和红色招牌，下方亮着灯',
+    },
+  },
+
   // ───── 음식 예시 사진 (T6.9) — 그 가게에서 찍은 사진이 아님 ─────
   // 제외(T6.9 R1 H-01, 2026-11-26): 아래 2장은 블로그 출처이고, Commons에 라이선스 검토 기록이 없으며
   // 업로더가 저작자라는 근거도 확인되지 않아(원 게시물 접속 실패) '불확실하면 제외' 기준으로 뺐습니다.
@@ -320,6 +386,22 @@ export function photoUrl(photo: Pick<Photo, 'file'>): string {
 /** 음식 예시 사진(그 가게에서 찍은 사진 아님)인지 */
 export function isDishExample(photo: Pick<Photo, 'kind'>): boolean {
   return photo.kind === 'dish-example';
+}
+
+/** 운영자 직접 촬영 사진(CC 아님, 라이선스·원본 링크 없음, T6.10)인지 */
+export function isOwnPhoto(photo: Pick<Photo, 'licenseId'>): boolean {
+  return photo.licenseId === OWN_PHOTO_LICENSE;
+}
+
+/**
+ * 짧은 출처 문구의 번역 키: 직접 촬영 `photo.creditOwn`("Photo: Edulleo team (own photo)", 자리표시자 없음) /
+ * 음식 예시 `photo.creditDish` / 그 밖 `photo.credit`. `t(photoCreditKey(p), photoCreditParams(p))`
+ */
+export function photoCreditKey(
+  photo: Pick<Photo, 'kind' | 'licenseId'>,
+): 'photo.creditOwn' | 'photo.creditDish' | 'photo.credit' {
+  if (isOwnPhoto(photo)) return 'photo.creditOwn';
+  return isDishExample(photo) ? 'photo.creditDish' : 'photo.credit';
 }
 
 /**

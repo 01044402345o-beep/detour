@@ -15,7 +15,12 @@ It was NOT taken at that shop and has nothing to do with it. The app labels it o
 "Example photo of the dish - not this shop". It replaces the SNS photos the user asked for,
 because SNS photos cannot be republished here.
 
-Checked against each original file page (Wikimedia Commons API: imageinfo extmetadata + page wikitext) on 2026-11-26.
+Author "Edulleo 운영자 (직접 촬영)": own photos taken by the Edulleo team (the app operator),
+used in the app with permission. They are NOT under a Creative Commons license and have no
+external source page; do not reuse them outside this app without asking.
+
+Wikimedia Commons photos were checked against each original file page
+(Wikimedia Commons API: imageinfo extmetadata + page wikitext) on 2026-11-26.
 
 1) sungsimdang.webp
    Kind:     place
@@ -107,7 +112,33 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Alt (zh): 夜晚的儒城户外足浴池，人们在秋树下泡脚
    Used for: area "yuseong"
 
-7) dish-manduguk.webp
+7) gwangcheon-sikdang.webp
+   Kind:     place
+   Title:    Gwangcheon Sikdang storefront (own photo)
+   Author:   Edulleo 운영자 (직접 촬영)
+   Source:   none (own photo, no external source page)
+   License:  Owner photo — used with permission (not a Creative Commons license)
+   Changes:  Own photo: one passer-by at the far right edge blurred; resized to 800px on the long side (800×601) and converted to WebP. No crop, no color correction; signage unchanged.
+   Review:   Own photo: the user confirmed on 2026-11-26 that they took this photo themselves and allow its use in the app (not a Creative Commons license; no external source page). The user also confirmed this is their own photo that they posted on the blog they run. One passer-by (far right edge) blurred; no other identifiable people. The shop’s sign is the subject; shown in context with the app’s non-affiliation notice (place screen). Window lettering also shows TV-channel names (KBS, MBC, SBS) and a TV show title as part of the shop’s own signage, incidental.
+   Alt (en): Gwangcheon Sikdang storefront from below, with its large red sign and a tall vertical sign
+   Alt (ja): 下から見たクァンチョン食堂の店先。大きな赤い看板と縦長の看板
+   Alt (zh): 从下方看广川食堂的店面，有大大的红色招牌和竖长招牌
+   Used for: place "gwc"
+
+8) suyeon-bunsik.webp
+   Kind:     place
+   Title:    Suyeon Bunsik sign (own photo)
+   Author:   Edulleo 운영자 (직접 촬영)
+   Source:   none (own photo, no external source page)
+   License:  Owner photo — used with permission (not a Creative Commons license)
+   Changes:  Own photo: resized to 800px on the long side (800×601) and converted to WebP. No blur, no crop, no color correction.
+   Review:   Own photo: the user confirmed on 2026-11-26 that they took this photo themselves and allow its use in the app (not a Creative Commons license; no external source page). No people. The shop’s sign is the subject; shown in context with the app’s non-affiliation notice (place screen). The sign includes the shop’s public phone number.
+   Alt (en): Suyeon Bunsik’s orange and red shop signs under the market roof, with lamps below
+   Alt (ja): 市場の屋根の下にあるスヨン粉食のオレンジと赤の看板と、その下の照明
+   Alt (zh): 市场顶棚下Suyeon小吃店的橙色和红色招牌，下方亮着灯
+   Used for: place "sy"
+
+9) dish-manduguk.webp
    Kind:     dish example (NOT taken at this shop)
    Dish:     Dumpling Soup
    Title:    Korean.cuisine-Manduguk-01
@@ -122,7 +153,7 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Alt (zh): 配小菜的饺子汤示例照片（并非在Gaecheon食堂拍摄）
    Used for: place "gc"
 
-8) dish-sundae-gukbap.webp
+10) dish-sundae-gukbap.webp
    Kind:     dish example (NOT taken at this shop)
    Dish:     Sundae Soup with Rice
    Title:    Korean soup-Sundae gukbap-01
@@ -137,7 +168,7 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Alt (zh): 配米饭和泡菜的砂锅米肠汤饭示例照片（并非在生日家拍摄）
    Used for: place "sj"
 
-9) dish-gukhwappang.webp
+11) dish-gukhwappang.webp
    Kind:     dish example (NOT taken at this shop)
    Dish:     Pulppang (mini red-bean cakes)
    Title:    Gukhwappang

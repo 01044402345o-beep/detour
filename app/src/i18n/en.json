@@ -310,6 +310,9 @@
     "dishExample": "Example photo of the dish · not this shop",
     "creditDish": "Example photo: {author} · {license}",
     "dishCredits": "Dish example photos (not taken at these shops): {list} · Wikimedia Commons",
-    "dishExampleOf": "Example photo of {dish} · not taken at this shop"
+    "dishExampleOf": "Example photo of {dish} · not taken at this shop",
+    "creditOwn": "Photo: Edulleo team (own photo)",
+    "ownAuthor": "Edulleo team (own photo)",
+    "ownLicense": "Own photo, used with permission (not a Creative Commons license)"
   }
 }

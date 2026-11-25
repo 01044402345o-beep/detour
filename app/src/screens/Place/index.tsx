@@ -10,7 +10,13 @@ import { bundleOfPlace, getPlace, type ContentPlace } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, coursePath } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
-import { isDishExample, photoCreditParams, photoForPlace, photoUrl } from '../../data/photos';
+import {
+  isDishExample,
+  photoCreditKey,
+  photoCreditParams,
+  photoForPlace,
+  photoUrl,
+} from '../../data/photos';
 import { Button, Icon, IconButton, cx, useToast } from '../../ui';
 import { ReportSheet } from '../../ui/ReportSheet';
 import { formatKrw } from '../Order/orderMath';
@@ -172,7 +178,7 @@ function PlaceView({ place }: { place: ContentPlace }) {
           )}
           {photo && (
             <p className="place-hero__credit" data-testid="photo-credit">
-              {t(dishPhoto ? 'photo.creditDish' : 'photo.credit', photoCreditParams(photo))}
+              {t(photoCreditKey(photo), photoCreditParams(photo))}
             </p>
           )}
         </div>

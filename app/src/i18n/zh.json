@@ -310,6 +310,9 @@
     "dishExample": "菜品示例照片 · 非本店照片",
     "creditDish": "示例照片：{author} · {license}",
     "dishCredits": "菜品示例照片（非各店拍摄）：{list} · 维基共享资源",
-    "dishExampleOf": "{dish}示例照片 · 非本店拍摄"
+    "dishExampleOf": "{dish}示例照片 · 非本店拍摄",
+    "creditOwn": "照片：Edulleo 团队自行拍摄",
+    "ownAuthor": "Edulleo 团队（自行拍摄）",
+    "ownLicense": "由团队自行拍摄，经许可使用（非知识共享许可）"
   }
 }

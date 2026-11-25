@@ -12,7 +12,7 @@
 import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { bundles, getBundle, type CourseBundle } from '../../data';
-import { isDishExample, photoForPlace, photoUrl, type Photo } from '../../data/photos';
+import { isDishExample, isOwnPhoto, photoForPlace, photoUrl, type Photo } from '../../data/photos';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, placePath } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
@@ -130,7 +130,9 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
     (p): p is Photo => !!p,
   );
   // 장소 사진과 음식 예시 사진(그 가게 사진 아님, T6.9)은 출처 줄을 나눠 표시
-  const placePhotos = usedPhotos.filter((p) => !isDishExample(p));
+  // 운영자 직접 촬영(T6.10, CC 아님)은 위키미디어 출처 줄과 따로
+  const ownPhotos = usedPhotos.filter((p) => isOwnPhoto(p));
+  const placePhotos = usedPhotos.filter((p) => !isDishExample(p) && !isOwnPhoto(p));
   const dishPhotos = usedPhotos.filter(isDishExample);
 
   const next = nextStopIndex(course.stops, events);
@@ -273,6 +275,11 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
         {placePhotos.length > 0 && (
           <p className="course-credit" data-testid="course-photo-credit">
             {t('course.photoCredits', { list: creditList(placePhotos) })}
+          </p>
+        )}
+        {ownPhotos.length > 0 && (
+          <p className="course-credit" data-testid="course-own-credit">
+            {t('photo.creditOwn')}
           </p>
         )}
         {dishPhotos.length > 0 && (

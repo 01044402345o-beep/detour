@@ -89,23 +89,38 @@ function PhotoCredits({ lang }: { lang: Lang }) {
             <dl className="set-cr__dl">
               <dt>{t('settings.photoTitle')}</dt>
               <dd lang="en">{p.title}</dd>
-              <dt>{t('photo.author')}</dt>
-              <dd lang="en">
-                {p.author}
-                {p.year !== undefined && `, ${p.year}`}
-              </dd>
-              <dt>{t('photo.license')}</dt>
-              <dd lang="en">
-                <ExtLink href={p.licenseUrl} testId="credit-license">
-                  {p.licenseId}
-                </ExtLink>
-              </dd>
-              <dt>{t('photo.original')}</dt>
-              <dd lang="en">
-                <ExtLink href={p.sourceUrl} testId="credit-source">
-                  {sourceFileName(p.sourceUrl)}
-                </ExtLink>
-              </dd>
+              {p.licenseUrl === undefined ? (
+                // 운영자 직접 촬영(T6.10): CC가 아니므로 라이선스·원본 링크 없이 화면 언어로 표시
+                <>
+                  <dt>{t('photo.author')}</dt>
+                  <dd>
+                    {t('photo.ownAuthor')}
+                    {p.year !== undefined && `, ${p.year}`}
+                  </dd>
+                  <dt>{t('photo.license')}</dt>
+                  <dd data-testid="credit-license-own">{t('photo.ownLicense')}</dd>
+                </>
+              ) : (
+                <>
+                  <dt>{t('photo.author')}</dt>
+                  <dd lang="en">
+                    {p.author}
+                    {p.year !== undefined && `, ${p.year}`}
+                  </dd>
+                  <dt>{t('photo.license')}</dt>
+                  <dd lang="en">
+                    <ExtLink href={p.licenseUrl} testId="credit-license">
+                      {p.licenseId}
+                    </ExtLink>
+                  </dd>
+                  <dt>{t('photo.original')}</dt>
+                  <dd lang="en">
+                    <ExtLink href={p.sourceUrl} testId="credit-source">
+                      {sourceFileName(p.sourceUrl)}
+                    </ExtLink>
+                  </dd>
+                </>
+              )}
               {p.notice && (
                 <>
                   <dt>{t('photo.notice')}</dt>

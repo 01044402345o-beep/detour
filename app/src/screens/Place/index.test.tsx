@@ -507,15 +507,11 @@ describe('T6.4 머리·진행 표시·닫힘·주문 바', () => {
     expect(h1).toHaveTextContent('Sungsimdang Main Store');
   });
 
-  // gwc·sy는 실제 데이터에 사진 없음(T6.9 R1 H-01로 제외), gc는 mock으로 사진을 없앤 경우
-  it.each([
-    ['gwc', false],
-    ['sy', false],
-    ['gc', true],
-  ] as const)(
-    '사진이 없는 장소(%s, mock=%s): 파란 글자 머리, 사진·출처·예시 표시 없음',
-    (id, mock) => {
-      if (mock) noPhoto.add(id);
+  // T6.10 이후 모든 정류장에 사진이 있어 mock으로 사진을 없앤 경우를 만듭니다
+  it.each(['gwc', 'sy', 'gc'])(
+    '사진이 없는 장소(%s): 파란 글자 머리, 사진·출처·예시 표시 없음',
+    (id) => {
+      noPhoto.add(id);
       renderAt(`/place/${id}`);
       const hero = screen.getByTestId('place-hero');
       expect(hero).toHaveClass('place-hero--text');
@@ -526,6 +522,36 @@ describe('T6.4 머리·진행 표시·닫힘·주문 바', () => {
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(getPlace(id)!.nameKo);
     },
   );
+
+  it.each([
+    ['gwc', 'own-gwangcheon-sikdang', /Gwangcheon Sikdang storefront/],
+    ['sy', 'own-suyeon-bunsik', /Suyeon Bunsik/],
+  ] as const)(
+    '운영자 직접 촬영 사진(%s, T6.10): 실제 가게 사진 머리, 예시 표시 없음, 직접 촬영 출처',
+    (id, photoId, alt) => {
+      renderAt(`/place/${id}`);
+      const hero = screen.getByTestId('place-hero');
+      expect(hero).toHaveClass('place-hero--photo');
+      expect(hero).toHaveAttribute('data-photo', photoId);
+      expect(hero).toHaveAttribute('data-photo-kind', 'place');
+      const img = within(hero).getByRole('img');
+      expect(img).toHaveAccessibleName(alt);
+      expect(screen.queryByTestId('dish-example-label')).toBeNull();
+      expect(screen.getByTestId('photo-credit')).toHaveTextContent(
+        'Photo: Edulleo team (own photo)',
+      );
+      expect(screen.getByTestId('photo-credit')).not.toHaveTextContent(/CC |운영자/);
+    },
+  );
+
+  it.each([
+    ['ja', '写真: Edulleo運営チーム撮影'],
+    ['zh', '照片：Edulleo 团队自行拍摄'],
+  ] as const)('직접 촬영 출처 (%s, 광천식당)', (lang, credit) => {
+    resetStore(lang);
+    renderAt('/place/gwc');
+    expect(screen.getByTestId('photo-credit')).toHaveTextContent(credit);
+  });
 
   it('음식 예시 사진(gc, T6.9): 사진 머리 + "이 가게 사진 아님" 표시 + 예시 사진 출처', () => {
     renderAt('/place/gc');

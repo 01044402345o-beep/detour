@@ -23,7 +23,12 @@ const HEADER = [
   '"Example photo of the dish - not this shop". It replaces the SNS photos the user asked for,',
   'because SNS photos cannot be republished here.',
   '',
-  'Checked against each original file page (Wikimedia Commons API: imageinfo extmetadata + page wikitext) on 2026-11-26.',
+  'Author "Edulleo 운영자 (직접 촬영)": own photos taken by the Edulleo team (the app operator),',
+  'used in the app with permission. They are NOT under a Creative Commons license and have no',
+  'external source page; do not reuse them outside this app without asking.',
+  '',
+  'Wikimedia Commons photos were checked against each original file page',
+  '(Wikimedia Commons API: imageinfo extmetadata + page wikitext) on 2026-11-26.',
 ];
 
 function usedFor(p: Photo): string {
@@ -44,8 +49,9 @@ export function creditsText(photos: readonly Photo[] = PHOTOS): string {
       `   Title:    ${p.title}`,
       `   Author:   ${p.author}`,
       ...(p.year !== undefined ? [`   Year:     ${p.year}`] : []),
-      `   Source:   ${p.sourceUrl}`,
-      `   License:  ${p.licenseId} - ${p.licenseUrl}`,
+      ...(p.sourceUrl === undefined
+        ? ['   Source:   none (own photo, no external source page)', `   License:  ${p.licenseId}`]
+        : [`   Source:   ${p.sourceUrl}`, `   License:  ${p.licenseId} - ${p.licenseUrl}`]),
       ...(p.notice ? [`   Notice:   ${p.notice}`] : []),
       `   Changes:  ${p.changes}`,
       `   Review:   ${p.review}`,

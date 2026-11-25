@@ -1,0 +1,23 @@
+{
+  "en": {
+    "photo": {
+      "creditOwn": "Photo: Edulleo team (own photo)",
+      "ownAuthor": "Edulleo team (own photo)",
+      "ownLicense": "Own photo, used with permission (not a Creative Commons license)"
+    }
+  },
+  "ja": {
+    "photo": {
+      "creditOwn": "写真: Edulleo運営チーム撮影",
+      "ownAuthor": "Edulleo運営チーム(自ら撮影)",
+      "ownLicense": "運営チームが撮影し、許可を得て使用(クリエイティブ・コモンズではありません)"
+    }
+  },
+  "zh": {
+    "photo": {
+      "creditOwn": "照片：Edulleo 团队自行拍摄",
+      "ownAuthor": "Edulleo 团队（自行拍摄）",
+      "ownLicense": "由团队自行拍摄，经许可使用（非知识共享许可）"
+    }
+  }
+}
