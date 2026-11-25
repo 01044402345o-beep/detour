@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
 import { course } from '../../data';
 import { photoForArea, photoUrl } from '../../data/photos';
 import { AppRoutes } from '../../router/AppRoutes';
@@ -37,10 +37,16 @@ vi.mock('../../router/screens', async () => {
   };
 });
 
-/** 현재 경로 (다른 화면이 가짜라 이동 확인용) */
+/** 현재 경로 + 뒤로 가기 버튼 (이동이 한 번이면 뒤로 한 번에 홈) */
 function Loc() {
   const l = useLocation();
-  return <div data-testid="loc">{l.pathname + l.search}</div>;
+  const navigate = useNavigate();
+  return (
+    <>
+      <div data-testid="loc">{l.pathname + l.search}</div>
+      <button type="button" data-testid="test-back" onClick={() => navigate(-1)} />
+    </>
+  );
 }
 
 async function renderHome(lang: Lang = 'en') {
@@ -90,7 +96,7 @@ describe('S01 홈 — 1호선 3권역 (T6.2)', () => {
 
   it('"Start the course" → 원도심 코스 지도 (한 번만 이동)', async () => {
     await renderHome();
-    fireEvent.click(screen.getByRole('button', { name: 'Start the course' }));
+    fireEvent.click(screen.getByTestId('home-start'));
     expect(await screen.findByTestId('screen-course')).toBeInTheDocument();
     expect(screen.getByTestId('loc')).toHaveTextContent(/^\/course$/);
     const views = useAppStore.getState().events.filter((e) => e.type === 'screen_view');
@@ -116,10 +122,29 @@ describe('S01 홈 — 1호선 3권역 (T6.2)', () => {
     expect(hub).toHaveTextContent('Jungang Market Food Walk');
     expect(hub).toHaveTextContent('4 stops · 0.7 km · about 2 hrs');
     expect(hub).not.toHaveTextContent('Coming');
+    expect(hub).toHaveTextContent('Starts at Daejeon Station');
     fireEvent.click(hub);
     expect(await screen.findByTestId('screen-course')).toBeInTheDocument();
     // 다른 화면은 이 파일에서 가짜이므로 이동 경로(?c=)로 확인 (실제 코스 화면은 Course.test)
     expect(screen.getByTestId('loc')).toHaveTextContent('/course?c=jungang-market');
+  });
+
+  it('대전역·소제동에도 시작 버튼 (T6.11): 두 버튼은 코스 이름으로 구분, 누르면 시장 코스로 한 번만 이동', async () => {
+    await renderHome();
+    const starts = screen.getAllByRole('button', { name: 'Start the course' });
+    expect(starts).toHaveLength(2);
+    expect(screen.getByTestId('home-start-market')).toHaveAccessibleDescription('Jungang Market Food Walk');
+    expect(screen.getByTestId('home-start')).toHaveAccessibleDescription('Old Downtown Half-day');
+    // 버튼 안 아이콘을 눌러도 카드(부모) 이동과 겹치지 않고 한 번만 이동
+    fireEvent.click(screen.getByTestId('home-start-market').querySelector('svg')!);
+    expect(await screen.findByTestId('screen-course')).toBeInTheDocument();
+    expect(screen.getByTestId('loc')).toHaveTextContent('/course?c=jungang-market');
+    const views = useAppStore.getState().events.filter((e) => e.type === 'screen_view');
+    expect(views.map((e) => e.screen)).toEqual(['home', 'course']);
+    // 같은 주소로 두 번 이동했다면 뒤로 한 번에 홈이 아니라 같은 코스에 머묾
+    fireEvent.click(screen.getByTestId('test-back'));
+    expect(await screen.findByTestId('screen-home')).toBeInTheDocument();
+    expect(screen.getByTestId('loc')).toHaveTextContent(/^\/$/);
   });
 
   it('유성 → "Coming soon" 토스트, 이동 없음', async () => {

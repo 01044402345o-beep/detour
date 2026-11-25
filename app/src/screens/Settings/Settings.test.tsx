@@ -257,7 +257,8 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     expect(within(dialog).getAllByText('撮影者')).toHaveLength(11);
     expect(within(dialog).getAllByText('元の題名')).toHaveLength(11);
     expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 4.0' })).toHaveLength(5);
-    expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 2.5' })).toHaveLength(1);
+    // T6.12: CC BY-SA 2.5(옛 충남도청 사진)는 직접 촬영 사진으로 교체
+    expect(within(dialog).queryAllByRole('link', { name: 'CC BY-SA 2.5' })).toHaveLength(0);
     expect(within(dialog).getByRole('heading', { name: '大田中央市場' })).toBeInTheDocument();
     expect(dialog).toHaveTextContent('Trainholic');
     // 음식 예시 사진(T6.9): BY와 BY-SA 링크 구분, 예시 표시 일본어
@@ -271,7 +272,7 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     );
     // 운영자 직접 촬영(T6.10): 일본어 저작자·이용 조건 문구, 링크 없음
     const own = within(dialog).getAllByTestId('credit-license-own');
-    expect(own).toHaveLength(2);
+    expect(own).toHaveLength(3);
     expect(own[0]).toHaveTextContent(
       '運営チームが撮影し、許可を得て使用(クリエイティブ・コモンズではありません)',
     );

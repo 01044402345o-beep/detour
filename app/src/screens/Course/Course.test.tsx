@@ -299,7 +299,7 @@ describe('S02 코스 지도', () => {
     renderCourse();
     expect(screen.getByTestId('course-photo-credit')).toHaveTextContent(
       t('en', 'course.photoCredits', {
-        list: 'Minseong Kim, Trainholic (CC BY-SA 4.0), Yoo Chung (CC BY-SA 2.5)',
+        list: 'Minseong Kim, Trainholic (CC BY-SA 4.0)',
       }),
     );
     expect(screen.getByTestId('course-photo-credit')).not.toHaveTextContent(/Edulleo|운영자/);
@@ -319,6 +319,7 @@ describe('S02 코스 지도', () => {
 
   it('사진이 모두 위키미디어 사진이면 직접 촬영 줄 없음', () => {
     noPhoto.add('gwc');
+    noPhoto.add('mus'); // T6.12: 근현대사전시관도 직접 촬영
     renderCourse();
     expect(screen.queryByTestId('course-own-credit')).toBeNull();
   });

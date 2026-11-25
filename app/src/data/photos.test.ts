@@ -76,9 +76,10 @@ describe('photos.ts', () => {
     expect(lic['dish-gukhwappang']).toBe('https://creativecommons.org/licenses/by-sa/2.0/kr/');
   });
 
-  it('운영자 직접 촬영 2장(T6.10): 광천식당·수연분식 실제 가게 사진, CC 아님, 개인 이름 없음', () => {
+  it('운영자 직접 촬영 3장(T6.10·T6.12): 대전근현대사전시관·광천식당·수연분식, CC 아님, 개인 이름 없음', () => {
     const own = PHOTOS.filter((p) => isOwnPhoto(p));
     expect(own.map((p) => [p.id, p.placeId, p.file, p.kind])).toEqual([
+      ['own-daejeon-modern-history-hall', 'mus', 'photos/daejeon-modern-history-hall.webp', 'place'],
       ['own-gwangcheon-sikdang', 'gwc', 'photos/gwangcheon-sikdang.webp', 'place'],
       ['own-suyeon-bunsik', 'sy', 'photos/suyeon-bunsik.webp', 'place'],
     ]);
@@ -91,15 +92,20 @@ describe('photos.ts', () => {
       expect(p.year).toBeUndefined(); // 근거 없는 연도는 적지 않음 (T6.10 R1 L-01)
       expect(p.notice).toBeUndefined();
       expect(p.review).toMatch(/user confirmed on 2026-11-26 that they took this photo themselves/);
-      expect(p.review).toMatch(/non-affiliation notice/);
       expect(p.changes).toMatch(/converted to WebP/);
       expect(photoCreditKey(p)).toBe('photo.creditOwn');
     }
-    const gwc = own[0];
+    const [mus, gwc, sy] = own;
+    // T6.12: 방문객 얼굴은 촬영자가 이미 흐림 처리, 기존 위키미디어 사진은 목록에서 빠짐
+    expect(mus.changes).toMatch(/faces were already blurred by the owner/);
+    expect(mus.review).toMatch(/all faces are blurred/);
+    expect(PHOTOS.some((p) => p.id === 'chungnam-office')).toBe(false);
     expect(gwc.review).toMatch(/own photo that they posted on the blog they run/);
     expect(gwc.review).toMatch(/One passer-by \(far right edge\) blurred/);
     expect(gwc.changes).toMatch(/passer-by .* blurred/);
-    expect(own[1].changes).toMatch(/No blur/);
+    expect(sy.changes).toMatch(/No blur/);
+    // 가게 사진(간판이 주제)에만 비제휴 안내 기록, 전시관은 가게가 아님
+    for (const p of [gwc, sy]) expect(p.review).toMatch(/non-affiliation notice/);
     // 다른 사진은 CC
     for (const p of PHOTOS.filter((x) => !isOwnPhoto(x))) expect(p.licenseId).toMatch(/^CC /);
   });
@@ -110,12 +116,12 @@ describe('photos.ts', () => {
     expect(photoCreditKey(photoForPlace('ssd')!)).toBe('photo.credit');
   });
 
-  it('kind: 장소 사진 8장(CC 6 + 직접 촬영 2)은 place, 음식 예시 3장은 dish-example(음식 이름 3개 언어·가게 사진 아님 기록)', () => {
+  it('kind: 장소 사진 8장(CC 5 + 직접 촬영 3)은 place, 음식 예시 3장은 dish-example(음식 이름 3개 언어·가게 사진 아님 기록)', () => {
     const places = PHOTOS.filter((p) => p.kind === 'place').map((p) => p.id);
     expect(places).toEqual([
       'sungsimdang',
       'euneungjeongi',
-      'chungnam-office',
+      'own-daejeon-modern-history-hall',
       'daejeon-station',
       'jungang-market',
       'yuseong-footbath',
@@ -195,7 +201,7 @@ describe('photos.ts', () => {
       expect(p.changes).toMatch(/signage unchanged/);
       expect(p.review).toMatch(/User decision 2026-11-26/);
     }
-    for (const id of ['chungnam-office', 'daejeon-station', 'jungang-market']) {
+    for (const id of ['daejeon-station', 'jungang-market']) {
       expect(PHOTOS.find((x) => x.id === id)!.changes).not.toMatch(/blur/);
     }
   });
@@ -237,14 +243,14 @@ describe('photos.ts', () => {
       txt.match(
         /License: {2}Owner photo — used with permission \(not a Creative Commons license\)$/gm,
       ),
-    ).toHaveLength(2);
-    expect(txt.match(/Source: {3}none \(own photo, no external source page\)$/gm)).toHaveLength(2);
+    ).toHaveLength(3);
+    expect(txt.match(/Source: {3}none \(own photo, no external source page\)$/gm)).toHaveLength(3);
     expect(txt).toMatch(/CC BY \(Attribution\) and CC BY-SA \(Attribution-ShareAlike\)/);
     expect(txt).toMatch(/NOT taken at that shop/);
   });
 
   it('장소·권역 조회, 장소 id는 실제 데이터에 있음', () => {
-    expect(photoForPlace('mus')?.id).toBe('chungnam-office');
+    expect(photoForPlace('mus')?.id).toBe('own-daejeon-modern-history-hall');
     expect(photoForPlace('djs')?.id).toBe('daejeon-station');
     expect(photoForArea('station')?.id).toBe('jungang-market');
     expect(photoForPlace('ssd')?.id).toBe('sungsimdang');

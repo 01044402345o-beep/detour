@@ -1,7 +1,8 @@
 /* S01 홈 (T6.2). DESIGN.md 7장 '홈', 시안 mockup/redesign/c2-home.png(.html 수치).
    - 1호선 세로 노선: 파란 선 6px, 역 = 빈 동그라미(흰 속 + 파란 테두리), 대표 역(원도심) = 더 굵은 테두리 + 앰버 점.
      앰버(--signal)는 장식이고 의미는 큰 카드·제목(h2)이 전달합니다(DESIGN.md 2장).
-   - 사진 위 글자: 글자 영역 전체에 막 rgba(scrim, .88) (DESIGN.md 5장 ≥ .85). 위쪽 부드러운 막은 장식.
+   - 사진 위 글자 (T6.11): 글자 줄 영역은 막 .62~.80 그라데이션 + 그림자, 그 위 56px은 투명으로 흐려짐.
+     흰 사진 위 최악 합성 대비 .62 → 5.1:1 (DESIGN.md 5장). 사진이 잘 보이도록 카드 높이를 키움.
    - 탭바는 앱 틀의 형제 요소라 내용을 가리지 않음. 좁은 폭은 세로 스크롤, 가로 넘침 없음. */
 .home {
   padding: env(safe-area-inset-top, 0px) 0 28px;
@@ -173,12 +174,16 @@
 }
 
 .home-ph--sm {
-  min-height: 116px;
+  min-height: 156px;
   border-radius: var(--r-md);
 }
 
+.home-ph--md {
+  min-height: 196px;
+}
+
 .home-ph--lg {
-  min-height: 176px;
+  min-height: 232px;
 }
 
 .home-ph__img {
@@ -195,7 +200,8 @@
   flex-direction: column;
   gap: 1px;
   padding: 10px 14px 12px;
-  background: rgba(var(--scrim-rgb), 0.88);
+  background: linear-gradient(0deg, rgba(var(--scrim-rgb), 0.8), rgba(var(--scrim-rgb), 0.62));
+  text-shadow: 0 1px 3px rgba(var(--scrim-rgb), 0.6);
 }
 
 /* 막 위쪽 가장자리를 부드럽게 (장식, 글자 없음) */
@@ -205,8 +211,8 @@
   bottom: 100%;
   left: 0;
   right: 0;
-  height: 28px;
-  background: linear-gradient(0deg, rgba(var(--scrim-rgb), 0.88), rgba(var(--scrim-rgb), 0));
+  height: 56px;
+  background: linear-gradient(0deg, rgba(var(--scrim-rgb), 0.62), rgba(var(--scrim-rgb), 0));
   pointer-events: none;
 }
 

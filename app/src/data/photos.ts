@@ -170,24 +170,24 @@ export const PHOTOS: readonly Photo[] = [
       zh: '傍晚的银杏亭文化街，人们在空中走廊顶棚下行走',
     },
   },
+  // T6.12 (사용자 요청 2026-11-26): 위키미디어 'South_Chungcheong_Provincial_Office.jpg'(Yoo Chung, CC BY-SA 2.5)를
+  // 운영자 직접 촬영 사진으로 교체. 중간에 받은 '대전광역시 중구' 로고 사진은 공공누리 근거를 확인하지 못해 쓰지 않음.
   {
-    id: 'chungnam-office',
+    id: 'own-daejeon-modern-history-hall',
     kind: 'place',
-    file: 'photos/chungnam-office.webp',
+    file: 'photos/daejeon-modern-history-hall.webp',
     placeId: 'mus',
-    title: 'South Chungcheong Provincial Office',
-    author: 'Yoo Chung',
-    year: 2007,
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:South_Chungcheong_Provincial_Office.jpg',
-    licenseId: 'CC BY-SA 2.5',
-    licenseUrl: LICENSE_URLS['CC BY-SA 2.5'],
-    notice: 'Copyright 2007 by Yoo Chul Chung. Licensed under CC-BY-SA-2.5',
-    changes: RESIZED,
-    review: `${SOURCE_OK} No people. Building front with small banners only; no logo as subject.`,
+    title: 'Daejeon Modern History Exhibition Hall front (own photo)',
+    author: OWN_AUTHOR,
+    // 촬영 연도: 근거 기록이 없어 적지 않음 (확실한 값만, T6.10 R1 L-01)
+    licenseId: OWN_PHOTO_LICENSE,
+    changes:
+      'Own photo: visitors’ faces were already blurred by the owner before submission (no further blurring needed); converted to WebP at the original 800×600. No crop, no color correction; signage unchanged.',
+    review: `${OWN_CONFIRMED} Front of the former South Chungcheong Provincial Office building with the hall’s own name sign. About six visitors are small in the frame and all faces are blurred. The museum’s own name signs are incidental.`,
     alt: {
-      en: 'Former South Chungcheong Provincial Office, now the Daejeon Modern History Exhibition Hall, seen across the road',
-      ja: '旧忠清南道庁(現・大田近現代史展示館)の建物を道路の向こうから見た様子',
-      zh: '从马路对面看到的旧忠清南道厅（现大田近现代史展览馆）建筑',
+      en: 'Front of the Daejeon Modern History Exhibition Hall, a 1930s brick building with an entrance porch and its name sign',
+      ja: '大田近現代史展示館の正面。玄関ポーチのある1930年代のれんが造りの建物と館名の看板',
+      zh: '大田近现代史展览馆正面，带门廊的1930年代砖砌建筑和馆名标牌',
     },
   },
   {

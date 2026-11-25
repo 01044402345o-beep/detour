@@ -12,7 +12,7 @@
   flex: none;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 290px;
+  min-height: 340px;
   color: #fff;
   background: var(--blue);
 }
@@ -70,7 +70,8 @@
   fill: currentColor;
 }
 
-/* 글자가 놓이는 영역 전체에 막 ≥ 0.86 (DESIGN.md 5장). 위 28px만 자연스럽게 흐려짐 */
+/* 글자 영역 막 .62~.82 + 그림자 (T6.11, 흰 사진 위 최악 합성 대비 .62 → 5.1:1, DESIGN.md 5장).
+   위 72px은 투명으로 흐려져 사진이 잘 보이게 */
 .place-hero__tx {
   position: relative;
   z-index: 1;
@@ -78,13 +79,14 @@
 }
 
 .place-hero--photo .place-hero__tx {
-  padding-top: 40px;
+  padding-top: 72px;
   background: linear-gradient(
     0deg,
-    rgba(var(--scrim-rgb), 0.92) 0%,
-    rgba(var(--scrim-rgb), 0.86) calc(100% - 28px),
+    rgba(var(--scrim-rgb), 0.82) 0%,
+    rgba(var(--scrim-rgb), 0.62) calc(100% - 72px),
     rgba(var(--scrim-rgb), 0) 100%
   );
+  text-shadow: 0 1px 3px rgba(var(--scrim-rgb), 0.6);
 }
 
 .place-hero__h {
@@ -679,4 +681,9 @@
   .prow__main {
     transition: none;
   }
+}
+
+/* 흰 바탕 알약은 글자 그림자 없이 (T6.11) */
+.place-hero__tx .place-status {
+  text-shadow: none;
 }

@@ -1,7 +1,7 @@
 /**
  * S01 홈 (T2.1 → T6.2, PRD F-02 v0.11, DESIGN.md 7장 '홈').
  * 대전 도시철도 1호선 세로 노선 위 3권역 사진 카드 (실제 노선 순서: 대전역 → 중앙로 → 유성온천).
- * - 대전역·소제동: 전통시장 코스 줄(→ 시장 코스, T5.1). 야시장 한 줄은 행사 기간 안일 때만(season.ts 판단 재사용).
+ * - 대전역·소제동: 원도심과 같은 카드 + "Start the course"(→ 시장 코스, T5.1·T6.11). 야시장 한 줄은 행사 기간 안일 때만(season.ts 판단 재사용).
  * - 원도심(대표): 코스 요약·출발 안내 + "Start the course"(→ 원도심 코스). 기존 '오늘의 코스'를 대신합니다.
  * - 유성온천: Coming later, 누르면 "준비 중" 알림.
  * 오늘의 문장·1박 배너·인사말·가로 캐러셀은 v0.11에서 뺐습니다(문장 듣기는 장소·문장 모음 화면에 그대로).
@@ -132,6 +132,11 @@ export default function HomeScreen() {
     if ((e.target as Element).closest('button')) return;
     toCourse();
   };
+  const toMarket = () => MARKET && navigate(coursePath(MARKET.course.id));
+  const onMarketClick = (e: MouseEvent<HTMLElement>) => {
+    if ((e.target as Element).closest('button')) return;
+    toMarket();
+  };
 
   const photos: Record<AreaId, Photo | undefined> = {
     station: photoForArea('station'),
@@ -182,29 +187,47 @@ export default function HomeScreen() {
           <li className="home-stn">
             <span className="home-dot" aria-hidden="true" />
             <div className="home-stn__body">
-              <button
-                type="button"
-                className="home-area"
-                onClick={() => navigate(coursePath(MARKET.course.id))}
+              {/* T6.11: 원도심 카드와 같은 틀 — 사진 + 코스 요약 + 시작 버튼 (사용자 요청 '스타트 버튼') */}
+              <article
+                className="home-panel"
+                aria-labelledby="home-station-title"
+                onClick={onMarketClick}
                 data-testid="hub-station"
               >
-                <span className="home-ph home-ph--sm">
+                <div className="home-ph home-ph--md">
                   <AreaPhoto photo={photos.station} eager />
                   <Status />
-                  <span className="home-ph__tx">
+                  <div className="home-ph__tx">
                     <span className="home-ph__stn">{t('home.stnStation')}</span>
-                    <span className="home-ph__area">{t('home.hubStation')}</span>
+                    <h2 className="home-ph__area" id="home-station-title">
+                      {t('home.hubStation')}
+                    </h2>
                     <span className="home-ph__desc">{t('home.hubStationSub')}</span>
-                  </span>
-                </span>
-                <span className="home-row">
-                  <span className="home-row__tx">
-                    <span className="home-row__t">{pickL10n(lang, MARKET.course.title)}</span>
-                    <span className="home-row__m">{withNums(courseMeta(MARKET))}</span>
-                  </span>
-                  <Icon name="forward" size={20} />
-                </span>
-              </button>
+                  </div>
+                </div>
+                <div className="home-course">
+                  <p className="home-course__t" id="home-market-course">
+                    {pickL10n(lang, MARKET.course.title)}
+                  </p>
+                  <p className="home-course__m">{withNums(courseMeta(MARKET))}</p>
+                  <p className="home-course__from">
+                    <Icon name="pin" size={16} />
+                    <span>
+                      {t('home.startsAt', { place: pickL10n(lang, MARKET.course.start.name) })}
+                    </span>
+                  </p>
+                  <Button
+                    variant="ink"
+                    className="home-cta"
+                    onClick={toMarket}
+                    aria-describedby="home-market-course"
+                    data-testid="home-start-market"
+                  >
+                    {t('home.startCourse')}
+                    <Icon name="forward" size={20} />
+                  </Button>
+                </div>
+              </article>
               {(MARKET.course.events ?? []).map((ev) => (
                 <NightMarketLine key={ev.id} event={ev} now={now} />
               ))}
@@ -232,7 +255,9 @@ export default function HomeScreen() {
               </div>
             </div>
             <div className="home-course">
-              <p className="home-course__t">{pickL10n(lang, DOWNTOWN.course.title)}</p>
+              <p className="home-course__t" id="home-downtown-course">
+                {pickL10n(lang, DOWNTOWN.course.title)}
+              </p>
               <p className="home-course__m">{withNums(courseMeta(DOWNTOWN))}</p>
               <p className="home-course__from">
                 <Icon name="pin" size={16} />
@@ -242,6 +267,7 @@ export default function HomeScreen() {
                 variant="ink"
                 className="home-cta"
                 onClick={toCourse}
+                aria-describedby="home-downtown-course"
                 data-testid="home-start"
               >
                 {t('home.startCourse')}
