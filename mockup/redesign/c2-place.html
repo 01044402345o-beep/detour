@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Edulleo — Place (C2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#F4F7FB; --surface:#FFFFFF; --line:#DCE3EE; --ink:#0F1B33; --mute:#55627A;
+  --blue:#1D5BD6; --blue-deep:#0E3A8F; --tint:#E6EEFB; --on-blue:#FFFFFF;
+  --signal:#FFB21A; --ok:#17703D; --scrim:8,20,46;
+  --sans:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  --r:14px; --gut:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:390px;height:844px;overflow:hidden;background:var(--ground);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+/* photo hero: name sits on the shop front */
+.hero{position:relative;height:292px;color:#fff;background:#24324F}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:42% 35%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(var(--scrim),.92) 0%,rgba(var(--scrim),.6) 42%,rgba(var(--scrim),0) 70%,rgba(var(--scrim),.35) 100%)}
+.bar{position:absolute;z-index:2;top:10px;left:10px;right:10px;display:flex;justify-content:space-between}
+.ib{width:44px;height:44px;display:grid;place-items:center;border-radius:22px;background:rgba(255,255,255,.94);color:var(--ink);box-shadow:0 1px 4px rgba(15,27,51,.25)}
+.hero .tx{position:absolute;z-index:1;left:var(--gut);right:var(--gut);bottom:16px}
+.hero h1{font-size:46px;line-height:1.05;font-weight:700;letter-spacing:-.03em}
+.hero .en{margin-top:6px;font-size:17px;font-weight:500}
+.hero .st{margin-top:8px;font-size:14px;display:flex;gap:10px;align-items:center}
+.open{display:flex;align-items:center;gap:6px;background:#fff;color:var(--ok);font-weight:600;border-radius:11px;padding:0 8px;line-height:22px;font-size:13px}
+.open::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.credit{position:absolute;z-index:1;right:10px;bottom:6px;font-size:11px;color:#fff;opacity:.95}
+.prog{display:flex;align-items:center;gap:12px;height:46px;padding:0 var(--gut);background:var(--surface);border-bottom:1px solid var(--line)}
+.prog p{font-size:13px;color:var(--mute);white-space:nowrap}
+.prog p b{color:var(--ink);font-weight:600}
+.prog svg{flex:1}
+.tabs{padding:0 var(--gut);display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.tab{height:46px;font-size:16px;font-weight:500;color:var(--mute);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--blue);font-weight:700;border-color:var(--blue)}
+.note{margin:8px var(--gut) 0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mute)}
+ul{list-style:none;margin:0 var(--gut)}
+li{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;min-height:72px;border-bottom:1px solid var(--line)}
+li .ko{font-size:18px;font-weight:700;letter-spacing:-.01em}
+li .en{font-size:14px;color:var(--mute)}
+li .pr{margin-top:1px;font-size:14px;font-weight:600}
+li .pr small{font-family:var(--sans);font-size:12px;font-weight:400;color:var(--mute)}
+li .ask{font-family:var(--sans);font-weight:400;color:var(--mute)}
+.step{display:flex;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:24px;height:46px}
+.step button{width:44px;height:44px;display:grid;place-items:center;border-radius:22px;color:var(--blue)}
+.step button[disabled]{color:#9AA5B8}
+.step .q{width:26px;text-align:center;font-family:var(--num);font-size:17px;font-weight:600}
+li.sel{background:var(--tint);margin:0 calc(-1*var(--gut));padding:0 var(--gut)}
+li.sel .step{border-color:var(--blue)}
+li.sel .step .plus{background:var(--blue);color:var(--on-blue)}
+.dock{position:absolute;left:0;right:0;bottom:0;padding:10px var(--gut) 24px;background:var(--surface);border-top:1px solid var(--line)}
+.cta{width:100%;height:54px;border-radius:12px;background:var(--blue);color:var(--on-blue);font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.cta .l{display:flex;gap:10px;align-items:baseline}
+</style></head>
+<body>
+<section class="hero">
+  <img src="../../photos/raw/ssd1.jpg" alt="Sungsimdang main store front at night">
+  <div class="bar">
+    <button class="ib" aria-label="Back to course"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="ib" aria-label="Save place"><svg class="i" viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg></button>
+  </div>
+  <div class="tx">
+    <h1 lang="ko">성심당 본점</h1>
+    <p class="en">Sungsimdang Main Store · Bakery</p>
+    <p class="st"><span class="open">Open now</span><span class="n">08:00–22:00</span></p>
+  </div>
+  <p class="credit">Photo: Trainholic · CC BY-SA 4.0</p>
+</section>
+
+<div class="prog">
+  <p><b>Stop 1 of 4</b> · Next <span class="n">2</span> min, <span lang="ko">으능정이</span></p>
+  <svg height="14" viewBox="0 0 120 14" preserveAspectRatio="none" role="img" aria-label="Stop 1 of 4 on the course line">
+    <line x1="6" y1="7" x2="114" y2="7" stroke="#DCE3EE" stroke-width="4" stroke-linecap="round"/>
+    <line x1="6" y1="7" x2="33" y2="7" stroke="#1D5BD6" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="33" cy="7" r="5.5" fill="#FFB21A" stroke="#1D5BD6" stroke-width="2"/>
+    <g fill="#fff" stroke="#1D5BD6" stroke-width="2"><circle cx="60" cy="7" r="4.5"/><circle cx="87" cy="7" r="4.5"/><circle cx="113" cy="7" r="4.5"/></g>
+  </svg>
+</div>
+
+<nav class="tabs" role="tablist">
+  <button class="tab on" role="tab" aria-selected="true">Menu</button>
+  <button class="tab" role="tab">How to order</button>
+  <button class="tab" role="tab">Phrases</button>
+</nav>
+<p class="note"><svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Sample info — not yet checked on site</p>
+
+<ul>
+  <li class="sel"><div><p class="ko" lang="ko">튀김소보로</p><p class="en">Fried Soboro</p><p class="pr n">₩1,700 <small>sample</small></p></div>
+    <div class="step"><button aria-label="Remove one"><svg class="i" viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button><span class="q">1</span><button class="plus" aria-label="Add one"><svg class="i" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></button></div></li>
+  <li><div><p class="ko" lang="ko">판타롱부추빵</p><p class="en">Pantarong Chive Bread</p><p class="pr n">₩2,000</p></div>
+    <div class="step"><button disabled aria-label="Remove one"><svg class="i" viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button><span class="q">0</span><button aria-label="Add one"><svg class="i" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></button></div></li>
+  <li><div><p class="ko" lang="ko">명란바게트</p><p class="en">Pollock Roe Baguette</p><p class="pr n">₩3,500</p></div>
+    <div class="step"><button disabled aria-label="Remove one"><svg class="i" viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button><span class="q">0</span><button aria-label="Add one"><svg class="i" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></button></div></li>
+  <li><div><p class="ko" lang="ko">보문산메아리</p><p class="en">Bomunsan Meari (layered bread)</p><p class="pr ask">Price: ask staff</p></div>
+    <div class="step"><button disabled aria-label="Remove one"><svg class="i" viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button><span class="q">0</span><button aria-label="Add one"><svg class="i" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></button></div></li>
+</ul>
+
+<div class="dock">
+  <button class="cta"><span class="l"><span><span class="n">1</span> item</span><span class="n">₩1,700</span></span><span style="display:flex;align-items:center;gap:8px">View my order<svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></button>
+</div>
+</body></html>

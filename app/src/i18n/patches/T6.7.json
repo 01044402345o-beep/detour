@@ -1,0 +1,56 @@
+{
+  "$override": [
+    "audio.listenSlow",
+    "reply.yesTitle",
+    "reply.yesNext",
+    "reply.soldNext",
+    "reply.waitNext",
+    "reply.payNext",
+    "result.great"
+  ],
+  "en": {
+    "audio": {
+      "listenSlow": "Listen slowly"
+    },
+    "reply": {
+      "yesTitle": "Yes!",
+      "yesNext": "Wait for your order, then head to the next stop.",
+      "soldNext": "Pick something else, then show the staff again.",
+      "waitNext": "When the staff is ready, show your order again.",
+      "payNext": "Pay at the counter, then tap Done."
+    },
+    "result": {
+      "great": "Great job!"
+    }
+  },
+  "ja": {
+    "audio": {
+      "listenSlow": "ゆっくり聞く"
+    },
+    "reply": {
+      "yesTitle": "はい!",
+      "yesNext": "商品を受け取ったら、次の立ち寄り先へ。",
+      "soldNext": "別のメニューを選んで、もう一度スタッフに見せましょう。",
+      "waitNext": "スタッフの準備ができたら、もう一度注文を見せましょう。",
+      "payNext": "レジで支払ったら「完了」を押してください。"
+    },
+    "result": {
+      "great": "よくできました!"
+    }
+  },
+  "zh": {
+    "audio": {
+      "listenSlow": "慢速听"
+    },
+    "reply": {
+      "yesTitle": "好的！",
+      "yesNext": "拿到餐点后，前往下一站。",
+      "soldNext": "换一样，再给店员看一次。",
+      "waitNext": "店员准备好后，再出示一次点单。",
+      "payNext": "在柜台付款后，点“完成”。"
+    },
+    "result": {
+      "great": "太棒了！"
+    }
+  }
+}

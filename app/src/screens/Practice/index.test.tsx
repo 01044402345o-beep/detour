@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { getPlace } from '../../data';
@@ -66,7 +68,7 @@ describe('S06 입력 상태·문장 표시', () => {
     setup({ state: phraseInput('order') });
     expect(screen.getByTestId('screen-practice')).toBeInTheDocument();
     expect(screen.getByText(orderKo)).toBeInTheDocument();
-    expect(screen.getByText(/MY ORDER/)).toHaveTextContent('Sungsimdang');
+    expect(screen.getByText(/My order ·/)).toHaveTextContent('Sungsimdang');
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '1');
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuemax', '5');
     expect(screen.getByText('1/5')).toBeInTheDocument();
@@ -120,7 +122,7 @@ describe('S06 듣기·단어 칩 (F-07)', () => {
     const { tts } = setup({ state: phraseInput('phrase', 'gwc-2') });
     fireEvent.click(screen.getByRole('button', { name: 'Listen' }));
     expect(tts.speak).toHaveBeenLastCalledWith('덜 맵게 해 주세요', 1, expect.any(Function));
-    fireEvent.click(screen.getByRole('button', { name: 'Listen slowly (0.75×)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Listen slowly' }));
     expect(tts.speak).toHaveBeenLastCalledWith('덜 맵게 해 주세요', 0.75, expect.any(Function));
     const plays = events().filter((e) => e.type === 'phrase_play');
     expect(plays).toHaveLength(2);
@@ -197,7 +199,7 @@ describe('S06 듣기·인식 상호 배제 (R1 M-01)', () => {
       expect(status()).toHaveAttribute('data-stt', st);
       const buttons = [
         screen.getByRole('button', { name: 'Listen' }),
-        screen.getByRole('button', { name: 'Listen slowly (0.75×)' }),
+        screen.getByRole('button', { name: 'Listen slowly' }),
         screen.getByRole('button', { name: '맵게 spicy' }),
       ];
       for (const b of buttons) {
@@ -273,6 +275,48 @@ describe('S06 STT 상태 머신 연결 (F-08)', () => {
     expect(status()).toHaveAttribute('data-stt', 'processing');
     act(() => vi.advanceTimersByTime(1));
     expect(status()).toHaveAttribute('data-stt', 'timeout');
+  });
+
+  it('반복 파형·고리는 listening에서만, requesting·processing은 정적 표시 + 상태 문구 (T6.6 R2 L-01)', () => {
+    const { rec } = setup({ state: phraseInput('order') });
+    const wave = () => document.querySelector('.pr-wave')!;
+    const looping = () => mic().classList.contains('on') || wave().classList.contains('on');
+    expect(status()).toHaveAttribute('data-stt', 'idle');
+    expect(looping()).toBe(false);
+    expect(mic()).not.toHaveClass('is-active');
+
+    fireEvent.click(mic());
+    expect(status()).toHaveAttribute('data-stt', 'requesting');
+    expect(looping()).toBe(false);
+    expect(mic()).toHaveClass('is-active');
+    expect(status()).toHaveTextContent('Allow microphone access to start');
+
+    act(() => rec.last().emitStart());
+    expect(status()).toHaveAttribute('data-stt', 'listening');
+    expect(mic()).toHaveClass('on');
+    expect(wave()).toHaveClass('on');
+    expect(mic()).toHaveAccessibleName('Stop recording');
+
+    act(() => rec.last().emitSpeechEnd());
+    expect(status()).toHaveAttribute('data-stt', 'processing');
+    expect(looping()).toBe(false);
+    expect(mic()).toHaveClass('is-active');
+    expect(status()).toHaveTextContent('Checking what we heard');
+  });
+
+  it('반복 애니메이션 규칙은 .on 선택자에만 있고, 움직임 줄이기에서 끔 (T6.6 R2 L-01)', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/screens/Practice/practice.css'),
+      'utf8',
+    ).replace(/\/\*[\s\S]*?\*\//g, '');
+    const rules = [...css.matchAll(/([^{}]+)\{([^{}]*animation:[^{}]*)\}/g)].map((m) => ({
+      sel: m[1].trim(),
+      body: m[2],
+    }));
+    const loops = rules.filter((r) => /infinite/.test(r.body));
+    expect(loops.map((r) => r.sel)).toEqual(['.pr-wave.on > i', '.pr-micb.on']);
+    const reduce = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+    expect(reduce).toMatch(/\.pr-wave\.on > i,\s*\.pr-micb\.on\s*\{\s*animation: none;/);
   });
 
   it('듣는 중 마이크 다시 누르면 취소(aborted)', () => {

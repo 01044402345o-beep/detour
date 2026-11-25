@@ -7,7 +7,7 @@ for (const lang of LANGS) {
     await page.getByTestId('hub-downtown').click();
     await openPlace(page, lang, 'gwc');
 
-    await expect(page.getByTestId('menu-od')).toContainText(tr(lang, 'menu.priceTbd'));
+    await expect(page.getByTestId('menu-od')).toContainText(tr(lang, 'menu.priceAsk'));
     await addMenu(page, lang, 'od');
     await expect(page.getByTestId('orderbar')).toContainText(tr(lang, 'menu.totalTbd'));
 

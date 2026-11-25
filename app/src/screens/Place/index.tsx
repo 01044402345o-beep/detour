@@ -4,23 +4,23 @@
  * - 같은 라우트에서 :id만 바뀌면 콘텐츠 루트에 key={id}를 줘 듣기 버튼 등을 다시 마운트합니다.
  * - screen_view는 라우터가 기록하고, 이 화면은 place_view·phrase_play만 기록합니다.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { bundleOfPlace, getPlace, type ContentPlace } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, coursePath } from '../../router/routes';
-import { phraseInput } from '../../router/navState';
 import { useAppStore } from '../../store/useAppStore';
-import { Button, IconButton, Pill, cx, useToast } from '../../ui';
+import { photoCreditParams, photoForPlace, photoUrl } from '../../data/photos';
+import { Button, Icon, IconButton, cx, useToast } from '../../ui';
 import { ReportSheet } from '../../ui/ReportSheet';
 import { formatKrw } from '../Order/orderMath';
 import { useOrderView } from '../Order/useOrder';
-import { openStatus } from './hours';
+import { dayLabel, nextOpening, openStatus } from './hours';
 import { HowTab, PhrasesTab } from './InfoTabs';
 import { MenuTab } from './MenuTab';
-import { PlaceArt } from './PlaceArt';
 import { SwitchPlaceSheet } from './SwitchPlaceSheet';
 import { warnIfDropped } from './log';
+import { NumIn } from './numText';
 import './place.css';
 
 export type PlaceTab = 'menu' | 'how' | 'phrases';
@@ -84,16 +84,41 @@ function PlaceView({ place }: { place: ContentPlace }) {
   }, [location.key, logEvent, place.id]);
 
   const status = openStatus(place);
+  const opening = status === 'closed' ? nextOpening(place) : null;
   const here = order.place?.id === place.id ? order : null;
+  const photo = photoForPlace(place.id);
+  const bundle = bundleOfPlace(place.id);
+  const total = bundle?.places.length ?? place.order;
+  const next = bundle?.places.find((p) => p.order === place.order + 1);
   const onToggleSave = () => {
     const on = toggleSavedPlace(place.id);
     toast(t(on ? 'saved.savedToast' : 'saved.removedToast'));
   };
+  const openingText =
+    opening &&
+    (opening.inDays === 0
+      ? t('place.opensAt', { time: opening.time })
+      : opening.inDays === 1
+        ? t('place.opensTomorrow', { time: opening.time })
+        : t('place.opensOn', { day: dayLabel(opening.day, lang), time: opening.time }));
+  const progress = { '--p': total > 1 ? (place.order - 1) / (total - 1) : 0 } as CSSProperties;
 
   return (
     <section className="screen place" data-testid="screen-place">
-      <div className="place-hero">
-        <PlaceArt placeId={place.id} category={place.category} />
+      <header
+        className={cx('place-hero', photo ? 'place-hero--photo' : 'place-hero--text')}
+        data-testid="place-hero"
+        data-photo={photo ? photo.id : 'none'}
+      >
+        {photo && (
+          <img
+            className="place-hero__img"
+            src={photoUrl(photo)}
+            alt={pickL10n(lang, photo.alt)}
+            loading="eager"
+            decoding="async"
+          />
+        )}
         <div className="place-hero__bar">
           <IconButton icon="back" label={t('common.back')} onClick={back} />
           <span className="place-hero__right">
@@ -107,73 +132,111 @@ function PlaceView({ place }: { place: ContentPlace }) {
             />
           </span>
         </div>
-      </div>
-
-      <div className="place-sheet">
-        <div className="place-badges">
-          <Pill tone="acc">
-            {t('course.stopOf', {
-              n: place.order,
-              total: bundleOfPlace(place.id)?.places.length ?? place.order,
-            })}
-          </Pill>
-          {place.verified ? (
-            <Pill tone="sea" icon="check" data-testid="verified-badge">
-              {t('course.checked', { date: place.checkedAt })}
-            </Pill>
-          ) : (
-            <Pill tone="line" icon="info" data-testid="verified-badge">
-              {t('place.unverified')}
-            </Pill>
-          )}
-        </div>
-        <h1 className="place-name">{pickL10n(lang, place.name)}</h1>
-        <p className="place-sub">
-          <span lang="ko">{place.nameKo}</span> · {pickL10n(lang, place.areaLocal)}
+        <div className="place-hero__tx">
+          <h1 className="place-hero__h">
+            <span className="place-hero__ko" lang="ko">
+              {place.nameKo}
+            </span>
+            <span className="place-hero__name">{pickL10n(lang, place.name)}</span>
+          </h1>
+          <p className="place-hero__meta">
+            {t(place.category === 'food' ? 'place.kindFood' : 'place.kindSight')}
+            {' · '}
+            {pickL10n(lang, place.areaLocal)}
+          </p>
           {status && (
-            <>
-              {' · '}
-              <b
-                className={status === 'open' ? 'is-open' : 'is-closed'}
+            <p className="place-hero__st">
+              <span
+                className={cx('place-status', status === 'open' ? 'is-open' : 'is-closed')}
                 data-testid="open-status"
                 aria-describedby="place-status-note"
               >
                 {t(status === 'open' ? 'place.openNow' : 'place.closedNow')}
-              </b>
-            </>
+              </span>
+              {opening && openingText ? (
+                <span className="place-hero__next" data-testid="next-open">
+                  <NumIn text={openingText} value={opening.time} />
+                </span>
+              ) : (
+                <span className="place-hero__hours num">{place.hours}</span>
+              )}
+            </p>
           )}
+          {photo && (
+            <p className="place-hero__credit" data-testid="photo-credit">
+              {t('photo.credit', photoCreditParams(photo))}
+            </p>
+          )}
+        </div>
+      </header>
+
+      <div className="place-prog" data-testid="place-progress">
+        <p className="place-prog__t">
+          <b>{t('place.stopOf', { n: place.order, total })}</b>
+          {' · '}
+          {next
+            ? t('place.nextStop', { name: pickL10n(lang, next.name), min: next.walkMinFromPrev })
+            : t('place.lastStop')}
+        </p>
+        <span className="place-prog__line" aria-hidden="true" style={progress}>
+          {Array.from({ length: total }, (_, i) => (
+            <span
+              key={i}
+              className={cx(
+                'place-prog__dot',
+                i + 1 < place.order && 'is-past',
+                i + 1 === place.order && 'is-cur',
+              )}
+            />
+          ))}
+        </span>
+      </div>
+
+      <div className="place-tabs" role="tablist">
+        {tabs.map((k) => (
+          <button
+            key={k}
+            type="button"
+            role="tab"
+            id={`place-tab-${k}`}
+            aria-controls="place-panel"
+            aria-selected={tab === k}
+            className={cx('place-tab', tab === k && 'is-on')}
+            onClick={() => setTab(k)}
+          >
+            {t(
+              k === 'menu'
+                ? 'place.tabMenu'
+                : k === 'phrases'
+                  ? 'place.tabPhrases'
+                  : place.category === 'food'
+                    ? 'place.tabHow'
+                    : 'place.tabVisit',
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="place-body">
+        {/* 확인 전 안내는 장소당 한 줄 (DESIGN.md 6장) */}
+        <p className="place-note" data-testid="verified-badge">
+          <Icon name={place.verified ? 'check' : 'info'} size={14} />
+          <span>
+            {place.verified
+              ? t('course.checked', { date: place.checkedAt })
+              : t('place.unverified')}
+          </span>
         </p>
         {status && (
           // 영업 상태는 등록된 시간표(Asia/Seoul) 기준 참고값 — 모든 탭에서 상태 옆에 안내 (PRD F-04, R1 M-02)
-          <p id="place-status-note" className="place-status-note" data-testid="status-note">
+          <p
+            id="place-status-note"
+            className="place-note place-note--sub"
+            data-testid="status-note"
+          >
             {t('place.statusNote')}
           </p>
         )}
-
-        <div className="place-tabs" role="tablist">
-          {tabs.map((k) => (
-            <button
-              key={k}
-              type="button"
-              role="tab"
-              id={`place-tab-${k}`}
-              aria-controls="place-panel"
-              aria-selected={tab === k}
-              className={cx('place-tab', tab === k && 'is-on')}
-              onClick={() => setTab(k)}
-            >
-              {t(
-                k === 'menu'
-                  ? 'place.tabMenu'
-                  : k === 'phrases'
-                    ? 'place.tabPhrases'
-                    : place.category === 'food'
-                      ? 'place.tabHow'
-                      : 'place.tabVisit',
-              )}
-            </button>
-          ))}
-        </div>
 
         <div id="place-panel" role="tabpanel" aria-labelledby={`place-tab-${tab}`}>
           {tab === 'menu' && (
@@ -194,8 +257,9 @@ function PlaceView({ place }: { place: ContentPlace }) {
         </p>
       </div>
 
-      <div className="orderbar">
-        {here && here.count > 0 ? (
+      {here && here.count > 0 && (
+        // 담은 메뉴가 있을 때만 아래 파란 주문 바 (DESIGN.md 7장 '장소'). 연습은 Phrases 탭 안에서
+        <div className="orderbar">
           <Button
             variant="ink"
             className="orderbar__btn"
@@ -203,29 +267,30 @@ function PlaceView({ place }: { place: ContentPlace }) {
             data-testid="orderbar"
           >
             <span className="orderbar__left">
-              <span className="orderbar__cnt" aria-label={t('menu.items', { count: here.count })}>
+              <span
+                className="orderbar__cnt num"
+                aria-label={t('menu.items', { count: here.count })}
+              >
                 {here.count}
               </span>
+              <span className={cx('orderbar__sum', here.total !== null && 'is-price')}>
+                {here.total === null ? (
+                  t('menu.totalTbd')
+                ) : (
+                  <NumIn
+                    text={t('menu.est', { price: formatKrw(here.total) })}
+                    value={formatKrw(here.total)}
+                  />
+                )}
+              </span>
+            </span>
+            <span className="orderbar__go">
               {t('menu.viewOrder')}
-            </span>
-            <span className="orderbar__sum">
-              {here.total === null
-                ? t('menu.totalTbd')
-                : t('menu.est', { price: formatKrw(here.total) })}
+              <Icon name="forward" size={20} />
             </span>
           </Button>
-        ) : (
-          <Button
-            variant="acc"
-            icon="mic"
-            onClick={() =>
-              navigate(PATHS.practice, { state: phraseInput('phrase', place.phrases[0].id) })
-            }
-          >
-            {t('phrases.practice')} · {place.phrases.length}
-          </Button>
-        )}
-      </div>
+        </div>
+      )}
 
       <ReportSheet open={sheet === 'report'} onClose={() => setSheet(null)} placeId={place.id} />
       <SwitchPlaceSheet

@@ -1,55 +1,100 @@
-/* S11 저장 · 제보 (목업 R.saved) */
+/* S11 저장 · 제보 (T6.6 DESIGN.md 2·3·6장): 밝은 바탕 + 흰 목록(선 구분), 파란 저장 표시 */
 .sav-head {
-  padding: 6px 22px 0;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 0;
 }
 .sav-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 .sav-body {
-  padding: 6px 18px 20px;
+  padding: 8px 16px 28px;
 }
+
+/* 빈 화면: 저장 방법 안내 */
 .sav-empty {
-  padding: 40px 0;
-  text-align: center;
-  font-size: 13px;
-  color: var(--soft);
-}
-.sav-sec {
   margin-top: 14px;
+  padding: 28px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  text-align: center;
+}
+.sav-empty__title {
+  font-size: 17px;
+  font-weight: 700;
+}
+.sav-empty__how {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 6px 14px 6px 6px;
+  border-radius: var(--r-pill);
+  background: var(--tint);
+}
+.sav-empty__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--blue);
+}
+.sav-empty__cap {
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 600;
+}
+.sav-empty__hint {
+  max-width: 320px;
+  margin: 14px auto 0;
+  color: var(--mute);
+  font-size: 15px;
+  line-height: 1.5;
+  text-wrap: balance;
+  line-break: strict;
+}
+
+.sav-sec {
+  margin: 20px 4px 8px;
+  color: var(--mute);
   font-size: 13px;
-  font-weight: 800;
-  color: var(--ink2);
+  font-weight: 600;
 }
 .sav-list {
+  overflow: hidden;
   list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
 }
 .sav-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
-  padding: 10px;
+  min-height: 64px;
+  padding: 8px 8px 8px 14px;
 }
+.sav-row + .sav-row {
+  border-top: 1px solid var(--line);
+}
+/* 정류장 번호: 파랑 동그라미 + 흰 숫자 (5.97:1) */
 .sav-no {
   display: grid;
   place-items: center;
   flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  color: #fff;
-  font-weight: 800;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--on-blue);
   font-size: 15px;
-}
-/* 흰 글자 대비 4.5:1: 목업 --acc 대신 --acc-d */
-.sav-no--food {
-  background: var(--acc-d);
-}
-.sav-no--sight {
-  background: var(--plum);
+  font-weight: 600;
 }
 .sav-row__main {
   flex: 1;
@@ -63,41 +108,75 @@
   border-radius: var(--r-md);
 }
 .sav-row__main:focus-visible {
-  outline: 3px solid var(--sea);
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
 }
 .sav-name {
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 .sav-ko {
-  letter-spacing: -0.3px;
+  word-break: keep-all;
 }
 .sav-meta {
   margin-top: 2px;
-  font-size: 11.5px;
-  color: var(--soft);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--mute);
 }
 .sav-bm {
-  color: var(--acc-d);
+  color: var(--blue);
   background: transparent;
   border-color: transparent;
 }
 .sav-bm svg {
   fill: currentColor;
 }
+.sav-row .ui-listen--round {
+  width: 44px;
+  height: 44px;
+}
+/* 듣기: 문장 모음과 같게 테두리 + 파란 아이콘 (재생 중에는 ui.css의 파랑 채움) */
+.sav-row .ui-listen--round:not([aria-pressed='true']) {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.sav-row .ui-listen-notice {
+  flex-basis: 100%;
+}
+
 .sav-report {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
+  min-height: 56px;
   margin-top: 24px;
-  padding: 15px 16px;
-  font-weight: 700;
-  font-size: 14.5px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.sav-report:active {
+  background: var(--tint);
+}
+.sav-report:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+.sav-report__icon {
+  color: var(--blue);
 }
 .sav-report__label {
   flex: 1;
 }
 .sav-chev {
-  color: var(--soft);
+  color: var(--mute);
 }

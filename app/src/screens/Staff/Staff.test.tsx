@@ -8,7 +8,17 @@ import { PATHS } from '../../router/routes';
 import { useAppStore, type Cart } from '../../store/useAppStore';
 import type { Lang } from '../../types';
 import StaffScreen from '.';
-import { findPhrase, resolveStaffContent, staffFontSize } from './staffContent';
+import {
+  STAFF_SIZE_LEVELS,
+  STAFF_SIZES,
+  findPhrase,
+  resolveStaffContent,
+  STAFF_WIDE_EM,
+  staffDisplaySize,
+  staffFontSize,
+  staffLongestWordEm,
+  staffSizeControls,
+} from './staffContent';
 
 const tts = vi.hoisted(() => ({
   init: vi.fn(() => Promise.resolve('ready' as const)),
@@ -188,25 +198,158 @@ describe('S08 입력 상태 검증', () => {
   });
 });
 
-describe('S08 큰 글씨 토글', () => {
-  it('누르면 aria-pressed와 글자 크기가 바뀜 (목업: 긴 문장 27→34px)', () => {
-    renderStaff();
-    const toggle = screen.getByRole('button', { name: 'Bigger' });
+describe('S08 글자 크기 A−/A+ (T6.5)', () => {
+  it('A+ 는 한 단계씩 키우고 끝 단계에서 비활성, A− 는 반대 (짧은 문장: 64 → 72 → 56)', () => {
+    renderStaff({ cart: { ssd: { tw: 1 } } });
+    const up = screen.getByRole('button', { name: 'Bigger' });
+    const down = screen.getByRole('button', { name: 'Smaller' });
     const ko = sentenceEl().textContent!;
-    expect(toggle).toHaveAttribute('aria-pressed', 'false');
-    expect(sentenceEl().style.fontSize).toBe(`${staffFontSize(ko, false)}px`);
-    fireEvent.click(toggle);
-    expect(toggle).toHaveAttribute('aria-pressed', 'true');
-    expect(sentenceEl().style.fontSize).toBe(`${staffFontSize(ko, true)}px`);
-    fireEvent.click(toggle);
-    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    const size = () => sentenceEl().style.fontSize;
+    expect(size()).toBe(`${staffFontSize(ko)}px`);
+    fireEvent.click(up);
+    expect(size()).toBe(`${staffFontSize(ko, 2)}px`);
+    expect(up).toBeDisabled();
+    fireEvent.click(down);
+    fireEvent.click(down);
+    expect(size()).toBe(`${staffFontSize(ko, 0)}px`);
+    expect(down).toBeDisabled();
+    expect(up).toBeEnabled();
   });
 
-  it('staffFontSize: 22자 이하 34/44, 초과 27/34', () => {
-    expect(staffFontSize('카드 돼요?', false)).toBe(34);
-    expect(staffFontSize('카드 돼요?', true)).toBe(44);
-    expect(staffFontSize('가'.repeat(23), false)).toBe(27);
-    expect(staffFontSize('가'.repeat(23), true)).toBe(34);
+  it('글자 크기 묶음은 이름 있는 group', () => {
+    renderStaff();
+    const group = screen.getByRole('group', { name: 'Text size' });
+    expect(within(group).getAllByRole('button')).toHaveLength(2);
+  });
+
+  it('staffFontSize: 모든 단계 56~72px, 짧은 문장 기본 64, 긴 문장 기본 56 (R1 M-01)', () => {
+    expect(STAFF_SIZES).toEqual([56, 64, 72]);
+    expect(STAFF_SIZE_LEVELS).toBe(3);
+    expect(staffFontSize('카드 돼요?')).toBe(64);
+    expect(staffFontSize('가'.repeat(20))).toBe(56);
+    expect(staffFontSize('가'.repeat(60))).toBe(56);
+    for (const ko of ['카드 돼요?', '가'.repeat(20), '가'.repeat(60)]) {
+      expect([0, 1, 2].map((l) => staffFontSize(ko, l))).toEqual([56, 64, 72]);
+    }
+    expect(staffFontSize('가', 9)).toBe(72); // 범위 밖은 끝 단계로
+    expect(staffFontSize('가', -3)).toBe(56);
+  });
+
+  it('여러 메뉴의 긴 문장: 처음 56px, A−는 비활성, A+로 72px까지', () => {
+    renderStaff({ cart: { ssd: { tw: 2, bu: 1, mr: 3, bm: 1 } }, takeout: true });
+    const size = () => parseInt(sentenceEl().style.fontSize, 10);
+    expect(size()).toBe(56);
+    expect(screen.getByRole('button', { name: 'Smaller' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Bigger' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Bigger' }));
+    expect(size()).toBe(72);
+  });
+});
+
+describe('S08 큰 문장: 낱말 중간 끊김 방지 (T6.7 M-04)', () => {
+  it('staffLongestWordEm: 일반 공백으로만 나눈 가장 긴 낱말 폭(em), 줄바꿈 없는 공백으로 붙인 수량은 한 덩어리', () => {
+    expect(staffLongestWordEm('판타롱부추빵 한\u00a0개 주세요.')).toBeCloseTo(6 * STAFF_WIDE_EM);
+    expect(staffLongestWordEm('보문산메아리 두\u00a0개, 판타롱부추빵 한\u00a0개')).toBeCloseTo(6 * STAFF_WIDE_EM);
+    expect(staffLongestWordEm('가 나')).toBeCloseTo(STAFF_WIDE_EM);
+    expect(staffLongestWordEm('')).toBe(0);
+  });
+
+  it('staffDisplaySize: 단계 크기를 낱말이 들어가는 크기로 제한, 56px 하한 우선 (R1 M-01)', () => {
+    const long = '가'.repeat(20); // 기본 단계 0
+    // 360px 폰 줄 폭 328px, 6글자 낱말(5.4em) → 60.7px까지
+    expect([0, 1, 2].map((l) => staffDisplaySize(long, l, 5.4, 328))).toEqual([56, 60.7, 60.7]);
+    // 7글자 낱말(6.3em, 오징어두루치기) → 52px지만 56px 아래로는 내리지 않음
+    expect([0, 1, 2].map((l) => staffDisplaySize(long, l, 6.3, 328))).toEqual([56, 56, 56]);
+    // 430px 폰(398px)은 단계 그대로
+    expect([0, 1, 2].map((l) => staffDisplaySize(long, l, 5.4, 398))).toEqual([56, 64, 72]);
+    // 폭을 모르면 단계 그대로
+    expect(staffDisplaySize(long, 2, 6.3, null)).toBe(72);
+  });
+
+  it('staffSizeControls: 실제 크기가 바뀌는 단계만 A+/A−로 갈 수 있고, 없으면 null(버튼 비활성)', () => {
+    const long = '가'.repeat(20);
+    expect(staffSizeControls(long, 0, 6.3, 328)).toEqual({ px: 56, bigger: null, smaller: null });
+    expect(staffSizeControls(long, 0, 5.4, 328)).toEqual({ px: 56, bigger: 1, smaller: null });
+    expect(staffSizeControls(long, 1, 5.4, 328)).toEqual({ px: 60.7, bigger: null, smaller: 0 });
+    // 폭이 줄어 2단계가 1단계와 같아진 경우: A−는 실제로 작아지는 0단계로
+    expect(staffSizeControls(long, 2, 5.4, 328)).toEqual({ px: 60.7, bigger: null, smaller: 0 });
+    expect(staffSizeControls(long, 1, 5.4, 398)).toEqual({ px: 64, bigger: 2, smaller: 0 });
+  });
+
+  describe('줄 폭을 아는 화면 (clientWidth 328px = 360px 폰)', () => {
+    let spy: { mockRestore: () => void };
+    beforeEach(() => {
+      spy = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(328);
+    });
+    afterEach(() => spy.mockRestore());
+
+    it('오징어두루치기(7글자 낱말): 56px 유지, 크기를 바꿀 단계가 없어 A+/A− 모두 비활성', () => {
+      renderStaff({ cart: { gwc: { od: 1 } }, currentPlaceId: 'gwc' });
+      expect(sentenceEl().textContent).toContain('오징어두루치기');
+      expect(sentenceEl().style.fontSize).toBe('56px');
+      expect(screen.getByRole('button', { name: 'Bigger' })).toBeDisabled();
+      expect(screen.getByRole('button', { name: 'Smaller' })).toBeDisabled();
+    });
+
+    it('성심당 여러 메뉴(6글자 낱말): 56 → A+ 60.7px, 그 위 단계는 같은 크기라 A+ 비활성, A−로 56', () => {
+      renderStaff({ cart: { ssd: { tw: 2, bu: 1, mr: 3, bm: 1 } }, takeout: true });
+      const up = screen.getByRole('button', { name: 'Bigger' });
+      const down = screen.getByRole('button', { name: 'Smaller' });
+      expect(sentenceEl().style.fontSize).toBe('56px');
+      fireEvent.click(up);
+      expect(sentenceEl().style.fontSize).toBe('60.7px');
+      expect(up).toBeDisabled();
+      expect(down).toBeEnabled();
+      fireEvent.click(down);
+      expect(sentenceEl().style.fontSize).toBe('56px');
+      expect(down).toBeDisabled();
+    });
+  });
+});
+
+describe('S08 T6.5 구성', () => {
+  it('한국어 안내에 이모지 없음, 주문이면 예시 합계 표시', () => {
+    renderStaff();
+    expect(screen.getByTestId('staff-note').textContent).toBe(STAFF_KO.noteOrder);
+    // R1 M-03: 직원이 읽는 합계에도 예시 가격 안내(한국어 고정), 숫자만 고정폭
+    const total = screen.getByTestId('staff-total');
+    expect(total).toHaveTextContent(`${STAFF_KO.sampleTotal} ₩5,400`);
+    expect(total).toHaveAttribute('lang', 'ko');
+    expect(total.querySelector('.num')).toHaveTextContent(/^₩5,400$/);
+  });
+
+  it('가격 미정 메뉴가 섞이면 합계(예시 금액) 줄을 보이지 않음', () => {
+    renderStaff({ cart: { gwc: { dt: 1, od: 1 } }, currentPlaceId: 'gwc' });
+    expect(screen.queryByTestId('staff-total')).toBeNull();
+    expect(screen.queryByText(STAFF_KO.sampleTotal, { exact: false })).toBeNull();
+  });
+
+  it('응답 버튼: 네만 파랑 채움, 순서 네·품절·잠시만·계산대', () => {
+    renderStaff();
+    const replies = screen
+      .getAllByRole('button')
+      .filter((b) => b.hasAttribute('data-reply'))
+      .map((b) => b.getAttribute('data-reply'));
+    expect(replies).toEqual(['yes', 'sold', 'wait', 'pay']);
+    const yes = screen.getByText(STAFF_KO.replies.yes).closest('button')!;
+    expect(yes).toHaveClass('staff__reply--yes');
+    expect(screen.getByText(STAFF_KO.replies.sold).closest('button')).not.toHaveClass(
+      'staff__reply--yes',
+    );
+  });
+
+  it('keep-all은 한국어 span에만: 응답 버튼의 번역(small)은 별도 요소 (R1 M-02)', () => {
+    renderStaff({ lang: 'ja' });
+    for (const k of Object.values(STAFF_KO.replies)) {
+      const ko = screen.getByText(k);
+      expect(ko).toHaveClass('staff__reply-ko');
+      expect(ko.closest('button')!.querySelector('small')).not.toHaveClass('staff__reply-ko');
+    }
+  });
+
+  it('제목(h1)은 화면 낭독기용으로 남김', () => {
+    renderStaff();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Show to staff');
   });
 });
 
@@ -223,7 +366,9 @@ describe('S08 읽어주기', () => {
   it('주문 문장 읽기 → phrase_play(src order, 장소 ID)', () => {
     renderStaff();
     fireEvent.click(screen.getByRole('button', { name: 'Play aloud' }));
-    expect(tts.speak.mock.calls[0][0]).toBe(sentenceEl().textContent);
+    // 화면은 수·단위 사이를 줄바꿈 없는 공백으로 표시, 읽기는 원문
+    expect(tts.speak.mock.calls[0][0]).toBe(sentenceEl().textContent!.replace(/\u00a0/g, ' '));
+    expect(sentenceEl().textContent).toContain('\u00a0');
     expect(ofType('phrase_play')).toEqual([
       expect.objectContaining({ src: 'order', placeId: 'ssd' }),
     ]);

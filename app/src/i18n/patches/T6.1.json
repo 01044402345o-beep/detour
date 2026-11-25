@@ -1,0 +1,84 @@
+{
+  "$override": [
+    "lang.welcomeTitle",
+    "lang.pronRoman"
+  ],
+  "en": {
+    "lang": {
+      "lede": "Hangul menus and Korean at the counter. Edulleo takes care of the route, the order and the reply.",
+      "foot": "No app install · works offline",
+      "boardLabel": "What Edulleo does",
+      "play": "Play scenes",
+      "pause": "Pause scenes",
+      "turnScreen": "Turn the screen to the staff",
+      "scenes": {
+        "course": {
+          "tab": "Course",
+          "cap": "A *ready-made walking course* from Daejeon Station: map, walking time and opening hours for every stop."
+        },
+        "order": {
+          "tab": "Order",
+          "cap": "Just *tap what you want* on the real menu. The Korean order is written for you, with pronunciation and audio."
+        },
+        "staff": {
+          "tab": "Staff",
+          "cap": "*Show your screen* to the staff. They answer with one tap, and you read the reply in your language."
+        }
+      },
+      "welcomeTitle": "Daejeon, one detour at a time.",
+      "pronRoman": "Pronunciation is shown in romanized Korean (Revised Romanization). It is a reading guide, not pinyin."
+    }
+  },
+  "ja": {
+    "lang": {
+      "lede": "ハングルのメニュー、韓国語のレジ。ルートも注文も返事も、Edulleoにおまかせ。",
+      "foot": "インストール不要 · オフラインでも使えます",
+      "boardLabel": "Edulleoでできること",
+      "play": "場面を自動で再生",
+      "pause": "場面の再生を一時停止",
+      "turnScreen": "画面を店員さんに向ける",
+      "scenes": {
+        "course": {
+          "tab": "コース",
+          "cap": "大田駅から歩ける*おすすめコース*。地図・徒歩時間・各スポットの営業時間がひと目でわかります。"
+        },
+        "order": {
+          "tab": "注文",
+          "cap": "実際のメニューで*欲しいものをタップするだけ*。韓国語の注文文が、発音と音声つきでできあがります。"
+        },
+        "staff": {
+          "tab": "店員",
+          "cap": "*画面を店員さんに見せる*だけ。店員さんはワンタップで返事し、あなたの言語で表示されます。"
+        }
+      },
+      "welcomeTitle": "大田を、もう一歩先へ。",
+      "pronRoman": "発音は韓国語のローマ字表記(国語のローマ字表記法)で示します。読み方の目安で、ピンインではありません。"
+    }
+  },
+  "zh": {
+    "lang": {
+      "lede": "韩文菜单、韩语柜台。路线、点餐和回复，都交给 Edulleo。",
+      "foot": "无需安装 · 离线也能用",
+      "boardLabel": "Edulleo 能做什么",
+      "play": "播放场景",
+      "pause": "暂停场景",
+      "turnScreen": "把屏幕转向店员",
+      "scenes": {
+        "course": {
+          "tab": "路线",
+          "cap": "从大田站出发的*现成步行路线*：地图、步行时间和每一站的营业时间一目了然。"
+        },
+        "order": {
+          "tab": "点餐",
+          "cap": "在真实菜单上*点一下想要的*，韩语点餐句子自动生成，附发音和语音。"
+        },
+        "staff": {
+          "tab": "店员",
+          "cap": "*把屏幕给店员看*，店员一键回复，回复会用你的语言显示。"
+        }
+      },
+      "welcomeTitle": "多走一步，遇见大田。",
+      "pronRoman": "发音以韩语罗马字（国语罗马字标记法）标注，仅作读音参考，并非汉语拼音。"
+    }
+  }
+}

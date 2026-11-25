@@ -65,6 +65,8 @@ for (const from of LANGS) {
 
     // 운영자 리포트: 언어와 무관하게 한국어
     await page.goto('./#/settings');
+    // Phase 6: 운영자 리포트는 설정의 '시연 도구' 묶음(기본 접힘) 안에 있음
+    await page.getByTestId('demo-tools').click();
     await page.getByTestId('open-report').click();
     const rep = page.getByTestId('screen-report');
     await expect(rep).toBeVisible();

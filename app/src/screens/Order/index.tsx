@@ -2,6 +2,8 @@
  * S05 내 주문 · 주문 카드 (T2.3, PRD F-05·F-06).
  * 문장은 domain/orderSentence(buildOrderSentence·toOrderLines), 포장 여부는 store effectiveTakeout.
  * `takeout:false` 장소는 포장/매장 전환을 숨기고 매장으로 고정합니다. 빈 주문이면 연습·직원 버튼 비활성.
+ * T6.5(DESIGN.md 7장 '주문'): 흰 문장 카드(문장 → 발음 → 뜻, 연파랑 듣기), 세그먼트, 항목·수량,
+ * 예상 합계(고정폭) → 아래 고정 주 버튼 "Show to staff"(파랑) + 보조 "Practice saying it".
  */
 import { useNavigate } from 'react-router-dom';
 import { pickL10n, useLang, useT } from '../../i18n';
@@ -19,12 +21,15 @@ import {
   cx,
   useToast,
 } from '../../ui';
-import { MenuArt } from '../Place/PlaceArt';
 import { warnIfDropped } from '../Place/log';
 import { formatKrw, lineTotal } from './orderMath';
+import { keepCountersTogether } from '../Staff/staffContent';
 import { QtyStepper } from './QtyStepper';
 import { isAtMax, useOrderView } from './useOrder';
 import './order.css';
+
+/** 이 글자 수를 넘는 문장은 카드 글자를 34 → 28px로 (DESIGN.md 3장 예외 28~34) */
+const LONG_SENTENCE = 16;
 
 export default function OrderScreen() {
   const t = useT();
@@ -58,10 +63,13 @@ export default function OrderScreen() {
       )}
 
       {sentence ? (
-        <div className="okcard" data-testid="order-card">
-          <div className="okcard__k">{t('order.sayThis')}</div>
-          <p className="okcard__ko" lang="ko" data-testid="order-ko">
-            {sentence.ko}
+        <section className="okcard" aria-label={t('order.sayThis')} data-testid="order-card">
+          <p
+            className={cx('okcard__ko', sentence.ko.length > LONG_SENTENCE && 'okcard__ko--long')}
+            lang="ko"
+            data-testid="order-ko"
+          >
+            {keepCountersTogether(sentence.ko, lines)}
           </p>
           <Pronunciation roman={sentence.roman} kana={sentence.kana} className="okcard__pr" />
           <p className="okcard__mn">{pickL10n(lang, sentence.meaning)}</p>
@@ -81,7 +89,7 @@ export default function OrderScreen() {
               onPlay={onPlay}
             />
           </div>
-        </div>
+        </section>
       ) : (
         <Card className="order-empty" data-testid="order-empty">
           <b>{t('order.empty')}</b>
@@ -100,7 +108,7 @@ export default function OrderScreen() {
                 className={cx(takeout && 'is-on')}
                 onClick={() => setTakeout(place, true)}
               >
-                <Icon name="bag" size={16} />
+                <Icon name="bag" size={18} />
                 {t('order.togo')}
               </button>
               <button
@@ -127,7 +135,6 @@ export default function OrderScreen() {
               const sum = lineTotal(line);
               return (
                 <li key={item.id} className="oi" data-testid={`line-${item.id}`}>
-                  <MenuArt menuId={item.id} size={46} />
                   <div className="oi__body">
                     <div className="oi__nm">{name}</div>
                     <div className="oi__sub">
@@ -135,7 +142,7 @@ export default function OrderScreen() {
                       {sum === null ? (
                         <b className="price-tbd">{t('menu.priceTbd')}</b>
                       ) : (
-                        formatKrw(sum)
+                        <span className="num">{formatKrw(sum)}</span>
                       )}
                     </div>
                   </div>
@@ -156,30 +163,33 @@ export default function OrderScreen() {
 
         {lines.length > 0 && (
           <div className="order-total">
-            <span>{t('menu.samplePrices')}</span>
-            <b className={cx(total === null && 'is-tbd')} data-testid="order-total">
-              {total === null ? t('menu.totalTbd') : t('menu.est', { price: formatKrw(total) })}
+            <span>{t('order.totalLabel')}</span>
+            <b className={cx(total === null ? 'is-tbd' : 'num')} data-testid="order-total">
+              {total === null ? t('menu.totalTbd') : formatKrw(total)}
             </b>
           </div>
         )}
       </div>
 
-      <div className="order-actions">
+      {/* 주 동작은 아래 엄지 영역: 직원에게 보여주기(파랑) → 연습(보조) */}
+      <div className="order-actions" data-testid="order-actions">
         <Button
-          variant="acc"
-          icon="mic"
-          disabled={!sentence}
-          onClick={() => navigate(PATHS.practice, { state: phraseInput('order') })}
-        >
-          {t('order.practice')}
-        </Button>
-        <Button
-          variant="ghost"
+          variant="ink"
           icon="text"
+          className="order-actions__primary"
           disabled={!sentence}
           onClick={() => navigate(PATHS.staff, { state: phraseInput('order') })}
         >
           {t('order.showStaff')}
+        </Button>
+        <Button
+          variant="ghost"
+          icon="mic"
+          className="order-actions__secondary"
+          disabled={!sentence}
+          onClick={() => navigate(PATHS.practice, { state: phraseInput('order') })}
+        >
+          {t('order.practice')}
         </Button>
       </div>
     </section>

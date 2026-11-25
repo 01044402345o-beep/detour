@@ -112,6 +112,41 @@ describe('S09 이동', () => {
   });
 });
 
+describe('S09 T6.5 다음 행동·주 버튼', () => {
+  const actionButtons = () => [...screen.getByTestId('reply-actions').querySelectorAll('button')];
+
+  it.each([
+    ['yes', 'Done', 'Wait for your order, then head to the next stop.'],
+    ['sold', 'Change my order', 'Pick something else, then show the staff again.'],
+    ['wait', 'Show to staff again', 'When the staff is ready, show your order again.'],
+    ['pay', 'Done', 'Pay at the counter, then tap Done.'],
+  ] as const)('%s → 주 버튼 "%s"(파랑) + 다음 행동 한 줄', (reply, primary, next) => {
+    renderReply(replyInput(reply, { src: 'order' }));
+    const [first, ...rest] = actionButtons();
+    expect(first).toHaveTextContent(primary);
+    expect(first).toHaveClass('ui-btn--ink');
+    expect(screen.getByTestId('reply-next')).toHaveTextContent(next);
+    // 나머지 버튼은 보조(흰 바탕 + 테두리)
+    expect(rest.length).toBeGreaterThan(0);
+    for (const b of rest) expect(b).toHaveClass('ui-btn--ghost');
+  });
+
+  it('품절인데 주문 수정 대상이 없으면 "다시 보여주기"가 주 버튼', () => {
+    renderReply(replyInput('sold', { src: 'order' }), 'en', null);
+    expect(actionButtons()[0]).toHaveTextContent('Show to staff again');
+  });
+
+  it.each(['en', 'ja', 'zh'] as const)('%s: 응답 화면 어디에도 이모지 없음', (lang) => {
+    for (const reply of REPLY_ORDER) {
+      const { unmount } = renderReply(replyInput(reply, { src: 'order' }), lang);
+      expect(screen.getByTestId('screen-reply').textContent).not.toMatch(
+        /\p{Extended_Pictographic}/u,
+      );
+      unmount();
+    }
+  });
+});
+
 describe('parseReplyInput', () => {
   it('정상 값', () => {
     expect(parseReplyInput({ reply: 'sold', input: { src: 'phrase', phraseId: 'ssd-1' } })).toEqual(

@@ -8,6 +8,7 @@ import { cx } from '../ui/cx';
 import { OVERLAY_ID } from '../ui/overlay';
 import { TabBar } from '../ui/TabBar';
 import { ToastProvider } from '../ui/Toast';
+import { useDismissToast } from '../ui/toastContext';
 import { PATHS, ROUTES, routeForPath, screenKeyForPath } from './routes';
 import { SCREENS } from './screens';
 
@@ -29,6 +30,24 @@ function ScreenViewLogger() {
   return null;
 }
 
+/**
+ * 경로가 바뀌면 지난 화면의 일반 토스트를 닫음 (DESIGN.md 6장, T6.0).
+ * SW 업데이트 안내(sw/UpdateToast)는 닫지 않음. 이동을 일으킨 동작이 방금 띄운 토스트는 남김(TOAST_ROUTE_GRACE_MS).
+ */
+function ToastRouteReset() {
+  const { key } = useLocation();
+  const dismiss = useDismissToast();
+  const lastKey = useRef(key);
+
+  useEffect(() => {
+    if (lastKey.current === key) return;
+    lastKey.current = key;
+    dismiss();
+  }, [key, dismiss]);
+
+  return null;
+}
+
 /** 앱 틀: 데스크톱에서 폰 폭(430px) 가운데 정렬, /report만 넓게. 탭바·시트·토스트 자리 포함 */
 function AppLayout() {
   const { pathname } = useLocation();
@@ -41,6 +60,7 @@ function AppLayout() {
         data-wide={route?.wide ? 'true' : 'false'}
       >
         <ToastProvider>
+          <ToastRouteReset />
           <main className="app-view" data-testid="app-root">
             <Suspense fallback={null}>
               <Outlet />

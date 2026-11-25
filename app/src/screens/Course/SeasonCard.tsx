@@ -1,5 +1,6 @@
 /**
  * 시즌 행사 카드 (T5.1, 야시장·축제 일정 안내). 코스 화면 지도 아래에 둡니다.
+ * T6.3: 새 색 체계, 작은 대문자 머리말(season.kicker)은 쓰지 않음(키는 남겨 둠).
  * 일정은 행사 공지 기준 참고값이라, 지금 상태(열림·오늘·다음 개장일·시즌 종료)와 함께
  * "방문 전 확인" 안내를 항상 붙입니다.
  * 화면을 열어 둔 채 개장·마감·날짜가 바뀌어도 맞도록 1분마다, 그리고 화면으로 돌아올 때 다시 계산합니다(R1 M-2).
@@ -70,13 +71,12 @@ export function SeasonCard({ event, now }: { event: SeasonEvent; now?: Date }) {
   return (
     <Card className="season" data-testid={`season-${event.id}`} data-status={status.kind}>
       <div className="season__head">
-        <span className="season__k">
-          <Icon name="clock" size={14} />
-          {t('season.kicker')}
-        </span>
+        <h3 className="season__title">
+          <Icon name="clock" size={18} />
+          {pickL10n(lang, event.name)}
+        </h3>
         {status.kind === 'open' && <Pill tone="acc">{t('season.openPill')}</Pill>}
       </div>
-      <h3 className="season__title">{pickL10n(lang, event.name)}</h3>
       <p className="season__desc">{pickL10n(lang, event.description)}</p>
       <dl className="season__rows">
         <div>

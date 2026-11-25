@@ -1,49 +1,89 @@
-/* 디자인 토큰 — mockup/index.html :root 값을 옮김.
-   단 PRD 7장 대비 4.5:1을 위해 --soft·--acc-d는 조금 어둡게 조정(T2.0, ui/a11y.ts 검사).
-   PRD가 목업보다 우선합니다(task.md 0절). */
+/* 디자인 토큰 — DESIGN.md v1.1 2장(색)·3장(글자) (T6.0).
+   글자/배경 대비 4.5:1은 ui/a11y.ts 표로 검사합니다(PRD 7장). 다크 모드 없음(color-scheme: light). */
 :root {
-  /* 글자·배경 */
-  --ink: #151a26;
-  --ink2: #2b3346;
-  --soft: #656c81; /* 목업 #6b7287: --paper 위 4.48:1 */
-  --mute: #9aa0b0;
-  --paper: #fbf7ef;
-  --card: #ffffff;
-  --line: #ece4d6;
-  --line2: #e2d8c6;
+  color-scheme: light;
 
-  /* 강조색 */
-  --acc: #ee6a3c;
-  --acc-d: #b3461c; /* 목업 #c24e22: --acc-s 위 3.98:1. 흰 글자 채움 버튼·강조 글자에 사용 */
-  --acc-s: #fde6dc;
-  --sea: #13807e;
-  --sea-d: #0c5654;
-  --sea-s: #d8efed;
-  --sun: #f2b33d;
-  --sun-s: #fdf1d6;
-  --plum: #6b4fc6;
-  --plum-s: #ece7fb;
-  --gold: #c8a46a;
-  --gold-l: #e9d6b0;
+  /* ───────── 새 토큰 (DESIGN.md 2장) ───────── */
+  --ground: #f4f7fb; /* 화면 바탕 */
+  --surface: #ffffff; /* 카드·시트·목록 바탕 */
+  --line: #dce3ee; /* 구분선·테두리 */
+  --ink: #0f1b33; /* 본문 글자 */
+  --mute: #55627a; /* 보조 글자: ground 위 5.72:1, 흰 바탕 위 6.15:1 */
+  --blue: #1d5bd6; /* 브랜드 색: 주 버튼·선택·경로선·활성 탭·링크 (흰 글자 5.97:1) */
+  --blue-deep: #0e3a8f; /* 짙은 띠·눌림 상태 */
+  --tint: #e6eefb; /* 선택된 줄·칩·보조 버튼 바탕 (파란 글자 5.11:1) */
+  --on-blue: #ffffff; /* 파랑 위 글자 */
+  --signal: #ffb21a; /* 아주 작게만(현재 위치 점·진행 점). 글자색·넓은 면 금지 */
+  --ok: #17703d; /* 영업 중 등 상태(점 + 글자) */
+  --danger: #b42318; /* 진짜 오류·실패 전용 (가격 미정·알레르기 미정·지금 닫힘에는 쓰지 않음) */
+  --scrim-rgb: 8, 20, 46; /* 사진 위 글자용 어두운 막: rgba(var(--scrim-rgb), .85) */
 
-  /* 어두운 면(목업 사이드바) */
-  --side: #0e121b;
-  --side2: #161b27;
-  --side-line: #232a3a;
-  --side-txt: #c9cdd8;
-  --side-mute: #7c849a;
+  /* ───────── 옛 토큰 이름 → 새 값 (호환 대응, 화면 task가 정리) ─────────
+     강조색은 파랑 하나: 주황(acc)·청록(sea)·보라(plum)·금색(gold) 계열은 파랑/중립으로 대응 */
+  --paper: var(--ground);
+  --card: var(--surface);
+  --line2: var(--line);
+  --ink2: var(--ink);
+  --soft: var(--mute);
+  --acc: var(--blue);
+  --acc-d: var(--blue);
+  --acc-s: var(--tint);
+  --sea: var(--blue);
+  --sea-d: var(--blue-deep);
+  --sea-s: var(--tint);
+  --sun: var(--signal);
+  --sun-s: var(--tint);
+  --plum: var(--blue-deep);
+  --plum-s: var(--tint);
+  --gold: var(--blue);
+  --gold-l: #c9dafb; /* 어두운 면 위 강조 글자 (ink 위 12.17:1) */
 
-  /* 무대 배경 */
-  --stage1: #f3eee5;
-  --stage2: #e6dccb;
+  /* 어두운 면(운영자 리포트 사이드바 등) */
+  --side: var(--ink);
+  --side2: #17264a;
+  --side-line: #24345a;
+  --side-txt: #d5dcea;
+  --side-mute: #9aa8c2;
 
-  /* 글꼴 — Pretendard 우선 */
-  --kfont:
-    'Pretendard Variable', Pretendard, 'Malgun Gothic', 'Yu Gothic UI', 'Microsoft YaHei',
-    system-ui, sans-serif;
-  --dfont: 'Fraunces', Georgia, serif;
+  /* 무대 배경(데스크톱에서 폰 틀 바깥) */
+  --stage1: #e9eef5;
+  --stage2: #dce3ee;
 
-  /* 반경 — 목업에서 쓰인 값 */
+  /* ───────── 글꼴 (DESIGN.md 3장) ─────────
+     언어별 스택 (T6.7 M-01): 한국어 시스템 글꼴(맑은 고딕)이 일본어·중국어 글자를 먼저 그리지 않도록
+     JA·ZH는 그 언어 글꼴을 맑은 고딕 자리에 둡니다. 실제 선택은 global.css의 [lang] 규칙이 합니다
+     (html lang = en/ja/zh-Hans는 App.tsx, 화면 안 한국어 부분은 lang="ko"). */
+  --sans-ko:
+    'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  --sans-ja:
+    'Pretendard Variable', Pretendard, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI',
+    'Yu Gothic', Meiryo, system-ui, sans-serif;
+  --sans-zh:
+    'Pretendard Variable', Pretendard, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui,
+    sans-serif;
+  /* 숫자(시간·거리·가격·수량). 숫자 글꼴에 없는 글자(分·分钟·中 등)가 'monospace' 대체(Windows의
+     MS Gothic·NSimSun)로 가지 않도록 Latin 고정폭 뒤, monospace 앞에 언어별 산세리프를 둡니다 (T6.7 M-02).
+     끝의 monospace는 Plex·ui-monospace·Consolas가 모두 없는 기기(Android 등)의 숫자용입니다. */
+  --num-ko: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --num-ja:
+    'IBM Plex Mono', ui-monospace, Consolas, 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', Meiryo,
+    monospace;
+  --num-zh:
+    'IBM Plex Mono', ui-monospace, Consolas, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC',
+    monospace;
+
+  --sans: var(--sans-ko);
+  --kfont: var(--sans);
+  --dfont: var(--sans); /* Fraunces(세리프) 제거 — 같은 산세리프 */
+  --num: var(--num-ko);
+
+  /* ───────── 움직임 (DESIGN.md 8장) ───────── */
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur: 200ms;
+  --dur-fast: 160ms;
+  --dur-slow: 240ms;
+
+  /* 반경 */
   --r-xs: 6px;
   --r-sm: 10px;
   --r-md: 12px;

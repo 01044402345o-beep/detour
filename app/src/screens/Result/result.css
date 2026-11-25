@@ -1,4 +1,6 @@
-/* S07 채점 결과 (T2.4) — 목업 result 블록 값 */
+/* S07 채점 결과 (T2.4 → T6.6 DESIGN.md 2·3장).
+   점수는 고정폭 숫자. 단어 일치 = 연파랑 바탕 + 짙은 파랑 글자 + 체크,
+   불일치 = 흰 바탕 + --danger 점선·글자 + 엑스 (진짜 불일치 표시라 --danger 사용, 흰 바탕 6.5:1). */
 .rs-ring {
   position: relative;
   width: 170px;
@@ -21,56 +23,58 @@
 
 .rs-ring__v b {
   font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -2px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
 .rs-xs {
-  color: var(--soft);
-  font-size: 11.5px;
+  color: var(--mute);
+  font-size: 13px;
 }
 
 .rs-xs--b {
-  margin-top: 2px;
-  font-weight: 700;
+  margin-top: 4px;
+  font-weight: 600;
 }
 
 .rs-head {
-  margin-top: 10px;
-  padding: 0 22px;
+  margin-top: 12px;
+  padding: 0 20px;
   text-align: center;
 }
 
 .rs-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 .rs-sub {
-  margin-top: 4px;
-  color: var(--soft);
-  font-size: 13px;
+  margin-top: 6px;
+  color: var(--ink);
+  font-size: 15px;
 }
 
 .rs-note {
   margin-top: 6px;
-  color: var(--soft);
-  font-size: 11.5px;
+  color: var(--mute);
+  font-size: 13px;
   line-height: 1.45;
+  text-wrap: balance;
+  line-break: strict;
 }
 
 .rs-body {
   margin-top: 20px;
-  padding: 0 22px 30px;
+  padding: 0 20px calc(28px + env(safe-area-inset-bottom, 0px));
 }
 
 .rs-heard {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
   margin-top: 10px;
   list-style: none;
 }
@@ -78,22 +82,28 @@
 .rs-heard li {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 7px 11px;
-  border-radius: 11px;
-  font-size: 15px;
-  font-weight: 800;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: var(--r-md);
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .rs-heard .ok {
-  background: var(--sea-s);
-  color: var(--sea-d);
+  border: 1.5px solid var(--tint);
+  background: var(--tint);
+  color: var(--blue-deep);
 }
 
 .rs-heard .ng {
-  border: 1.5px dashed var(--sun);
-  background: var(--sun-s);
-  color: #8a6210;
+  border: 1.5px dashed var(--danger);
+  background: var(--surface);
+  color: var(--danger);
+}
+
+/* 가장 약한 단어: 실선으로 한 번 더 강조 */
+.rs-heard .ng.weak {
+  border-style: solid;
 }
 
 .rs-tip {
@@ -101,29 +111,41 @@
   gap: 10px;
   margin-top: 14px;
   padding: 13px 14px;
-  border-radius: 14px;
-  background: var(--sun-s);
-  color: #5e4610;
-  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
   line-height: 1.5;
+}
+
+.rs-tip__icon {
+  margin-top: 2px;
+  color: var(--blue);
 }
 
 .rs-row {
   display: flex;
   gap: 10px;
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .rs-row > * {
   flex: 1;
 }
 
+/* 다시 듣기: 아이콘만이라 좁게 */
+.rs-row > .rs-listen {
+  flex: 0 0 64px;
+}
+
 .rs-listen.ui-btn {
-  color: var(--ink);
+  color: var(--blue);
 }
 
 .rs-listen[aria-pressed='true'] {
-  border-color: var(--sea);
+  border-color: var(--blue);
+  background: var(--tint);
 }
 
 .rs-next {
@@ -132,6 +154,9 @@
 
 .rs-instead.ui-btn {
   margin-top: 6px;
-  color: var(--acc-d);
-  font-size: 14px;
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

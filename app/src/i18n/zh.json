@@ -9,18 +9,38 @@
   },
   "lang": {
     "choose": "请选择语言",
-    "welcomeTitle": "多走一步,遇见大田。",
+    "welcomeTitle": "多走一步，遇见大田。",
     "welcomeSub": "路线、真实菜单和用得上的韩语——无需安装。",
     "start": "开始",
-    "pronRoman": "发音以韩语罗马字(国语罗马字标记法)标注,仅作读音参考,并非汉语拼音。",
-    "pronKana": "发音以片假名标注,仅为近似读音。"
+    "pronRoman": "发音以韩语罗马字（国语罗马字标记法）标注，仅作读音参考，并非汉语拼音。",
+    "pronKana": "发音以片假名标注,仅为近似读音。",
+    "lede": "韩文菜单、韩语柜台。路线、点餐和回复，都交给 Edulleo。",
+    "foot": "无需安装 · 离线也能用",
+    "boardLabel": "Edulleo 能做什么",
+    "play": "播放场景",
+    "pause": "暂停场景",
+    "turnScreen": "把屏幕转向店员",
+    "scenes": {
+      "course": {
+        "tab": "路线",
+        "cap": "从大田站出发的*现成步行路线*：地图、步行时间和每一站的营业时间一目了然。"
+      },
+      "order": {
+        "tab": "点餐",
+        "cap": "在真实菜单上*点一下想要的*，韩语点餐句子自动生成，附发音和语音。"
+      },
+      "staff": {
+        "tab": "店员",
+        "cap": "*把屏幕给店员看*，店员一键回复，回复会用你的语言显示。"
+      }
+    }
   },
   "nav": {
     "explore": "探索",
     "course": "路线",
     "phrases": "短句",
     "saved": "收藏",
-    "me": "我的"
+    "me": "设置"
   },
   "home": {
     "location": "韩国·大田",
@@ -41,7 +61,19 @@
     "overnightTitle": "儒城温泉·1号线直达",
     "todayPhrase": "今日短句",
     "todayCourse": "今日路线",
-    "soonToast": "即将上线——演示版开放老城区和中央市场。"
+    "soonToast": "即将上线——演示版开放老城区和中央市场。",
+    "langButton": "语言：{lang}。可在设置中更改",
+    "lineTitle": "地铁1号线上的三个区域",
+    "lineLabel": "按地铁1号线车站划分的区域",
+    "stnStation": "대전역 · 大田站",
+    "stnDowntown": "중앙로 · 中央路站",
+    "stnYuseong": "유성온천 · 儒城温泉站",
+    "areaOpen": "已开放",
+    "later": "即将推出",
+    "yuseongDesc": "温泉·从大田站乘地铁1号线直达",
+    "startCourse": "开始路线",
+    "startsAt": "起点：{place}",
+    "nightMarket": "夜市 {days} {hours}，至{end}"
   },
   "course": {
     "title": "老城区半日游",
@@ -63,7 +95,11 @@
     "walkToStop": "步行前往第{n}站",
     "dirNext": "将在NAVER地图App中打开前往第{n}站的步行路线",
     "noApp": "没有NAVER地图App？请按上方地图的编号顺序，参考列表中的步行时间前往。",
-    "googleMaps": "在Google地图中查看第{n}站"
+    "googleMaps": "在Google地图中查看第{n}站",
+    "minShort": "{min}分钟",
+    "metaFrom": "出发：{start}",
+    "startTag": "出发",
+    "photoCredits": "照片：{list} · 维基共享资源"
   },
   "season": {
     "kicker": "限时活动",
@@ -101,7 +137,15 @@
     "takedown": "致店家:如需更正或删除本信息,请与我们联系,我们会立即处理。",
     "save": "收藏此地点",
     "unsave": "取消收藏",
-    "googleMaps": "在 Google 地图中查看"
+    "googleMaps": "在 Google 地图中查看",
+    "stopOf": "第 {n} 站 / 共 {total} 站",
+    "nextStop": "下一站：{name}，步行 {min} 分钟",
+    "lastStop": "最后一站",
+    "kindFood": "美食",
+    "kindSight": "景点",
+    "opensAt": "{time} 开始营业",
+    "opensTomorrow": "明天 {time} 开始营业",
+    "opensOn": "{day} {time} 开始营业"
   },
   "menu": {
     "signature": "招牌",
@@ -120,7 +164,9 @@
     "switchTitle": "要在这里重新点单吗?",
     "switchBody": "{place}的点单将被清空。",
     "switchConfirm": "清空并继续",
-    "switchKeep": "保留点单"
+    "switchKeep": "保留点单",
+    "priceAsk": "价格：请询问店员",
+    "sample": "示例"
   },
   "order": {
     "title": "我的点单",
@@ -131,17 +177,18 @@
     "practice": "练习说",
     "showStaff": "给店员看",
     "empty": "点单为空",
-    "emptyHint": "请至少添加一样,才能生成点单卡。"
+    "emptyHint": "请至少添加一样,才能生成点单卡。",
+    "totalLabel": "预估合计 · 价格仅供参考"
   },
   "audio": {
     "listen": "听",
-    "listenSlow": "慢速听(0.75倍)",
+    "listenSlow": "慢速听",
     "noKoreanVoice": "此设备不支持韩语语音。",
     "ttsUnsupported": "此浏览器不支持语音朗读。"
   },
   "practice": {
     "title": "口语练习",
-    "tapWord": "点击单词",
+    "tapWord": "点击单词收听",
     "tapMic": "点麦克风开始说",
     "requesting": "请允许使用麦克风",
     "listening": "正在听…请说",
@@ -167,7 +214,7 @@
   "result": {
     "match": "识别一致度",
     "matchNote": "表示识别出的文字与短句的一致程度,并非发音评分。",
-    "great": "太棒了!🎉",
+    "great": "太棒了！",
     "almost": "差一点!",
     "closeMatch": "识别出的文字与短句非常接近。",
     "heard": "识别结果",
@@ -182,10 +229,11 @@
     "staffReply": "店员回复",
     "play": "朗读",
     "bigger": "放大",
-    "smaller": "缩小"
+    "smaller": "缩小",
+    "textSize": "字号"
   },
   "reply": {
-    "yesTitle": "好的!👍",
+    "yesTitle": "好的！",
     "yesBody": "店员明白了。",
     "soldTitle": "已售罄",
     "soldBody": "请换一样吧。",
@@ -194,7 +242,11 @@
     "payTitle": "请到柜台付款",
     "payBody": "请前往收银台。",
     "edit": "修改点单",
-    "backToStaff": "再次给店员看"
+    "backToStaff": "再次给店员看",
+    "yesNext": "拿到餐点后，前往下一站。",
+    "soldNext": "换一样，再给店员看一次。",
+    "waitNext": "店员准备好后，再出示一次点单。",
+    "payNext": "在柜台付款后，点“完成”。"
   },
   "phrases": {
     "title": "短句",
@@ -206,7 +258,9 @@
     "savedToast": "已收藏",
     "removedToast": "已取消收藏",
     "empty": "还没有收藏",
-    "places": "地点"
+    "places": "地点",
+    "emptyHint": "点按地点或短句上的收藏按钮，就会保存在这里。",
+    "emptyIcon": "收藏按钮"
   },
   "report": {
     "open": "信息有误?",
@@ -224,12 +278,34 @@
     "operatorReport": "运营报告",
     "reset": "重置演示数据",
     "resetConfirm": "要删除本机上的全部演示数据并重新开始吗?",
-    "resetDone": "演示数据已重置。"
+    "resetDone": "演示数据已重置。",
+    "demoTools": "演示工具",
+    "demoToolsNote": "用于比赛演示，游客无需使用。",
+    "photoCreditsSub": "本应用使用的照片及其许可",
+    "photoPlace": "地点",
+    "photoTitle": "原标题",
+    "photoArea": {
+      "downtown": "老城区",
+      "station": "大田中央市场",
+      "yuseong": "儒城温泉足浴池"
+    }
   },
   "pwa": {
     "offlineReady": "已可离线使用",
     "updateAvailable": "有新版本可用。",
     "update": "更新",
     "later": "稍后"
+  },
+  "photo": {
+    "label": "照片",
+    "credit": "照片：{author} · {license}",
+    "credits": "照片来源",
+    "source": "照片：维基共享资源",
+    "author": "作者",
+    "license": "许可协议",
+    "original": "原始文件",
+    "changes": "修改说明",
+    "notice": "注意事项",
+    "licenseScope": "这些许可协议仅适用于照片文件。"
   }
 }

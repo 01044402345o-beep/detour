@@ -1,5 +1,5 @@
 /**
- * S06 말하기 연습 (T2.4, PRD F-07·F-08).
+ * S06 말하기 연습 (T2.4, PRD F-07·F-08 → T6.6 DESIGN.md 새 색·글자 체계, 동작은 그대로).
  * - 듣기(보통·0.75배속)·단어 칩은 ui/ListenButton (TTS 계약은 ListenButton이 지킴).
  * - 마이크는 speech/stt 상태 머신에 연결합니다. 기한(requesting 15초, listening·processing 8초)은
  *   stt가 관리하고, 화면은 상태만 그립니다. 실패 → 재시도/직원에게 보여주기, 미지원 → 직원에게 보여주기만.
@@ -179,7 +179,7 @@ function PracticeView({ session, Recognition, tts }: ViewProps) {
     stt.status === 'requesting'
       ? t('practice.requesting')
       : stt.status === 'listening'
-        ? `● ${t('practice.listening')}`
+        ? t('practice.listening')
         : stt.status === 'processing'
           ? t('practice.processing')
           : t('practice.tapMic');
@@ -202,8 +202,8 @@ function PracticeView({ session, Recognition, tts }: ViewProps) {
       <PracticeHeader index={session.index} total={session.list.length} onClose={close} />
       <h1 className="sr-only">{t('practice.title')}</h1>
 
-      <p className="pr-kicker">
-        {item.kind === 'order' ? <>🧾 {t('order.title').toLocaleUpperCase(lang)}</> : '💬'} ·{' '}
+      <p className="pr-context">
+        {item.kind === 'order' && <>{t('order.title')} · </>}
         {pickL10n(lang, place.name)}
       </p>
 
@@ -266,13 +266,18 @@ function PracticeView({ session, Recognition, tts }: ViewProps) {
             <p>{problem.body}</p>
             <div className="pr-acts">
               {problem.canRetry && (
-                <button type="button" className="pr-act" onClick={retry}>
+                <button type="button" className="pr-act pr-act--ink" onClick={retry}>
                   <Icon name="refresh" size={16} />
                   {t('stt.retry')}
                 </button>
               )}
-              <button type="button" className="pr-act pr-act--ink" onClick={showStaff}>
-                📱 {t('order.showStaff')}
+              {/* 재시도할 수 없으면 직원에게 보여주기가 주 동작 (파랑 채움) */}
+              <button
+                type="button"
+                className={cx('pr-act', !problem.canRetry && 'pr-act--ink')}
+                onClick={showStaff}
+              >
+                {t('order.showStaff')}
               </button>
             </div>
           </div>
@@ -287,6 +292,7 @@ function PracticeView({ session, Recognition, tts }: ViewProps) {
           data-testid="practice-status"
           data-stt={stt.status}
         >
+          {stt.status === 'listening' && <span className="pr-status__dot" aria-hidden="true" />}
           {statusText}
         </p>
 
@@ -296,7 +302,7 @@ function PracticeView({ session, Recognition, tts }: ViewProps) {
               {t('common.cancel')}
             </button>
             <button type="button" className="pr-act pr-act--ink" onClick={showStaff}>
-              📱 {t('order.showStaff')}
+              {t('order.showStaff')}
             </button>
           </div>
         )}
@@ -309,7 +315,9 @@ function PracticeView({ session, Recognition, tts }: ViewProps) {
 
         <button
           type="button"
-          className={cx('pr-micb', active && 'on')}
+          // 반복 고리(on)는 듣는 중(listening)에만 — DESIGN.md 8장 예외 범위. 그 밖의 진행 상태는 정적(is-active)
+          className={cx('pr-micb', active && 'is-active', stt.status === 'listening' && 'on')}
+          data-testid="practice-mic"
           aria-label={t(active ? 'practice.micStop' : 'practice.micStart')}
           aria-describedby={noticeId}
           aria-pressed={active}

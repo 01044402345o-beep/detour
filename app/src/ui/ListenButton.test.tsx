@@ -97,11 +97,11 @@ describe('② 탭 핸들러에서 init을 기다리지 않고 speak를 동기 �
   it('init이 끝나기 전에 눌러도 그 자리에서 speak(text, rate)', () => {
     const f = fakeTts(null);
     render(<ListenButton text="튀김소보로 주세요" rate={0.75} tts={f.tts} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Listen slowly (0.75×)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Listen slowly' }));
     expect(f.tts.speak).toHaveBeenCalledTimes(1);
     expect(f.tts.speak.mock.calls[0][0]).toBe('튀김소보로 주세요');
     expect(f.tts.speak.mock.calls[0][1]).toBe(0.75);
-    expect(pressed('Listen slowly (0.75×)')).toBe('true');
+    expect(pressed('Listen slowly')).toBe('true');
   });
 
   it("onPlay는 'started'일 때만, 실패면 재생 표시를 바로 끔", () => {

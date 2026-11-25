@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Edulleo — Home (C2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#F4F7FB; --surface:#FFFFFF; --line:#DCE3EE; --ink:#0F1B33; --mute:#55627A;
+  --blue:#1D5BD6; --blue-deep:#0E3A8F; --tint:#E6EEFB; --on-blue:#FFFFFF;
+  --signal:#FFB21A; --ok:#17703D; --scrim:8,20,46;
+  --sans:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  --r:14px; --gut:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:390px;height:844px;overflow:hidden;background:var(--ground);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.top{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut)}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:36px;height:36px;border-radius:10px;background:var(--blue);display:grid;place-items:center}
+.mark svg{width:28px;height:28px}
+.wm b{display:block;font-size:21px;font-weight:700;letter-spacing:-.04em;line-height:1}
+.wm span{display:block;font-size:12px;color:var(--mute);margin-top:2px;line-height:1}
+.lang{height:44px;min-width:44px;padding:0 12px;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:22px;font-size:15px;font-weight:600}
+h1{margin:2px var(--gut) 0;display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700}
+.ln{width:28px;height:28px;border-radius:50%;background:var(--blue);color:var(--on-blue);display:grid;place-items:center;font-size:15px;font-weight:600}
+/* Metro Line 1: one blue line, three station rings = three areas */
+.line{list-style:none;margin:12px var(--gut) 0}
+.stn{position:relative;display:grid;grid-template-columns:34px 1fr;padding-bottom:12px}
+.stn::before{content:"";position:absolute;left:11px;width:6px;top:0;bottom:0;background:var(--blue)}
+.stn:first-child::before{top:30px}
+.stn:last-child::before{bottom:auto;height:30px}
+.stn:last-child{padding-bottom:0}
+.dot{position:relative;z-index:1;margin-top:20px;width:28px;height:22px;border-radius:7px;background:var(--surface);border:3px solid var(--blue)}
+.feat .dot{border-radius:50%;height:28px;margin-top:17px}
+.feat .dot::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--signal)}
+.ph{position:relative;display:block;border-radius:12px;overflow:hidden;color:#fff;background:#24324F}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(var(--scrim),.9) 0%,rgba(var(--scrim),.72) 60%,rgba(var(--scrim),.3) 100%)}
+.ph .tx{position:relative;z-index:1;padding:10px 14px;display:flex;flex-direction:column;justify-content:center;height:100%}
+.sn{display:flex;align-items:baseline;gap:8px;font-size:13px;line-height:20px}
+.sn b{font-weight:700}
+.st{margin-left:auto;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;background:#fff;color:var(--ok);border-radius:11px;padding:0 8px;line-height:22px}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.st.later{color:var(--ink)}.st.later::before{display:none}
+.area{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.2;margin-top:2px}
+.desc{font-size:13px;opacity:.92;margin-top:1px}
+.a1 .ph{height:92px}
+.a3 .ph{height:76px}
+.row{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 4px 0 2px;border-bottom:1px solid var(--line)}
+.row .tx{flex:1}
+.row b{display:block;font-size:15px;font-weight:600}
+.row .tx>span{font-size:13px;color:var(--mute)}
+.quiet{font-size:12px;color:var(--mute);margin-top:5px;padding-left:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.panel .ph{height:148px;border-radius:0}
+.panel .ph::after{background:linear-gradient(0deg,rgba(var(--scrim),.9) 0%,rgba(var(--scrim),.62) 60%,rgba(var(--scrim),.4) 100%)}
+.panel .ph .tx{justify-content:flex-end;padding:12px 14px}
+.panel .area{font-size:25px}
+.course{padding:12px 14px 14px}
+.course .t{font-size:17px;font-weight:700}
+.meta{margin-top:2px;font-size:14px;color:var(--mute)}
+.meta .n{color:var(--ink);font-weight:600}
+.from{margin-top:4px;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mute)}
+.from b{color:var(--ink);font-weight:600}
+.cta{margin-top:12px;width:100%;height:52px;border-radius:12px;background:var(--blue);color:var(--on-blue);font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px}
+.credit{margin:12px var(--gut) 0;display:flex;gap:6px;font-size:11px;line-height:15px;color:var(--mute)}
+.tabs{position:absolute;left:0;right:0;bottom:0;height:84px;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:20px}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:500;color:var(--mute)}
+.tab.on{color:var(--blue);font-weight:700}
+</style></head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M14.5 24 H39 A15 15 0 1 0 34.6 34.6" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="24" r="4.6" fill="#1D5BD6" stroke="#fff" stroke-width="3"/><circle cx="34.6" cy="34.6" r="4.4" fill="#fff"/></svg></span>
+    <span class="wm"><b>edulleo</b><span lang="ko">에둘러</span></span>
+  </div>
+  <button class="lang" aria-label="Language: English"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.6 5.7 3.6 9s-1.1 6.3-3.6 9c-2.5-2.7-3.6-5.7-3.6-9S9.5 5.7 12 3z"/></svg>EN</button>
+</header>
+
+<h1><span class="ln n" aria-hidden="true">1</span>Three areas on Metro Line 1</h1>
+
+<ol class="line" aria-label="Areas by metro station">
+  <li class="stn a1">
+    <span class="dot" aria-hidden="true"></span>
+    <div>
+      <div class="ph"><img src="../../photos/raw/mkt1.jpg" alt="" style="object-position:50% 42%">
+        <div class="tx"><p class="sn"><b lang="ko">대전역</b><span>Daejeon Stn</span><span class="st">Open</span></p>
+        <p class="area">Daejeon Station &amp; Sojedong</p><p class="desc">Traditional market · street food</p></div></div>
+      <a class="row" href="#">
+        <span class="tx"><b>Jungang Market Food Walk</b><span><span class="n">4</span> stops · <span class="n">0.7</span> km · about <span class="n">2</span> hrs</span></span>
+        <svg class="i" viewBox="0 0 24 24" style="color:var(--mute)"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+      <p class="quiet">Night market Fri–Sat <span class="n">18:00–22:00</span>, until Nov 28</p>
+    </div>
+  </li>
+  <li class="stn feat">
+    <span class="dot" aria-hidden="true"></span>
+    <section class="panel" aria-labelledby="od">
+      <div class="ph"><img src="../../photos/raw/eun.jpg" alt="Euneungjeongi culture street arcade" style="object-position:50% 45%">
+        <div class="tx"><p class="sn"><b lang="ko">중앙로</b><span>Jungang-ro</span><span class="st">Open</span></p>
+        <h2 class="area" id="od">Old Downtown</h2><p class="desc">Eunhaeng-dong · Bakery, history, local food</p></div></div>
+      <div class="course">
+        <p class="t">Old Downtown Half-day</p>
+        <p class="meta"><span class="n">4</span> stops · <span class="n">2.2</span> km · about <span class="n">3</span> hrs</p>
+        <p class="from"><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>Starts at <b>Daejeon Stn</b> · west plaza</p>
+        <button class="cta">Start the course<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </section>
+  </li>
+  <li class="stn a3">
+    <span class="dot" aria-hidden="true"></span>
+    <div class="ph"><img src="../../photos/raw/ys1.jpg" alt="" style="object-position:50% 55%">
+      <div class="tx"><p class="sn"><b lang="ko">유성온천</b><span>Yuseong Spa</span><span class="st later">Coming later</span></p>
+      <p class="area">Yuseong Spa</p><p class="desc">Hot springs · Line <span class="n">1</span> from Daejeon Stn, no transfer</p></div></div>
+  </li>
+</ol>
+<p class="credit"><svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Photos: Minseong Kim, Pmlydon · CC BY-SA 4.0, Wikimedia</span></p>
+
+<nav class="tabs" aria-label="Main">
+  <a class="tab on" aria-current="page"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Explore</a>
+  <a class="tab"><svg class="i" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8.2 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.8"/></svg>Course</a>
+  <a class="tab"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>Phrases</a>
+  <a class="tab"><svg class="i" viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg>Saved</a>
+  <a class="tab"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</a>
+</nav>
+</body></html>

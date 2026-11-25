@@ -8,7 +8,7 @@ import { LeafletMap } from './LeafletMap';
 import { OSM_COPYRIGHT_URL, OSM_CREDIT } from './osm';
 import { SketchMap } from './SketchMap';
 import type { GeoPoint } from '../../types';
-import type { MapMode, MapStart, MapStop } from './types';
+import type { MapLeg, MapMode, MapStart, MapStop } from './types';
 
 export type CourseMapProps = {
   /** 방문 순서대로. 바뀔 때마다 지도를 다시 그리므로 useMemo로 넘기세요 */
@@ -19,13 +19,15 @@ export type CourseMapProps = {
   route?: readonly GeoPoint[];
   /** 출발지 이름표 (예: 대전역). route가 있으면 route 첫 점과 같은 위치여야 합니다 */
   start?: MapStart;
+  /** 도보 구간별 경로·분 (지도 위 구간 분 칩, T6.3). route가 있을 때만 그립니다 */
+  legs?: readonly MapLeg[];
 };
 
 function initialMode(): MapMode {
   return typeof navigator !== 'undefined' && navigator.onLine === false ? 'sketch' : 'tiles';
 }
 
-export function CourseMap({ stops, onSelect, label, route, start }: CourseMapProps) {
+export function CourseMap({ stops, onSelect, label, route, start, legs }: CourseMapProps) {
   const t = useT();
   const [mode, setMode] = useState<MapMode>(initialMode);
 
@@ -46,9 +48,17 @@ export function CourseMap({ stops, onSelect, label, route, start }: CourseMapPro
             label={label}
             route={route}
             start={start}
+            legs={legs}
           />
         ) : (
-          <SketchMap stops={stops} onSelect={onSelect} label={label} route={route} start={start} />
+          <SketchMap
+            stops={stops}
+            onSelect={onSelect}
+            label={label}
+            route={route}
+            start={start}
+            legs={legs}
+          />
         )}
       </div>
       <p className="cmap-note">{t(route ? 'course.routeNote' : 'course.lineNote')}</p>

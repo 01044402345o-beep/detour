@@ -4,4 +4,4 @@ import './map.css';
 export { CourseMap, type CourseMapProps } from './CourseMap';
 export { SketchMap } from './SketchMap';
 export { googlePlaceUrl, naverWalkUrl, type ExternalMapTarget } from './externalMap';
-export type { MapMode, MapStop } from './types';
+export type { MapLeg, MapMode, MapStop } from './types';

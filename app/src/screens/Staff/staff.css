@@ -1,184 +1,308 @@
-/* S08 직원에게 보여주기 (목업 .staff). 누를 수 있는 요소는 44px 이상. */
+/* S08 직원에게 보여주기 (T6.5 · DESIGN.md 7장 '직원', 시안 mockup/redesign/c2-staff).
+   짙은 파랑 띠(손님용 조작) 위에 흰 면(직원이 읽는 부분). 누를 수 있는 요소는 44px 이상, 굵기 400~700. */
 .staff {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  background: #fffdf8;
+  background: var(--blue-deep);
 }
 
-.staff__title {
-  color: var(--soft); /* #fffdf8 위 5.14:1 */
-  font-size: 13px;
-}
-
-.staff__note {
-  margin: 4px 18px 0;
-  padding: 11px 14px;
-  border-radius: var(--r-lg);
-  background: var(--sea-s);
-  color: var(--sea-d); /* 7.07:1 */
-  font-size: 13.5px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.staff__big {
+/* ── 띠: 닫기 · 글자 크기 ── */
+.staff__band {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  padding: 16px 24px;
-  text-align: center;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding: 10px 10px 10px 6px;
+  color: var(--on-blue); /* blue-deep 위 흰 글자 10.39:1 */
 }
 
-.staff__ko {
-  color: var(--ink);
-  font-weight: 800;
-  letter-spacing: -1px;
-  line-height: 1.3;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-  transition: font-size 0.25s;
-}
-
-.staff__lines {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 14px auto 0;
-  padding: 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  background: #fff;
-  color: var(--ink2);
-  font-size: 15px;
-  font-weight: 700;
-  text-align: left;
-  list-style: none;
-}
-
-.staff__qty {
-  color: var(--acc-d); /* 목업 --acc(#fff 위 3.0:1) → --acc-d 5.51:1 */
-}
-
-.staff__rule {
-  width: 44px;
-  height: 4px;
-  margin: 22px auto;
-  border: 0;
-  border-radius: 4px;
-  background: var(--acc);
-}
-
-.staff__meaning {
-  color: var(--soft);
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.staff__prompt {
-  margin-bottom: 8px;
-  color: var(--soft);
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.staff__replies {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 0 18px;
-}
-
-.staff__reply {
-  min-width: var(--touch);
-  min-height: 56px;
-  padding: 12px 6px;
-  border: 1.5px solid var(--line2);
-  border-radius: var(--r-xl);
-  background: #fff;
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1.2;
-  word-break: keep-all;
-}
-
-.staff__reply small {
-  display: block;
-  margin-top: 3px;
-  color: var(--soft); /* #fff 위 5.23:1 */
-  font-size: 10.5px;
-  font-weight: 600;
-}
-
-.staff__reply--yes {
-  border-color: var(--sea);
-  background: var(--sea);
-  color: #fff; /* 4.75:1 */
-}
-
-.staff__reply--yes small {
-  color: #fff; /* 목업 #cdeeea 3.85:1 → 흰색 */
-}
-
-.staff__reply:active {
-  transform: scale(0.98);
-}
-
-.staff__ctrls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 18px 34px;
-}
-
-.staff__toggle {
+.staff__close {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   min-width: var(--touch);
   min-height: var(--touch);
-  padding: 0 14px;
-  border: 1px solid var(--line2);
+  padding: 0 12px 0 8px;
   border-radius: var(--r-pill);
-  background: #fff;
-  color: var(--ink2); /* 12.6:1 */
-  font-size: 12.5px;
+  color: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.staff__size {
+  display: flex;
+  flex: none;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--r-pill);
+}
+
+.staff__size-btn {
+  display: grid;
+  place-items: center;
+  min-width: 52px;
+  min-height: var(--touch);
+  color: inherit;
   font-weight: 700;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.staff__toggle[aria-pressed='true'] {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: #fff;
+/* "A−"·"A+"는 언어와 무관한 기호라 번역 키 대신 CSS 글자로 그림(이름은 aria-label: Smaller/Bigger) */
+.staff__size-btn--down::before {
+  content: 'A\2212';
+  font-size: 15px;
 }
 
-.staff__reply:focus-visible,
-.staff__toggle:focus-visible {
-  outline: 3px solid var(--sea);
-  outline-offset: 2px;
+.staff__size-btn--up {
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
 }
 
-.staff__empty {
+.staff__size-btn--up::before {
+  content: 'A+';
+  font-size: 20px;
+}
+
+/* 끝 단계: 흐리게 하지 않고(대비 유지) 밑줄 없이 눌리지 않음만 표시 */
+.staff__size-btn:disabled {
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.staff__close:active,
+.staff__size-btn:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* 띠 위 초점: 흰 외곽선 (파랑은 짙은 파랑 위에서 안 보임) */
+.staff__close:focus-visible,
+.staff__size-btn:focus-visible {
+  outline: 3px solid var(--on-blue);
+  outline-offset: -3px;
+}
+
+/* ── 흰 면 ── */
+.staff__sheet {
   display: flex;
   flex: 1;
   flex-direction: column;
+  padding: 22px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  border-radius: 20px 20px 0 0;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.staff__note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mute); /* 흰 바탕 6.15:1 */
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+/* 앰버 점은 장식(글자와 함께) — DESIGN.md 2장 signal */
+.staff__dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--signal);
+}
+
+/*
+ * 큰 문장 글자 크기는 index.tsx가 인라인으로 줌(staffSizeControls, T6.7 M-04·R1 M-01):
+ * 단계 56·64·72px를 가장 긴 낱말이 한 줄에 들어가는 크기로 제한하되 56px 아래로는 내리지 않음.
+ * keep-all로 낱말 사이에서만 줄을 바꾸고, 한 낱말이 56px로도 줄보다 길 때만
+ * overflow-wrap: anywhere가 그 낱말 안에서 줄을 바꿈(DESIGN.md 3장).
+ */
+.staff__ko {
+  margin-top: 18px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.staff__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 6px;
+  margin-top: 14px;
+  color: var(--mute);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.staff__lines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  list-style: none;
+}
+
+.staff__qty {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.staff__total .num {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.staff__meaning {
+  margin-top: 6px;
+  color: var(--mute);
+  font-size: 14px;
+  line-height: 1.45;
+  line-break: strict;
+}
+
+/* 소리 재생: 연파랑 넓은 버튼 */
+.staff .staff__play {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 18px;
+  gap: 10px;
+  font-size: 17px;
+}
+
+.staff .ui-listen-notice {
+  margin-top: 8px;
+}
+
+/* ── 직원 응답 ── */
+.staff__reply-area {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.staff__prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.staff__prompt-sub {
+  color: var(--mute);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.staff__replies {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1.3fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.staff__reply {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: var(--touch);
+  min-height: 68px;
+  padding: 8px 6px;
+  border: 2px solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+/* keep-all은 한국어에만 — 번역(일본어·중국어 등)은 일반 줄바꿈 (T6.5 R1 M-02) */
+.staff__reply-ko {
+  max-width: 100%;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.staff__reply small {
+  max-width: 100%;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  line-break: strict;
+  text-wrap: balance;
+  word-break: auto-phrase; /* 일본어 구 단위 (lang 속성 기준, 미지원이면 normal) */
+  color: var(--mute); /* 흰 바탕 6.15:1 */
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.staff__reply--yes {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: var(--on-blue); /* 5.97:1 */
+}
+
+.staff__reply--yes small {
+  color: var(--on-blue);
+}
+
+.staff__reply--pay {
+  grid-column: 1 / -1;
+}
+
+.staff__reply:active {
+  transform: scale(0.97);
+}
+
+.staff__reply--yes:active {
+  background: var(--blue-deep);
+}
+
+.staff__reply:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ── 빈 주문 ── */
+.staff__empty {
   justify-content: center;
   gap: 10px;
-  padding: 24px;
   text-align: center;
 }
 
 .staff__empty-title {
-  font-size: 18px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .staff__empty-hint {
   margin-bottom: 8px;
-  color: var(--soft);
-  font-size: 14px;
+  color: var(--mute);
+  font-size: 15px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .staff__reply:active {
+    transform: none;
+  }
 }

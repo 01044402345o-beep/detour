@@ -1,0 +1,95 @@
+Edulleo - photo credits
+=======================
+
+Generated from app/src/data/photos.ts (do not edit by hand).
+
+The licenses below apply ONLY to the photo files in this folder (public/photos/*.webp).
+They do not apply to the Edulleo app code or to any other file.
+Photos changed by us (resized, converted, faces blurred) are shared under the same license
+as their original (CC BY-SA, ShareAlike).
+
+Checked against each original file page (Wikimedia Commons API: imageinfo extmetadata + page wikitext) on 2026-11-26.
+
+1) sungsimdang.webp
+   Title:    Sungsimdang 2019
+   Author:   Trainholic
+   Year:     2019
+   Source:   https://commons.wikimedia.org/wiki/File:Sungsimdang_2019.jpg
+   License:  CC BY-SA 4.0 - https://creativecommons.org/licenses/by-sa/4.0/
+   Notice:   trainholic's travel
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail; faces of identifiable people blurred (soft elliptical Gaussian blur, 14 areas); resized to 1200px on the long side; converted to WebP. No crop, no color correction; signage unchanged.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty. Shop front with the bakery’s sign and logo as the subject; customers visible in the doorway and upstairs windows (first check: excluded as uncertain). User decision 2026-11-26: use after blurring faces; shop signs are shown in context with the app’s non-affiliation notice.
+   Alt (en): Sungsimdang main store at night, with its lit sign above the entrance
+   Alt (ja): 夜の聖心堂 本店。入口の上に明かりのついた看板
+   Alt (zh): 夜晚的圣心堂总店，入口上方是亮着灯的招牌
+   Used for: place "ssd"
+
+2) euneungjeongi.webp
+   Title:    Eunhaeng-dong Cultural Street
+   Author:   Minseong Kim
+   Year:     2014
+   Source:   https://commons.wikimedia.org/wiki/File:Eunhaeng-dong_Cultural_Street.jpg
+   License:  CC BY-SA 4.0 - https://creativecommons.org/licenses/by-sa/4.0/
+   Notice:   CC-BY-SA 4.0
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail; faces of identifiable people blurred (soft elliptical Gaussian blur, 18 areas); resized to 1200px on the long side; converted to WebP. No crop, no color correction; signage unchanged.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty. Street scene under the Skyroad canopy; pedestrians large in the foreground (a student in school uniform), many shop brand signs incidental (first check: excluded as uncertain). User decision 2026-11-26: use after blurring faces; shop signs are shown in context with the app’s non-affiliation notice.
+   Alt (en): Euneungjeongi Culture Street in the evening, people walking under the Skyroad canopy
+   Alt (ja): 夕方のウヌンジョンイ文化の街。スカイロードの屋根の下を歩く人々
+   Alt (zh): 傍晚的银杏亭文化街，人们在空中走廊顶棚下行走
+   Used for: place "eun", area "downtown"
+
+3) chungnam-office.webp
+   Title:    South Chungcheong Provincial Office
+   Author:   Yoo Chung
+   Year:     2007
+   Source:   https://commons.wikimedia.org/wiki/File:South_Chungcheong_Provincial_Office.jpg
+   License:  CC BY-SA 2.5 - https://creativecommons.org/licenses/by-sa/2.5/
+   Notice:   Copyright 2007 by Yoo Chul Chung. Licensed under CC-BY-SA-2.5
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail, resized to 1200px on the long side and converted to WebP. No crop, no color correction.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty. No people. Building front with small banners only; no logo as subject.
+   Alt (en): Former South Chungcheong Provincial Office, now the Daejeon Modern History Exhibition Hall, seen across the road
+   Alt (ja): 旧忠清南道庁(現・大田近現代史展示館)の建物を道路の向こうから見た様子
+   Alt (zh): 从马路对面看到的旧忠清南道厅（现大田近现代史展览馆）建筑
+   Used for: place "mus"
+
+4) daejeon-station.webp
+   Title:    Daejeon Station
+   Author:   Minseong Kim
+   Year:     2014
+   Source:   https://commons.wikimedia.org/wiki/File:Daejeon_Station.jpg
+   License:  CC BY-SA 4.0 - https://creativecommons.org/licenses/by-sa/4.0/
+   Notice:   CC-BY-SA 4.0
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail, resized to 1200px on the long side and converted to WebP. No crop, no color correction.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty. People only small and distant on the plaza. Station name sign is part of the building, not a logo shot.
+   Alt (en): Daejeon Station building and plaza with the twin railway towers behind
+   Alt (ja): 大田駅の駅舎と駅前広場、後ろに2棟の高層ビル
+   Alt (zh): 大田站站房和站前广场，后方是两座高楼
+   Used for: place "djs"
+
+5) jungang-market.webp
+   Title:    Daejeon Jungang Market
+   Author:   Minseong Kim
+   Year:     2014
+   Source:   https://commons.wikimedia.org/wiki/File:Daejeon_Jungang_Market.jpg
+   License:  CC BY-SA 4.0 - https://creativecommons.org/licenses/by-sa/4.0/
+   Notice:   CC-BY-SA 4.0
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail, resized to 1200px on the long side and converted to WebP. No crop, no color correction.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty. People small, mostly from behind; the nearest vendor’s face is blurred in the original. Market gate name sign (public market) is the landmark, not a brand logo.
+   Alt (en): Street leading to the gate of Daejeon Jungang Market with stalls on both sides
+   Alt (ja): 両側に露店が並ぶ、大田中央市場の入口へ続く通り
+   Alt (zh): 通往大田中央市场入口的街道，两旁摆着摊位
+   Used for: area "station"
+
+6) yuseong-footbath.webp
+   Title:    Yuseong Foot Spa at Night
+   Author:   Pmlydon
+   Year:     2021
+   Source:   https://commons.wikimedia.org/wiki/File:Yuseong_Foot_Spa_at_Night.jpg
+   License:  CC BY-SA 4.0 - https://creativecommons.org/licenses/by-sa/4.0/
+   Notice:   CC-BY-SA P.M.Lydon
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail; faces of identifiable people blurred (soft elliptical Gaussian blur, 8 areas); resized to 1200px on the long side; converted to WebP. No crop, no color correction; signage unchanged.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty. People (including children) using the public foot spa are the subject, at medium size; no signage as subject (first check: excluded as uncertain). User decision 2026-11-26: use after blurring faces; shop signs are shown in context with the app’s non-affiliation notice.
+   Alt (en): Yuseong outdoor foot spa at night, people soaking their feet under autumn trees
+   Alt (ja): 夜の儒城の屋外足湯。紅葉の下で足を湯に浸す人々
+   Alt (zh): 夜晚的儒城户外足浴池，人们在秋树下泡脚
+   Used for: area "yuseong"

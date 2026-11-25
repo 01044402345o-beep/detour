@@ -149,7 +149,7 @@ describe('TabBar', () => {
       'Course',
       'Phrases',
       'Saved',
-      'Me',
+      'Settings',
     ]);
     expect(screen.getByRole('link', { name: 'Phrases' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('link', { name: 'Explore' })).not.toHaveAttribute('aria-current');

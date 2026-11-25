@@ -1,13 +1,16 @@
 /*
- * 공용 UI 스타일 (T2.0). 값은 mockup/index.html 기준.
+ * 공용 UI 스타일 (T2.0 → T6.0 DESIGN.md v1.1 3·6·8장).
  * - 터치 영역: 누를 수 있는 요소는 min-width/min-height var(--touch)(44px) 이상 (ui/a11y.test.ts 검사)
  * - 색 조합: 글자/배경 쌍은 ui/a11y.ts COLOR_PAIRS에 등록하고 4.5:1 이상 (같은 테스트가 검사)
+ * - 움직임: 누름 scale(.97) + var(--ease) 160~240ms, 호버는 (hover:hover) and (pointer:fine) 안에서만,
+ *   움직임 줄이기는 global.css가 전부 끔
+ * - 굵기 400/500/600/700만 (800·900 금지)
  */
 
 /* ───────── 앱 틀: 데스크톱에서 폰 폭 가운데 정렬 (PRD 7장) ───────── */
 .app-stage {
   min-height: 100%;
-  background: linear-gradient(160deg, var(--stage1), var(--stage2));
+  background: var(--stage1);
 }
 
 .app-frame {
@@ -26,8 +29,8 @@
 @media (min-width: 431px) {
   .app-frame {
     box-shadow:
-      0 0 0 1px rgba(21, 26, 38, 0.06),
-      0 30px 60px -30px rgba(21, 26, 38, 0.35);
+      0 0 0 1px rgba(15, 27, 51, 0.06),
+      0 30px 60px -30px rgba(15, 27, 51, 0.3);
   }
 }
 
@@ -60,7 +63,8 @@
   pointer-events: auto;
 }
 
-/* ───────── 버튼 ───────── */
+/* ───────── 버튼 ─────────
+   주 동작 = 파란 채움(ink·acc), 연파랑 보조(sea), 흰 바탕 + 테두리 보조(ghost) */
 .ui-btn {
   display: flex;
   align-items: center;
@@ -71,14 +75,19 @@
   min-height: var(--touch);
   height: 52px;
   padding: 0 18px;
-  border-radius: var(--r-xl);
-  font-size: 15px;
+  border-radius: var(--r-md);
+  font-size: 16px;
   font-weight: 700;
-  transition: transform 0.12s;
+  line-height: 1.2;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    background-color var(--dur) var(--ease);
 }
 
 .ui-btn:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .ui-btn:disabled {
@@ -91,25 +100,29 @@
 }
 
 .ui-btn--ink {
-  background: var(--ink);
-  color: #fff;
+  background: var(--blue);
+  color: var(--on-blue);
 }
 
 .ui-btn--acc {
-  background: var(--acc-d);
-  color: #fff;
-  box-shadow: 0 10px 20px -10px rgba(238, 106, 60, 0.7);
+  background: var(--acc);
+  color: var(--on-blue);
 }
 
 .ui-btn--sea {
-  background: var(--sea);
-  color: #fff;
+  background: var(--tint);
+  color: var(--blue);
 }
 
 .ui-btn--ghost {
-  background: #fff;
-  border: 1.5px solid var(--line2);
+  background: var(--surface);
+  border: 1px solid var(--line);
   color: var(--ink);
+}
+
+.ui-btn--ink:active:not(:disabled),
+.ui-btn--acc:active:not(:disabled) {
+  background-color: var(--blue-deep);
 }
 
 /* ───────── 알약 표시 (누를 수 없음) ───────── */
@@ -119,43 +132,43 @@
   gap: 5px;
   padding: 4px 9px;
   border-radius: var(--r-pill);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
 .ui-pill--acc {
-  background: var(--acc-s);
-  color: var(--acc-d);
+  background: var(--tint);
+  color: var(--blue);
 }
 
 .ui-pill--sea {
-  background: var(--sea-s);
-  color: var(--sea-d);
+  background: var(--tint);
+  color: var(--blue-deep);
 }
 
 .ui-pill--plum {
-  background: var(--plum-s);
-  color: var(--plum);
+  background: var(--tint);
+  color: var(--blue-deep);
 }
 
 .ui-pill--ink {
   background: var(--ink);
-  color: #fff;
+  color: var(--on-blue);
 }
 
 .ui-pill--line {
-  background: #fff;
-  border: 1px solid var(--line2);
-  color: var(--ink2);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
 }
 
 /* ───────── 카드 ───────── */
 .ui-card {
   display: block;
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--r-2xl);
+  border-radius: var(--r-xl);
   color: var(--ink);
 }
 
@@ -164,9 +177,18 @@
   min-width: var(--touch);
   min-height: var(--touch);
   text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    border-color var(--dur) var(--ease);
 }
 
-/* ───────── 아이콘 버튼 (목업 40px → 44px) ───────── */
+.ui-card--action:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* ───────── 아이콘 버튼 (44px) ───────── */
 .ui-icb {
   display: grid;
   place-items: center;
@@ -176,9 +198,16 @@
   min-width: var(--touch);
   min-height: var(--touch);
   border-radius: 50%;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
   color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.ui-icb:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .ui-icb:disabled {
@@ -196,16 +225,17 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 60px;
-  padding: 8px 18px;
+  min-height: 56px;
+  padding: 6px 12px;
 }
 
 .ui-topbar__title {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -223,7 +253,7 @@
   display: flex;
   flex: none;
   padding: 4px 8px calc(4px + env(safe-area-inset-bottom, 0px));
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--surface);
   border-top: 1px solid var(--line);
 }
 
@@ -233,17 +263,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 4px;
   min-width: var(--touch);
   min-height: 56px;
-  color: var(--soft);
-  font-size: 11px;
-  font-weight: 600;
+  color: var(--mute);
+  font-size: 12px;
+  font-weight: 500;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .ui-tab[aria-current='page'] {
-  color: var(--acc-d);
+  color: var(--blue);
+  font-weight: 700;
 }
 
 /* ───────── 바텀시트 ───────── */
@@ -252,18 +285,19 @@
   inset: 0;
   display: flex;
   align-items: flex-end;
-  background: rgba(14, 18, 27, 0.45);
-  animation: ui-fadein 0.2s;
+  background: rgba(var(--scrim-rgb), 0.45);
+  animation: ui-fadein var(--dur) var(--ease);
 }
 
 .ui-sheet {
   width: 100%;
   max-height: 90%;
   overflow-y: auto;
-  padding: 12px 22px calc(28px + env(safe-area-inset-bottom, 0px));
-  background: var(--paper);
-  border-radius: 28px 28px 0 0;
-  animation: ui-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 12px 20px calc(28px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface);
+  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+  color: var(--ink);
+  animation: ui-up var(--dur-slow) var(--ease);
 }
 
 .ui-sheet:focus {
@@ -275,7 +309,7 @@
   height: 5px;
   margin: 0 auto 16px;
   border-radius: 5px;
-  background: var(--line2);
+  background: var(--line);
 }
 
 .ui-sheet__head {
@@ -287,8 +321,8 @@
 .ui-sheet__title {
   flex: 1;
   font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 /* ───────── 토스트 ───────── */
@@ -302,19 +336,19 @@
   width: max-content;
   max-width: calc(100% - 32px);
   padding: 11px 18px;
-  border-radius: var(--r-pill);
+  border-radius: var(--r-md);
   background: var(--ink);
-  color: #fff;
-  font-size: 13px;
+  color: var(--on-blue);
+  font-size: 14px;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(15, 27, 51, 0.4);
   transform: translateX(-50%);
-  animation: ui-toast 2.4s ease forwards;
+  animation: ui-toast 2.4s var(--ease) forwards;
   pointer-events: none;
 }
 
-/* ───────── 듣기 버튼 ───────── */
+/* ───────── 듣기 버튼 (연파랑) ───────── */
 .ui-listen {
   display: inline-flex;
   align-items: center;
@@ -322,8 +356,17 @@
   gap: 6px;
   min-width: var(--touch);
   min-height: var(--touch);
-  color: var(--sea-d);
-  font-weight: 700;
+  color: var(--blue);
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+
+.ui-listen:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .ui-listen:disabled {
@@ -335,44 +378,100 @@
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: var(--sea-s);
+  background: var(--tint);
 }
 
 .ui-listen--pill {
   padding: 0 14px;
-  border-radius: var(--r-pill);
-  background: var(--sea-s);
-  font-size: 12.5px;
+  border-radius: var(--r-md);
+  background: var(--tint);
+  font-size: 14px;
 }
 
 .ui-listen[aria-pressed='true'] {
-  background: var(--sea);
-  color: #fff;
+  background: var(--blue);
+  color: var(--on-blue);
 }
 
 .ui-listen-notice {
   display: block;
   margin-top: 6px;
-  color: var(--acc-d);
-  font-size: 12px;
-  font-weight: 600;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
 }
 
 /* ───────── 발음 표기 ───────── */
 .ui-pron {
-  color: var(--soft);
+  color: var(--mute);
   font-size: 13px;
 }
 
-/* ───────── 키보드 포커스 ───────── */
+/* ───────── 로고 (DESIGN.md 4장, ui/Logo.tsx) ───────── */
+.ui-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ui-logo__tile {
+  display: grid;
+  flex: none;
+  place-items: center;
+}
+
+.ui-logo__tile svg {
+  display: block;
+}
+
+.ui-logo__wm {
+  display: grid;
+  gap: 3px;
+  line-height: 1;
+}
+
+.ui-logo__name {
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.ui-logo__ko {
+  color: var(--mute);
+  font-weight: 600;
+}
+
+/* ───────── 키보드 포커스: 3px 파랑 외곽선 (DESIGN.md 9장) ───────── */
 .ui-btn:focus-visible,
 .ui-icb:focus-visible,
 .ui-tab:focus-visible,
 .ui-card--action:focus-visible,
 .ui-listen:focus-visible {
-  outline: 3px solid var(--sea);
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
+}
+
+/* ───────── 호버: 마우스(정밀 포인터)에서만 ───────── */
+@media (hover: hover) and (pointer: fine) {
+  .ui-btn--ink:hover:not(:disabled),
+  .ui-btn--acc:hover:not(:disabled) {
+    background-color: var(--blue-deep);
+  }
+
+  .ui-btn--sea:hover:not(:disabled),
+  .ui-btn--ghost:hover:not(:disabled),
+  .ui-icb:hover:not(:disabled) {
+    background-color: var(--tint);
+  }
+
+  .ui-card--action:hover:not(:disabled) {
+    border-color: var(--blue);
+  }
+
+  .ui-tab:hover {
+    color: var(--blue);
+  }
 }
 
 @keyframes ui-fadein {
@@ -396,9 +495,9 @@
 @keyframes ui-toast {
   0% {
     opacity: 0;
-    transform: translate(-50%, 10px);
+    transform: translate(-50%, 8px);
   }
-  10%,
+  8%,
   85% {
     opacity: 1;
     transform: translate(-50%, 0);

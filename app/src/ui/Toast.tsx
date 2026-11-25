@@ -1,9 +1,16 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { UpdateToast } from '../sw/UpdateToast';
-import { ToastContext } from './toastContext';
+import { ToastContext, ToastDismissContext } from './toastContext';
 
 /** 토스트 표시 시간 (목업 애니메이션 2.4초) */
 export const TOAST_MS = 2400;
+
+/**
+ * 경로 변경으로 닫을 때, 이 시간 안에 띄운 토스트는 남김: 토스트를 띄운 동작이 곧바로 화면을 옮기는 경우
+ * (예: 설정 > 데모 초기화 → 안내 토스트 + 언어 화면 이동) 그 안내가 다음 화면에서 보이게.
+ * 화면 이동이 transition으로 늦게 반영될 수 있어 렌더 순서 대신 시간으로 판단합니다.
+ */
+export const TOAST_ROUTE_GRACE_MS = 500;
 
 type ToastItem = { id: number; message: string };
 
@@ -16,8 +23,17 @@ type ToastItem = { id: number; message: string };
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<ToastItem | null>(null);
 
+  const shownAt = useRef(0);
+
   const show = useCallback((message: string) => {
+    shownAt.current = Date.now();
     setToast((prev) => ({ id: (prev?.id ?? 0) + 1, message }));
+  }, []);
+
+  /** 일반 토스트만 닫음 (방금 띄운 것은 남김). SW 업데이트 안내는 별도 상태라 영향 없음 */
+  const dismiss = useCallback(() => {
+    if (Date.now() - shownAt.current < TOAST_ROUTE_GRACE_MS) return;
+    setToast(null);
   }, []);
 
   useEffect(() => {
@@ -28,7 +44,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   return (
     <ToastContext.Provider value={show}>
-      {children}
+      <ToastDismissContext.Provider value={dismiss}>{children}</ToastDismissContext.Provider>
       <div role="status" aria-live="polite" data-testid="toast-region">
         {toast && (
           <div key={toast.id} className="ui-toast">

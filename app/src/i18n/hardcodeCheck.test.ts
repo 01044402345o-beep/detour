@@ -44,6 +44,15 @@ describe('findHardcoded 규칙', () => {
     expect(check('const A = () => <h1>Edulleo</h1>;')).toEqual([]);
   });
 
+  it('브랜드 글자 로고 edulleo·에둘러는 허용하되, 그 밖의 말은 그대로 잡는다 (T6.0)', () => {
+    expect(check('const A = () => <><b>edulleo</b><span>에둘러</span></>;')).toEqual([]);
+    expect(check("const k = '에둘러';", 'src/ui/x.ts')).toEqual([]);
+    // 허용은 정확히 같은 문자열만: 덧붙인 말·다른 한국어는 위반
+    expect(check('const A = () => <b>에둘러 가기</b>;')).toHaveLength(1);
+    expect(check('const A = () => <b>edulleo walks</b>;')).toHaveLength(1);
+    expect(check('const A = () => <b>돌아서</b>;')).toHaveLength(1);
+  });
+
   it('t() 호출·import 경로·타입 리터럴·비가시 문자열은 넘긴다', () => {
     const src = [
       "import { useT } from '../i18n';",

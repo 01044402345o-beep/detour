@@ -62,6 +62,7 @@ const expected = (placeId: string, items: Record<string, number>, takeout: boole
   buildOrderSentence(toOrderLines(getPlace(placeId)!.menu!, items), takeout)!;
 
 const line = (id: string) => screen.getByTestId(`line-${id}`);
+const koText = () => screen.getByTestId('order-ko').textContent?.replace(/\u00a0/g, ' ');
 
 beforeEach(() => {
   localStorage.clear();
@@ -116,7 +117,48 @@ describe('주문 카드 (F-06)', () => {
     renderOrder();
     expect(line('tw')).toHaveTextContent('₩3,400');
     expect(line('bu')).toHaveTextContent('₩2,000');
-    expect(screen.getByTestId('order-total')).toHaveTextContent('Est. ₩5,400');
+    // T6.5: 합계는 고정폭 숫자만, 왼쪽 이름표에 "예시 가격" 표기
+    expect(screen.getByTestId('order-total')).toHaveTextContent(/^₩5,400$/);
+    expect(screen.getByTestId('order-total')).toHaveClass('num');
+    expect(screen.getByText('Est. total · sample prices')).toBeInTheDocument();
+  });
+
+  it('문장 카드: 작은 대문자 머리말 없이 카드 이름(aria-label)으로 안내', () => {
+    setOrder('ssd', { ssd: { tw: 1 } });
+    renderOrder();
+    const card = screen.getByRole('region', { name: 'Say this at the counter' });
+    expect(card).toBe(screen.getByTestId('order-card'));
+    expect(card).not.toHaveTextContent('SAY THIS');
+  });
+});
+
+describe('T6.5 버튼 순서·역할 (주 버튼 = 직원에게 보여주기)', () => {
+  it('아래 버튼 묶음: 첫 번째 "Show to staff"(파랑 채움), 두 번째 "Practice saying it"(보조)', () => {
+    setOrder('ssd', { ssd: { tw: 1 } });
+    renderOrder();
+    const buttons = within(screen.getByTestId('order-actions')).getAllByRole('button');
+    expect(buttons.map((b) => b.textContent)).toEqual(['Show to staff', 'Practice saying it']);
+    expect(buttons[0]).toHaveClass('ui-btn--ink');
+    expect(buttons[1]).toHaveClass('ui-btn--ghost');
+  });
+
+  it('빈 주문이면 두 버튼 모두 비활성 (순서 유지)', () => {
+    setOrder('ssd', { ssd: {} });
+    renderOrder();
+    const buttons = within(screen.getByTestId('order-actions')).getAllByRole('button');
+    expect(buttons).toHaveLength(2);
+    for (const b of buttons) expect(b).toBeDisabled();
+  });
+
+  it('세그먼트는 radiogroup, 선택된 쪽만 aria-checked·is-on', () => {
+    setOrder('ssd', { ssd: { tw: 1 } }, true);
+    renderOrder();
+    const group = screen.getByRole('radiogroup');
+    const [togo, here] = within(group).getAllByRole('radio');
+    expect(togo).toHaveAttribute('aria-checked', 'true');
+    expect(togo).toHaveClass('is-on');
+    expect(here).toHaveAttribute('aria-checked', 'false');
+    expect(here).not.toHaveClass('is-on');
   });
 });
 
@@ -124,7 +166,8 @@ describe('포장/매장 (F-05, effectiveTakeout)', () => {
   it('포장 → 문장 끝 "포장해 주세요.", 매장 → 제거', () => {
     setOrder('ssd', { ssd: { tw: 1 } });
     renderOrder();
-    const ko = () => screen.getByTestId('order-ko').textContent;
+    // 화면은 수·단위 사이를 줄바꿈 없는 공백으로 표시 (T6.5) — 원문과 비교할 때 되돌림
+    const ko = () => koText();
     expect(ko()).not.toContain('포장해 주세요');
     fireEvent.click(screen.getByRole('radio', { name: 'To go' }));
     expect(useAppStore.getState().takeout).toBe(true);
@@ -140,7 +183,7 @@ describe('포장/매장 (F-05, effectiveTakeout)', () => {
     renderOrder();
     expect(screen.queryByRole('radio')).toBeNull();
     expect(screen.getByTestId('dine-in-only')).toHaveTextContent('Dine-in only');
-    expect(screen.getByTestId('order-ko').textContent).toBe(expected('gwc', { dt: 2 }, false).ko);
+    expect(koText()).toBe(expected('gwc', { dt: 2 }, false).ko);
     expect(screen.getByTestId('order-ko').textContent).not.toContain('포장');
   });
 });
@@ -209,7 +252,7 @@ describe('이동·기록', () => {
     const ko = expected('ssd', { tw: 2 }, false).ko;
     fireEvent.click(screen.getByRole('button', { name: 'Listen' }));
     expect(fake.tts.speak).toHaveBeenLastCalledWith(ko, 1, expect.any(Function));
-    fireEvent.click(screen.getByRole('button', { name: 'Listen slowly (0.75×)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Listen slowly' }));
     expect(fake.tts.speak).toHaveBeenLastCalledWith(ko, 0.75, expect.any(Function));
     const plays = useAppStore.getState().events.filter((e) => e.type === 'phrase_play');
     expect(plays).toHaveLength(2);

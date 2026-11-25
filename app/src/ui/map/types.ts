@@ -20,3 +20,11 @@ export type MapStart = {
 
 /** 지도 표시 방식: OSM 타일 지도 / SVG 약도 */
 export type MapMode = 'tiles' | 'sketch';
+
+/** 도보 구간 하나 (출발지→1번, 1번→2번 …). 지도 위 구간 분 칩에 씀 (T6.3) */
+export type MapLeg = {
+  /** 구간 경로 좌표 (구간 시작 → 끝) */
+  path: readonly GeoPoint[];
+  /** 칩 글자 (사용자 언어, 예: "11 min") */
+  label: string;
+};

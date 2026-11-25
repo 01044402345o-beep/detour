@@ -1,0 +1,48 @@
+{
+  "$override": ["nav.me"],
+  "en": {
+    "nav": { "me": "Settings" },
+    "photo": {
+      "label": "Photo",
+      "credit": "Photo: {author} · {license}",
+      "credits": "Photo credits",
+      "source": "Photos: Wikimedia Commons",
+      "author": "Author",
+      "license": "License",
+      "original": "Original file",
+      "changes": "Changes",
+      "notice": "Notice",
+      "licenseScope": "These licenses apply only to the photo files."
+    }
+  },
+  "ja": {
+    "nav": { "me": "設定" },
+    "photo": {
+      "label": "写真",
+      "credit": "写真: {author} · {license}",
+      "credits": "写真のクレジット",
+      "source": "写真: ウィキメディア・コモンズ",
+      "author": "撮影者",
+      "license": "ライセンス",
+      "original": "元の画像",
+      "changes": "変更内容",
+      "notice": "注意事項",
+      "licenseScope": "これらのライセンスは写真ファイルにのみ適用されます。"
+    }
+  },
+  "zh": {
+    "nav": { "me": "设置" },
+    "photo": {
+      "label": "照片",
+      "credit": "照片：{author} · {license}",
+      "credits": "照片来源",
+      "source": "照片：维基共享资源",
+      "author": "作者",
+      "license": "许可协议",
+      "original": "原始文件",
+      "changes": "修改说明",
+      "notice": "注意事项",
+      "licenseScope": "这些许可协议仅适用于照片文件。"
+    }
+  }
+}

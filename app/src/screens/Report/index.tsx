@@ -162,7 +162,7 @@ export default function ReportScreen() {
             <p className="s">{OPERATOR_KO.overnightSub}</p>
             <div className="rep-hbar rep-hbar--solo">
               <span className="tr">
-                <i style={{ ...width(SAMPLE_OVERNIGHT_PCT), background: 'var(--sea)' }} />
+                <i style={{ ...width(SAMPLE_OVERNIGHT_PCT), background: 'var(--blue)' }} />
               </span>
               <span className="v">{`${SAMPLE_OVERNIGHT_PCT}%`}</span>
             </div>

@@ -1,8 +1,9 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { places } from '../../data';
+import { getBundle, places } from '../../data';
 import { t } from '../../i18n';
 import { useAppStore } from '../../store/useAppStore';
+import { photoForPlace, photoUrl } from '../../data/photos';
 import { googlePlaceUrl, naverWalkUrl } from '../../ui/map/externalMap';
 import CourseScreen from '.';
 
@@ -57,16 +58,32 @@ describe('S02 코스 지도', () => {
     const root = screen.getByTestId('screen-course');
     expect(root.tagName).toBe('SECTION');
     expect(screen.getAllByText('Old Downtown Half-day').length).toBeGreaterThan(0);
-    expect(
-      screen.getByText(t('en', 'course.meta', { stops: 4, km: '2.2', hours: '3' })),
-    ).toBeInTheDocument();
-    expect(screen.getByText(t('en', 'course.from'))).toBeInTheDocument();
+    // 요약: 정류장·km·시간 · 출발 (숫자는 고정폭 .num)
+    const meta = screen.getByTestId('course-meta');
+    expect(meta).toHaveTextContent(
+      `${t('en', 'course.meta', { stops: 4, km: '2.2', hours: '3' })} · ${t('en', 'course.metaFrom', { start: 'Daejeon Stn' })}`,
+    );
+    expect([...meta.querySelectorAll('.num')].map((el) => el.textContent)).toEqual([
+      '4',
+      '2.2',
+      '3',
+    ]);
+    // 화면 머리 제목은 탭 이름과 같은 "Course"
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(t('en', 'nav.course'));
   });
 
   it('정류장 4곳이 방문 순서대로, 각각 이동 시간 표시', () => {
     renderCourse();
     const items = within(screen.getByRole('list')).getAllByRole('listitem');
     expect(items).toHaveLength(4);
+    // 분은 오른쪽 고정폭 (보이는 "11 min"), 영업시간도 고정폭. 하루 종일 여는 거리는 시간 생략
+    expect(items[0].querySelector('.course-stop__time')?.textContent).toBe(
+      `${t('en', 'course.minShort', { min: 11 })}${t('en', 'place.hours')} 08:00–22:0008:00–22:00`,
+    );
+    expect(items[0].querySelectorAll('.course-stop__time .num')).toHaveLength(2);
+    expect(items[1].querySelector('.course-stop__time')?.textContent).toBe(
+      t('en', 'course.minShort', { min: 2 }),
+    );
     ['ssd', 'eun', 'mus', 'gwc'].forEach((id, i) => {
       const p = byId(id);
       expect(items[i]).toHaveTextContent(p.name.en);
@@ -102,7 +119,7 @@ describe('S02 코스 지도', () => {
     expect(screen.getAllByText('Old Downtown Half-day').length).toBeGreaterThan(0);
   });
 
-  it('확인 상태: verified면 "확인일 YYYY-MM-DD", 아니면 날짜 없이 "현장 확인 전 · 예시 정보"', () => {
+  it('확인 상태(혼합 = 정류장마다): verified면 "확인일 YYYY-MM-DD", 아니면 날짜 없이 "현장 확인 전 · 예시 정보"', () => {
     renderCourse();
     expect(screen.getByTestId('check-ssd')).toHaveTextContent(
       t('en', 'course.checked', { date: byId('ssd').checkedAt }),
@@ -112,16 +129,127 @@ describe('S02 코스 지도', () => {
       expect(el).toHaveTextContent(t('en', 'place.unverified'));
       expect(el.textContent).not.toMatch(/\d{4}-\d{2}-\d{2}/);
     }
-    // 한 곳이라도 확인 전이면 코스 전체도 확인일 대신 확인 전 표시
-    expect(screen.getByTestId('course-unverified')).toHaveTextContent(t('en', 'place.unverified'));
+    // 확인/미확인이 섞이면 정류장마다만 표시하고 코스 요약 줄은 없음 (DESIGN.md 6장)
+    expect(screen.queryByTestId('course-unverified')).toBeNull();
+    expect(screen.queryByTestId('course-checked')).toBeNull();
   });
 
-  it('주문 가능한 장소만 메뉴 수, 모든 장소에 문장 수', () => {
+  it('확인 상태(모두 확인, 확인일이 서로 다름): 정류장마다 각자 확인일, 코스 요약으로 합치지 않음 (R1 M-1)', () => {
+    const b = getBundle('downtown-halfday')!;
+    const saved = b.places.map((p) => ({ verified: p.verified, checkedAt: p.checkedAt }));
+    const dates = ['2026-11-01', '2026-11-10', '2026-11-18', '2026-11-25'];
+    b.places.forEach((p, i) => Object.assign(p, { verified: true, checkedAt: dates[i] }));
+    try {
+      renderCourse();
+      b.places.forEach((p, i) => {
+        const el = screen.getByTestId(`check-${p.id}`);
+        expect(el).toHaveTextContent(t('en', 'course.checked', { date: dates[i] }));
+        expect(el).toHaveClass('is-verified');
+      });
+      expect(screen.queryByTestId('course-unverified')).toBeNull();
+      expect(screen.queryByText(t('en', 'place.unverified'))).toBeNull();
+    } finally {
+      b.places.forEach((p, i) => Object.assign(p, saved[i]));
+    }
+  });
+
+  it('영업시간은 정류장 버튼의 접근 가능한 이름에 포함, 이동 시간은 한 번만 (R1 M-2)', () => {
+    renderCourse();
+    // testing-library가 계산한 접근 가능한 이름 (dom-accessibility-api)
+    let name = '';
+    screen.getByRole('button', {
+      name: (n, el) => {
+        if (el === screen.getByTestId('stop-ssd')) name = n;
+        return el === screen.getByTestId('stop-ssd');
+      },
+    });
+    expect(name).toContain(`${t('en', 'place.hours')} 08:00–22:00`);
+    expect(name).toContain(
+      t('en', 'course.walkFromStart', { min: 11, start: t('en', 'course.mapStation') }),
+    );
+    // 보이는 "11 min"은 낭독기에서 숨겨 도보 문구와 중복되지 않음
+    expect(name.split('11 min').length - 1).toBe(1);
+    expect(screen.getByTestId('hours-ssd')).not.toHaveAttribute('aria-hidden');
+    expect(screen.getByTestId('hours-ssd').closest('[aria-hidden="true"]')).toBeNull();
+    // 하루 종일 여는 거리는 영업시간 없음
+    expect(screen.queryByTestId('hours-eun')).toBeNull();
+    // 이름으로 버튼을 찾을 수 있음
+    expect(screen.getByRole('button', { name: /Sungsimdang.*08:00–22:00/ })).toBe(
+      screen.getByTestId('stop-ssd'),
+    );
+  });
+
+  it('확인 상태(모두 미확인 = 요약 한 줄): 시장 코스는 4곳 모두 확인 전 → 코스에 한 줄, 정류장별 표시 없음', () => {
+    renderCourse('/course?c=jungang-market');
+    expect(screen.getByTestId('course-unverified')).toHaveTextContent(t('en', 'place.unverified'));
+    expect(screen.getAllByText(t('en', 'place.unverified'))).toHaveLength(1);
+    for (const id of ['sy', 'gc', 'sj', 'hg']) {
+      expect(screen.queryByTestId(`check-${id}`)).toBeNull();
+    }
+    expect(screen.queryByTestId('course-checked')).toBeNull();
+  });
+
+  it('썸네일: 사진이 있으면 사진(빈 alt, lazy), 없으면 파란 글자 타일(한글 2~3자)', () => {
+    renderCourse();
+    const thumb = (id: string) => screen.getByTestId(`stop-${id}`).querySelector('.course-thumb')!;
+    for (const id of ['ssd', 'eun', 'mus']) {
+      const img = thumb(id).querySelector('img')!;
+      expect(img).toHaveAttribute('src', photoUrl(photoForPlace(id)!));
+      expect(img).toHaveAttribute('alt', '');
+      expect(img).toHaveAttribute('loading', 'lazy');
+      expect(thumb(id)).toHaveAttribute('data-kind', 'photo');
+    }
+    expect(thumb('gwc')).toHaveAttribute('data-kind', 'tile');
+    expect(thumb('gwc').querySelector('img')).toBeNull();
+    expect(thumb('gwc')).toHaveTextContent('광천4');
+    // 번호 동그라미
+    expect(thumb('ssd').querySelector('.course-thumb__no')).toHaveTextContent('1');
+    // 출발지(대전역)는 대전역 사진 + "Start"
+    const origin = screen.getByTestId('course-origin');
+    expect(origin.querySelector('img')).toHaveAttribute('src', photoUrl(photoForPlace('djs')!));
+    expect(origin).toHaveTextContent(t('en', 'course.startTag'));
+    expect(origin).toHaveTextContent('대전역');
+    expect(origin).toHaveTextContent('or Line 1, 1 stop to Jungang-ro');
+  });
+
+  it('시장 코스: 가게 사진이 없어 모두 글자 타일, 출발지만 사진', () => {
+    renderCourse('/course?c=jungang-market');
+    const kinds = ['sy', 'gc', 'sj', 'hg'].map((id) =>
+      screen.getByTestId(`stop-${id}`).querySelector('.course-thumb')?.getAttribute('data-kind'),
+    );
+    expect(kinds).toEqual(['tile', 'tile', 'tile', 'tile']);
+    expect(
+      ['sy', 'gc', 'sj', 'hg'].map(
+        (id) => screen.getByTestId(`stop-${id}`).querySelector('.course-thumb__tile')?.textContent,
+      ),
+    ).toEqual(['수연', '개천', '생일집', '홍가']);
+    expect(screen.getByTestId('course-origin').querySelector('img')).not.toBeNull();
+  });
+
+  it('사진 출처 한 줄: 이 코스에 쓴 사진의 저작자·라이선스', () => {
+    renderCourse();
+    expect(screen.getByTestId('course-photo-credit')).toHaveTextContent(
+      t('en', 'course.photoCredits', {
+        list: 'Minseong Kim, Trainholic (CC BY-SA 4.0), Yoo Chung (CC BY-SA 2.5)',
+      }),
+    );
+  });
+
+  it('사진 출처(시장 코스): 대전역 사진만', () => {
+    renderCourse('/course?c=jungang-market');
+    expect(screen.getByTestId('course-photo-credit')).toHaveTextContent(
+      t('en', 'course.photoCredits', { list: 'Minseong Kim (CC BY-SA 4.0)' }),
+    );
+  });
+
+  it('정류장 줄: 사용자 언어 이름 + 한국어 이름·동네 (T6.3: 메뉴 수·문장 수 알약은 시안대로 뺌)', () => {
     renderCourse();
     const ssd = screen.getByTestId('stop-ssd');
-    expect(ssd).toHaveTextContent(`${t('en', 'place.tabMenu')} ${byId('ssd').menu!.length}`);
-    expect(screen.getByTestId('stop-eun')).not.toHaveTextContent(t('en', 'place.tabMenu'));
-    expect(screen.getByTestId('stop-eun')).toHaveTextContent(String(byId('eun').phrases.length));
+    expect(ssd.querySelector('.course-stop__name')).toHaveTextContent(byId('ssd').name.en);
+    expect(ssd.querySelector('.course-stop__sub')).toHaveTextContent(
+      `${byId('ssd').nameKo} · ${byId('ssd').areaLocal.en}`,
+    );
+    expect(ssd.querySelector('.ui-pill')).toBeNull();
   });
 
   it('목록 클릭 → 장소 상세, 화면은 place_view를 직접 기록하지 않음', () => {
@@ -169,6 +297,65 @@ describe('S02 코스 지도', () => {
     expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId('mus')));
   });
 
+  describe.each([
+    ['downtown-halfday', '/course', ['ssd', 'eun', 'mus', 'gwc']],
+    ['jungang-market', '/course?c=jungang-market', ['sy', 'gc', 'sj', 'hg']],
+  ] as const)('아래 고정 길찾기 버튼 (%s)', (_id, url, ids) => {
+    const view = (placeId: string) => ({ type: 'place_view' as const, placeId, t: 1 });
+
+    it('첫 진입(기록 없음): "Start with stop 1" → 1번 네이버 도보 길찾기', () => {
+      renderCourse(url);
+      const walk = screen.getByTestId('start-walking');
+      expect(walk).toHaveTextContent(t('en', 'course.startWalk'));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[0])));
+      expect(walk.closest('.course-dock')).not.toBeNull();
+      expect(screen.getByText(t('en', 'course.dirNext', { n: 1 }))).toBeInTheDocument();
+      expect(screen.getByTestId('google-maps')).toHaveAttribute(
+        'href',
+        googlePlaceUrl(byId(ids[0])),
+      );
+    });
+
+    it('중간 방문(1번을 봄): 기존 다음 정류장 문구 "Walk to stop 2"·2번 주소', () => {
+      useAppStore.setState({ events: [view(ids[0])] });
+      renderCourse(url);
+      const walk = screen.getByTestId('start-walking');
+      expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 2 }));
+      expect(walk).not.toHaveTextContent(t('en', 'course.startWalk'));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[1])));
+      expect(screen.getByText(t('en', 'course.dirNext', { n: 2 }))).toBeInTheDocument();
+      expect(screen.getByTestId('google-maps')).toHaveTextContent(
+        t('en', 'course.googleMaps', { n: 2 }),
+      );
+    });
+
+    it('마지막 정류장을 봄: 마지막 정류장 그대로 (코스 끝)', () => {
+      useAppStore.setState({ events: [view(ids[0]), view(ids[3])] });
+      renderCourse(url);
+      const walk = screen.getByTestId('start-walking');
+      expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 4 }));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[3])));
+      expect(screen.getByTestId('google-maps')).toHaveAttribute(
+        'href',
+        googlePlaceUrl(byId(ids[3])),
+      );
+      expect(screen.getByTestId('course-noapp')).toHaveTextContent(t('en', 'course.noApp'));
+    });
+  });
+
+  it('오프라인 약도: 같은 색 체계(흰 핀·파란 경로) + 구간 분 칩 + 약도 안내', () => {
+    renderCourse();
+    const sketch = screen.getByTestId('map-sketch');
+    expect(sketch.querySelector('[data-testid="map-line"]')).toHaveAttribute('data-route', 'walk');
+    expect(
+      screen.getByTestId('map-pin-ssd').querySelector('.cmap-sketch__dot')?.getAttribute('fill'),
+    ).toBe('#ffffff');
+    const chips = sketch.querySelectorAll('[data-testid^="map-chip-"]');
+    expect(chips.length).toBeGreaterThan(0);
+    chips.forEach((c) => expect(c.textContent).toMatch(/^\d+ min$/));
+    expect(screen.getByText(t('en', 'course.mapOffline'))).toBeInTheDocument();
+  });
+
   it('언어 즉시 전환 (ja·zh)', () => {
     renderCourse();
     act(() => useAppStore.setState({ lang: 'ja' }));
@@ -192,6 +379,6 @@ describe('S02 코스 지도', () => {
     renderCourse();
     expect(screen.getByTestId('start-walking')).toHaveClass('ui-btn');
     expect(screen.getByTestId('stop-ssd')).toHaveClass('course-stop');
-    expect(screen.getByTestId('google-maps')).toHaveClass('course-actions__google');
+    expect(screen.getByTestId('google-maps')).toHaveClass('course-google');
   });
 });

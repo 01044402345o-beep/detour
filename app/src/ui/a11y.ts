@@ -9,7 +9,10 @@
 export type ColorRef = `--${string}` | `#${string}`;
 
 export type ColorPair = {
-  /** ui.css 선택자. 그 규칙에 color/background가 있으면 이 표와 같은지도 검사 */
+  /**
+   * ui.css 선택자. 그 규칙에 color/background가 있으면 이 표와 같은지도 검사.
+   * 'compat:'·'state:'로 시작하면 CSS 규칙과 대조하지 않는 토큰 조합 검사(옛 토큰 호환·상태색)
+   */
   selector: string;
   fg: ColorRef;
   bg: ColorRef;
@@ -19,37 +22,57 @@ export const MIN_CONTRAST = 4.5;
 export const MIN_TOUCH_PX = 44;
 
 export const COLOR_PAIRS: readonly ColorPair[] = [
-  // 기본 글자
+  // 기본 글자 (DESIGN.md 2장 토큰)
   { selector: 'body', fg: '--ink', bg: '--paper' },
-  { selector: '.ui-card', fg: '--ink', bg: '--card' },
-  // 버튼
-  { selector: '.ui-btn--ink', fg: '#fff', bg: '--ink' },
-  { selector: '.ui-btn--acc', fg: '#fff', bg: '--acc-d' },
-  { selector: '.ui-btn--sea', fg: '#fff', bg: '--sea' },
-  { selector: '.ui-btn--ghost', fg: '--ink', bg: '#fff' },
-  { selector: '.ui-icb', fg: '--ink', bg: '#fff' },
+  { selector: '.ui-card', fg: '--ink', bg: '--surface' },
+  // 버튼: 파란 채움(ink·acc) · 연파랑(sea) · 흰 바탕 + 테두리(ghost)
+  { selector: '.ui-btn--ink', fg: '--on-blue', bg: '--blue' },
+  { selector: '.ui-btn--acc', fg: '--on-blue', bg: '--acc' },
+  { selector: '.ui-btn--sea', fg: '--blue', bg: '--tint' },
+  { selector: '.ui-btn--ghost', fg: '--ink', bg: '--surface' },
+  { selector: '.ui-icb', fg: '--ink', bg: '--surface' },
   // 알약
-  { selector: '.ui-pill--acc', fg: '--acc-d', bg: '--acc-s' },
-  { selector: '.ui-pill--sea', fg: '--sea-d', bg: '--sea-s' },
-  { selector: '.ui-pill--plum', fg: '--plum', bg: '--plum-s' },
-  { selector: '.ui-pill--ink', fg: '#fff', bg: '--ink' },
-  { selector: '.ui-pill--line', fg: '--ink2', bg: '#fff' },
-  // 탭바 (배경 흰색 96% — 흰색으로 계산)
-  { selector: '.ui-tab', fg: '--soft', bg: '#fff' },
-  { selector: ".ui-tab[aria-current='page']", fg: '--acc-d', bg: '#fff' },
+  { selector: '.ui-pill--acc', fg: '--blue', bg: '--tint' },
+  { selector: '.ui-pill--sea', fg: '--blue-deep', bg: '--tint' },
+  { selector: '.ui-pill--plum', fg: '--blue-deep', bg: '--tint' },
+  { selector: '.ui-pill--ink', fg: '--on-blue', bg: '--ink' },
+  { selector: '.ui-pill--line', fg: '--ink', bg: '--surface' },
+  // 탭바
+  { selector: '.ui-tab', fg: '--mute', bg: '--surface' },
+  { selector: ".ui-tab[aria-current='page']", fg: '--blue', bg: '--surface' },
   // 토스트·시트
-  { selector: '.ui-toast', fg: '#fff', bg: '--ink' },
-  { selector: '.ui-sheet', fg: '--ink', bg: '--paper' },
+  { selector: '.ui-toast', fg: '--on-blue', bg: '--ink' },
+  { selector: '.ui-sheet', fg: '--ink', bg: '--surface' },
   // 듣기·발음
-  { selector: '.ui-listen', fg: '--sea-d', bg: '--paper' },
-  { selector: '.ui-listen', fg: '--sea-d', bg: '--card' },
-  { selector: '.ui-listen--round', fg: '--sea-d', bg: '--sea-s' },
-  { selector: '.ui-listen--pill', fg: '--sea-d', bg: '--sea-s' },
-  { selector: ".ui-listen[aria-pressed='true']", fg: '#fff', bg: '--sea' },
-  { selector: '.ui-listen-notice', fg: '--acc-d', bg: '--paper' },
-  { selector: '.ui-listen-notice', fg: '--acc-d', bg: '--card' },
-  { selector: '.ui-pron', fg: '--soft', bg: '--paper' },
-  { selector: '.ui-pron', fg: '--soft', bg: '--card' },
+  { selector: '.ui-listen', fg: '--blue', bg: '--paper' },
+  { selector: '.ui-listen', fg: '--blue', bg: '--surface' },
+  { selector: '.ui-listen--round', fg: '--blue', bg: '--tint' },
+  { selector: '.ui-listen--pill', fg: '--blue', bg: '--tint' },
+  { selector: ".ui-listen[aria-pressed='true']", fg: '--on-blue', bg: '--blue' },
+  { selector: '.ui-listen-notice', fg: '--danger', bg: '--paper' },
+  { selector: '.ui-listen-notice', fg: '--danger', bg: '--surface' },
+  { selector: '.ui-pron', fg: '--mute', bg: '--paper' },
+  { selector: '.ui-pron', fg: '--mute', bg: '--surface' },
+  // 로고 글자
+  { selector: '.ui-logo__name', fg: '--ink', bg: '--paper' },
+  { selector: '.ui-logo__name', fg: '--ink', bg: '--surface' },
+  { selector: '.ui-logo__ko', fg: '--mute', bg: '--paper' },
+  { selector: '.ui-logo__ko', fg: '--mute', bg: '--surface' },
+  // 옛 토큰 호환 대응: 화면 CSS가 아직 쓰는 조합 (화면 task 전까지)
+  { selector: 'compat:acc-d/acc-s', fg: '--acc-d', bg: '--acc-s' },
+  { selector: 'compat:sea-d/sea-s', fg: '--sea-d', bg: '--sea-s' },
+  { selector: 'compat:plum/plum-s', fg: '--plum', bg: '--plum-s' },
+  { selector: 'compat:soft/paper', fg: '--soft', bg: '--paper' },
+  { selector: 'compat:soft/card', fg: '--soft', bg: '--card' },
+  { selector: 'compat:ink2/paper', fg: '--ink2', bg: '--paper' },
+  { selector: 'compat:white/acc-d', fg: '#fff', bg: '--acc-d' },
+  { selector: 'compat:white/plum', fg: '#fff', bg: '--plum' },
+  { selector: 'compat:gold-l/ink', fg: '--gold-l', bg: '--ink' },
+  { selector: 'compat:side-txt/side', fg: '--side-txt', bg: '--side' },
+  { selector: 'compat:side-mute/side', fg: '--side-mute', bg: '--side' },
+  // 상태색
+  { selector: 'state:ok/surface', fg: '--ok', bg: '--surface' },
+  { selector: 'state:danger/surface', fg: '--danger', bg: '--surface' },
 ];
 
 /** 누를 수 있는 공용 요소 클래스 (min-width·min-height ≥ 44px) */

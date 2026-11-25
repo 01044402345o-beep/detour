@@ -11,9 +11,9 @@
   gap: 6px 10px;
   z-index: 81;
   padding: 8px 8px 8px 18px;
-  border-radius: 22px;
+  border-radius: var(--r-lg);
   text-align: left;
-  animation: ui-fadein 0.2s ease;
+  animation: ui-fadein var(--dur) var(--ease);
   pointer-events: auto;
 }
 
@@ -27,18 +27,20 @@
   min-height: var(--touch);
   padding: 0 14px;
   border-radius: var(--r-pill);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
+  color: var(--on-blue);
+  font-size: 14px;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .ui-toast__btn--primary {
-  background: #fff;
-  color: var(--ink);
+  background: var(--blue);
+  color: var(--on-blue);
 }
 
 .ui-toast__btn:focus-visible {
-  outline: 3px solid var(--sea);
+  outline: 3px solid var(--signal); /* 어두운 토스트 위: 파랑 외곽선은 ink 바탕에서 안 보여 신호색 */
   outline-offset: 2px;
 }
 

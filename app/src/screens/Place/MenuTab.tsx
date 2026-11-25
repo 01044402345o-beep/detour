@@ -1,12 +1,14 @@
-/** S03 메뉴 탭 (F-04·F-05): 메뉴 카드, +/− 수량, 가격 미확인 표시, 알레르기 */
+/**
+ * S03 메뉴 탭 (F-04·F-05, T6.4): 메뉴 줄(한국어 이름 → 사용자 언어 이름 → 고정폭 가격), +/− 수량,
+ * 담은 줄은 연파랑 바탕. 가격 미정·알레르기 미정은 중립 회색(빨강·주황 금지, DESIGN.md 2장).
+ */
 import type { ContentMenuItem, ContentPlace } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { useAppStore } from '../../store/useAppStore';
-import { Card, Icon, Pill, useToast } from '../../ui';
+import { Icon, cx, useToast } from '../../ui';
 import { formatKrw } from '../Order/orderMath';
 import { AddButton, QtyStepper } from '../Order/QtyStepper';
 import { isAtMax } from '../Order/useOrder';
-import { MenuArt } from './PlaceArt';
 
 type Props = {
   place: ContentPlace;
@@ -40,70 +42,85 @@ export function MenuTab({ place, onNeedSwitch }: Props) {
     increment(place.id, item.id);
   };
 
-  const anySample = menu.some((m) => !m.verified);
   const allergyUnknown = !place.allergens || menu.some((m) => m.allergenStatus === 'unknown');
 
   return (
     <div className="menu-tab">
-      <div className="menu-tab__head">
-        <span className="menu-tab__hint">{t('menu.addHint')}</span>
-        {anySample && <Pill tone="line">{t('menu.samplePrices')}</Pill>}
-      </div>
-      {menu.map((item) => {
-        const qty = qtys?.[item.id] ?? 0;
-        const name = pickL10n(lang, item.name);
-        return (
-          <Card key={item.id} className="mitem" data-testid={`menu-${item.id}`}>
-            <MenuArt menuId={item.id} />
-            <div className="mitem__body">
-              <div className="mitem__title">
-                <span className="mitem__nm">{name}</span>
-                {item.signature && (
-                  <Pill tone="acc" className="mitem__tag">
-                    ★ {t('menu.signature')}
-                  </Pill>
-                )}
-                {item.spicy && (
-                  <Pill tone="acc" className="mitem__tag">
-                    🌶 {t('menu.spicy')}
-                  </Pill>
+      <ul className="menu-list">
+        {menu.map((item) => {
+          const qty = qtys?.[item.id] ?? 0;
+          const name = pickL10n(lang, item.name);
+          return (
+            <li
+              key={item.id}
+              className={cx('mrow', qty > 0 && 'is-sel')}
+              data-testid={`menu-${item.id}`}
+            >
+              <div className="mrow__body">
+                <p className="mrow__ko" lang="ko">
+                  {item.ko}
+                </p>
+                <p className="mrow__nm">
+                  {name}
+                  {item.signature && (
+                    <>
+                      {' '}
+                      <span className="mrow__tag">{t('menu.signature')}</span>
+                    </>
+                  )}
+                  {item.spicy && (
+                    <>
+                      {' '}
+                      <span className="mrow__tag">{t('menu.spicy')}</span>
+                    </>
+                  )}
+                </p>
+                <p className="mrow__pr">
+                  {item.priceKrw === undefined ? (
+                    <span className="mrow__ask" data-testid="price-ask">
+                      {t('menu.priceAsk')}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="num">{formatKrw(item.priceKrw)}</span>
+                      {item.counter === '인분' && (
+                        <>
+                          {' '}
+                          <small className="mrow__small">{t('menu.perPerson')}</small>
+                        </>
+                      )}
+                      {!item.verified && (
+                        <>
+                          {' '}
+                          <small className="mrow__small">{t('menu.sample')}</small>
+                        </>
+                      )}
+                    </>
+                  )}
+                </p>
+                {item.description && <p className="mrow__ds">{pickL10n(lang, item.description)}</p>}
+                {item.allergenStatus === 'confirmed' && item.allergens && (
+                  <p className="mrow__ds">
+                    {t('place.contains')}: {pickL10n(lang, item.allergens)}
+                  </p>
                 )}
               </div>
-              <div className="mitem__ko">
-                <span lang="ko">{item.ko}</span> ·{' '}
-                {item.priceKrw === undefined ? (
-                  <b className="price-tbd">{t('menu.priceTbd')}</b>
-                ) : (
-                  <>
-                    {t('menu.est', { price: formatKrw(item.priceKrw) })}
-                    {item.counter === '인분' && ` · ${t('menu.perPerson')}`}
-                  </>
-                )}
-              </div>
-              {item.description && (
-                <div className="mitem__ds">{pickL10n(lang, item.description)}</div>
+              {qty > 0 ? (
+                <QtyStepper
+                  qty={qty}
+                  name={name}
+                  onIncrement={() => add(item)}
+                  onDecrement={() => decrement(place.id, item.id)}
+                />
+              ) : (
+                <AddButton name={name} onClick={() => add(item)} />
               )}
-              {item.allergenStatus === 'confirmed' && item.allergens && (
-                <div className="mitem__ds">
-                  {t('place.contains')}: {pickL10n(lang, item.allergens)}
-                </div>
-              )}
-            </div>
-            {qty > 0 ? (
-              <QtyStepper
-                qty={qty}
-                name={name}
-                onIncrement={() => add(item)}
-                onDecrement={() => decrement(place.id, item.id)}
-              />
-            ) : (
-              <AddButton name={name} onClick={() => add(item)} />
-            )}
-          </Card>
-        );
-      })}
+            </li>
+          );
+        })}
+      </ul>
       <div className="allergy" role="note" data-testid="allergy">
-        <Icon name="alert" size={16} />
+        <Icon name="info" size={14} />
         <span>
           <b>{t('place.allergyTitle')}</b>
           {place.allergens && (

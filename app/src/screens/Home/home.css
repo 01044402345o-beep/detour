@@ -1,271 +1,396 @@
-/* S01 홈 (T2.1). 값은 mockup/index.html 기준(.hello .hubs .hub .banner .phr-day .sec).
-   대비 조정(PRD 7장 4.5:1, 목업과 다름):
-   - "지도 보기" 링크: 목업 --acc(3.0:1) → --acc-d(paper 위 5.4:1)
-   - 잠긴 거점: 목업은 카드 전체 opacity .55(글자 대비 미달) → 그림만 흐리게, 글자는 그대로
-   - 1박 배너 머리글: 목업 흰색 75% → 100% (--sea 위 4.6:1) */
-.home-screen {
-  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+/* S01 홈 (T6.2). DESIGN.md 7장 '홈', 시안 mockup/redesign/c2-home.png(.html 수치).
+   - 1호선 세로 노선: 파란 선 6px, 역 = 빈 동그라미(흰 속 + 파란 테두리), 대표 역(원도심) = 더 굵은 테두리 + 앰버 점.
+     앰버(--signal)는 장식이고 의미는 큰 카드·제목(h2)이 전달합니다(DESIGN.md 2장).
+   - 사진 위 글자: 글자 영역 전체에 막 rgba(scrim, .88) (DESIGN.md 5장 ≥ .85). 위쪽 부드러운 막은 장식.
+   - 탭바는 앱 틀의 형제 요소라 내용을 가리지 않음. 좁은 폭은 세로 스크롤, 가로 넘침 없음. */
+.home {
+  padding: env(safe-area-inset-top, 0px) 0 28px;
+  overflow-x: hidden;
+}
+
+.home-n {
+  font-weight: 600;
+}
+
+/* 줄바꿈 (DESIGN.md 3장, R1 L-2): 일본어·중국어 긴 문장은 균형 + 엄격한 금칙,
+   한글이 든 역 이름은 어절 단위(keep-all). 화면 언어는 section[lang]로 지정 */
+.home-h1,
+.home-ph__area,
+.home-ph__desc,
+.home-row__t,
+.home-row__m,
+.home-quiet,
+.home-course__t,
+.home-course__m,
+.home-course__from,
+.home-credit {
+  overflow-wrap: anywhere;
+}
+
+.home:lang(ja) :is(.home-h1, .home-ph__area, .home-ph__desc, .home-row__t, .home-row__m, .home-quiet, .home-course__t, .home-course__m, .home-course__from, .home-credit),
+.home:lang(zh) :is(.home-h1, .home-ph__area, .home-ph__desc, .home-row__t, .home-row__m, .home-quiet, .home-course__t, .home-course__m, .home-course__from, .home-credit) {
+  line-break: strict;
+  text-wrap: balance;
+}
+
+.home-ph__stn {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* ───────── 머리: 로고 + 언어 ───────── */
+.home-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding: 0 16px;
+}
+
+.home-lang {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 0 14px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.home-lang:active {
+  transform: scale(0.97);
+}
+
+/* ───────── 제목 ───────── */
+.home-h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 16px 0;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.home-h1__no {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--on-blue);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ───────── 노선 ───────── */
+.home-line {
+  margin: 12px 16px 0;
+  list-style: none;
+}
+
+.home-stn {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  padding-bottom: 14px;
+}
+
+/* 역 사이 파란 선 */
+.home-stn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 11px;
+  width: 6px;
+  background: var(--blue);
+}
+
+.home-stn:first-child::before {
+  top: 30px;
+}
+
+.home-stn:last-child {
+  padding-bottom: 0;
+}
+
+.home-stn:last-child::before {
+  bottom: auto;
+  height: 30px;
+}
+
+.home-stn__body {
+  min-width: 0;
+}
+
+/* 역 = 빈 동그라미 */
+.home-dot {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  margin-top: 16px;
+  border: 3px solid var(--blue);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+/* 대표 역: 굵은 테두리 + 가운데 앰버 점 */
+.home-dot--feat {
+  border-width: 5px;
+  margin-top: 40px;
+}
+
+.home-dot--feat::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--signal);
+}
+
+/* ───────── 사진 + 막 ───────── */
+.home-ph {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: var(--blue-deep);
+  color: var(--on-blue);
+  text-align: left;
+}
+
+.home-ph--sm {
+  min-height: 116px;
+  border-radius: var(--r-md);
+}
+
+.home-ph--lg {
+  min-height: 176px;
+}
+
+.home-ph__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-ph__tx {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 10px 14px 12px;
+  background: rgba(var(--scrim-rgb), 0.88);
+}
+
+/* 막 위쪽 가장자리를 부드럽게 (장식, 글자 없음) */
+.home-ph__tx::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: linear-gradient(0deg, rgba(var(--scrim-rgb), 0.88), rgba(var(--scrim-rgb), 0));
+  pointer-events: none;
+}
+
+.home-ph__stn {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.home-ph__area {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.home-ph__area--lg {
+  font-size: 25px;
+}
+
+.home-ph__desc {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* 상태 알약 (사진 위 흰 바탕) */
+.home-st {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ok);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.home-st::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+
+.home-st--later {
+  color: var(--ink);
+}
+
+.home-st--later::before {
+  display: none;
+}
+
+/* ───────── 누르는 권역 카드 (대전역·유성) ───────── */
+.home-area {
+  display: block;
+  width: 100%;
+  min-height: var(--touch);
+  border-radius: var(--r-md);
+  color: var(--ink);
+  text-align: left;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.home-area:active {
+  transform: scale(0.97);
 }
 
 .home-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.home-xs {
-  color: var(--soft);
-  font-size: 11.5px;
-}
-
-.home-s {
-  color: var(--soft);
-  font-size: 13px;
-}
-
-.home-h-m {
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-}
-
-.home-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 4px 22px 0;
-}
-
-.home-brand__logo {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
-  background: linear-gradient(135deg, #f58a5c, var(--acc-d));
-  color: #fff;
-  font-weight: 800;
-}
-
-.home-brand__name {
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.home-brand__sp {
-  flex: 1;
-}
-
-.home-hello {
-  margin-top: 20px;
-  padding: 6px 22px 0;
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -1px;
-  line-height: 1.15;
-}
-
-.home-sec {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 22px 0;
-}
-
-.home-link {
-  min-width: var(--touch);
-  min-height: var(--touch);
-  margin: -12px -8px -12px 0;
-  padding: 0 8px;
-  color: var(--acc-d);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.home-hubs {
-  display: flex;
   gap: 12px;
-  padding: 12px 22px 4px;
-  overflow-x: auto;
-  scrollbar-width: none;
+  min-height: 56px;
+  padding: 6px 4px 6px 2px;
+  border-bottom: 1px solid var(--line);
+  color: var(--mute);
 }
 
-.home-hubs::-webkit-scrollbar {
-  display: none;
+.home-row__tx {
+  flex: 1;
+  min-width: 0;
 }
 
-.home-hub {
-  position: relative;
-  flex: none;
-  width: 236px;
-  min-height: var(--touch);
+.home-row__t {
+  display: block;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.home-row__m {
+  display: block;
+  font-size: 13px;
+}
+
+.home-row__m .home-n,
+.home-course__m .home-n {
+  color: var(--ink);
+}
+
+.home-quiet {
+  margin-top: 6px;
+  padding-left: 2px;
+  color: var(--mute);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* ───────── 원도심 (대표) ───────── */
+.home-panel {
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 22px;
-  background: #fff;
-  color: var(--ink);
-  text-align: left;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  cursor: pointer;
 }
 
-.home-hub__art {
-  display: block;
-  width: 100%;
-  height: 120px;
+.home-course {
+  padding: 12px 14px 14px;
 }
 
-.home-hub--lock .home-hub__art {
-  opacity: 0.55;
-  filter: grayscale(0.4);
-}
-
-.home-hub__info {
-  display: block;
-  padding: 12px 15px 14px;
-}
-
-.home-hub__sub {
-  display: block;
-  margin-top: 2px;
-}
-
-.home-hub__meta {
-  gap: 12px;
-  margin-top: 8px;
-  color: var(--ink2);
-  font-size: 11.5px;
-  font-weight: 600;
-}
-
-.home-hub__soon {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-}
-
-.home-banner {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: calc(100% - 44px);
-  min-height: var(--touch);
-  margin: 16px 22px 0;
-  padding: 16px;
-  border-radius: 22px;
-  background: linear-gradient(120deg, var(--sea), var(--sea-d));
-  color: #fff;
-  text-align: left;
-}
-
-.home-banner__icon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 58px;
-  height: 58px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.15);
-  font-size: 26px;
-}
-
-.home-banner__body {
-  flex: 1;
-  min-width: 0;
-}
-
-.home-banner__k {
-  display: block;
-  font-size: 10.5px;
+.home-course__t {
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 1.2px;
 }
 
-.home-banner__t {
-  display: block;
-  margin-top: 3px;
+.home-course__m {
+  margin-top: 2px;
+  color: var(--mute);
   font-size: 15px;
-  font-weight: 800;
-  line-height: 1.3;
 }
 
-.home-course.ui-card {
-  display: block;
-  width: calc(100% - 44px);
-  margin: 10px 22px 0;
-  padding: 16px 18px;
-}
-
-.home-course__title {
-  display: block;
-  margin-bottom: 3px;
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.home-course__stops {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  margin-top: 10px;
-  list-style: none;
-  color: var(--ink2);
-  font-size: 12.5px;
-  font-weight: 600;
-}
-
-.home-course__stops li {
+.home-course__from {
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-top: 4px;
+  color: var(--mute);
+  font-size: 13px;
 }
 
-.home-course__no {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
+.home-course__from .ui-icon,
+.home-course__from svg {
+  flex: none;
 }
 
-.home-phrase.ui-card {
+.home-cta.ui-btn {
+  margin-top: 12px;
+  border-radius: var(--r-md);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* ───────── 사진 출처 ───────── */
+.home-credit {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin: 10px 22px 0;
-  padding: 16px 18px;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 14px 16px 0;
+  color: var(--mute);
+  font-size: 11.5px;
+  line-height: 1.4;
 }
 
-.home-phrase__body {
-  flex: 1;
-  min-width: 0;
+.home-credit svg {
+  flex: none;
+  margin-top: 1px;
 }
 
-.home-phrase__ko {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -0.4px;
-}
-
-.home-phrase__sub {
-  margin-top: 3px;
-}
-
-.home-phrase .ui-listen-notice {
-  flex-basis: 100%;
-  margin-top: 0;
-}
-
-.home-end {
-  height: 24px;
-}
-
-.home-hub:focus-visible,
-.home-banner:focus-visible,
-.home-link:focus-visible {
-  outline: 3px solid var(--sea);
+/* 초점: 3px 파랑 외곽선 (DESIGN.md 9장) */
+.home-lang:focus-visible,
+.home-area:focus-visible {
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-area:hover .home-row__t {
+    color: var(--blue);
+  }
 }

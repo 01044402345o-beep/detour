@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { closedDaysLabel, openStatus, parseHours, seoulClock } from './hours';
+import {
+  closedDaysLabel,
+  dayLabel,
+  nextOpening,
+  openStatus,
+  parseHours,
+  seoulClock,
+} from './hours';
 
 describe('hours', () => {
   it('parseHours: en dash·하이픈, 24:00', () => {
@@ -60,5 +67,50 @@ describe('hours', () => {
     expect(closedDaysLabel('mon', 'zh')).toBe('周一');
     expect(closedDaysLabel('sat,sun', 'en')).toMatch(/Sat.*Sun/);
     expect(closedDaysLabel(undefined, 'en')).toBeNull();
+  });
+});
+
+describe('nextOpening (닫힘일 때 다음 영업 시각)', () => {
+  const shop = { hours: '08:00–22:00' };
+  const hall = { hours: '10:00–18:00', closedOn: 'mon' };
+
+  it('영업 중이거나 시간표를 읽을 수 없으면 null', () => {
+    expect(nextOpening(shop, new Date('2026-11-24T01:00:00Z'))).toBeNull(); // 화 10:00 영업 중
+    expect(nextOpening({ hours: 'n/a' }, new Date('2026-11-24T14:00:00Z'))).toBeNull();
+  });
+
+  it('오늘 시작 전이면 오늘, 끝난 뒤면 내일', () => {
+    // 화 07:00 → 오늘 08:00
+    expect(nextOpening(shop, new Date('2026-11-23T22:00:00Z'))).toEqual({
+      inDays: 0,
+      day: 'tue',
+      time: '08:00',
+    });
+    // 화 23:00 → 내일(수) 08:00
+    expect(nextOpening(shop, new Date('2026-11-24T14:00:00Z'))).toEqual({
+      inDays: 1,
+      day: 'wed',
+      time: '08:00',
+    });
+  });
+
+  it('휴무 요일은 건너뜀 (일 19:00 → 월 휴무 → 화 10:00)', () => {
+    expect(nextOpening(hall, new Date('2026-11-22T10:00:00Z'))).toEqual({
+      inDays: 2,
+      day: 'tue',
+      time: '10:00',
+    });
+    // 월 12:00(휴무) → 내일(화) 10:00
+    expect(nextOpening(hall, new Date('2026-11-23T03:00:00Z'))).toEqual({
+      inDays: 1,
+      day: 'tue',
+      time: '10:00',
+    });
+  });
+
+  it('dayLabel: 언어별 짧은 요일 이름', () => {
+    expect(dayLabel('tue', 'en')).toBe('Tue');
+    expect(dayLabel('tue', 'ja')).toBe('火');
+    expect(dayLabel('tue', 'zh')).toBe('周二');
   });
 });

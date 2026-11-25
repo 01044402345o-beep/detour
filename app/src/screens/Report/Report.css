@@ -1,14 +1,15 @@
-/* S13 운영자 리포트 (목업 .report · .kpis · .rgrid). 데스크톱 넓은 폭, 휴대폰 1열. */
+/* S13 운영자 리포트 (목업 .report · .kpis · .rgrid). 데스크톱 넓은 폭, 휴대폰 1열.
+   T6.6: 배치는 그대로, 색만 DESIGN.md 2장 새 토큰(파랑 하나 + 중립), 굵기 800 → 700, 숫자 고정폭. */
 .rep {
   padding: 16px;
 }
 .rep-panel {
   width: min(1060px, 100%);
   margin: 0 auto;
-  background: #fff;
-  border: 1px solid rgba(21, 26, 38, 0.06);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 26px;
-  box-shadow: 0 40px 80px -30px rgba(21, 26, 38, 0.35);
+  box-shadow: 0 40px 80px -30px rgba(15, 27, 51, 0.25);
   padding: 20px 34px 30px;
   color: var(--ink);
 }
@@ -23,14 +24,14 @@
   display: inline-block;
   font-size: 11px;
   font-weight: 700;
-  color: var(--acc-d);
-  background: var(--acc-s);
+  color: var(--blue);
+  background: var(--tint);
   border-radius: var(--r-pill);
   padding: 4px 10px;
 }
 .rep-title {
   margin-top: 8px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 28px;
   letter-spacing: -0.8px;
 }
@@ -38,7 +39,7 @@
 .rep .s {
   margin-top: 4px;
   font-size: 12.5px;
-  color: var(--soft);
+  color: var(--mute);
 }
 .rep-kpis {
   display: grid;
@@ -54,17 +55,18 @@
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 16px 18px;
-  background: linear-gradient(180deg, #fff, #fcfaf5);
+  background: var(--surface);
 }
 .rep-kpi .l {
   font-size: 12px;
-  color: var(--soft);
+  color: var(--mute);
   font-weight: 600;
 }
 .rep-kpi .n {
   margin-top: 6px;
+  font-family: var(--num);
   font-size: 30px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -1px;
   font-variant-numeric: tabular-nums;
 }
@@ -75,13 +77,13 @@
   margin-top: 2px;
   font-size: 11.5px;
   font-weight: 700;
-  color: var(--soft);
+  color: var(--mute);
 }
 .rep-kpi .d--sea {
-  color: var(--sea);
+  color: var(--ok);
 }
 .rep-kpi .d--acc {
-  color: var(--acc-d);
+  color: var(--blue);
 }
 .rep-grid {
   display: grid;
@@ -98,7 +100,7 @@
 .rep-box h2,
 .rep-box h3 {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .rep-box .rep-gap {
   margin-top: 22px;
@@ -118,7 +120,7 @@
 .rep-hbar .tr {
   height: 12px;
   border-radius: 6px;
-  background: #f2ece1;
+  background: var(--tint);
   overflow: hidden;
 }
 .rep-hbar .tr i {
@@ -129,7 +131,7 @@
 .rep-hbar .v {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--ink2);
+  color: var(--ink);
 }
 .rep-stack {
   display: flex;
@@ -148,7 +150,7 @@
   gap: 14px;
   margin-top: 10px;
   font-size: 12px;
-  color: var(--ink2);
+  color: var(--ink);
 }
 .rep-legend i {
   display: inline-block;
@@ -169,16 +171,16 @@
   border-bottom: 1px dashed var(--line);
   font-size: 13px;
 }
-/* 목업 --gold 순위 숫자는 흰 바탕 대비 부족 → --acc-d */
+/* 순위 숫자: 파랑(흰 바탕 5.97:1), 고정폭 */
 .rep-list li b {
-  font-family: var(--dfont);
-  color: var(--acc-d);
+  font-family: var(--num);
+  color: var(--blue);
   width: 18px;
 }
 .rep-list li .c {
   margin-left: auto;
   font-variant-numeric: tabular-nums;
-  color: var(--soft);
+  color: var(--mute);
   font-weight: 600;
 }
 .rep-cols {
@@ -191,7 +193,7 @@
 .rep-cols div {
   flex: 1;
   border-radius: 6px 6px 2px 2px;
-  background: linear-gradient(180deg, var(--acc), #f3a080);
+  background: var(--blue);
   position: relative;
 }
 .rep-cols div span {
@@ -200,22 +202,22 @@
   left: 50%;
   transform: translateX(-50%);
   font-size: 10.5px;
-  color: var(--soft);
+  color: var(--mute);
   white-space: nowrap;
 }
 .rep-device {
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 2px dashed var(--line2);
+  border-top: 2px dashed var(--line);
 }
 .rep-device > h2 {
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .rep-none {
   margin-top: 10px;
   font-size: 13px;
-  color: var(--soft);
+  color: var(--mute);
 }
 
 /* 휴대폰: 1열 (PRD 7장 S13) */

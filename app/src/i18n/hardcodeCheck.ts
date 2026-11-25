@@ -36,6 +36,8 @@ export const EXEMPT_PATHS: readonly { pattern: RegExp; reason: string }[] = [
 /** 상호명·서비스명 (PRD 4장). 화면 언어와 관계없이 그대로 씁니다. */
 export const BRAND_TERMS: readonly string[] = [
   'Edulleo',
+  'edulleo',
+  '에둘러',
   'Daejeon',
   'E',
   'NAVER',

@@ -54,6 +54,7 @@ describe('대비 4.5:1 이상 (PRD 7장)', () => {
 
   it('표의 색이 실제 CSS 선언과 같음 (표와 CSS가 어긋나지 않게)', () => {
     for (const p of COLOR_PAIRS) {
+      if (/^(compat|state):/.test(p.selector)) continue; // CSS 규칙 없는 토큰 조합
       const decl = rules.get(p.selector) ?? globalRules.get(p.selector);
       expect(decl, `${p.selector} 규칙 없음`).toBeDefined();
       const color = decl!.get('color');
@@ -77,6 +78,89 @@ describe('대비 4.5:1 이상 (PRD 7장)', () => {
       .map(([sel]) => sel)
       .filter((sel) => !listed.has(sel));
     expect(missing).toEqual([]);
+  });
+});
+
+describe('DESIGN.md 2장 토큰 (T6.0)', () => {
+  const DESIGN_TOKENS: Record<string, string> = {
+    '--ground': '#f4f7fb',
+    '--surface': '#ffffff',
+    '--line': '#dce3ee',
+    '--ink': '#0f1b33',
+    '--mute': '#55627a',
+    '--blue': '#1d5bd6',
+    '--blue-deep': '#0e3a8f',
+    '--tint': '#e6eefb',
+    '--on-blue': '#ffffff',
+    '--signal': '#ffb21a',
+    '--ok': '#17703d',
+    '--danger': '#b42318',
+  };
+
+  it('새 토큰 값이 DESIGN.md와 같음', () => {
+    for (const [name, hex] of Object.entries(DESIGN_TOKENS)) {
+      expect(resolveColor(name as `--${string}`, tokens).toLowerCase(), name).toBe(hex);
+    }
+  });
+
+  it('옛 강조색 이름은 파랑·중립으로 대응 (주황·청록·보라·금색 값 없음)', () => {
+    const palette = new Set(Object.values(DESIGN_TOKENS));
+    for (const old of [
+      '--acc',
+      '--acc-d',
+      '--acc-s',
+      '--sea',
+      '--sea-d',
+      '--sea-s',
+      '--plum',
+      '--plum-s',
+      '--paper',
+      '--card',
+      '--soft',
+      '--ink2',
+      '--line2',
+    ]) {
+      expect(palette.has(resolveColor(old as `--${string}`, tokens).toLowerCase()), old).toBe(true);
+    }
+  });
+
+  it('공용 스타일에 굵기 800·900 없음 (DESIGN.md 3장)', () => {
+    for (const f of [
+      '../styles/ui.css',
+      '../styles/global.css',
+      './ReportSheet.css',
+      '../sw/updateToast.css',
+    ]) {
+      expect(read(f), f).not.toMatch(/font-weight:\s*(800|900)/);
+    }
+  });
+
+  it('글꼴: Fraunces 없음, 숫자는 IBM Plex Mono', () => {
+    expect(tokens.get('--dfont')).not.toMatch(/Fraunces/);
+    expect(tokens.get('--sans')).toBe('var(--sans-ko)');
+    expect(tokens.get('--num')).toBe('var(--num-ko)');
+    for (const l of ['ko', 'ja', 'zh']) {
+      expect(tokens.get(`--sans-${l}`)).toMatch(/^'Pretendard Variable'/);
+      expect(tokens.get(`--num-${l}`)).toMatch(/^'IBM Plex Mono'/);
+    }
+  });
+
+  it('JA·ZH 글꼴 스택에 맑은 고딕 없음, 숫자 스택은 monospace 앞에 언어 글꼴 (T6.7 M-01·M-02)', () => {
+    expect(tokens.get('--sans-ko')).toMatch(/'Malgun Gothic'/);
+    for (const l of ['ja', 'zh']) {
+      expect(tokens.get(`--sans-${l}`)).not.toMatch(/Malgun/);
+      expect(tokens.get(`--num-${l}`)).not.toMatch(/Malgun/);
+    }
+    expect(tokens.get('--sans-ja')).toMatch(/'Hiragino Sans'[\s\S]*'Yu Gothic UI'[\s\S]*Meiryo/);
+    expect(tokens.get('--sans-zh')).toMatch(/'PingFang SC'[\s\S]*'Microsoft YaHei'/);
+    expect(tokens.get('--num-ja')).toMatch(/'Yu Gothic UI'[\s\S]*monospace$/);
+    expect(tokens.get('--num-zh')).toMatch(/'Microsoft YaHei'[\s\S]*monospace$/);
+    // lang 속성 요소에서 언어별 변수를 고름(html에도 적용되게 :root보다 높은 명시도),
+    // font-family는 :where(명시도 0)라 화면 CSS가 이김
+    const g = read('../styles/global.css');
+    expect(g).toMatch(/\n\[lang\]:lang\(ja\)\s*\{[^}]*--sans:\s*var\(--sans-ja\)/);
+    expect(g).toMatch(/\n\[lang\]:lang\(zh\)\s*\{[^}]*--sans:\s*var\(--sans-zh\)/);
+    expect(g).toMatch(/:where\(\[lang\]\)\s*\{\s*font-family:\s*var\(--sans\);/);
   });
 });
 

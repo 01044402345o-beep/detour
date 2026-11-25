@@ -10,7 +10,7 @@ import { logOrWarn } from './logOrWarn';
 import './Phrases.css';
 
 /**
- * S10 문장 모음 (F-12·F-13, 목업 R.phrases).
+ * S10 문장 모음 (F-12·F-13, 목업 R.phrases → T6.6 흰 목록·선 구분, 듣기·저장 44px).
  * 코스별(원도심·전통시장, T5.1)로 장소 문장을 보여 주고, 듣기(phrase_play)·연습 시작·문장 북마크를 합니다.
  */
 export default function PhrasesScreen() {
@@ -52,7 +52,7 @@ export default function PhrasesScreen() {
           {places.map((place) => (
             <section key={place.id} className="phr-sec" aria-labelledby={`phr-${place.id}`}>
               <h3 className="phr-sec__head" id={`phr-${place.id}`}>
-                <span className={cx('phr-no', `phr-no--${place.category}`)} aria-hidden="true">
+                <span className="phr-no num" aria-hidden="true">
                   {place.order}
                 </span>
                 {pickL10n(lang, place.name)}
@@ -61,7 +61,7 @@ export default function PhrasesScreen() {
                 {place.phrases.map((ph) => {
                   const saved = savedPhrases.includes(ph.id);
                   return (
-                    <li key={ph.id} className="ui-card phr-row" data-phrase-id={ph.id}>
+                    <li key={ph.id} className="phr-row" data-phrase-id={ph.id}>
                       <button
                         type="button"
                         className="phr-row__main"
@@ -73,9 +73,10 @@ export default function PhrasesScreen() {
                         <span className="phr-ko" lang="ko">
                           {ph.ko}
                         </span>
+                        {/* 한국어 → 발음 → 뜻 (DESIGN.md 7장 주문 카드와 같은 순서) */}
                         <span className="phr-meta">
-                          <Pronunciation roman={ph.roman} kana={ph.kana} /> ·{' '}
-                          {pickL10n(lang, ph.meaning)}
+                          <Pronunciation className="phr-pron" roman={ph.roman} kana={ph.kana} />{' '}
+                          <span className="phr-mn">{pickL10n(lang, ph.meaning)}</span>
                         </span>
                       </button>
                       <IconButton

@@ -1,213 +1,342 @@
-/* S02 코스 지도 (T2.2) — 목업 .cmeta .stop .walkseg 값 */
+/* S02 코스 (T2.2 → T6.3 DESIGN.md 7장 '코스', 시안 mockup/redesign/c2-course) */
 .course {
-  padding-bottom: 30px;
-}
-
-.course-meta {
-  padding: 16px 22px 6px;
-}
-
-.course-meta__title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
-  line-height: 1.2;
-}
-
-.course-meta__sub {
-  margin-top: 4px;
-  font-size: 13px;
-  color: var(--soft);
-}
-
-.course-meta__pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  flex-direction: column;
+}
+
+/* ───────── 제목·요약 ───────── */
+.course-head {
+  padding: 2px 16px 0;
+}
+
+.course-head__title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.course-head__meta {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--mute);
+  line-break: strict;
+}
+
+.course-head__meta .num,
+.course-head__meta b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.course .cmap {
+  margin-top: 12px;
+}
+
+/* ───────── 정류장 목록 (세로 노선) ───────── */
+.course-line {
+  position: relative;
+  margin: 14px 16px 0;
+}
+
+/* 노선: 출발지 썸네일 가운데 → 마지막 정류장 썸네일 가운데 */
+.course-line::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 32px;
+  bottom: 32px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--blue);
 }
 
 .course-stops {
   list-style: none;
 }
 
-.course-walk {
-  margin-left: 36px;
-  padding: 2px 22px;
-  font-size: 11.5px;
-  color: var(--soft);
-  display: flex;
+.course-origin,
+.course-stop {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 14px;
   align-items: center;
-  gap: 6px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 0;
+  text-align: left;
 }
 
-.course-walk::before {
-  content: '';
-  width: 2px;
-  height: 18px;
-  background: repeating-linear-gradient(var(--line2) 0 3px, transparent 3px 6px);
-  margin-right: 8px;
+.course-stops > li {
+  border-top: 1px solid var(--line);
 }
 
 .course-stop {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  padding: 12px 22px;
-  text-align: left;
-  width: 100%;
-  min-height: var(--touch);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  border-radius: var(--r-md);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.course-stop:active {
+  background: var(--tint);
 }
 
 .course-stop:focus-visible {
-  outline: 3px solid var(--ink);
-  outline-offset: -3px;
-  border-radius: var(--r-md);
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
 }
 
-.course-stop__n {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+@media (hover: hover) and (pointer: fine) {
+  .course-stop:hover {
+    background: var(--surface);
+  }
+}
+
+/* 썸네일: 사진 또는 파란 글자 타일 + 번호 동그라미 */
+.course-thumb {
+  position: relative;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: var(--blue);
+  box-shadow: 0 0 0 2px var(--blue);
+}
+
+.course-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 11px;
+}
+
+.course-thumb__tile {
   display: grid;
   place-items: center;
-  color: #fff;
-  font-weight: 800;
-  font-size: 13px;
-  flex: none;
-  margin-top: 2px;
+  width: 100%;
+  height: 100%;
+  color: var(--on-blue);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
 }
 
-/* 흰 글자 대비 4.5:1: 목업 #ee6a3c(3.1:1) 대신 --acc-d */
-.course-stop__n--food {
-  background: var(--acc-d);
+.course-thumb__no {
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--blue);
+  background: var(--surface);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.course-stop__n--sight {
-  background: var(--plum);
-}
-
+.course-origin__body,
 .course-stop__body {
-  flex: 1;
   min-width: 0;
   display: block;
 }
 
 .course-stop__name {
   display: block;
-  font-size: 15.5px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .course-stop__sub {
   display: block;
   margin-top: 2px;
-  font-size: 11.5px;
-  color: var(--soft);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--mute);
 }
 
-.course-stop__pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 7px;
-}
-
+/* 확인/미확인이 섞일 때만 정류장마다 (DESIGN.md 6장) */
 .course-stop__check {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-top: 7px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--ink2);
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--mute);
 }
 
 .course-stop__check.is-verified {
-  color: var(--sea-d);
+  color: var(--ok);
 }
 
-.course-stop__chev {
-  color: var(--soft);
-  margin-top: 8px;
-}
-
-.course-actions {
-  padding: 14px 22px 0;
-}
-
-.course-actions__hint {
-  margin-top: 8px;
-  font-size: 11.5px;
-  color: var(--soft);
-  text-align: center;
-}
-
-.course-actions__noapp {
-  margin-top: 6px;
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--soft);
-  text-align: center;
-}
-
-.course-actions__google {
+/* 분·영업시간: 고정폭, 오른쪽 정렬 */
+.course-stop__time {
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.course-stop__time b {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.course-stop__time span {
+  font-size: 11.5px;
+  color: var(--mute);
+}
+
+/* 분 안의 숫자(.num)는 위 b 크기·색 그대로 */
+.course-stop__time b .num {
+  font-size: inherit;
+  color: inherit;
+}
+
+.course-origin__tag {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+/* ───────── 안내·출처·대체 경로 ───────── */
+.course-notes {
+  margin: 8px 16px 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.course-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--mute);
+}
+
+.course-note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.course-note--ok {
+  color: var(--ok);
+}
+
+.course-credit {
+  margin-top: 4px;
+  padding-left: 20px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--mute);
+}
+
+.course-noapp {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--mute);
+}
+
+.course-google {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   min-height: var(--touch);
-  margin-top: 4px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--sea-d);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-.course-actions__google:focus-visible {
-  outline: 3px solid var(--ink);
+.course-google:focus-visible {
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-xs);
 }
 
-/* 링크(a)로 만든 큰 버튼: 전역 a 밑줄 제거 */
-.course-actions .ui-btn {
+/* ───────── 아래 고정 길찾기 ───────── */
+.course-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin-top: auto;
+  padding: 10px 16px 12px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+/* 목록과 고정 버튼 사이 여유 (margin-top: auto는 짧은 화면에서 0) */
+.course-notes {
+  margin-bottom: 16px;
+}
+
+.course-dock__btn {
+  height: 54px;
+  font-size: 17px;
   text-decoration: none;
 }
 
-/* 시즌 행사 카드 (야시장·축제, T5.1) */
+.course-dock__btn:focus-visible {
+  outline: 3px solid var(--blue-deep);
+  outline-offset: 2px;
+}
+
+.course-dock__hint {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--mute);
+}
+
+/* ───────── 시즌 행사 카드 (야시장·축제, T5.1) ───────── */
 .season {
-  margin: 14px 22px 0;
+  margin: 14px 16px 0;
   padding: 14px 16px;
 }
 
 .season__head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
 }
 
-.season__k {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  color: var(--acc-d);
-}
-
 .season__title {
-  margin-top: 6px;
-  font-size: 16px;
-  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 600;
   line-height: 1.3;
 }
 
+.season__title svg {
+  flex: none;
+  color: var(--blue);
+}
+
 .season__desc {
-  margin-top: 2px;
+  margin-top: 4px;
   font-size: 13px;
-  color: var(--soft);
+  line-height: 1.45;
+  color: var(--mute);
 }
 
 .season__rows {
@@ -215,6 +344,7 @@
   gap: 4px;
   margin-top: 10px;
   font-size: 13px;
+  line-height: 1.45;
 }
 
 .season__rows > div {
@@ -225,22 +355,23 @@
 .season__rows dt {
   flex: none;
   min-width: 48px;
-  font-weight: 700;
-  color: var(--soft);
+  font-weight: 600;
+  color: var(--mute);
 }
 
 .season__state {
   margin-top: 10px;
   padding: 8px 10px;
-  border-radius: 10px;
-  background: var(--paper, #f7f2e9);
+  border-radius: var(--r-sm);
+  background: var(--tint);
+  color: var(--blue-deep);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .season__note {
   margin-top: 6px;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.45;
-  color: var(--soft);
+  color: var(--mute);
 }

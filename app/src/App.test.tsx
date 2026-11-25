@@ -27,6 +27,17 @@ describe('앱 골격 스모크', () => {
     expect(window.location.hash).toBe('#/lang');
   });
 
+  it('html lang이 화면 언어를 따른다 (zh → zh-Hans, 언어 변경 시 갱신)', async () => {
+    useAppStore.setState({ lang: 'zh' });
+    window.location.hash = '#/course';
+    render(<App />);
+    await screen.findByTestId('screen-course');
+    expect(document.documentElement.lang).toBe('zh-Hans');
+    const { act } = await import('@testing-library/react');
+    act(() => useAppStore.setState({ lang: 'ja' }));
+    expect(document.documentElement.lang).toBe('ja');
+  });
+
   it('HashRouter: #/course로 열면 코스 화면', async () => {
     useAppStore.setState({ lang: 'en' });
     window.location.hash = '#/course';

@@ -13,7 +13,27 @@
     "welcomeSub": "ルート・実際のメニュー・使える韓国語を、インストール不要で。",
     "start": "はじめる",
     "pronRoman": "発音は韓国語のローマ字表記(国語のローマ字表記法)で示します。読み方の目安で、ピンインではありません。",
-    "pronKana": "発音はカタカナで示します。カタカナは近似表記です。"
+    "pronKana": "発音はカタカナで示します。カタカナは近似表記です。",
+    "lede": "ハングルのメニュー、韓国語のレジ。ルートも注文も返事も、Edulleoにおまかせ。",
+    "foot": "インストール不要 · オフラインでも使えます",
+    "boardLabel": "Edulleoでできること",
+    "play": "場面を自動で再生",
+    "pause": "場面の再生を一時停止",
+    "turnScreen": "画面を店員さんに向ける",
+    "scenes": {
+      "course": {
+        "tab": "コース",
+        "cap": "大田駅から歩ける*おすすめコース*。地図・徒歩時間・各スポットの営業時間がひと目でわかります。"
+      },
+      "order": {
+        "tab": "注文",
+        "cap": "実際のメニューで*欲しいものをタップするだけ*。韓国語の注文文が、発音と音声つきでできあがります。"
+      },
+      "staff": {
+        "tab": "店員",
+        "cap": "*画面を店員さんに見せる*だけ。店員さんはワンタップで返事し、あなたの言語で表示されます。"
+      }
+    }
   },
   "nav": {
     "explore": "探す",
@@ -41,7 +61,19 @@
     "overnightTitle": "儒城温泉・1号線で乗り換えなし",
     "todayPhrase": "今日のフレーズ",
     "todayCourse": "今日のコース",
-    "soonToast": "近日公開 — デモでは旧都心と中央市場を利用できます。"
+    "soonToast": "近日公開 — デモでは旧都心と中央市場を利用できます。",
+    "langButton": "言語: {lang}。設定で変更できます",
+    "lineTitle": "地下鉄1号線の3つのエリア",
+    "lineLabel": "地下鉄1号線の駅ごとのエリア",
+    "stnStation": "대전역 · 大田駅",
+    "stnDowntown": "중앙로 · 中央路駅",
+    "stnYuseong": "유성온천 · 儒城温泉駅",
+    "areaOpen": "利用できます",
+    "later": "今後公開",
+    "yuseongDesc": "温泉・大田駅から地下鉄1号線で乗り換えなし",
+    "startCourse": "コースを始める",
+    "startsAt": "出発: {place}",
+    "nightMarket": "夜市 {days} {hours}、{end}まで"
   },
   "course": {
     "title": "旧都心 半日コース",
@@ -63,7 +95,11 @@
     "walkToStop": "{n}か所目へ歩く",
     "dirNext": "NAVER地図アプリで{n}か所目への徒歩ルートが開きます",
     "noApp": "NAVER地図アプリがない場合は、上の地図の番号順に、一覧の徒歩時間を目安に進んでください。",
-    "googleMaps": "Google マップで{n}か所目を見る"
+    "googleMaps": "Google マップで{n}か所目を見る",
+    "minShort": "{min}分",
+    "metaFrom": "出発: {start}",
+    "startTag": "出発",
+    "photoCredits": "写真: {list} · ウィキメディア・コモンズ"
   },
   "season": {
     "kicker": "期間限定イベント",
@@ -101,7 +137,15 @@
     "takedown": "店舗の方へ:情報の訂正・削除をご希望の場合はご連絡ください。すぐに対応します。",
     "save": "この場所を保存",
     "unsave": "保存を解除",
-    "googleMaps": "Google マップで見る"
+    "googleMaps": "Google マップで見る",
+    "stopOf": "{total}か所中 {n}か所目",
+    "nextStop": "次: {name}まで徒歩{min}分",
+    "lastStop": "最後の立ち寄り先",
+    "kindFood": "グルメ",
+    "kindSight": "観光スポット",
+    "opensAt": "{time}から営業",
+    "opensTomorrow": "明日 {time}から営業",
+    "opensOn": "{day}曜 {time}から営業"
   },
   "menu": {
     "signature": "看板",
@@ -120,7 +164,9 @@
     "switchTitle": "ここで新しく注文しますか?",
     "switchBody": "{place}の注文は消去されます。",
     "switchConfirm": "消去して続ける",
-    "switchKeep": "注文を残す"
+    "switchKeep": "注文を残す",
+    "priceAsk": "価格: 店員に確認",
+    "sample": "例"
   },
   "order": {
     "title": "わたしの注文",
@@ -131,17 +177,18 @@
     "practice": "話す練習",
     "showStaff": "スタッフに見せる",
     "empty": "注文が空です",
-    "emptyHint": "注文カードを作るには、1品以上追加してください。"
+    "emptyHint": "注文カードを作るには、1品以上追加してください。",
+    "totalLabel": "合計の目安 · 価格は参考値"
   },
   "audio": {
     "listen": "聞く",
-    "listenSlow": "ゆっくり聞く(0.75倍)",
+    "listenSlow": "ゆっくり聞く",
     "noKoreanVoice": "この端末では韓国語音声が使えません。",
     "ttsUnsupported": "このブラウザは音声の読み上げに対応していません。"
   },
   "practice": {
     "title": "話す練習",
-    "tapWord": "単語をタップ",
+    "tapWord": "単語をタップして聞く",
     "tapMic": "マイクを押して話してください",
     "requesting": "マイクの使用を許可してください",
     "listening": "聞いています…どうぞ",
@@ -167,7 +214,7 @@
   "result": {
     "match": "認識一致度",
     "matchNote": "認識された文がフレーズとどれだけ一致したかを示します。発音の評価ではありません。",
-    "great": "よくできました!🎉",
+    "great": "よくできました!",
     "almost": "あと少し!",
     "closeMatch": "認識された文はフレーズとよく一致しました。",
     "heard": "聞き取った内容",
@@ -182,10 +229,11 @@
     "staffReply": "スタッフの返事",
     "play": "読み上げ",
     "bigger": "拡大",
-    "smaller": "縮小"
+    "smaller": "縮小",
+    "textSize": "文字の大きさ"
   },
   "reply": {
-    "yesTitle": "はい!👍",
+    "yesTitle": "はい!",
     "yesBody": "スタッフに伝わりました。",
     "soldTitle": "品切れです",
     "soldBody": "別のメニューを選んでください。",
@@ -194,7 +242,11 @@
     "payTitle": "レジでお支払いください",
     "payBody": "レジへどうぞ。",
     "edit": "注文を変更",
-    "backToStaff": "もう一度スタッフに見せる"
+    "backToStaff": "もう一度スタッフに見せる",
+    "yesNext": "商品を受け取ったら、次の立ち寄り先へ。",
+    "soldNext": "別のメニューを選んで、もう一度スタッフに見せましょう。",
+    "waitNext": "スタッフの準備ができたら、もう一度注文を見せましょう。",
+    "payNext": "レジで支払ったら「完了」を押してください。"
   },
   "phrases": {
     "title": "フレーズ",
@@ -206,7 +258,9 @@
     "savedToast": "保存しました",
     "removedToast": "削除しました",
     "empty": "まだ保存がありません",
-    "places": "スポット"
+    "places": "スポット",
+    "emptyHint": "場所やフレーズの保存ボタンを押すと、ここに集まります。",
+    "emptyIcon": "保存ボタン"
   },
   "report": {
     "open": "情報が違う?",
@@ -224,12 +278,34 @@
     "operatorReport": "運営者レポート",
     "reset": "デモデータをリセット",
     "resetConfirm": "この端末のデモデータをすべて削除して最初からやり直しますか?",
-    "resetDone": "デモデータをリセットしました。"
+    "resetDone": "デモデータをリセットしました。",
+    "demoTools": "デモ用ツール",
+    "demoToolsNote": "審査デモ用の機能です。旅行者の方は使う必要はありません。",
+    "photoCreditsSub": "このアプリで使っている写真とライセンス",
+    "photoPlace": "場所",
+    "photoTitle": "元の題名",
+    "photoArea": {
+      "downtown": "旧市街",
+      "station": "大田中央市場",
+      "yuseong": "儒城温泉の足湯"
+    }
   },
   "pwa": {
     "offlineReady": "オフラインで使えます",
     "updateAvailable": "新しいバージョンがあります。",
     "update": "更新",
     "later": "あとで"
+  },
+  "photo": {
+    "label": "写真",
+    "credit": "写真: {author} · {license}",
+    "credits": "写真のクレジット",
+    "source": "写真: ウィキメディア・コモンズ",
+    "author": "撮影者",
+    "license": "ライセンス",
+    "original": "元の画像",
+    "changes": "変更内容",
+    "notice": "注意事項",
+    "licenseScope": "これらのライセンスは写真ファイルにのみ適用されます。"
   }
 }

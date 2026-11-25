@@ -22,10 +22,11 @@ export type SampleNext =
   | { labelKey: OperatorKoKey; pct: number; color: string };
 
 export const SAMPLE_NEXT: readonly SampleNext[] = [
-  { placeId: 'eun', pct: 38, color: 'var(--plum)' },
-  { placeId: 'mus', pct: 21, color: '#8c74d8' },
-  { placeId: 'gwc', pct: 17, color: 'var(--acc)' },
-  { labelKey: 'nextMarket', pct: 9, color: 'var(--sun)' },
+  // T6.6: 파랑 하나의 명도 단계 + 중립 (막대마다 이름·수치 글자가 옆에 있음)
+  { placeId: 'eun', pct: 38, color: 'var(--blue-deep)' },
+  { placeId: 'mus', pct: 21, color: 'var(--blue)' },
+  { placeId: 'gwc', pct: 17, color: '#5b87e0' },
+  { labelKey: 'nextMarket', pct: 9, color: '#93b0ec' },
   { labelKey: 'nextHome', pct: 15, color: 'var(--mute)' },
 ];
 
@@ -39,9 +40,10 @@ export const SAMPLE_TOP: readonly { phraseId: string; count: number }[] = [
 ];
 
 export const SAMPLE_LANG: readonly { lang: Lang; pct: number; color: string }[] = [
+  // T6.6: 이웃 칸끼리 구분되게 짙은 남색 · 파랑 · 연한 파랑 (범례 글자 함께)
   { lang: 'en', pct: 52, color: 'var(--ink)' },
-  { lang: 'ja', pct: 21, color: 'var(--acc)' },
-  { lang: 'zh', pct: 27, color: 'var(--sea)' },
+  { lang: 'ja', pct: 21, color: 'var(--blue)' },
+  { lang: 'zh', pct: 27, color: '#93b0ec' },
 ];
 
 export const SAMPLE_OVERNIGHT_PCT = 7;

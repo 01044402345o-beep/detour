@@ -15,11 +15,65 @@ body,
   height: 100%;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/*
+ * 언어별 글꼴·줄바꿈 (T6.7 M-01·M-03, DESIGN.md 3장)
+ * lang 속성이 붙은 요소(html = en/ja/zh-Hans, 화면 안 lang="ko"·"ja"·"zh-Hans" 부분)에서 글꼴 변수를
+ * 다시 계산합니다. 변수는 선언한 요소에서 값이 정해지므로 --kfont·--dfont도 여기서 다시 묶어야
+ * 자손이 그 언어 스택을 받습니다. 변수 규칙은 tokens.css의 :root(명시도 0,1,0)보다 뒤·같거나 높은
+ * 명시도여야 html에도 적용됩니다. font-family 자체는 :where()(명시도 0)라 화면 CSS가 항상 이깁니다.
+ */
+[lang] {
+  --sans: var(--sans-ko);
+  --num: var(--num-ko);
+  --kfont: var(--sans);
+  --dfont: var(--sans);
+}
+
+[lang]:lang(ja) {
+  --sans: var(--sans-ja);
+  --num: var(--num-ja);
+}
+
+/* :lang(zh)는 zh-Hans도 맞음 */
+[lang]:lang(zh) {
+  --sans: var(--sans-zh);
+  --num: var(--num-zh);
+}
+
+:where([lang]) {
+  font-family: var(--sans);
+}
+
+/*
+ * 마지막 줄 한 글자·한 낱말 막기: 모든 글자에 text-wrap: pretty (상속). 긴 제목·짧은 블록은 화면 CSS의
+ * balance가 그대로 이깁니다(명시도 0). JA·ZH는 행두 금칙을 엄격하게(line-break: strict),
+ * JA는 문절 단위 줄바꿈(word-break: auto-phrase, 지원 브라우저만)으로 낱말 중간 끊김을 줄입니다.
+ * 한 문절이 줄보다 길면 넘치지 않게 그 안에서 끊습니다(overflow-wrap: break-word).
+ */
+:where(:root) {
+  text-wrap: pretty;
+}
+
+:where([lang]:lang(ja), [lang]:lang(zh)) {
+  line-break: strict;
+}
+
+:where([lang]:lang(ja)) {
+  word-break: auto-phrase;
+  overflow-wrap: break-word;
+}
+
 body {
   font-family: var(--kfont);
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -30,8 +84,26 @@ button {
   cursor: pointer;
 }
 
+/* 탭 지연·두 번 탭 확대 없음 (DESIGN.md 8장) */
+button,
+a,
+input,
+select,
+textarea,
+label,
+[role='button'] {
+  touch-action: manipulation;
+}
+
 a {
   color: inherit;
+}
+
+/* 숫자(시간·거리·가격·수량): 고정폭 숫자 (DESIGN.md 1·3장) */
+.num {
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 /* 시각적으로 숨기되 화면 낭독기는 읽음 */
@@ -42,4 +114,15 @@ a {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* 움직임 줄이기: 전부 끔 (DESIGN.md 8장) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

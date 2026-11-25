@@ -1,146 +1,151 @@
-/* S05 내 주문 (목업 .okcard .toggle .olist .oi) */
+/* S05 내 주문 (T6.5 · DESIGN.md 7장 '주문', 시안 mockup/redesign/c2-order). 굵기 400~700만. */
 .order {
   display: flex;
   flex-direction: column;
+  background: var(--ground);
 }
 
 .order-place {
-  padding: 0 22px 6px;
-  color: var(--soft);
-  font-size: 11.5px;
+  padding: 0 16px 2px;
+  color: var(--mute); /* ground 위 5.72:1 */
+  font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
+/* 한국어 문장 카드: 문장 → 발음 → 뜻 → 듣기 두 개 */
 .okcard {
-  position: relative;
-  margin: 6px 18px 0;
-  padding: 20px;
-  overflow: hidden;
-  border-radius: 24px;
-  background: var(--ink);
-  color: #fff;
-}
-
-.okcard::after {
-  content: '';
-  position: absolute;
-  top: -90px;
-  right: -80px;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(238, 106, 60, 0.35), transparent 65%);
-  pointer-events: none;
-}
-
-.okcard__k {
-  color: var(--gold-l);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 1.4px;
+  margin: 12px 16px 0;
+  padding: 22px 18px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  color: var(--ink);
 }
 
 .okcard__ko {
-  position: relative;
-  margin-top: 10px;
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  line-height: 1.35;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.22;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.okcard__ko--long {
+  font-size: 28px;
 }
 
 .okcard .okcard__pr {
-  position: relative;
   display: block;
-  margin-top: 8px;
-  color: #aeb5c6;
-  font-size: 12.5px;
+  margin-top: 10px;
+  color: var(--mute); /* 흰 바탕 6.15:1 */
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .okcard__mn {
-  position: relative;
-  margin-top: 6px;
-  color: #7ee0d7;
-  font-size: 13.5px;
-  font-weight: 600;
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.4;
+  line-break: strict;
+  text-wrap: balance;
 }
 
 .okcard__ctrl {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
 }
 
+/* ListenButton pill = 연파랑(tint) 바탕 + 파란 글자 5.11:1 (ui.css) */
 .okcard .okcard__listen {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-}
-
-.okcard .okcard__listen[aria-pressed='true'] {
-  background: var(--sea);
+  min-height: 48px;
+  padding: 0 10px;
+  font-size: 15px;
+  line-height: 1.2;
+  text-align: center;
 }
 
 .okcard .ui-listen-notice {
-  flex-basis: 100%;
-  color: #ffd2bf;
+  grid-column: 1 / -1;
+  margin-top: 0;
 }
 
 .order-empty {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin: 6px 18px 0;
+  margin: 12px 16px 0;
   padding: 30px 20px;
-  color: var(--soft);
-  font-size: 13px;
+  color: var(--mute);
+  font-size: 14px;
   text-align: center;
 }
 
 .order-empty b {
   color: var(--ink);
-  font-size: 15px;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .order-body {
-  margin-top: 18px;
-  padding: 0 22px;
+  margin-top: 16px;
+  padding: 0 16px 20px;
 }
 
+/* To go / For here 세그먼트 (role=radiogroup) */
 .toggle {
-  display: flex;
-  padding: 4px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 3px;
+  border-radius: var(--r-md);
+  background: var(--line);
 }
 
 .toggle button {
   display: flex;
-  flex: 1;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   min-height: var(--touch);
-  border-radius: 11px;
-  color: var(--soft);
-  font-size: 13.5px;
-  font-weight: 700;
+  height: 46px;
+  padding: 0 8px;
+  border-radius: 9px;
+  color: var(--mute); /* line 바탕 위 비선택 4.76:1 */
+  font-size: 16px;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    background-color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.toggle button:active {
+  transform: scale(0.97);
 }
 
 .toggle button.is-on {
-  background: var(--ink);
-  color: #fff;
+  background: var(--surface);
+  color: var(--blue); /* 흰 바탕 5.97:1 */
+  box-shadow:
+    0 1px 3px rgba(15, 27, 51, 0.15),
+    inset 0 0 0 2px var(--blue);
 }
 
 .toggle button:focus-visible {
-  outline: 3px solid var(--sea);
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
 }
 
+/* 항목·수량 */
 .olist {
-  margin-top: 8px;
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
   list-style: none;
 }
 
@@ -148,12 +153,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px dashed var(--line2);
-}
-
-.oi .menu-art {
-  border-radius: 12px;
+  min-height: 72px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
 }
 
 .oi__body {
@@ -162,17 +164,22 @@
 }
 
 .oi__nm {
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .oi__sub {
-  color: var(--soft);
-  font-size: 11.5px;
+  margin-top: 2px;
+  color: var(--mute);
+  font-size: 14px;
 }
 
+/* 가격 미정: 중립 회색 (빨강·주황 아님) */
 .order .price-tbd {
-  color: var(--acc-d);
+  color: var(--mute);
+  font-weight: 600;
 }
 
 .order-total {
@@ -180,25 +187,47 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 2px;
-  color: var(--soft);
-  font-size: 13px;
+  min-height: 54px;
+  padding: 10px 0;
+  color: var(--mute);
+  font-size: 14px;
 }
 
 .order-total b {
+  flex: none;
   color: var(--ink);
-  font-size: 18px;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .order-total b.is-tbd {
+  flex: 0 1 auto;
   font-size: 14px;
   text-align: right;
 }
 
+/* 아래 고정 버튼 묶음 (엄지 영역). 화면이 길면 스크롤 컨테이너 바닥에 붙음 */
 .order-actions {
-  display: flex;
-  flex-direction: column;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
   gap: 10px;
   margin-top: auto;
-  padding: 12px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.order-actions .order-actions__primary {
+  height: 60px;
+  font-size: 19px;
+}
+
+.order-actions .order-actions__secondary {
+  font-weight: 600;
+}
+
+.order-actions__secondary .ui-icon {
+  color: var(--blue);
 }

@@ -1,0 +1,354 @@
+<title>Edulleo 인트로 시안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Sans+JP:wght@500;700&display=swap">
+<style>
+/* C안 인트로 v3 (밝은 파랑): 바탕은 맑은 흰빛, 기능 안내판은 브랜드 파랑, 노선 신호색 앰버는 작게만.
+   기능 3장면(코스 · 주문 · 직원) 자동 재생 + 'e 우회로' 로고 */
+:root {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --line: #dce3ee;
+  --text: #0f1b33;
+  --mute: #55627a;
+  --blue: #1d5bd6;
+  --blue-2: #2a66de;
+  --blue-d: #0e3a8f;
+  --on-blue: #ffffff;
+  --on-blue-2: #e3ebfb;
+  --amber: #ffb21a;
+  --sans: "IBM Plex Sans KR", "IBM Plex Sans JP", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --num: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  color-scheme: light;
+}
+html, body { background: var(--bg); color: var(--text); }
+body { font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--blue); color: var(--on-blue); }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+.app {
+  max-width: 430px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 18px;
+  padding-block: 16px 22px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+
+/* 로고 */
+.logo { display: flex; align-items: center; gap: 11px; }
+.logo .tile { width: 40px; height: 40px; border-radius: 11px; background: var(--blue); display: grid; place-items: center; flex: none; }
+.logo .tile svg { width: 30px; height: 30px; }
+.wm { display: grid; line-height: 1; gap: 4px; }
+.wm b { font-size: 22px; font-weight: 700; letter-spacing: -0.035em; color: var(--text); }
+.wm span { font-size: 11.5px; font-weight: 600; color: var(--mute); letter-spacing: 0.06em; }
+
+/* 기능 안내판 (브랜드 파랑) */
+.board { background: var(--blue); border-radius: 22px; padding: 12px 12px 16px; display: grid; gap: 12px; color: var(--on-blue); box-shadow: 0 1px 2px rgba(15, 27, 51, 0.06), 0 18px 36px -22px rgba(29, 91, 214, 0.55); }
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.tabs button { position: relative; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; border-radius: 12px; font-size: 13.5px; font-weight: 600; color: var(--on-blue-2); transition: color 240ms var(--ease), background-color 240ms var(--ease); }
+.tabs button i { font-style: normal; font-family: var(--num); width: 20px; height: 20px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font-size: 11px; flex: none; }
+.tabs button[aria-selected="true"] { color: var(--on-blue); background: var(--blue-d); }
+.tabs button .bar { position: absolute; left: 12px; right: 12px; bottom: 5px; height: 2px; border-radius: 1px; background: var(--amber); transform: scaleX(0); transform-origin: left; }
+.tabs button[aria-selected="true"] .bar { animation: prog var(--dur, 4400ms) linear forwards; }
+@keyframes prog { to { transform: scaleX(1); } }
+
+.stage { position: relative; height: 196px; border-radius: 14px; background: var(--blue-2); overflow: hidden; }
+.scene { position: absolute; inset: 0; opacity: 0; transition: opacity 320ms var(--ease); padding: 14px; }
+.scene.on { opacity: 1; }
+.cap { margin: 0; min-height: 66px; font-size: 16px; line-height: 1.5; font-weight: 500; text-wrap: pretty; color: var(--on-blue); }
+.cap b { font-weight: 700; text-decoration: underline; text-decoration-color: var(--amber); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+/* 장면 1: 코스 */
+.s-course svg { width: 100%; height: 100%; display: block; }
+.s-course .grid { stroke: #3a74e4; }
+.s-course .road { stroke: #4a83eb; }
+.s-course .run { stroke: var(--amber); stroke-dasharray: 360; stroke-dashoffset: 360; }
+.s-course.on .run { animation: draw 1.8s 0.15s var(--ease) forwards; }
+.s-course .stp { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.s-course.on .stp { animation: pop 380ms var(--ease) forwards; }
+.s-course .pill { opacity: 0; }
+.s-course.on .pill { animation: fade 400ms var(--ease) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* 장면 2: 주문 */
+.s-order { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center; }
+.rows { display: grid; gap: 8px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 40px; padding: 0 8px 0 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.14); }
+.row .t { display: grid; gap: 5px; }
+.row .t span { display: block; height: 7px; border-radius: 4px; background: rgba(255, 255, 255, 0.45); }
+.row .t span:first-child { width: 58px; height: 9px; background: #ffffff; }
+.row .t span:last-child { width: 30px; }
+.step { display: flex; align-items: center; gap: 4px; font-family: var(--num); font-weight: 600; font-size: 13px; }
+.step em { font-style: normal; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.6); display: grid; place-items: center; color: var(--on-blue); font-size: 14px; position: relative; }
+.step em.plus.tap::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--amber); animation: ripple 520ms var(--ease) forwards; }
+@keyframes ripple { from { opacity: 1; transform: scale(0.6); } to { opacity: 0; transform: scale(1.4); } }
+.step b { min-width: 12px; text-align: center; color: var(--on-blue-2); }
+.step b.n { color: var(--amber); }
+.card { position: relative; border-radius: 14px; background: var(--surface); padding: 14px 12px; display: grid; gap: 9px; opacity: 0; transform: translateY(14px); transition: opacity 420ms var(--ease), transform 420ms var(--ease); box-shadow: 0 10px 24px -14px rgba(14, 58, 143, 0.7); }
+.card.on { opacity: 1; transform: none; }
+.card .ko { display: grid; gap: 7px; }
+.card .ko span { display: block; height: 12px; border-radius: 6px; background: var(--blue); transform-origin: left; transform: scaleX(0); transition: transform 500ms var(--ease); }
+.card.on .ko span { transform: scaleX(1); }
+.card .ko span:nth-child(2) { width: 70%; transition-delay: 120ms; }
+.card .ro { height: 6px; width: 80%; border-radius: 3px; background: #c9d6ee; }
+.card .snd { display: flex; align-items: center; gap: 6px; color: var(--blue); }
+.card .snd svg { width: 20px; height: 20px; }
+.card .snd .w { display: flex; gap: 3px; align-items: center; height: 16px; }
+.card .snd .w i { width: 3px; border-radius: 2px; background: #9db4e6; height: 6px; }
+.card.on .snd .w i { animation: wave 900ms ease-in-out infinite; }
+.card.on .snd .w i:nth-child(2) { animation-delay: 120ms; }
+.card.on .snd .w i:nth-child(3) { animation-delay: 240ms; }
+.card.on .snd .w i:nth-child(4) { animation-delay: 360ms; }
+@keyframes wave { 50% { height: 16px; background: var(--blue); } }
+
+/* 장면 3: 직원 */
+.s-staff { display: grid; grid-template-columns: 112px 1fr; gap: 14px; align-items: center; }
+.phone { width: 96px; height: 150px; margin: 0 auto; border-radius: 16px; border: 2px solid var(--blue-d); background: var(--surface); padding: 14px 10px; display: grid; align-content: start; gap: 8px; transition: transform 700ms var(--ease); }
+.phone span { display: block; height: 13px; border-radius: 6px; background: var(--text); }
+.phone span:nth-child(2) { width: 75%; }
+.phone small { display: block; height: 5px; width: 50%; border-radius: 3px; background: #c9d0dc; margin-bottom: 4px; }
+.phone .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
+.phone .btns i { height: 18px; border-radius: 6px; border: 1.5px solid var(--text); display: grid; place-items: center; }
+.phone .btns i.yes { background: var(--blue); border-color: var(--blue); }
+.phone .btns i svg { width: 12px; height: 12px; opacity: 0; }
+.phone .btns i.yes svg { opacity: 1; }
+.s-staff.turn .phone { transform: rotate(180deg); }
+.flow { display: grid; gap: 10px; }
+.who { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--on-blue-2); }
+.who svg { width: 18px; height: 18px; flex: none; }
+.bubble { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px 12px 12px 4px; background: var(--surface); opacity: 0; transform: translateY(8px); transition: opacity 380ms var(--ease), transform 380ms var(--ease); }
+.bubble.on { opacity: 1; transform: none; }
+.bubble svg { width: 20px; height: 20px; flex: none; }
+.bubble .lines { display: grid; gap: 5px; flex: 1; }
+.bubble .lines span { display: block; height: 8px; border-radius: 4px; background: var(--text); }
+.bubble .lines span:last-child { width: 60%; background: #9aa6bb; }
+
+/* 문구·언어·시작 */
+h1 { margin: 0; font-size: 29px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; color: var(--text); }
+.lede { margin: -6px 0 0; color: var(--mute); font-size: 15.5px; line-height: 1.55; text-wrap: pretty; }
+.lang { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.lang button { min-height: 44px; border-radius: 10px; font-weight: 600; font-size: 15px; color: var(--mute); transition: background-color 160ms var(--ease), color 160ms var(--ease), transform 160ms var(--ease); }
+.lang button[aria-pressed="true"] { background: var(--text); color: var(--surface); }
+.lang button:active { transform: scale(0.97); }
+.start { width: 100%; height: 58px; border-radius: 14px; background: var(--blue); color: var(--on-blue); font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 160ms var(--ease); box-shadow: 0 12px 24px -16px rgba(29, 91, 214, 0.9); }
+.start:active { transform: scale(0.97); }
+.start svg { width: 22px; height: 22px; }
+.foot { margin: -6px 0 0; text-align: center; color: var(--mute); font-size: 12.5px; }
+
+/* 로고 견본 */
+.spec { max-width: 430px; margin: 10px auto 0; padding: 18px 18px 30px; border-top: 1px solid var(--line); display: grid; gap: 14px; color: var(--mute); font-size: 13px; line-height: 1.6; }
+.spec h2 { margin: 0; color: var(--text); font-size: 16px; }
+.spec p { margin: 0; }
+.marks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: end; }
+.marks figure { margin: 0; display: grid; gap: 6px; justify-items: center; text-align: center; font-size: 12px; }
+.icon-big, .icon-dark, .icon-light { width: 76px; height: 76px; border-radius: 18px; display: grid; place-items: center; }
+.icon-big { background: var(--blue); }
+.icon-dark { background: var(--blue-d); }
+.icon-light { background: var(--surface); border: 1px solid var(--line); }
+.icon-big svg, .icon-dark svg, .icon-light svg { width: 56px; height: 56px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .s-course .run { stroke-dashoffset: 0 !important; animation: none !important; }
+  .s-course .stp, .s-course .pill { opacity: 1 !important; animation: none !important; }
+  .card, .card .ko span, .bubble, .phone, .scene { transition: none !important; }
+  .card.on .snd .w i { animation: none; }
+  .tabs button .bar { display: none; }
+}
+</style>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- e 우회로: 출발점에서 곧게 가다(가로획) 한 바퀴 돌아(고리) 도착점으로 -->
+    <symbol id="e-route" viewBox="0 0 48 48">
+      <path d="M14.5 24 H39 A15 15 0 1 0 34.6 34.6" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="8" cy="24" r="4.6" fill="var(--hole, #1d5bd6)" stroke="currentColor" stroke-width="3"/>
+      <circle cx="34.6" cy="34.6" r="4.4" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main class="app" id="app">
+  <div class="logo" aria-label="Edulleo">
+    <span class="tile" aria-hidden="true"><svg style="color:#fff;--hole:var(--blue)"><use href="#e-route"/></svg></span>
+    <span class="wm" aria-hidden="true"><b>edulleo</b><span>에둘러 · DAEJEON</span></span>
+  </div>
+
+  <section class="board" aria-label="What Edulleo does">
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="t0" data-i="0" aria-selected="true"><i>1</i><span data-t="tab0"></span><span class="bar"></span></button>
+      <button type="button" role="tab" id="t1" data-i="1" aria-selected="false"><i>2</i><span data-t="tab1"></span><span class="bar"></span></button>
+      <button type="button" role="tab" id="t2" data-i="2" aria-selected="false"><i>3</i><span data-t="tab2"></span><span class="bar"></span></button>
+    </div>
+
+    <div class="stage" aria-hidden="true">
+      <!-- 1. 코스 -->
+      <div class="scene s-course on" id="sc0">
+        <svg viewBox="0 0 320 168">
+          <g class="grid" stroke-width="1"><path d="M0 42H320M0 84H320M0 126H320M64 0V168M128 0V168M192 0V168M256 0V168"/></g>
+          <g class="road" stroke-width="7" fill="none" stroke-linecap="round"><path d="M-10 150 L120 20 M40 168 L330 96 M200 0 L240 168"/></g>
+          <path class="run" d="M40 128 L92 104 L128 116 L196 72 L262 52" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <g class="stp" style="animation-delay:.1s"><rect x="27" y="118" width="26" height="20" rx="6" fill="#0e3a8f" stroke="#ffffff" stroke-width="3"/></g>
+          <g font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" text-anchor="middle">
+            <g class="stp" style="animation-delay:.55s"><circle cx="92" cy="104" r="11" fill="#0e3a8f" stroke="#ffffff" stroke-width="3"/><text x="92" y="108" fill="#ffffff">1</text></g>
+            <g class="stp" style="animation-delay:.85s"><circle cx="128" cy="116" r="11" fill="#0e3a8f" stroke="#ffffff" stroke-width="3"/><text x="128" y="120" fill="#ffffff">2</text></g>
+            <g class="stp" style="animation-delay:1.25s"><circle cx="196" cy="72" r="11" fill="#0e3a8f" stroke="#ffffff" stroke-width="3"/><text x="196" y="76" fill="#ffffff">3</text></g>
+            <g class="stp" style="animation-delay:1.65s"><circle cx="262" cy="52" r="11" fill="#0e3a8f" stroke="#ffffff" stroke-width="3"/><text x="262" y="56" fill="#ffffff">4</text></g>
+          </g>
+          <g class="pill" style="animation-delay:2s">
+            <rect x="196" y="112" width="104" height="40" rx="10" fill="#0e3a8f"/>
+            <g stroke="#ffb21a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(206 122)"><circle cx="10" cy="10" r="8"/><path d="M10 5v5l3 2"/></g>
+            <rect x="234" y="124" width="54" height="6" rx="3" fill="#ffffff"/><rect x="234" y="135" width="34" height="5" rx="2.5" fill="#8fb0ee"/>
+          </g>
+          <g class="pill" style="animation-delay:1.9s">
+            <rect x="14" y="22" width="92" height="34" rx="10" fill="#0e3a8f"/>
+            <g stroke="#ffb21a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(23 29)"><circle cx="11" cy="3.5" r="2.4"/><path d="M9 8l-3 6 4 3v4M9 8l4 3 3 1M10 17l-3 4"/></g>
+            <rect x="50" y="33" width="44" height="6" rx="3" fill="#ffffff"/><rect x="50" y="43" width="28" height="5" rx="2.5" fill="#8fb0ee"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 2. 주문 -->
+      <div class="scene s-order" id="sc1">
+        <div class="rows">
+          <div class="row"><span class="t"><span></span><span></span></span><span class="step"><em>−</em><b id="c1">0</b><em class="plus" id="p1">+</em></span></div>
+          <div class="row"><span class="t"><span></span><span></span></span><span class="step"><em>−</em><b id="c2">0</b><em class="plus" id="p2">+</em></span></div>
+          <div class="row"><span class="t"><span></span><span></span></span><span class="step"><em>−</em><b>0</b><em class="plus">+</em></span></div>
+        </div>
+        <div class="card" id="card">
+          <div class="ko"><span></span><span></span></div>
+          <div class="ro"></div>
+          <div class="snd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/></svg><span class="w"><i></i><i></i><i></i><i></i></span></div>
+        </div>
+      </div>
+
+      <!-- 3. 직원 -->
+      <div class="scene s-staff" id="sc2">
+        <div class="phone" id="ph">
+          <small></small>
+          <span></span><span></span>
+          <div class="btns"><i id="yes"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="flow">
+          <div class="who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4M21 7H9a5 5 0 0 0 0 10h3"/></svg><span data-t="turn"></span></div>
+          <div class="bubble" id="bub"><svg viewBox="0 0 24 24" fill="none" stroke="#1d5bd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="lines"><span></span><span></span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="cap" id="cap" aria-live="polite"></p>
+  </section>
+
+  <h1 data-t="title"></h1>
+  <p class="lede" data-t="lede"></p>
+
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" id="l-en" data-lang="en" aria-pressed="true">English</button>
+    <button type="button" id="l-ja" data-lang="ja" aria-pressed="false" lang="ja">日本語</button>
+    <button type="button" id="l-zh" data-lang="zh" aria-pressed="false" lang="zh">中文</button>
+  </div>
+  <button type="button" class="start" id="start"><span data-t="start"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  <p class="foot" data-t="foot"></p>
+</main>
+
+<section class="spec" aria-label="로고 시안 설명">
+  <h2>로고 시안: e 우회로</h2>
+  <div class="marks">
+    <figure><span class="icon-big"><svg style="color:#fff;--hole:var(--blue)"><use href="#e-route"/></svg></span>앱 아이콘</figure>
+    <figure><span class="icon-dark"><svg style="color:#fff;--hole:var(--blue-d)"><use href="#e-route"/></svg></span>짙은 파랑</figure>
+    <figure><span class="icon-light"><svg style="color:var(--blue);--hole:var(--surface)"><use href="#e-route"/></svg></span>흰 바탕</figure>
+  </div>
+  <p>'에둘러'는 '곧장 가지 않고 돌아서'라는 뜻입니다. 로고는 출발역(왼쪽 빈 동그라미)에서 곧게 가다가(가로획) 한 바퀴 크게 돌아(고리) 도착점(아래 꽉 찬 점)에 닿는 길 하나로 소문자 e를 그렸습니다. 노선도의 역 표시(점)와 경로선을 그대로 써서 앱 안의 지도·코스 그림과 한 식구로 보이게 했습니다.</p>
+  <p>시안 안내: 위 안내판은 ① 코스 → ② 주문 → ③ 직원 세 기능을 차례로 보여 주며, 위 번호를 눌러 원하는 장면을 볼 수 있습니다. 언어 버튼을 누르면 설명이 그 언어로 바뀝니다. '시작하기'는 시안이라 동작하지 않습니다.</p>
+</section>
+
+<script>
+(function () {
+  var T = {
+    en: { tab0: 'Course', tab1: 'Order', tab2: 'Staff',
+      cap0: 'A <b>ready-made walking course</b> from Daejeon Station: map, walking time and opening hours for every stop.',
+      cap1: 'Just <b>tap what you want</b> on the real menu. The Korean order is written for you, with pronunciation and audio.',
+      cap2: '<b>Show your screen</b> to the staff. They answer with one tap, and you read the reply in your language.',
+      turn: 'Turn the screen to the staff',
+      title: 'Daejeon, one detour at a time.',
+      lede: 'Hangul menus and Korean at the counter. Edulleo takes care of the route, the order and the reply.',
+      start: 'Get started', foot: 'No app install · works offline' },
+    ja: { tab0: 'コース', tab1: '注文', tab2: '店員',
+      cap0: '大田駅から歩ける<b>おすすめコース</b>。地図・徒歩時間・営業時間がひと目でわかります。',
+      cap1: '実際のメニューで<b>欲しいものをタップするだけ</b>。韓国語の注文文が発音・音声つきで自動でできあがります。',
+      cap2: '<b>画面を店員さんに見せる</b>だけ。店員さんはワンタップで返事し、あなたの言語で表示されます。',
+      turn: '画面を店員さんに向ける',
+      title: '大田を、もう一歩先へ。',
+      lede: 'ハングルのメニュー、韓国語のレジ。ルートも注文も返事も、Edulleoにおまかせ。',
+      start: 'はじめる', foot: 'インストール不要 · オフラインでも使えます' },
+    zh: { tab0: '路线', tab1: '点餐', tab2: '店员',
+      cap0: '从大田站出发的<b>现成步行路线</b>:地图、步行时间和每站营业时间一目了然。',
+      cap1: '在真实菜单上<b>点一下想要的</b>,韩语点餐句子自动生成,附发音和语音。',
+      cap2: '<b>把屏幕给店员看</b>,店员一键回复,回复会用你的语言显示。',
+      turn: '把屏幕转向店员',
+      title: '多走一步,遇见大田。',
+      lede: '韩文菜单、韩语柜台。路线、点餐和回复,交给 Edulleo。',
+      start: '开始', foot: '无需安装 · 离线也能用' }
+  };
+  var DUR = 4400;
+  var lang = 'en', cur = 0, timers = [];
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var $ = function (id) { return document.getElementById(id); };
+  var cap = $('cap');
+
+  function texts() {
+    document.querySelectorAll('[data-t]').forEach(function (el) { el.textContent = T[lang][el.dataset.t]; });
+    cap.innerHTML = T[lang]['cap' + cur];
+    $('app').lang = lang;
+    document.querySelectorAll('[data-lang]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+  }
+  function later(fn, ms) { timers.push(setTimeout(fn, reduce ? 0 : ms)); }
+  function clear() { timers.forEach(clearTimeout); timers = []; }
+  function tap(el) { el.classList.remove('tap'); void el.offsetWidth; el.classList.add('tap'); }
+
+  function resetScenes() {
+    $('c1').textContent = '0'; $('c1').className = ''; $('c2').textContent = '0'; $('c2').className = '';
+    $('card').classList.remove('on');
+    $('sc2').classList.remove('turn'); $('yes').classList.remove('yes'); $('bub').classList.remove('on');
+  }
+  function show(i, auto) {
+    clear(); cur = i; resetScenes();
+    for (var k = 0; k < 3; k++) {
+      var sc = $('sc' + k); sc.classList.remove('on');
+      var tb = $('t' + k); tb.setAttribute('aria-selected', String(k === i));
+      var bar = tb.querySelector('.bar'); bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+    }
+    void $('sc' + i).offsetWidth; $('sc' + i).classList.add('on');
+    cap.innerHTML = T[lang]['cap' + i];
+    if (i === 1) {
+      later(function () { tap($('p1')); $('c1').textContent = '1'; $('c1').className = 'n'; }, 500);
+      later(function () { tap($('p2')); $('c2').textContent = '1'; $('c2').className = 'n'; }, 1100);
+      later(function () { tap($('p2')); $('c2').textContent = '2'; }, 1550);
+      later(function () { $('card').classList.add('on'); }, 2050);
+    }
+    if (i === 2) {
+      later(function () { $('sc2').classList.add('turn'); }, 500);
+      later(function () { $('yes').classList.add('yes'); }, 1500);
+      later(function () { $('sc2').classList.remove('turn'); }, 2200);
+      later(function () { $('bub').classList.add('on'); }, 2700);
+    }
+    if (auto && !reduce) later(function () { show((i + 1) % 3, true); }, DUR);
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[role="tab"]');
+    if (t) { show(Number(t.dataset.i), true); return; }
+    var l = e.target.closest('[data-lang]');
+    if (l) { lang = l.dataset.lang; texts(); show(cur, true); }
+  });
+  document.documentElement.style.setProperty('--dur', DUR + 'ms');
+  texts();
+  show(0, true);
+})();
+</script>

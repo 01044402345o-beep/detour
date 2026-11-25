@@ -1,114 +1,189 @@
-/* S12 설정 (T2.1). 값은 mockup/index.html R.settings·.ropt 기준.
-   대비: 선택 표시 체크·초기화 글자는 --acc-d(흰 카드 위 5.9:1, 목업 --acc는 3.0:1) */
+/* S12 설정 (T2.1 → T6.6 DESIGN.md 2·3·6장).
+   밝은 바탕 + 흰 목록(선 구분), 선택 = 연파랑 줄 + 파란 체크, 보조 글자 --mute(흰 바탕 6.15:1). */
 .set-screen {
   padding-top: calc(6px + env(safe-area-inset-top, 0px));
 }
 
 .set-title {
-  padding: 14px 22px 0;
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
+  padding: 14px 20px 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 .set-body {
-  padding: 10px 18px 20px;
+  padding: 8px 16px 28px;
 }
 
 .set-label {
-  margin: 10px 4px;
-  color: var(--soft);
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  margin: 14px 4px 8px;
+  color: var(--mute);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.set-langs.ui-card {
-  padding: 6px;
+/* 흰 목록 묶음: 줄 사이는 선 */
+.set-group {
+  overflow: hidden;
+  margin-top: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+}
+
+.set-label + .set-group {
+  margin-top: 0;
 }
 
 .set-opt,
-.set-row.ui-card {
+.set-row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
-  min-height: var(--touch);
-  padding: 15px 16px;
-  font-size: 14.5px;
-  font-weight: 700;
+  min-height: 56px;
+  padding: 10px 16px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
   text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color var(--dur) var(--ease);
 }
 
-.set-opt {
-  border-radius: 14px;
+.set-opt + .set-opt,
+.set-row + .set-row,
+.set-demo__panel > .set-row,
+.set-demo__note {
+  border-top: 1px solid var(--line);
 }
 
 .set-opt--on {
-  background: var(--paper);
+  background: var(--tint);
+}
+
+.set-opt__badge.ui-pill {
+  justify-content: center;
+  min-width: 36px;
+  font-family: var(--num);
+}
+
+.set-opt--on .set-opt__badge.ui-pill {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--on-blue);
 }
 
 .set-opt__name,
-.set-row__name {
+.set-row__name,
+.set-row__text {
   flex: 1;
+  min-width: 0;
 }
 
 .set-opt__check {
-  color: var(--acc-d);
+  color: var(--blue);
 }
 
-.set-privacy.ui-card {
+/* 숨긴 radio에 키보드 포커스가 있으면 라벨에 표시 (R1 M-01) */
+.set-opt:has(input:focus-visible),
+.set-row:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: -3px;
+}
+
+.set-row__icon {
+  color: var(--blue);
+}
+
+.set-row__text {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.set-row__sub {
+  color: var(--mute);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.set-row__chev {
+  color: var(--mute);
+}
+
+.set-row:active {
+  background: var(--tint);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .set-row:hover,
+  .set-opt:not(.set-opt--on):hover {
+    background: var(--ground);
+  }
+}
+
+/* 조용한 안내 줄 (개인정보·오프라인 준비) */
+.set-notes {
   margin-top: 14px;
-  padding: 14px 16px;
-  color: var(--ink2);
+  padding: 0 4px;
+  list-style: none;
+  color: var(--mute);
   font-size: 13px;
   line-height: 1.5;
 }
 
-.set-privacy .ui-icon {
-  flex: none;
+.set-notes li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.set-notes li + li {
+  margin-top: 8px;
+}
+
+.set-notes .ui-icon {
   margin-top: 2px;
 }
 
-/* 오프라인 준비 완료 (T3.1) */
-.set-offline.ui-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 14px 16px;
-  color: var(--sea-d);
+/* 오프라인 준비 완료 (T3.1): 점 대신 체크 + 글자, 흰/바탕 위 --ok 5.9:1 이상 */
+.set-notes__ok {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+/* 시연 도구 (접힘) */
+.set-demo {
+  margin-top: 22px;
+}
+
+.set-demo__chev {
+  transform: rotate(90deg);
+  transition: transform var(--dur) var(--ease);
+}
+
+.set-demo__toggle[aria-expanded='true'] .set-demo__chev {
+  transform: rotate(-90deg);
+}
+
+.set-demo__note {
+  padding: 12px 16px;
+  color: var(--mute);
   font-size: 13px;
-  font-weight: 700;
-}
-
-.set-offline .ui-icon {
-  flex: none;
-}
-
-.set-row.ui-card {
-  margin-top: 14px;
-}
-
-.set-row--danger.ui-card {
-  margin-top: 10px;
-  color: var(--acc-d);
-}
-
-.set-row__chev {
-  color: var(--soft);
+  line-height: 1.45;
 }
 
 .set-takedown {
   margin-top: 22px;
   padding: 0 4px;
-  color: var(--soft);
-  font-size: 12px;
+  color: var(--mute);
+  font-size: 13px;
   line-height: 1.5;
 }
 
@@ -117,14 +192,14 @@
 }
 
 .set-takedown__contact {
-  color: var(--ink2);
-  font-weight: 700;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .set-confirm__body {
   margin-top: 10px;
-  color: var(--ink2);
-  font-size: 14px;
+  color: var(--ink);
+  font-size: 15px;
   line-height: 1.5;
 }
 
@@ -134,13 +209,111 @@
   margin-top: 18px;
 }
 
-.set-opt {
-  position: relative;
-  cursor: pointer;
+/* ───────── 사진 출처 시트 ───────── */
+.set-cr__scope {
+  margin-top: 6px;
+  color: var(--mute);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
-/* 숨긴 radio에 키보드 포커스가 있으면 라벨에 표시 (R1 M-01) */
-.set-opt:has(input:focus-visible) {
-  outline: 3px solid var(--sea);
+.set-cr {
+  margin-top: 8px;
+  list-style: none;
+}
+
+.set-cr__item {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.set-cr__item:first-child {
+  border-top: 0;
+}
+
+.set-cr__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.set-cr__thumb {
+  flex: none;
+  width: 64px;
+  height: 48px;
+  border-radius: var(--r-sm);
+  background: var(--tint);
+  object-fit: cover;
+}
+
+.set-cr__place {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+  word-break: keep-all;
+}
+
+.set-cr__dl {
+  display: grid;
+  grid-template-columns: minmax(84px, max-content) minmax(0, 1fr);
+  column-gap: 12px;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.set-cr__dl dt {
+  padding: 4px 0;
+  color: var(--mute);
+}
+
+.set-cr__dl dd {
+  min-width: 0;
+  padding: 4px 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* 링크 줄은 dt도 링크 높이(44px)에 맞춰 가운데 */
+.set-cr__dl dt:has(+ dd > .set-cr__link) {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.set-cr__dl dd:has(> .set-cr__link) {
+  padding: 0;
+}
+
+.set-cr__changes {
+  color: var(--mute);
+}
+
+.set-cr__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--touch);
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.set-cr__link:focus-visible {
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 긴 보조 문장: 일본어·중국어 끝 글자 한 개만 떨어지는 줄바꿈 방지 (DESIGN.md 3장, T6.6 R1 L-01) */
+.set-row__sub,
+.set-notes span,
+.set-demo__note,
+.set-takedown p,
+.set-confirm__body,
+.set-cr__scope,
+.set-cr__place {
+  text-wrap: balance;
+  line-break: strict;
 }

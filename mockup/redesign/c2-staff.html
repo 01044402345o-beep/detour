@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Edulleo — Show to staff (C2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#F4F7FB; --surface:#FFFFFF; --line:#DCE3EE; --ink:#0F1B33; --mute:#55627A;
+  --blue:#1D5BD6; --blue-deep:#0E3A8F; --tint:#E6EEFB; --on-blue:#FFFFFF;
+  --signal:#FFB21A; --ok:#17703D; --scrim:8,20,46;
+  --sans:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  --r:14px; --gut:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:390px;height:844px;overflow:hidden;background:var(--blue-deep);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+/* tourist band (deep blue) above the staff-facing white sheet */
+.band{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 6px;color:#fff}
+.close{height:44px;padding:0 12px 0 8px;display:flex;align-items:center;gap:6px;font-size:15px;font-weight:600;border-radius:22px}
+.size{display:flex;border:1px solid rgba(255,255,255,.55);border-radius:22px;height:44px}
+.size button{width:48px;display:grid;place-items:center;font-weight:700}
+.size button+button{border-left:1px solid rgba(255,255,255,.55)}
+.sheet{position:absolute;top:64px;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;padding:22px var(--gut) 28px;display:flex;flex-direction:column}
+.to{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;color:var(--mute)}
+.to::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--signal)}
+.big{margin-top:22px;font-size:68px;line-height:1.12;font-weight:700;letter-spacing:-.035em;word-break:keep-all}
+.dt{margin-top:14px;display:flex;gap:10px;font-size:16px;color:var(--mute)}
+.dt .n{color:var(--ink);font-weight:600}
+.play{margin-top:20px;height:54px;border-radius:12px;background:var(--tint);color:var(--blue);display:flex;align-items:center;justify-content:center;gap:10px;font-size:17px;font-weight:600}
+.rp{margin-top:auto}
+.rp h2{font-size:16px;font-weight:700;display:flex;justify-content:space-between;align-items:baseline;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.rp h2 span{font-size:13px;font-weight:500;color:var(--mute)}
+.grid{margin-top:12px;display:grid;grid-template-columns:1fr 1.5fr 1.3fr;gap:10px}
+.grid button{height:68px;border-radius:12px;border:2px solid var(--ink);font-size:21px;font-weight:700;color:var(--ink);background:var(--surface)}
+.grid .yes{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.grid .wide{grid-column:1/-1}
+</style></head>
+<body>
+<div class="band" lang="en">
+  <button class="close" aria-label="Close, back to my order"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>Close</button>
+  <div class="size" role="group" aria-label="Text size">
+    <button aria-label="Smaller text" style="font-size:14px">A−</button>
+    <button aria-label="Bigger text" style="font-size:19px">A+</button>
+  </div>
+</div>
+
+<main class="sheet">
+  <p class="to">직원분께: 외국인 손님의 주문입니다</p>
+  <p class="big">튀김소보로 한&nbsp;개 주세요.</p>
+  <p class="dt"><span>튀김소보로 <span class="n">1</span>개</span><span>·</span><span>매장에서 먹어요</span><span>·</span><span class="n">₩1,700</span></p>
+  <button class="play" lang="en"><svg class="i" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>Play aloud <span lang="ko">· 소리 재생</span></button>
+
+  <section class="rp" aria-labelledby="rh">
+    <h2 id="rh">답변을 눌러 주세요<span lang="en">Staff: tap a reply</span></h2>
+    <div class="grid">
+      <button class="yes">네</button>
+      <button>품절이에요</button>
+      <button>잠시만요</button>
+      <button class="wide">계산대에서 결제해 주세요</button>
+    </div>
+  </section>
+</main>
+</body></html>

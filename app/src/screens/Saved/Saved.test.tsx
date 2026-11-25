@@ -59,6 +59,26 @@ describe('S11 저장 · 제보', () => {
     expect(screen.getByRole('button', { name: /Info looks wrong\?/ })).toBeInTheDocument();
   });
 
+  it('빈 화면에 저장 방법 안내: 저장(북마크) 아이콘 + 설명 (T6.6)', () => {
+    renderSaved();
+    const empty = screen.getByTestId('saved-empty');
+    expect(empty).toHaveTextContent(
+      'Tap the save button on a place or a phrase, and it will be kept here.',
+    );
+    // 아이콘 견본은 장식(설명 글이 같은 내용) — 누를 수 있는 버튼이 아님
+    const how = empty.querySelector('.sav-empty__how')!;
+    expect(how).toHaveAttribute('aria-hidden', 'true');
+    expect(how.querySelector('svg path')).toHaveAttribute('d', 'M6 3h12v18l-6-4-6 4V3z');
+    expect(within(empty).queryByRole('button')).toBeNull();
+  });
+
+  it('빈 화면 안내 JA (T6.6)', () => {
+    renderSaved('ja');
+    expect(screen.getByTestId('saved-empty')).toHaveTextContent(
+      '場所やフレーズの保存ボタンを押すと、ここに集まります。',
+    );
+  });
+
   it('저장한 장소·문장을 데이터 순서로, 데이터에 없는 ID는 숨김', () => {
     useAppStore.setState({
       saved: { places: ['gwc', 'ghost', 'ssd'], phrases: ['gwc-3', 'ssd-2', 'x-9'] },

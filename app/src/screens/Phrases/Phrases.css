@@ -1,102 +1,141 @@
-/* S10 문장 모음 (목업 R.phrases · .prow) */
+/* S10 문장 모음 (T6.6 DESIGN.md 2·3·6·7장): 코스별 묶음 → 장소(번호) → 흰 목록(선 구분).
+   한 줄 = 한국어 · 발음 · 뜻, 저장·듣기 44px. 듣기는 테두리만 있는 작은 원이라 줄을 압도하지 않음. */
 .phr {
-  padding-bottom: 20px;
+  padding-bottom: 28px;
 }
 .phr-head {
-  padding: 6px 22px 6px;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 0;
 }
 .phr-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
-.phr-sub {
-  margin-top: 2px;
-  font-size: 13px;
-  color: var(--soft);
-}
 /* 코스 제목 (코스 여러 개, T5.1) */
+.phr-course + .phr-course {
+  margin-top: 12px;
+}
 .phr-course__title {
-  padding: 18px 22px 0;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  color: var(--soft);
+  padding: 20px 20px 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 .phr-sec__head {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 16px 22px 0;
-  font-size: 15px;
-  font-weight: 800;
+  gap: 10px;
+  padding: 16px 20px 8px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
 }
+/* 정류장 번호: 파랑 동그라미 + 흰 숫자 (5.97:1) */
 .phr-no {
   display: grid;
   place-items: center;
   flex: none;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-}
-/* 흰 글자 대비 4.5:1: 목업 --acc(3.1:1) 대신 --acc-d */
-.phr-no--food {
-  background: var(--acc-d);
-}
-.phr-no--sight {
-  background: var(--plum);
+  background: var(--blue);
+  color: var(--on-blue);
+  font-size: 13px;
+  font-weight: 600;
 }
 .phr-list {
+  overflow: hidden;
+  margin: 0 16px;
   list-style: none;
-  padding: 0 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
 }
 .phr-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  padding: 6px 8px 6px 6px;
+  gap: 2px;
+  padding: 6px 8px 6px 4px;
+}
+.phr-row + .phr-row {
+  border-top: 1px solid var(--line);
 }
 .phr-row__main {
   flex: 1;
   min-width: 0;
   min-height: var(--touch);
   padding: 8px 10px;
+  color: var(--ink);
   text-align: left;
-  border-radius: var(--r-lg);
+  border-radius: var(--r-md);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color var(--dur) var(--ease);
+}
+.phr-row__main:active {
+  background: var(--tint);
 }
 .phr-row__main:focus-visible {
-  outline: 3px solid var(--sea);
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .phr-row__main:hover {
+    background: var(--ground);
+  }
 }
 .phr-ko {
   display: block;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  word-break: keep-all;
 }
 .phr-meta {
   display: block;
   margin-top: 2px;
-  font-size: 11.5px;
-  color: var(--soft);
+}
+.phr-pron {
+  display: block;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.phr-mn {
+  display: block;
+  margin-top: 1px;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.4;
+  text-wrap: balance;
+  line-break: strict;
 }
 .phr-bm {
-  color: var(--soft);
+  color: var(--mute);
   background: transparent;
   border-color: transparent;
 }
 .phr-bm.is-on {
-  color: var(--acc-d);
+  color: var(--blue);
 }
 .phr-bm.is-on svg {
   fill: currentColor;
 }
+/* 듣기: 44px 원, 연파랑 면 대신 테두리 + 파란 아이콘 (재생 중에는 ui.css의 파랑 채움) */
 .phr-play.ui-listen--round {
   width: 44px;
   height: 44px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.phr-play.ui-listen--round[aria-pressed='true'] {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+/* TTS 안내(no-korean-voice 등)는 줄 아래 전체 폭 */
+.phr-row .ui-listen-notice {
+  flex-basis: 100%;
+  margin: 0 10px 6px;
 }

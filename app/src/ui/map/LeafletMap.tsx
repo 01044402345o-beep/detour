@@ -17,8 +17,10 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef } from 'react';
 import type { GeoPoint } from '../../types';
+import { chipSize, placeChips, rectAround, textWidth, type Rect } from './chips';
 import { separate } from './projection';
-import type { MapStart, MapStop } from './types';
+import { ROUTE_CASING, ROUTE_COLOR } from './sketchConstants';
+import type { MapLeg, MapStart, MapStop } from './types';
 
 export const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 export const OSM_ATTRIBUTION =
@@ -28,6 +30,13 @@ export const OSM_ATTRIBUTION =
 export const TILE_TIMEOUT_MS = 8000;
 /** 핀 터치 영역 지름 (px, pinIcon iconSize와 같음) */
 const PIN_TOUCH_PX = 44;
+/** 보이는 핀 지름 (테두리 포함, map.css .cmap-pin__dot) — 분 칩이 덮지 않을 영역 */
+const PIN_SHOWN_PX = 32;
+/** 분 칩 글자 크기 (map.css .cmap-mins) */
+const CHIP_FONT_PX = 12;
+/** 출발 표시(둥근 네모)와 이름표 크기 추정 (map.css .cmap-start__*) */
+const START_MARK = { w: 30, h: 24 };
+const START_TAG_FONT = 12;
 /** fitBounds 기본 여백 (px) */
 const FIT_PAD = 36;
 /** 출처 표시 막대 높이(터치 44px) + 아래 여백 4px — map.css와 맞춤 */
@@ -46,6 +55,8 @@ export type LeafletMapProps = {
   route?: readonly GeoPoint[];
   /** 출발지 이름표 (누를 수 없음, 화면 낭독기에는 이름으로 읽힘) */
   start?: MapStart;
+  /** 도보 구간 (구간 분 칩, route가 있을 때만). 바뀔 때마다 지도를 다시 그리므로 고정값을 넘기세요 */
+  legs?: readonly MapLeg[];
 };
 
 function pinIcon(stop: MapStop): L.DivIcon {
@@ -69,6 +80,7 @@ export function LeafletMap({
   onMapReady,
   route,
   start,
+  legs,
 }: LeafletMapProps) {
   const boxRef = useRef<HTMLDivElement>(null);
   const selectRef = useRef(onSelect);
@@ -87,6 +99,8 @@ export function LeafletMap({
       zoomControl: false,
       attributionControl: true,
       scrollWheelZoom: false,
+      // 좁은 화면(360px)에서도 경로가 지도를 채우게 0.25 단위로 맞춤 (T6.3, 정수 줌이면 한 단계 작게 보임)
+      zoomSnap: 0.25,
     });
     map.attributionControl.setPrefix(false);
     // 뷰를 먼저 정해야 핀이 바로 DOM에 붙습니다(접근성 속성 지정)
@@ -163,11 +177,21 @@ export function LeafletMap({
     };
     map.on('zoomend moveend', onViewChange);
 
+    // 경로선: 아래 굵은 흰 선(테두리) + 위 파란 선 (DESIGN.md 7장)
+    L.polyline(routeLatlngs ?? latlngs, {
+      color: ROUTE_CASING,
+      weight: routeLatlngs ? 10 : 8,
+      opacity: 1,
+      lineCap: 'round',
+      lineJoin: 'round',
+      interactive: false,
+      className: 'cmap-casing',
+    }).addTo(map);
     if (routeLatlngs) {
       L.polyline(routeLatlngs, {
-        color: '#151a26',
-        weight: 4,
-        opacity: 0.7,
+        color: ROUTE_COLOR,
+        weight: 5,
+        opacity: 1,
         lineCap: 'round',
         lineJoin: 'round',
         interactive: false,
@@ -175,9 +199,9 @@ export function LeafletMap({
       }).addTo(map);
     } else {
       L.polyline(latlngs, {
-        color: '#151a26',
-        weight: 3,
-        opacity: 0.75,
+        color: ROUTE_COLOR,
+        weight: 3.5,
+        opacity: 1,
         dashArray: '7 6',
         lineCap: 'round',
         interactive: false,
@@ -193,7 +217,7 @@ export function LeafletMap({
       tag.className = 'cmap-start__tag';
       tag.textContent = start.label;
       const dot = document.createElement('span');
-      dot.className = 'cmap-start__dot';
+      dot.className = 'cmap-start__mark';
       dot.setAttribute('aria-hidden', 'true');
       el.append(tag, dot);
       const marker = L.marker([start.geo.lat, start.geo.lng], {
@@ -242,13 +266,67 @@ export function LeafletMap({
         el.setAttribute('data-testid', `map-pin-${s.id}`);
       }
     }
+
+    // 구간 분 칩 (누를 수 없음, 화면 낭독기에는 숨김 — 분은 정류장 목록에 있음).
+    // 핀(벌린 위치)·출발 표시·이름표와 겹치지 않는 자리에만 두고, 줌이 바뀌면 다시 고릅니다.
+    const legList = routeLatlngs && legs ? legs : [];
+    const chips = legList.map((leg) => {
+      const el = document.createElement('span');
+      el.className = 'cmap-mins num';
+      el.textContent = leg.label;
+      const m = L.marker([leg.path[0].lat, leg.path[0].lng], {
+        icon: L.divIcon({ className: 'cmap-mins-box', html: el, iconSize: [0, 0] }),
+        interactive: false,
+        keyboard: false,
+      });
+      return { m, size: chipSize(leg.label, CHIP_FONT_PX), shown: false };
+    });
+    const layoutChips = () => {
+      if (chips.length === 0) return;
+      const size = map.getSize();
+      const obstacles: Rect[] = markers.map((mk) => {
+        const p = map.latLngToContainerPoint(mk.getLatLng());
+        return rectAround(p, PIN_SHOWN_PX + 4, PIN_SHOWN_PX + 4);
+      });
+      if (start) {
+        const p = map.latLngToContainerPoint([start.geo.lat, start.geo.lng]);
+        obstacles.push(rectAround(p, START_MARK.w + 4, START_MARK.h + 4));
+        const tw = textWidth(start.label, START_TAG_FONT) + 24;
+        // 이름표: 표시 위쪽 가운데 (map.css .cmap-start__tag bottom 16px, 높이 약 26px)
+        obstacles.push({ x: p.x - tw / 2, y: p.y - 16 - 26, w: tw, h: 26 });
+      }
+      const at = placeChips(
+        legList.map((leg, i) => ({
+          path: leg.path.map((g) => map.latLngToContainerPoint([g.lat, g.lng])),
+          ...chips[i].size,
+        })),
+        obstacles,
+        // 아래쪽 출처 표시 막대 위로
+        { width: size.x, height: size.y - ATTRIBUTION_H, margin: 4 },
+      );
+      at.forEach((c, i) => {
+        const chip = chips[i];
+        if (c) {
+          chip.m.setLatLng(map.containerPointToLatLng(L.point(c.x, c.y)));
+          if (!chip.shown) chip.m.addTo(map);
+          chip.shown = true;
+          chip.m.getElement()?.setAttribute('data-testid', `map-chip-${i}`);
+          chip.m.getElement()?.setAttribute('aria-hidden', 'true');
+        } else if (chip.shown) {
+          chip.m.remove();
+          chip.shown = false;
+        }
+      });
+    };
+    layoutChips();
+    map.on('zoomend', layoutChips);
     readyRef.current?.(map);
 
     return () => {
       stopTimer();
       map.remove();
     };
-  }, [stops, route, start]);
+  }, [stops, route, start, legs]);
 
   return (
     <div

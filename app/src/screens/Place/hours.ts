@@ -83,3 +83,47 @@ export function closedDaysLabel(closedOn: string | undefined, lang: Lang): strin
   const names = days.map((d) => fmt.format(new Date(Date.UTC(2024, 0, 7 + DAYS.indexOf(d)))));
   return new Intl.ListFormat(lang, { type: 'conjunction', style: 'narrow' }).format(names);
 }
+
+/** 요일 하나를 사용자 언어 짧은 이름으로 ('mon' → 'Mon' / '月' / '周一') */
+export function dayLabel(day: Day, lang: Lang): string {
+  const fmt = new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' });
+  return fmt.format(new Date(Date.UTC(2024, 0, 7 + DAYS.indexOf(day))));
+}
+
+/** 자정 이후 분 → 'HH:MM' */
+export function formatMinutes(min: number): string {
+  const h = Math.floor(min / 60) % 24;
+  const m = min % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+export type NextOpening = {
+  /** 0 = 오늘, 1 = 내일, 2~7 = 그 요일 */
+  inDays: number;
+  day: Day;
+  /** 'HH:MM' (서울 시각) */
+  time: string;
+};
+
+/**
+ * 지금 닫혀 있을 때 다음 영업 시작 시각 (등록된 시간표·휴무 요일 기준, Asia/Seoul).
+ * 시간표를 읽을 수 없거나 지금 영업 중이면 null. 휴무 요일은 "그날 시작하는 영업이 없다"는 뜻(openStatus와 같음).
+ */
+export function nextOpening(
+  place: Pick<Place, 'hours' | 'closedOn'>,
+  now: Date = new Date(),
+): NextOpening | null {
+  const range = parseHours(place.hours);
+  if (!range || openStatus(place, now) !== 'closed') return null;
+  const [start] = range;
+  const { day, minutes } = seoulClock(now);
+  const closed = closedDays(place.closedOn);
+  const idx = DAYS.indexOf(day);
+  for (let inDays = 0; inDays <= 7; inDays++) {
+    const d = DAYS[(idx + inDays) % 7];
+    if (closed.includes(d)) continue;
+    if (inDays === 0 && minutes >= start) continue; // 오늘 시작 시각은 이미 지남
+    return { inDays, day: d, time: formatMinutes(start) };
+  }
+  return null;
+}

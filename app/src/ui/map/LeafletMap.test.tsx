@@ -414,9 +414,9 @@ describe('OSM 출처 링크 터치 영역 (T3.2 → R3)', () => {
     expect(tokens).toMatch(/--touch:\s*44px;/);
   });
 
-  it('보이는 글자 크기 10px 유지, 출처 막대도 44px 높이', () => {
+  it('보이는 글자 크기 11.5px(DESIGN.md 3장 최소, T6.7 L-06), 출처 막대도 44px 높이', () => {
     const bar = block('.cmap .leaflet-control-attribution');
-    expect(bar).toMatch(/font-size:\s*10px;/);
+    expect(bar).toMatch(/font-size:\s*11\.5px;/);
     expect(bar).toMatch(/min-height:\s*var\(--touch\);/);
   });
 
@@ -564,4 +564,111 @@ describe('핀 클릭 영역은 지름 44px 원 (T5.1 R4 M-1)', () => {
     expect(pin.style.marginLeft).toBe('-22px');
     expect(pin.style.marginTop).toBe('-22px');
   });
+});
+
+describe('T6.3 경로선·핀·구간 분 칩 (밝은 지도)', () => {
+  const css = readFileSync(join(process.cwd(), 'src/ui/map/map.css'), 'utf8');
+  const block = (sel: string) => {
+    const at = css.indexOf(`\n${sel} {`);
+    return at < 0 ? '' : css.slice(at, css.indexOf('}', at));
+  };
+
+  it('타일 층을 밝고 옅게 (saturate .55, brightness 1.03)', () => {
+    expect(block('.cmap .leaflet-tile-pane')).toMatch(
+      /filter:\s*saturate\(0\.55\) brightness\(1\.03\);/,
+    );
+  });
+
+  it('분 칩 글자 11.5px 이상 (R1 L-1)', () => {
+    const m = /font-size:\s*([\d.]+)px;/.exec(block('.cmap-mins'));
+    expect(Number(m?.[1])).toBeGreaterThanOrEqual(11.5);
+  });
+
+  it('핀: 흰 바탕 + 파란 테두리 + 파란 번호', () => {
+    const dot = block('.cmap-pin__dot');
+    expect(dot).toMatch(/background:\s*var\(--surface\);/);
+    expect(dot).toMatch(/color:\s*var\(--blue\);/);
+    expect(dot).toMatch(/border:\s*3px solid var\(--blue\);/);
+  });
+
+  it('도보 경로: 아래 굵은 흰 선(테두리) + 위 파란 선, 테두리는 cmap-line이 아님', () => {
+    const b = getBundle('downtown-halfday')!;
+    const route = b.route.legs.flatMap((leg, i) => (i === 0 ? leg.path : leg.path.slice(1)));
+    render(
+      <LeafletMap
+        stops={STOPS}
+        onSelect={() => {}}
+        onFail={() => {}}
+        label="Course"
+        route={route}
+      />,
+    );
+    const casing = document.querySelector('path.cmap-casing')!;
+    const line = document.querySelector('path.cmap-line')!;
+    expect(casing.getAttribute('stroke')).toBe('#ffffff');
+    expect(line.getAttribute('stroke')).toBe('#1d5bd6');
+    expect(Number(casing.getAttribute('stroke-width'))).toBeGreaterThan(
+      Number(line.getAttribute('stroke-width')),
+    );
+    expect(casing.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it.each(['downtown-halfday', 'jungang-market'])(
+    '실제 코스(%s): 분 칩은 누를 수 없고 화면 낭독기에서 숨김, 핀과 겹치지 않음 (줌을 바꿔도)',
+    (id) => {
+      const b = getBundle(id)!;
+      const stops: MapStop[] = b.places.map((p, i) => ({
+        id: p.id,
+        no: i + 1,
+        name: p.name.en,
+        category: p.category,
+        geo: p.geo,
+      }));
+      const route = b.route.legs.flatMap((leg, i) => (i === 0 ? leg.path : leg.path.slice(1)));
+      const legs = b.route.legs.map((leg) => ({
+        path: leg.path,
+        label: `${b.places.find((p) => p.id === leg.to)!.walkMinFromPrev} min`,
+      }));
+      let map: L.Map | undefined;
+      render(
+        <LeafletMap
+          stops={stops}
+          onSelect={() => {}}
+          onFail={() => {}}
+          label="Course"
+          route={route}
+          legs={legs}
+          start={{ label: 'Daejeon Stn', geo: b.course.start.geo }}
+          onMapReady={(m) => (map = m)}
+        />,
+      );
+      const check = () => {
+        const chips = [...document.querySelectorAll<HTMLElement>('[data-testid^="map-chip-"]')];
+        chips.forEach((c) => {
+          expect(c).toHaveAttribute('aria-hidden', 'true');
+          expect(c).not.toHaveAttribute('tabindex');
+          expect(c.textContent).toMatch(/^\d+ min$/);
+        });
+        // 칩 가운데(마커 위치)가 핀 가운데에서 핀 반지름 + 칩 높이 절반 이상 떨어짐
+        const pins = stops.map((s) => screen.getByTestId(`map-pin-${s.id}`));
+        const at = (el: HTMLElement) => {
+          let found: L.Marker | undefined;
+          map!.eachLayer((l) => {
+            const mk = l as L.Marker;
+            if (typeof mk.getElement === 'function' && mk.getElement() === el) found = mk;
+          });
+          return map!.latLngToContainerPoint(found!.getLatLng());
+        };
+        for (const c of chips) {
+          for (const p of pins) expect(at(c).distanceTo(at(p))).toBeGreaterThan(16 + 8);
+        }
+        return chips.length;
+      };
+      expect(check()).toBeGreaterThan(0);
+      act(() => {
+        map!.setZoom(map!.getZoom() - 1, { animate: false });
+      });
+      check();
+    },
+  );
 });

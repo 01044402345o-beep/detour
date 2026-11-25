@@ -1,0 +1,78 @@
+{
+  "$override": ["practice.tapWord", "result.great", "result.heard"],
+  "en": {
+    "practice": {
+      "tapWord": "Tap a word to hear it"
+    },
+    "result": {
+      "great": "Great job!",
+      "heard": "What we heard"
+    },
+    "saved": {
+      "emptyHint": "Tap the save button on a place or a phrase, and it will be kept here.",
+      "emptyIcon": "Save button"
+    },
+    "settings": {
+      "demoTools": "Demo tools",
+      "demoToolsNote": "For the competition demo. Visitors do not need these.",
+      "photoCreditsSub": "Photos used in this app, with licenses",
+      "photoPlace": "Place",
+      "photoTitle": "Original title",
+      "photoArea": {
+        "downtown": "Old Downtown",
+        "station": "Daejeon Jungang Market",
+        "yuseong": "Yuseong Spa foot bath"
+      }
+    }
+  },
+  "ja": {
+    "practice": {
+      "tapWord": "単語をタップして聞く"
+    },
+    "result": {
+      "great": "よくできました!",
+      "heard": "聞き取った内容"
+    },
+    "saved": {
+      "emptyHint": "場所やフレーズの保存ボタンを押すと、ここに集まります。",
+      "emptyIcon": "保存ボタン"
+    },
+    "settings": {
+      "demoTools": "デモ用ツール",
+      "demoToolsNote": "審査デモ用の機能です。旅行者の方は使う必要はありません。",
+      "photoCreditsSub": "このアプリで使っている写真とライセンス",
+      "photoPlace": "場所",
+      "photoTitle": "元の題名",
+      "photoArea": {
+        "downtown": "旧市街",
+        "station": "大田中央市場",
+        "yuseong": "儒城温泉の足湯"
+      }
+    }
+  },
+  "zh": {
+    "practice": {
+      "tapWord": "点击单词收听"
+    },
+    "result": {
+      "great": "太棒了!",
+      "heard": "识别结果"
+    },
+    "saved": {
+      "emptyHint": "点按地点或短句上的收藏按钮，就会保存在这里。",
+      "emptyIcon": "收藏按钮"
+    },
+    "settings": {
+      "demoTools": "演示工具",
+      "demoToolsNote": "用于比赛演示，游客无需使用。",
+      "photoCreditsSub": "本应用使用的照片及其许可",
+      "photoPlace": "地点",
+      "photoTitle": "原标题",
+      "photoArea": {
+        "downtown": "老城区",
+        "station": "大田中央市场",
+        "yuseong": "儒城温泉足浴池"
+      }
+    }
+  }
+}

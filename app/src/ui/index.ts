@@ -3,6 +3,7 @@ export { Button, type ButtonProps, type ButtonVariant } from './Button';
 export { Card, CardButton, type CardButtonProps, type CardProps } from './Card';
 export { Icon, type IconName, type IconProps } from './Icon';
 export { IconButton, type IconButtonProps } from './IconButton';
+export { Logo, LogoMark, type LogoProps, type LogoTile } from './Logo';
 export { ListenButton, type ListenButtonProps } from './ListenButton';
 export { Pill, type PillProps, type PillTone } from './Pill';
 export { pickPronunciation, pronunciationKind } from './pron';

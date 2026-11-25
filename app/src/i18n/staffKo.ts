@@ -16,6 +16,8 @@ export const STAFF_KO = {
   replyResultPrefix: '직원 응답',
   /** 주문 목록 끝 포장 표시 (목업 S08, 포장 선택 시에만) */
   takeoutLine: '포장',
+  /** 직원 화면 합계 앞 표시: 현장 확인 전 예시 가격 (PRD 4장, T6.5 R1 M-03) */
+  sampleTotal: '예상 금액(예시 가격)',
   /** 직원 응답 버튼 (F-11) */
   replies: {
     yes: '네',

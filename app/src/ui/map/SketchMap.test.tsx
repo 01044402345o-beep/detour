@@ -7,15 +7,21 @@ import { bundles } from '../../data';
 import { SketchMap } from './SketchMap';
 import { contrastRatio, parseTokens, resolveColor } from '../a11y';
 import {
+  CHIP_FILL,
+  CHIP_FONT,
   MAP_INSET_PX,
   PIN_FILL,
+  PIN_STROKE,
+  ROUTE_CASING,
+  ROUTE_COLOR,
   PIN_HIT_R,
   SKETCH_BG,
   SKETCH_TEXT,
   SKETCH_W,
   START_FILL,
 } from './sketchConstants';
-import type { MapStop } from './types';
+import { rectAround, rectsOverlap } from './chips';
+import type { MapLeg, MapStop } from './types';
 
 const STOPS: MapStop[] = [
   { id: 'ssd', no: 1, name: 'Sungsimdang', category: 'food', geo: { lat: 36.3277, lng: 127.4273 } },
@@ -215,11 +221,25 @@ describe('약도 글자 대비 4.5:1 (T3.2)', () => {
   it('하천 이름은 하천·바탕·블록·도로 모두를 바탕으로 검사하고, 옛 색 #4f7385는 쓰지 않음', () => {
     expect([...SKETCH_TEXT.stream.on].sort()).toEqual(Object.values(SKETCH_BG).sort());
     expect(SKETCH_TEXT.stream.fill.toLowerCase()).not.toBe('#4f7385');
-    expect(SKETCH_TEXT.stream.fill).toBe(hex('var(--sea-d)'));
+    expect(SKETCH_TEXT.stream.fill).toBe(hex('var(--blue-deep)')); // T6.0: 새 토큰
   });
 
-  it('핀 채움은 표의 핀 바탕과 같음 (흰 번호 대비)', () => {
-    expect([...SKETCH_TEXT.pin.on].sort()).toEqual(Object.values(PIN_FILL).sort());
+  it('핀 채움은 표의 핀 바탕과 같음 (파란 번호 대비)', () => {
+    expect([...SKETCH_TEXT.pin.on].sort()).toEqual([...new Set(Object.values(PIN_FILL))].sort());
+  });
+
+  it('T6.3 같은 색 체계: 흰 핀·파란 테두리/번호/경로, 연파랑 칩 = 디자인 토큰 값', () => {
+    expect(PIN_FILL.food).toBe(hex('var(--surface)'));
+    expect(PIN_FILL.sight).toBe(hex('var(--surface)'));
+    expect(PIN_STROKE).toBe(hex('var(--blue)'));
+    expect(ROUTE_COLOR).toBe(hex('var(--blue)'));
+    expect(SKETCH_TEXT.pin.fill).toBe(hex('var(--blue)'));
+    expect(SKETCH_TEXT.chip.fill).toBe(hex('var(--blue)'));
+    expect(CHIP_FILL).toBe(hex('var(--tint)'));
+    expect(SKETCH_TEXT.start.fill).toBe(hex('var(--ink)'));
+    // 옛 베이지·검정 계열을 쓰지 않음
+    const all = [...Object.values(SKETCH_BG), START_FILL, ROUTE_COLOR].map((c) => c.toLowerCase());
+    for (const old of ['#f1ebde', '#e8e0cf', '#151a26']) expect(all).not.toContain(old);
   });
 
   it('렌더된 약도의 모든 <text>가 표에 등록된 글자 색을 씀 (표 밖 글자 금지)', () => {
@@ -240,4 +260,112 @@ describe('약도 글자 대비 4.5:1 (T3.2)', () => {
     expect(dot('ssd')).toBe(PIN_FILL.food);
     expect(dot('eun')).toBe(PIN_FILL.sight);
   });
+});
+
+describe('약도 경로선·구간 분 칩 (T6.3)', () => {
+  it('경로선: 아래 흰 테두리 선 + 위 파란 선 (같은 경로)', () => {
+    const route = [STOPS[0].geo, STOPS[1].geo, STOPS[2].geo];
+    const { container } = render(
+      <SketchMap stops={STOPS} onSelect={() => {}} label="Course" route={route} />,
+    );
+    const casing = container.querySelector('.cmap-sketch__casing')!;
+    const line = screen.getByTestId('map-line');
+    expect(casing.getAttribute('d')).toBe(line.getAttribute('d'));
+    expect(casing.getAttribute('stroke')).toBe(ROUTE_CASING);
+    expect(line.getAttribute('stroke')).toBe(ROUTE_COLOR);
+    expect(Number(casing.getAttribute('stroke-width'))).toBeGreaterThan(
+      Number(line.getAttribute('stroke-width')),
+    );
+    // 테두리 선이 먼저(아래) 그려짐
+    expect(casing.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('핀: 흰 바탕 + 파란 테두리, 번호는 파란 글자', () => {
+    render(<SketchMap stops={STOPS} onSelect={() => {}} label="Course" />);
+    const pin = screen.getByTestId('map-pin-ssd');
+    const dot = pin.querySelector('.cmap-sketch__dot')!;
+    expect(dot.getAttribute('fill')).toBe('#ffffff');
+    expect(dot.getAttribute('stroke')).toBe(PIN_STROKE);
+    expect(pin.querySelector('text')?.getAttribute('fill')).toBe(SKETCH_TEXT.pin.fill);
+  });
+
+  it('분 칩 글자는 최소 폭 360px 실제 렌더에서도 11.5px 이상 (R1 L-1)', () => {
+    const route = [STOPS[0].geo, STOPS[1].geo, STOPS[2].geo];
+    const legs: MapLeg[] = [{ path: [STOPS[1].geo, STOPS[2].geo], label: '12 min' }];
+    const { container } = render(
+      <SketchMap stops={STOPS} onSelect={() => {}} label="Course" route={route} legs={legs} />,
+    );
+    const text = container.querySelector('[data-testid="map-chip-0"] text')!;
+    const font = Number(text.getAttribute('font-size'));
+    expect(font).toBe(CHIP_FONT);
+    expect((font * (360 - MAP_INSET_PX)) / SKETCH_W).toBeGreaterThanOrEqual(11.5);
+    // 칩 상자도 글자 크기에 맞게 커짐 (배치 계산과 같은 크기)
+    const rect = container.querySelector('[data-testid="map-chip-0"] rect')!;
+    expect(Number(rect.getAttribute('height'))).toBeGreaterThanOrEqual(font + 6);
+    expect(Number(rect.getAttribute('width'))).toBeGreaterThanOrEqual(font * 0.6 * 6);
+  });
+
+  it('경로 없이 legs만 주면 칩을 그리지 않음 (직선 연결선에는 구간 시간이 맞지 않음)', () => {
+    const legs: MapLeg[] = [{ path: [STOPS[0].geo, STOPS[1].geo], label: '2 min' }];
+    const { container } = render(
+      <SketchMap stops={STOPS} onSelect={() => {}} label="Course" legs={legs} />,
+    );
+    expect(container.querySelectorAll('[data-testid^="map-chip-"]')).toHaveLength(0);
+  });
+
+  it.each(bundles.map((b) => [b.course.id, b] as const))(
+    '실제 코스(%s): 분 칩은 표의 색, 누를 수 없고, 핀·출발 표시·서로와 겹치지 않으며 상자 안',
+    (_id, b) => {
+      const real: MapStop[] = b.places.map((p, i) => ({
+        id: p.id,
+        no: i + 1,
+        name: p.name.en,
+        category: p.category,
+        geo: p.geo,
+      }));
+      const route = b.route.legs.flatMap((leg, i) => (i === 0 ? leg.path : leg.path.slice(1)));
+      const legs: MapLeg[] = b.route.legs.map((leg) => ({
+        path: leg.path,
+        label: `${b.places.find((p) => p.id === leg.to)!.walkMinFromPrev} min`,
+      }));
+      const { container } = render(
+        <SketchMap
+          stops={real}
+          onSelect={() => {}}
+          label="Course"
+          route={route}
+          legs={legs}
+          start={{ label: 'Daejeon Stn', geo: b.course.start.geo }}
+        />,
+      );
+      const chips = [...container.querySelectorAll('[data-testid^="map-chip-"]')];
+      expect(chips.length).toBeGreaterThan(0);
+      const rectOf = (el: Element) => ({
+        x: Number(el.getAttribute('x')),
+        y: Number(el.getAttribute('y')),
+        w: Number(el.getAttribute('width')),
+        h: Number(el.getAttribute('height')),
+      });
+      const chipRects = chips.map((c) => {
+        expect(c).toHaveAttribute('aria-hidden', 'true');
+        expect(c.querySelector('text')?.getAttribute('fill')).toBe(SKETCH_TEXT.chip.fill);
+        expect(c.querySelector('rect')?.getAttribute('fill')).toBe(CHIP_FILL);
+        return rectOf(c.querySelector('rect')!);
+      });
+      const pins = real.map((p) => {
+        const d = screen.getByTestId(`map-pin-${p.id}`).querySelector('.cmap-sketch__dot')!;
+        const r = Number(d.getAttribute('r')) + Number(d.getAttribute('stroke-width'));
+        const c = { x: Number(d.getAttribute('cx')), y: Number(d.getAttribute('cy')) };
+        return rectAround(c, r * 2, r * 2);
+      });
+      const startRects = [...screen.getByTestId('map-start').querySelectorAll('rect')].map(rectOf);
+      chipRects.forEach((r, i) => {
+        expect(r.x).toBeGreaterThanOrEqual(0);
+        expect(r.y).toBeGreaterThanOrEqual(0);
+        expect(r.x + r.w).toBeLessThanOrEqual(SKETCH_W);
+        for (const o of [...pins, ...startRects]) expect(rectsOverlap(r, o)).toBe(false);
+        chipRects.slice(i + 1).forEach((o) => expect(rectsOverlap(r, o)).toBe(false));
+      });
+    },
+  );
 });

@@ -13,14 +13,34 @@
     "welcomeSub": "Routes, real menus and the Korean you need — no app install.",
     "start": "Get started",
     "pronRoman": "Pronunciation is shown in romanized Korean (Revised Romanization). It is a reading guide, not pinyin.",
-    "pronKana": "Pronunciation is shown in katakana, which is only an approximation."
+    "pronKana": "Pronunciation is shown in katakana, which is only an approximation.",
+    "lede": "Hangul menus and Korean at the counter. Edulleo takes care of the route, the order and the reply.",
+    "foot": "No app install · works offline",
+    "boardLabel": "What Edulleo does",
+    "play": "Play scenes",
+    "pause": "Pause scenes",
+    "turnScreen": "Turn the screen to the staff",
+    "scenes": {
+      "course": {
+        "tab": "Course",
+        "cap": "A *ready-made walking course* from Daejeon Station: map, walking time and opening hours for every stop."
+      },
+      "order": {
+        "tab": "Order",
+        "cap": "Just *tap what you want* on the real menu. The Korean order is written for you, with pronunciation and audio."
+      },
+      "staff": {
+        "tab": "Staff",
+        "cap": "*Show your screen* to the staff. They answer with one tap, and you read the reply in your language."
+      }
+    }
   },
   "nav": {
     "explore": "Explore",
     "course": "Course",
     "phrases": "Phrases",
     "saved": "Saved",
-    "me": "Me"
+    "me": "Settings"
   },
   "home": {
     "location": "Daejeon, Korea",
@@ -41,7 +61,19 @@
     "overnightTitle": "Yuseong Spa · Line 1, no transfer",
     "todayPhrase": "Phrase of the day",
     "todayCourse": "Today's course",
-    "soonToast": "Coming soon — Old Downtown and Jungang Market are open in this demo."
+    "soonToast": "Coming soon — Old Downtown and Jungang Market are open in this demo.",
+    "langButton": "Language: {lang}. Change it in Settings",
+    "lineTitle": "Three areas on Metro Line 1",
+    "lineLabel": "Areas by Metro Line 1 station",
+    "stnStation": "대전역 · Daejeon Stn",
+    "stnDowntown": "중앙로 · Jungang-ro Stn",
+    "stnYuseong": "유성온천 · Yuseong Spa Stn",
+    "areaOpen": "Open",
+    "later": "Coming later",
+    "yuseongDesc": "Hot springs · Line 1 from Daejeon Stn, no transfer",
+    "startCourse": "Start the course",
+    "startsAt": "Starts at {place}",
+    "nightMarket": "Night market {days} {hours}, until {end}"
   },
   "course": {
     "title": "Old Downtown Half-day",
@@ -63,7 +95,11 @@
     "walkToStop": "Walk to stop {n}",
     "dirNext": "Opens walking directions to stop {n} in the NAVER Map app",
     "noApp": "No NAVER Map app? Follow the numbered stops on the map above, using the walk times in the list.",
-    "googleMaps": "View stop {n} in Google Maps"
+    "googleMaps": "View stop {n} in Google Maps",
+    "minShort": "{min} min",
+    "metaFrom": "Start: {start}",
+    "startTag": "Start",
+    "photoCredits": "Photos: {list} · Wikimedia Commons"
   },
   "season": {
     "kicker": "SEASONAL EVENT",
@@ -101,7 +137,15 @@
     "takedown": "Store owners: if you want this information corrected or removed, please contact us and we will act right away.",
     "save": "Save this place",
     "unsave": "Remove from saved",
-    "googleMaps": "View in Google Maps"
+    "googleMaps": "View in Google Maps",
+    "stopOf": "Stop {n} of {total}",
+    "nextStop": "Next: {name}, {min} min walk",
+    "lastStop": "Last stop",
+    "kindFood": "Food & drink",
+    "kindSight": "Sightseeing",
+    "opensAt": "Opens at {time}",
+    "opensTomorrow": "Opens tomorrow at {time}",
+    "opensOn": "Opens {day} at {time}"
   },
   "menu": {
     "signature": "Signature",
@@ -120,28 +164,31 @@
     "switchTitle": "Start a new order here?",
     "switchBody": "Your order at {place} will be cleared.",
     "switchConfirm": "Clear and continue",
-    "switchKeep": "Keep my order"
+    "switchKeep": "Keep my order",
+    "priceAsk": "Price: ask staff",
+    "sample": "sample"
   },
   "order": {
     "title": "My order",
     "togo": "To go",
     "here": "For here",
     "dineInOnly": "Dine-in only",
-    "sayThis": "SAY THIS AT THE COUNTER",
+    "sayThis": "Say this at the counter",
     "practice": "Practice saying it",
     "showStaff": "Show to staff",
     "empty": "Your order is empty",
-    "emptyHint": "Add at least one item to create an order card."
+    "emptyHint": "Add at least one item to create an order card.",
+    "totalLabel": "Est. total · sample prices"
   },
   "audio": {
     "listen": "Listen",
-    "listenSlow": "Listen slowly (0.75×)",
+    "listenSlow": "Listen slowly",
     "noKoreanVoice": "Korean voice is not available on this device.",
     "ttsUnsupported": "Audio playback is not supported in this browser."
   },
   "practice": {
     "title": "Speaking practice",
-    "tapWord": "TAP A WORD",
+    "tapWord": "Tap a word to hear it",
     "tapMic": "Tap the mic and say it",
     "requesting": "Allow microphone access to start",
     "listening": "Listening… say it now",
@@ -167,10 +214,10 @@
   "result": {
     "match": "Recognition match",
     "matchNote": "This shows how closely the recognized text matched the phrase. It is not a pronunciation grade.",
-    "great": "Great job! 🎉",
+    "great": "Great job!",
     "almost": "Almost there!",
     "closeMatch": "The recognized text matched the phrase closely.",
-    "heard": "WHAT WE HEARD",
+    "heard": "What we heard",
     "tip": "“{word}” didn’t match well. Say it slowly, one syllable at a time.",
     "again": "Try again",
     "next": "Next phrase",
@@ -182,10 +229,11 @@
     "staffReply": "Staff reply",
     "play": "Play aloud",
     "bigger": "Bigger",
-    "smaller": "Smaller"
+    "smaller": "Smaller",
+    "textSize": "Text size"
   },
   "reply": {
-    "yesTitle": "Yes! 👍",
+    "yesTitle": "Yes!",
     "yesBody": "The staff understood you.",
     "soldTitle": "Sold out",
     "soldBody": "Please choose something else.",
@@ -194,7 +242,11 @@
     "payTitle": "Please pay at the counter",
     "payBody": "Head to the cashier to pay.",
     "edit": "Change my order",
-    "backToStaff": "Show to staff again"
+    "backToStaff": "Show to staff again",
+    "yesNext": "Wait for your order, then head to the next stop.",
+    "soldNext": "Pick something else, then show the staff again.",
+    "waitNext": "When the staff is ready, show your order again.",
+    "payNext": "Pay at the counter, then tap Done."
   },
   "phrases": {
     "title": "Phrases",
@@ -206,7 +258,9 @@
     "savedToast": "Saved",
     "removedToast": "Removed",
     "empty": "Nothing saved yet",
-    "places": "Places"
+    "places": "Places",
+    "emptyHint": "Tap the save button on a place or a phrase, and it will be kept here.",
+    "emptyIcon": "Save button"
   },
   "report": {
     "open": "Info looks wrong?",
@@ -224,12 +278,34 @@
     "operatorReport": "Operator report",
     "reset": "Reset demo data",
     "resetConfirm": "Delete all demo data on this device and start over?",
-    "resetDone": "Demo data has been reset."
+    "resetDone": "Demo data has been reset.",
+    "demoTools": "Demo tools",
+    "demoToolsNote": "For the competition demo. Visitors do not need these.",
+    "photoCreditsSub": "Photos used in this app, with licenses",
+    "photoPlace": "Place",
+    "photoTitle": "Original title",
+    "photoArea": {
+      "downtown": "Old Downtown",
+      "station": "Daejeon Jungang Market",
+      "yuseong": "Yuseong Spa foot bath"
+    }
   },
   "pwa": {
     "offlineReady": "Ready to use offline",
     "updateAvailable": "A new version is available.",
     "update": "Update",
     "later": "Later"
+  },
+  "photo": {
+    "label": "Photo",
+    "credit": "Photo: {author} · {license}",
+    "credits": "Photo credits",
+    "source": "Photos: Wikimedia Commons",
+    "author": "Author",
+    "license": "License",
+    "original": "Original file",
+    "changes": "Changes",
+    "notice": "Notice",
+    "licenseScope": "These licenses apply only to the photo files."
   }
 }

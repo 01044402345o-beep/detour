@@ -262,7 +262,8 @@ describe('메뉴 담기 (F-05)', () => {
     expect(useAppStore.getState().cart.ssd).toEqual({});
     expect(within(menuCard('tw')).queryByRole('button', { name: /^Remove one/ })).toBeNull();
     expect(screen.queryByTestId('orderbar')).toBeNull();
-    expect(screen.getByRole('button', { name: /Practice · 4/ })).toBeInTheDocument();
+    // T6.4: 떠 있는 연습 버튼은 없앰 (연습은 Phrases 탭 안에서)
+    expect(screen.queryByRole('button', { name: /Practice/ })).toBeNull();
   });
 
   it('수량 9에서 + → 9 유지, 안내 토스트', () => {
@@ -273,9 +274,10 @@ describe('메뉴 담기 (F-05)', () => {
     expect(screen.getByTestId('toast-region')).toHaveTextContent('Up to 9 per item');
   });
 
-  it('가격 미확인 메뉴는 "가격 확인 필요", 담으면 주문 바에 "총액 확인 필요"', () => {
+  it('가격 미확인 메뉴는 중립 회색 "직원에게 확인", 담으면 주문 바에 "총액 확인 필요"', () => {
     renderAt('/place/ssd');
-    expect(menuCard('bm')).toHaveTextContent('Price to be confirmed');
+    expect(menuCard('bm')).toHaveTextContent('Price: ask staff');
+    expect(within(menuCard('bm')).getByTestId('price-ask')).toHaveClass('mrow__ask');
     addIn('tw');
     addIn('bm');
     const bar = screen.getByTestId('orderbar');
@@ -285,7 +287,7 @@ describe('메뉴 담기 (F-05)', () => {
 
   it('인분 메뉴는 1인분 가격 표기', () => {
     renderAt('/place/gwc');
-    expect(menuCard('dt')).toHaveTextContent('Est. ₩8,000 · per person');
+    expect(menuCard('dt')).toHaveTextContent('₩8,000 per person');
   });
 
   it('주문 바 → 내 주문', () => {
@@ -377,9 +379,11 @@ describe('이용 기록', () => {
     expect(JSON.parse(probe.textContent!)).toEqual({ src: 'phrase', phraseId: ph.id });
   });
 
-  it('하단 연습 버튼 → 이 장소 첫 문장으로 연습', () => {
+  it('떠 있는 연습 버튼 없음 (T6.4) — 문장 탭 첫 문장 → 이 장소 첫 문장으로 연습', () => {
     renderAt('/place/mus');
-    fireEvent.click(screen.getByRole('button', { name: /Practice · 3/ }));
+    expect(screen.queryByRole('button', { name: /Practice/ })).toBeNull();
+    fireEvent.click(screen.getByRole('tab', { name: 'Phrases' }));
+    fireEvent.click(within(screen.getByTestId('phrase-mus-1')).getAllByRole('button')[0]);
     expect(JSON.parse(screen.getByTestId('probe').textContent!)).toEqual({
       src: 'phrase',
       phraseId: 'mus-1',
@@ -472,5 +476,107 @@ describe('언어 전환', () => {
     fireEvent.click(screen.getAllByRole('tab')[2]);
     const ph = getPlace('ssd')!.phrases[0];
     expect(screen.getByTestId(`phrase-${ph.id}`)).toHaveTextContent(ph.kana);
+  });
+});
+
+describe('T6.4 머리·진행 표시·닫힘·주문 바', () => {
+  it('사진이 있는 장소(ssd): 사진 머리(eager) + 짧은 출처 + 큰 한글 이름', () => {
+    renderAt('/place/ssd');
+    const hero = screen.getByTestId('place-hero');
+    expect(hero).toHaveClass('place-hero--photo');
+    const img = within(hero).getByRole('img');
+    expect(img).toHaveAttribute('loading', 'eager');
+    expect(img.getAttribute('src')).toMatch(/photos\/.+\.webp$/);
+    expect(img).toHaveAccessibleName(/Sungsimdang/);
+    expect(screen.getByTestId('photo-credit')).toHaveTextContent(
+      'Photo: Trainholic · CC BY-SA 4.0',
+    );
+    const h1 = screen.getByRole('heading', { level: 1 });
+    expect(within(h1).getByText('성심당 본점')).toHaveAttribute('lang', 'ko');
+    expect(h1).toHaveTextContent('Sungsimdang Main Store');
+  });
+
+  it.each(['gwc', 'sy'])('사진이 없는 장소(%s): 파란 글자 머리, 사진·출처 없음', (id) => {
+    renderAt(`/place/${id}`);
+    const hero = screen.getByTestId('place-hero');
+    expect(hero).toHaveClass('place-hero--text');
+    expect(within(hero).queryByRole('img')).toBeNull();
+    expect(screen.queryByTestId('photo-credit')).toBeNull();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(getPlace(id)!.nameKo);
+  });
+
+  it('진행 표시: Stop n of N + 다음 정류장, 마지막 정류장', () => {
+    const { unmount } = renderAt('/place/ssd');
+    const prog = screen.getByTestId('place-progress');
+    expect(prog).toHaveTextContent('Stop 1 of 4');
+    expect(prog).toHaveTextContent('Next: Euneungjeongi Culture Street, 2 min walk');
+    expect(prog.querySelectorAll('.place-prog__dot')).toHaveLength(4);
+    expect(prog.querySelector('.place-prog__dot.is-cur')).toBe(
+      prog.querySelectorAll('.place-prog__dot')[0],
+    );
+    unmount();
+    renderAt('/place/gwc');
+    expect(screen.getByTestId('place-progress')).toHaveTextContent('Stop 4 of 4 · Last stop');
+  });
+
+  it('지금 닫힘: 중립색 표시 + 다음 영업 시각 (영업 중이면 시간표)', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-24T14:00:00Z')); // 서울 화 23:00
+    const { unmount } = renderAt('/place/ssd');
+    expect(screen.getByTestId('open-status')).toHaveClass('is-closed');
+    expect(screen.getByTestId('next-open')).toHaveTextContent('Opens tomorrow at 08:00');
+    unmount();
+    vi.setSystemTime(new Date('2026-11-22T10:00:00Z')); // 서울 일 19:00, 월 휴무
+    const r2 = renderAt('/place/mus');
+    expect(screen.getByTestId('next-open')).toHaveTextContent('Opens Tue at 10:00');
+    r2.unmount();
+    vi.setSystemTime(new Date('2026-11-24T01:00:00Z')); // 서울 화 10:00
+    renderAt('/place/ssd');
+    expect(screen.getByTestId('open-status')).toHaveClass('is-open');
+    expect(screen.queryByTestId('next-open')).toBeNull();
+    expect(screen.getByText('08:00–22:00')).toBeInTheDocument();
+  });
+
+  it('지금 닫힘 다음 영업 시각: ja·zh 문구', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-23T22:00:00Z')); // 서울 화 07:00
+    resetStore('ja');
+    const { unmount } = renderAt('/place/ssd');
+    expect(screen.getByTestId('next-open')).toHaveTextContent('08:00から営業');
+    unmount();
+    resetStore('zh');
+    renderAt('/place/ssd');
+    expect(screen.getByTestId('next-open')).toHaveTextContent('08:00 开始营业');
+  });
+
+  it('주문 바는 담은 메뉴가 있을 때만, 담은 줄은 선택 표시', () => {
+    renderAt('/place/ssd');
+    expect(screen.queryByTestId('orderbar')).toBeNull();
+    expect(menuCard('tw')).not.toHaveClass('is-sel');
+    addIn('tw');
+    expect(menuCard('tw')).toHaveClass('is-sel');
+    expect(screen.getByTestId('orderbar')).toBeInTheDocument();
+  });
+
+  it('비주문 장소(eun)는 메뉴 탭·주문 바 없음', () => {
+    renderAt('/place/eun');
+    expect(screen.queryByRole('tab', { name: 'Menu' })).toBeNull();
+    expect(screen.queryByTestId('orderbar')).toBeNull();
+  });
+});
+
+describe('T6.4 R1 L-01 숫자 글꼴', () => {
+  it('다음 영업 시각·주문 합계는 치환값만 .num, 문장은 일반 글꼴', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-24T14:00:00Z')); // 서울 화 23:00
+    renderAt('/place/ssd');
+    const next = screen.getByTestId('next-open');
+    expect(next).toHaveTextContent('Opens tomorrow at 08:00');
+    expect(next).not.toHaveClass('num');
+    expect(within(next).getByText('08:00')).toHaveClass('num');
+    addIn('tw');
+    const bar = screen.getByTestId('orderbar');
+    expect(bar).toHaveTextContent('Est. ₩1,700');
+    expect(within(bar).getByText('₩1,700')).toHaveClass('num');
   });
 });

@@ -1,0 +1,51 @@
+{
+  "$override": ["home.stnStation", "home.stnDowntown", "home.stnYuseong"],
+  "en": {
+    "home": {
+      "langButton": "Language: {lang}. Change it in Settings",
+      "lineTitle": "Three areas on Metro Line 1",
+      "lineLabel": "Areas by Metro Line 1 station",
+      "stnStation": "대전역 · Daejeon Stn",
+      "stnDowntown": "중앙로 · Jungang-ro Stn",
+      "stnYuseong": "유성온천 · Yuseong Spa Stn",
+      "areaOpen": "Open",
+      "later": "Coming later",
+      "yuseongDesc": "Hot springs · Line 1 from Daejeon Stn, no transfer",
+      "startCourse": "Start the course",
+      "startsAt": "Starts at {place}",
+      "nightMarket": "Night market {days} {hours}, until {end}"
+    }
+  },
+  "ja": {
+    "home": {
+      "langButton": "言語: {lang}。設定で変更できます",
+      "lineTitle": "地下鉄1号線の3つのエリア",
+      "lineLabel": "地下鉄1号線の駅ごとのエリア",
+      "stnStation": "대전역 · 大田駅",
+      "stnDowntown": "중앙로 · 中央路駅",
+      "stnYuseong": "유성온천 · 儒城温泉駅",
+      "areaOpen": "利用できます",
+      "later": "今後公開",
+      "yuseongDesc": "温泉・大田駅から地下鉄1号線で乗り換えなし",
+      "startCourse": "コースを始める",
+      "startsAt": "出発: {place}",
+      "nightMarket": "夜市 {days} {hours}、{end}まで"
+    }
+  },
+  "zh": {
+    "home": {
+      "langButton": "语言：{lang}。可在设置中更改",
+      "lineTitle": "地铁1号线上的三个区域",
+      "lineLabel": "按地铁1号线车站划分的区域",
+      "stnStation": "대전역 · 大田站",
+      "stnDowntown": "중앙로 · 中央路站",
+      "stnYuseong": "유성온천 · 儒城温泉站",
+      "areaOpen": "已开放",
+      "later": "即将推出",
+      "yuseongDesc": "温泉·从大田站乘地铁1号线直达",
+      "startCourse": "开始路线",
+      "startsAt": "起点：{place}",
+      "nightMarket": "夜市 {days} {hours}，至{end}"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "en": {
+    "course": {
+      "minShort": "{min} min",
+      "metaFrom": "Start: {start}",
+      "startTag": "Start",
+      "photoCredits": "Photos: {list} · Wikimedia Commons"
+    }
+  },
+  "ja": {
+    "course": {
+      "minShort": "{min}分",
+      "metaFrom": "出発: {start}",
+      "startTag": "出発",
+      "photoCredits": "写真: {list} · ウィキメディア・コモンズ"
+    }
+  },
+  "zh": {
+    "course": {
+      "minShort": "{min}分钟",
+      "metaFrom": "出发：{start}",
+      "startTag": "出发",
+      "photoCredits": "照片：{list} · 维基共享资源"
+    }
+  }
+}
