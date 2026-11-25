@@ -1,9 +1,11 @@
+import { StrictMode } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { MemoryRouter, useNavigate, type NavigateFunction } from 'react-router-dom';
 import type { AppEvent } from '../domain/events';
 import { useAppStore } from '../store/useAppStore';
 import type { Lang } from '../types';
 import { AppRoutes } from './AppRoutes';
+import { setLaunchIntroPending } from './launchIntro';
 import { ROUTES } from './routes';
 
 /**
@@ -79,6 +81,56 @@ describe('첫 실행 리다이렉트', () => {
     renderAt('/unknown/path');
     expect(await screen.findByTestId('screen-home')).toBeInTheDocument();
     expect(screenViews()).toEqual(['home']);
+  });
+});
+
+describe('앱을 열 때마다 인트로 (T6.8)', () => {
+  it('언어를 골랐어도 앱을 열어 첫 화면이 홈이면 인트로가 먼저', async () => {
+    setLaunchIntroPending(true);
+    renderAt('/', 'en');
+    expect(await screen.findByTestId('screen-lang')).toBeInTheDocument();
+    expect(screen.queryByTestId('screen-home')).toBeNull();
+  });
+
+  it('인트로를 지난 뒤 같은 페이지 안에서 홈으로 가면 인트로가 다시 끼어들지 않음', async () => {
+    setLaunchIntroPending(true);
+    const { go } = renderAt('/', 'en');
+    await screen.findByTestId('screen-lang');
+    go('/');
+    expect(await screen.findByTestId('screen-home')).toBeInTheDocument();
+    go('/course');
+    go('/');
+    expect(await screen.findByTestId('screen-home')).toBeInTheDocument();
+  });
+
+  it('StrictMode에서도 인트로 → 홈 이동의 screen_view가 정확히 lang, home 한 번씩', async () => {
+    setLaunchIntroPending(true);
+    useAppStore.setState({ lang: 'en', events: [] });
+    const ref: { nav: NavigateFunction | null } = { nav: null };
+    function Grab() {
+      ref.nav = useNavigate();
+      return null;
+    }
+    render(
+      <StrictMode>
+        <MemoryRouter initialEntries={['/']}>
+          <Grab />
+          <AppRoutes />
+        </MemoryRouter>
+      </StrictMode>,
+    );
+    expect(await screen.findByTestId('screen-lang')).toBeInTheDocument();
+    act(() => void ref.nav!('/', { replace: true })); // 인트로의 시작 버튼과 같은 이동
+    expect(await screen.findByTestId('screen-home')).toBeInTheDocument();
+    expect(screenViews()).toEqual(['lang', 'home']);
+  });
+
+  it('특정 화면 주소로 바로 열면(새로고침·링크) 그 화면 그대로, 이후 홈도 그대로', async () => {
+    setLaunchIntroPending(true);
+    const { go } = renderAt('/place/ssd', 'en');
+    expect(await screen.findByTestId('screen-place')).toBeInTheDocument();
+    go('/');
+    expect(await screen.findByTestId('screen-home')).toBeInTheDocument();
   });
 });
 

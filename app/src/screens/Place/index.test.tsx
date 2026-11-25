@@ -18,6 +18,17 @@ const fake = vi.hoisted(() => ({
   },
 }));
 
+// 사진 없는 장소(글자 타일) 경우를 만들려고, 여기에 넣은 장소 id는 사진이 없는 것으로 봅니다(T6.9 이후 실제 데이터는 모든 정류장에 사진).
+const noPhoto = vi.hoisted(() => new Set<string>());
+afterEach(() => noPhoto.clear());
+vi.mock('../../data/photos', async (orig) => {
+  const mod = await orig<typeof import('../../data/photos')>();
+  return {
+    ...mod,
+    photoForPlace: (id: string) => (noPhoto.has(id) ? undefined : mod.photoForPlace(id)),
+  };
+});
+
 vi.mock('../../speech/tts', async (orig) => {
   const mod = await orig<typeof import('../../speech/tts')>();
   return { ...mod, getTts: () => fake.tts };
@@ -496,13 +507,62 @@ describe('T6.4 머리·진행 표시·닫힘·주문 바', () => {
     expect(h1).toHaveTextContent('Sungsimdang Main Store');
   });
 
-  it.each(['gwc', 'sy'])('사진이 없는 장소(%s): 파란 글자 머리, 사진·출처 없음', (id) => {
-    renderAt(`/place/${id}`);
+  // gwc·sy는 실제 데이터에 사진 없음(T6.9 R1 H-01로 제외), gc는 mock으로 사진을 없앤 경우
+  it.each([
+    ['gwc', false],
+    ['sy', false],
+    ['gc', true],
+  ] as const)(
+    '사진이 없는 장소(%s, mock=%s): 파란 글자 머리, 사진·출처·예시 표시 없음',
+    (id, mock) => {
+      if (mock) noPhoto.add(id);
+      renderAt(`/place/${id}`);
+      const hero = screen.getByTestId('place-hero');
+      expect(hero).toHaveClass('place-hero--text');
+      expect(hero).toHaveAttribute('data-photo', 'none');
+      expect(within(hero).queryByRole('img')).toBeNull();
+      expect(screen.queryByTestId('photo-credit')).toBeNull();
+      expect(screen.queryByTestId('dish-example-label')).toBeNull();
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(getPlace(id)!.nameKo);
+    },
+  );
+
+  it('음식 예시 사진(gc, T6.9): 사진 머리 + "이 가게 사진 아님" 표시 + 예시 사진 출처', () => {
+    renderAt('/place/gc');
     const hero = screen.getByTestId('place-hero');
-    expect(hero).toHaveClass('place-hero--text');
-    expect(within(hero).queryByRole('img')).toBeNull();
-    expect(screen.queryByTestId('photo-credit')).toBeNull();
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(getPlace(id)!.nameKo);
+    expect(hero).toHaveClass('place-hero--photo');
+    expect(hero).toHaveAttribute('data-photo', 'dish-manduguk');
+    expect(hero).toHaveAttribute('data-photo-kind', 'dish-example');
+    const img = within(hero).getByRole('img');
+    expect(img.getAttribute('src')).toMatch(/photos\/dish-manduguk\.webp$/);
+    expect(img).toHaveAccessibleName(/Example photo of dumpling soup.+not taken at Gaecheon/);
+    // 표시는 글자 막(.place-hero__tx) 안 — 사진 위 글자 대비 규칙
+    const label = screen.getByTestId('dish-example-label');
+    expect(label).toHaveTextContent('Example photo of the dish · not this shop');
+    expect(label.closest('.place-hero__tx')).not.toBeNull();
+    expect(screen.getByTestId('photo-credit')).toHaveTextContent(
+      'Example photo: avlxyz · CC BY-SA 2.0',
+    );
+  });
+
+  it.each([
+    [
+      'ja',
+      '料理のイメージ写真 · この店の写真ではありません',
+      'イメージ写真: avlxyz · CC BY-SA 2.0',
+    ],
+    ['zh', '菜品示例照片 · 非本店照片', '示例照片：avlxyz · CC BY-SA 2.0'],
+  ] as const)('음식 예시 표시·출처 (%s, 개천식당)', (lang, label, credit) => {
+    resetStore(lang);
+    renderAt('/place/gc');
+    expect(screen.getByTestId('dish-example-label')).toHaveTextContent(label);
+    expect(screen.getByTestId('photo-credit')).toHaveTextContent(credit);
+  });
+
+  it('장소 사진(ssd)에는 예시 표시 없음', () => {
+    renderAt('/place/ssd');
+    expect(screen.getByTestId('place-hero')).toHaveAttribute('data-photo-kind', 'place');
+    expect(screen.queryByTestId('dish-example-label')).toBeNull();
   });
 
   it('진행 표시: Stop n of N + 다음 정류장, 마지막 정류장', () => {

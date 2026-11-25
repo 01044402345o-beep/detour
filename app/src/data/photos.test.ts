@@ -5,6 +5,7 @@ import path from 'node:path';
 import { getPlace } from './index';
 import { creditsText } from './photoCredits';
 import {
+  isDishExample,
   LICENSE_URLS,
   PHOTOS,
   photoCreditParams,
@@ -51,12 +52,76 @@ describe('photos.ts', () => {
     }
   });
 
-  it('라이선스 URL이 licenseId와 맞음', () => {
+  it('라이선스 URL이 licenseId와 맞음 (BY와 BY-SA, 국가판 KR 구분)', () => {
     for (const p of PHOTOS) {
       expect(p.licenseUrl).toBe(LICENSE_URLS[p.licenseId]);
-      const ver = /CC BY-SA (\d\.\d)/.exec(p.licenseId)![1];
-      expect(p.licenseUrl).toBe(`https://creativecommons.org/licenses/by-sa/${ver}/`);
+      const [, kind, ver, kr] = /^CC (BY|BY-SA) (\d\.\d)( KR)?$/.exec(p.licenseId)!;
+      expect(p.licenseUrl).toBe(
+        `https://creativecommons.org/licenses/${kind.toLowerCase()}/${ver}/${kr ? 'kr/' : ''}`,
+      );
     }
+    // 음식 예시 사진 3장: 원본 페이지(2026-11-26 API 확인)의 라이선스 그대로
+    const lic = Object.fromEntries(PHOTOS.map((p) => [p.id, p.licenseUrl]));
+    expect(lic['dish-manduguk']).toBe('https://creativecommons.org/licenses/by-sa/2.0/');
+    expect(lic['dish-sundae-gukbap']).toBe('https://creativecommons.org/licenses/by/2.0/');
+    expect(lic['dish-gukhwappang']).toBe('https://creativecommons.org/licenses/by-sa/2.0/kr/');
+  });
+
+  it('kind: 기존 6장은 place, 음식 예시 3장은 dish-example(음식 이름 3개 언어·가게 사진 아님 기록)', () => {
+    const places = PHOTOS.filter((p) => p.kind === 'place').map((p) => p.id);
+    expect(places).toEqual([
+      'sungsimdang',
+      'euneungjeongi',
+      'chungnam-office',
+      'daejeon-station',
+      'jungang-market',
+      'yuseong-footbath',
+    ]);
+    const dishes = PHOTOS.filter((p) => p.kind === 'dish-example');
+    expect(dishes.map((p) => [p.placeId, p.file])).toEqual([
+      ['gc', 'photos/dish-manduguk.webp'],
+      ['sj', 'photos/dish-sundae-gukbap.webp'],
+      ['hg', 'photos/dish-gukhwappang.webp'],
+    ]);
+    for (const p of dishes) {
+      if (p.kind !== 'dish-example') throw new Error('kind');
+      expect(isDishExample(p)).toBe(true);
+      expect(p.areaId).toBeUndefined();
+      // 대표 음식 이름 = 그 가게 메뉴의 대표(signature) 이름
+      const sig = getPlace(p.placeId!)!.menu!.find((m) => m.signature)!;
+      expect(p.dish).toEqual(sig.name);
+      expect(p.review).toMatch(/No people; no shop signs or logos/);
+      expect(p.review).toMatch(/not taken at .+ and unrelated to it/);
+      expect(p.review).toMatch(/SNS photos/);
+      expect(p.review).toMatch(/no EXIF copyright or credit notice/);
+      expect(p.notice).toBeUndefined();
+      expect(p.changes).toMatch(/WebP/);
+      expect(p.changes).toMatch(/no crop, no color correction/i);
+      expect(p.changes).not.toMatch(/blur/);
+      for (const lang of ['en', 'ja', 'zh'] as const) expect(p.dish[lang].trim()).not.toBe('');
+      expect(p.alt.en).toMatch(/^Example photo of .+, not taken at /);
+    }
+    // 리사이즈한 것(원본 > 1280px)과 크기 그대로 변환한 것 구분
+    const byId = (id: string) => PHOTOS.find((p) => p.id === id)!;
+    for (const id of ['dish-manduguk', 'dish-gukhwappang'])
+      expect(byId(id).changes).toMatch(/resized to 1200px/);
+    expect(byId('dish-sundae-gukbap').changes).toMatch(/at the same size\. No resize/);
+    // 만둣국 라이선스 이력 (R1 L-01): Commons 2007-12-14 검토가 BY-SA 2.0 확인, 최초 기재 BY 2.0은 당시 유효성 불명
+    expect(byId('dish-manduguk').review).toMatch(/Esrever \(2007-12-14\) confirmed CC BY-SA 2\.0/);
+    expect(byId('dish-manduguk').review).not.toMatch(/later changed/);
+    for (const p of PHOTOS.filter((x) => x.kind === 'place')) expect(isDishExample(p)).toBe(false);
+  });
+
+  it('허락 근거 미확인으로 뺀 2장(R1 H-01)은 기록·public·CREDITS에 없고, 그 장소는 사진 없음', () => {
+    for (const f of ['dish-dubu-duruchigi.webp', 'dish-gochu-twigim.webp']) {
+      expect(fs.existsSync(path.join(PUBLIC, 'photos', f)), f).toBe(false);
+      expect(PHOTOS.some((p) => p.file.endsWith(f))).toBe(false);
+    }
+    expect(photoForPlace('gwc')).toBeUndefined();
+    expect(photoForPlace('sy')).toBeUndefined();
+    expect(PHOTOS).toHaveLength(9);
+    const txt = fs.readFileSync(path.join(PUBLIC, 'photos/CREDITS.txt'), 'utf8');
+    expect(txt).not.toMatch(/dubu|gochu|이랑이랑|굿바이/);
   });
 
   it('파일이 public/photos에 있고 WebP·긴 변 ≤1200px·≤200KB', () => {
@@ -117,7 +182,12 @@ describe('photos.ts', () => {
         expect(txt, `${p.id}: ${v}`).toContain(v);
       }
       if (p.notice) expect(txt).toContain(p.notice);
+      if (p.kind === 'dish-example') expect(txt).toContain(`Dish:     ${p.dish.en}`);
     }
+    expect(txt.match(/Kind: {5}dish example \(NOT taken at this shop\)/g)).toHaveLength(3);
+    expect(txt.match(/Kind: {5}place$/gm)).toHaveLength(6);
+    expect(txt).toMatch(/CC BY \(Attribution\) and CC BY-SA \(Attribution-ShareAlike\)/);
+    expect(txt).toMatch(/NOT taken at that shop/);
   });
 
   it('장소·권역 조회, 장소 id는 실제 데이터에 있음', () => {
@@ -128,8 +198,13 @@ describe('photos.ts', () => {
     expect(photoForPlace('eun')?.id).toBe('euneungjeongi');
     expect(photoForArea('downtown')?.id).toBe('euneungjeongi');
     expect(photoForArea('yuseong')?.id).toBe('yuseong-footbath');
-    // 사진 없는 장소 → 글자 타일
+    // 음식 예시 사진 (T6.9)
+    expect(photoForPlace('gc')?.id).toBe('dish-manduguk');
+    expect(photoForPlace('sj')?.id).toBe('dish-sundae-gukbap');
+    expect(photoForPlace('hg')?.id).toBe('dish-gukhwappang');
+    // 사진 없는 장소 → 글자 타일 (gwc·sy는 R1 H-01로 사진 제외)
     expect(photoForPlace('gwc')).toBeUndefined();
+    expect(photoForPlace('sy')).toBeUndefined();
     expect(photoForPlace('nope')).toBeUndefined();
     for (const p of PHOTOS)
       if (p.placeId && p.placeId !== 'djs') expect(getPlace(p.placeId)).toBeDefined();

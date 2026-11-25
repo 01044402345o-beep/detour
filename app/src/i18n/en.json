@@ -306,6 +306,10 @@
     "original": "Original file",
     "changes": "Changes",
     "notice": "Notice",
-    "licenseScope": "These licenses apply only to the photo files."
+    "licenseScope": "These licenses apply only to the photo files.",
+    "dishExample": "Example photo of the dish · not this shop",
+    "creditDish": "Example photo: {author} · {license}",
+    "dishCredits": "Dish example photos (not taken at these shops): {list} · Wikimedia Commons",
+    "dishExampleOf": "Example photo of {dish} · not taken at this shop"
   }
 }

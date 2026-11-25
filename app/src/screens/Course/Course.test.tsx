@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { getBundle, places } from '../../data';
 import { t } from '../../i18n';
@@ -19,6 +19,17 @@ vi.mock('../../data', async (importOriginal) => {
     bundles,
     getPlace: (id: string) => list.find((p) => p.id === id),
     getBundle: (id: string) => bundles.find((b) => b.course.id === id),
+  };
+});
+
+// 사진 없는 정류장(글자 타일) 경우를 만들려고, 여기에 넣은 장소 id는 사진이 없는 것으로 봅니다(T6.9 이후 실제 데이터는 모든 정류장에 사진).
+const noPhoto = vi.hoisted(() => new Set<string>());
+afterEach(() => noPhoto.clear());
+vi.mock('../../data/photos', async (orig) => {
+  const mod = await orig<typeof import('../../data/photos')>();
+  return {
+    ...mod,
+    photoForPlace: (id: string) => (noPhoto.has(id) ? undefined : mod.photoForPlace(id)),
   };
 });
 
@@ -190,6 +201,7 @@ describe('S02 코스 지도', () => {
   });
 
   it('썸네일: 사진이 있으면 사진(빈 alt, lazy), 없으면 파란 글자 타일(한글 2~3자)', () => {
+    // 광천식당(gwc)은 실제 데이터에 사진 없음 (T6.9 R1 H-01로 제외)
     renderCourse();
     const thumb = (id: string) => screen.getByTestId(`stop-${id}`).querySelector('.course-thumb')!;
     for (const id of ['ssd', 'eun', 'mus']) {
@@ -198,8 +210,10 @@ describe('S02 코스 지도', () => {
       expect(img).toHaveAttribute('alt', '');
       expect(img).toHaveAttribute('loading', 'lazy');
       expect(thumb(id)).toHaveAttribute('data-kind', 'photo');
+      expect(thumb(id)).toHaveAttribute('data-photo-kind', 'place');
     }
     expect(thumb('gwc')).toHaveAttribute('data-kind', 'tile');
+    expect(thumb('gwc')).not.toHaveAttribute('data-photo-kind');
     expect(thumb('gwc').querySelector('img')).toBeNull();
     expect(thumb('gwc')).toHaveTextContent('광천4');
     // 번호 동그라미
@@ -212,34 +226,85 @@ describe('S02 코스 지도', () => {
     expect(origin).toHaveTextContent('or Line 1, 1 stop to Jungang-ro');
   });
 
-  it('시장 코스: 가게 사진이 없어 모두 글자 타일, 출발지만 사진', () => {
+  it('시장 코스(T6.9): 수연분식은 글자 타일, 나머지 세 가게는 음식 예시 사진, 출발지는 대전역 사진', () => {
     renderCourse('/course?c=jungang-market');
-    const kinds = ['sy', 'gc', 'sj', 'hg'].map((id) =>
-      screen.getByTestId(`stop-${id}`).querySelector('.course-thumb')?.getAttribute('data-kind'),
-    );
-    expect(kinds).toEqual(['tile', 'tile', 'tile', 'tile']);
+    const thumb = (id: string) => screen.getByTestId(`stop-${id}`).querySelector('.course-thumb')!;
+    expect(thumb('sy')).toHaveAttribute('data-kind', 'tile');
+    expect(thumb('sy').querySelector('img')).toBeNull();
+    expect(thumb('sy').querySelector('.course-thumb__tile')).toHaveTextContent('수연');
+    for (const id of ['gc', 'sj', 'hg']) {
+      expect(thumb(id)).toHaveAttribute('data-kind', 'photo');
+      expect(thumb(id)).toHaveAttribute('data-photo-kind', 'dish-example');
+      expect(thumb(id).querySelector('img')).toHaveAttribute('src', photoUrl(photoForPlace(id)!));
+      expect(thumb(id).querySelector('.course-thumb__tile')).toBeNull();
+    }
+    expect(screen.getByTestId('course-origin').querySelector('img')).not.toBeNull();
+  });
+
+  it('음식 예시 정류장(R1 M-01): 이름 아래 "음식 예시 사진 · 이 가게 사진 아님", 장소 사진·글자 타일 정류장에는 없음', () => {
+    renderCourse('/course?c=jungang-market');
+    for (const id of ['gc', 'sj', 'hg']) {
+      const note = screen.getByTestId(`dish-note-${id}`);
+      expect(note).toHaveTextContent(t('en', 'photo.dishExample'));
+      // aria-hidden 썸네일 밖(정류장 글자 영역)에 있어 낭독기에도 읽힘
+      expect(note.closest('[aria-hidden="true"]')).toBeNull();
+      expect(note.closest('.course-stop__body')).not.toBeNull();
+      expect(screen.getByTestId(`stop-${id}`)).toHaveAccessibleName(
+        expect.stringContaining(t('en', 'photo.dishExample')),
+      );
+    }
+    expect(screen.queryByTestId('dish-note-sy')).toBeNull();
+    // 원도심: 실제 장소 사진(ssd·eun·mus)과 글자 타일(gwc)에는 안내 없음
+    cleanup();
+    renderCourse();
+    for (const id of ['ssd', 'eun', 'mus', 'gwc']) {
+      expect(screen.queryByTestId(`dish-note-${id}`)).toBeNull();
+    }
+  });
+
+  it.each([
+    ['ja', '料理のイメージ写真 · この店の写真ではありません'],
+    ['zh', '菜品示例照片 · 非本店照片'],
+  ] as const)('음식 예시 정류장 안내 (%s)', (lang, text) => {
+    useAppStore.setState({ lang });
+    renderCourse('/course?c=jungang-market');
+    expect(screen.getByTestId('dish-note-gc')).toHaveTextContent(text);
+  });
+
+  it('시장 코스: 사진이 없으면 글자 타일(로직 유지)', () => {
+    for (const id of ['sy', 'gc', 'sj', 'hg']) noPhoto.add(id);
+    renderCourse('/course?c=jungang-market');
     expect(
       ['sy', 'gc', 'sj', 'hg'].map(
         (id) => screen.getByTestId(`stop-${id}`).querySelector('.course-thumb__tile')?.textContent,
       ),
     ).toEqual(['수연', '개천', '생일집', '홍가']);
-    expect(screen.getByTestId('course-origin').querySelector('img')).not.toBeNull();
+    expect(screen.queryByTestId('course-dish-credit')).toBeNull();
+    expect(screen.queryByTestId('dish-note-gc')).toBeNull();
   });
 
-  it('사진 출처 한 줄: 이 코스에 쓴 사진의 저작자·라이선스', () => {
+  it('사진 출처(원도심): 음식 예시 사진이 없으면 장소 사진 줄만', () => {
     renderCourse();
     expect(screen.getByTestId('course-photo-credit')).toHaveTextContent(
       t('en', 'course.photoCredits', {
         list: 'Minseong Kim, Trainholic (CC BY-SA 4.0), Yoo Chung (CC BY-SA 2.5)',
       }),
     );
+    expect(screen.queryByTestId('course-dish-credit')).toBeNull();
   });
 
-  it('사진 출처(시장 코스): 대전역 사진만', () => {
+  it('사진 출처(시장 코스): 대전역 사진 줄 + 음식 예시 3장 줄(BY·BY-SA 구분, 이 가게들에서 찍지 않음)', () => {
     renderCourse('/course?c=jungang-market');
     expect(screen.getByTestId('course-photo-credit')).toHaveTextContent(
       t('en', 'course.photoCredits', { list: 'Minseong Kim (CC BY-SA 4.0)' }),
     );
+    const dish = screen.getByTestId('course-dish-credit');
+    expect(dish).toHaveTextContent(
+      t('en', 'photo.dishCredits', {
+        list: 'avlxyz (CC BY-SA 2.0), pcamp (CC BY 2.0), 국립국어원 (CC BY-SA 2.0 KR)',
+      }),
+    );
+    expect(dish).toHaveTextContent('not taken at these shops');
   });
 
   it('정류장 줄: 사용자 언어 이름 + 한국어 이름·동네 (T6.3: 메뉴 수·문장 수 알약은 시안대로 뺌)', () => {

@@ -7,6 +7,7 @@ import {
   buildSsdOrder,
   chooseLanguage,
   expect,
+  openHome,
   openOrder,
   openPlace,
   test,
@@ -39,8 +40,11 @@ for (const from of LANGS) {
     await checkStaffKorean(page, from);
 
     // 설정(탭바 Me)에서 언어 변경 → 즉시 전환
-    await page.goto('./#/');
-    await page.getByRole('navigation').getByRole('link', { name: tr(from, 'nav.me') }).click();
+    await openHome(page, from);
+    await page
+      .getByRole('navigation')
+      .getByRole('link', { name: tr(from, 'nav.me') })
+      .click();
     await expect(page.getByRole('heading', { name: tr(from, 'settings.title') })).toBeVisible();
     await page.getByTestId(`set-lang-${to}`).click();
     await expect(page.getByRole('heading', { name: tr(to, 'settings.title') })).toBeVisible();

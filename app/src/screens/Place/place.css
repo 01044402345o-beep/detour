@@ -162,6 +162,21 @@
   font-weight: 500;
 }
 
+/* 음식 예시 사진 표시 (T6.9): 글자 막(≥0.86) 위에 다시 짙은 띠(0.92)를 깔아 사진과 겹쳐도 대비 유지 */
+.place-hero__dish {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 10px;
+  padding: 3px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 6px;
+  background: rgba(var(--scrim-rgb), 0.92);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  line-break: strict;
+}
+
 .place-hero__credit {
   margin-top: 8px;
   font-size: 11.5px;

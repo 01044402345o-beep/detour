@@ -5,12 +5,20 @@ Generated from app/src/data/photos.ts (do not edit by hand).
 
 The licenses below apply ONLY to the photo files in this folder (public/photos/*.webp).
 They do not apply to the Edulleo app code or to any other file.
+Two different license families are used: CC BY (Attribution) and CC BY-SA (Attribution-ShareAlike).
 Photos changed by us (resized, converted, faces blurred) are shared under the same license
-as their original (CC BY-SA, ShareAlike).
+as their original (for CC BY-SA photos this is required by ShareAlike).
+
+Kind "place": a photo of that place or area.
+Kind "dish example": a general photo of the shop's signature dish from Wikimedia Commons.
+It was NOT taken at that shop and has nothing to do with it. The app labels it on screen as
+"Example photo of the dish - not this shop". It replaces the SNS photos the user asked for,
+because SNS photos cannot be republished here.
 
 Checked against each original file page (Wikimedia Commons API: imageinfo extmetadata + page wikitext) on 2026-11-26.
 
 1) sungsimdang.webp
+   Kind:     place
    Title:    Sungsimdang 2019
    Author:   Trainholic
    Year:     2019
@@ -25,6 +33,7 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Used for: place "ssd"
 
 2) euneungjeongi.webp
+   Kind:     place
    Title:    Eunhaeng-dong Cultural Street
    Author:   Minseong Kim
    Year:     2014
@@ -39,6 +48,7 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Used for: place "eun", area "downtown"
 
 3) chungnam-office.webp
+   Kind:     place
    Title:    South Chungcheong Provincial Office
    Author:   Yoo Chung
    Year:     2007
@@ -53,6 +63,7 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Used for: place "mus"
 
 4) daejeon-station.webp
+   Kind:     place
    Title:    Daejeon Station
    Author:   Minseong Kim
    Year:     2014
@@ -67,6 +78,7 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Used for: place "djs"
 
 5) jungang-market.webp
+   Kind:     place
    Title:    Daejeon Jungang Market
    Author:   Minseong Kim
    Year:     2014
@@ -81,6 +93,7 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Used for: area "station"
 
 6) yuseong-footbath.webp
+   Kind:     place
    Title:    Yuseong Foot Spa at Night
    Author:   Pmlydon
    Year:     2021
@@ -93,3 +106,47 @@ Checked against each original file page (Wikimedia Commons API: imageinfo extmet
    Alt (ja): 夜の儒城の屋外足湯。紅葉の下で足を湯に浸す人々
    Alt (zh): 夜晚的儒城户外足浴池，人们在秋树下泡脚
    Used for: area "yuseong"
+
+7) dish-manduguk.webp
+   Kind:     dish example (NOT taken at this shop)
+   Dish:     Dumpling Soup
+   Title:    Korean.cuisine-Manduguk-01
+   Author:   avlxyz
+   Year:     2007
+   Source:   https://commons.wikimedia.org/wiki/File:Korean.cuisine-Manduguk-01.jpg
+   License:  CC BY-SA 2.0 - https://creativecommons.org/licenses/by-sa/2.0/
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail, resized to 1200px on the long side and converted to WebP. No crop, no color correction.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty; no EXIF copyright or credit notice. Author shown on the page as “by avlxyz” (Flickr user avlxyz). Commons Flickr review by Esrever (2007-12-14) confirmed CC BY-SA 2.0 on Flickr; the CC BY 2.0 first given at upload to Commons could not be confirmed as valid at that time. The Flickr page (checked 2026-11-26) also links to CC BY-SA 2.0. We use CC BY-SA 2.0 (ShareAlike). No people; no shop signs or logos. A general photo of the dish, not taken at Gaecheon Sikdang and unrelated to it. Why: the user asked (2026-11-26) for SNS photos of the shops without a photo; SNS photos cannot be republished in the public repository and app, so a freely licensed Wikimedia Commons photo of the shop’s signature dish is used instead and labeled on screen as an example photo, not this shop.
+   Alt (en): Example photo of dumpling soup (manduguk) with side dishes, not taken at Gaecheon Sikdang
+   Alt (ja): おかずを添えたマンドゥスープのイメージ写真(ケチョン食堂で撮影したものではありません)
+   Alt (zh): 配小菜的饺子汤示例照片（并非在Gaecheon食堂拍摄）
+   Used for: place "gc"
+
+8) dish-sundae-gukbap.webp
+   Kind:     dish example (NOT taken at this shop)
+   Dish:     Sundae Soup with Rice
+   Title:    Korean soup-Sundae gukbap-01
+   Author:   pcamp
+   Year:     2008
+   Source:   https://commons.wikimedia.org/wiki/File:Korean_soup-Sundae_gukbap-01.jpg
+   License:  CC BY 2.0 - https://creativecommons.org/licenses/by/2.0/
+   Changes:  Downloaded the original file (1024×768px) from Wikimedia Commons and converted it to WebP at the same size. No resize, no crop, no color correction.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty; no EXIF copyright or credit notice. Originally posted to Flickr; Flickr upload bot license review (2008-06-20) confirmed CC BY 2.0. No people; no shop signs or logos. A general photo of the dish, not taken at Saengiljip and unrelated to it. Why: the user asked (2026-11-26) for SNS photos of the shops without a photo; SNS photos cannot be republished in the public repository and app, so a freely licensed Wikimedia Commons photo of the shop’s signature dish is used instead and labeled on screen as an example photo, not this shop.
+   Alt (en): Example photo of sundae gukbap in a hot pot with rice and kimchi, not taken at Saengiljip
+   Alt (ja): ご飯とキムチを添えた土鍋のスンデクッパのイメージ写真(センイルチプで撮影したものではありません)
+   Alt (zh): 配米饭和泡菜的砂锅米肠汤饭示例照片（并非在生日家拍摄）
+   Used for: place "sj"
+
+9) dish-gukhwappang.webp
+   Kind:     dish example (NOT taken at this shop)
+   Dish:     Pulppang (mini red-bean cakes)
+   Title:    Gukhwappang
+   Author:   국립국어원
+   Source:   https://commons.wikimedia.org/wiki/File:Gukhwappang.jpg
+   License:  CC BY-SA 2.0 KR - https://creativecommons.org/licenses/by-sa/2.0/kr/
+   Changes:  Downloaded the 1280px-wide Wikimedia Commons thumbnail, resized to 1200px on the long side and converted to WebP. No crop, no color correction.
+   Review:   Source page: no personality-rights or trademark templates; Restrictions field empty; no EXIF copyright or credit notice. From the Basic Korean Dictionary media of the National Institute of Korean Language (국립국어원); license review on the page (2024-01-11) confirmed CC BY-SA 2.0 KR. The date is only “before 2015-12-21”, so no year. Gukhwappang (flower-shaped pulppang) is the same kind of red-bean cake. No people; no shop signs or logos. A general photo of the dish, not taken at Honggane Pulppang and unrelated to it. Why: the user asked (2026-11-26) for SNS photos of the shops without a photo; SNS photos cannot be republished in the public repository and app, so a freely licensed Wikimedia Commons photo of the shop’s signature dish is used instead and labeled on screen as an example photo, not this shop.
+   Alt (en): Example photo of flower-shaped red-bean cakes (gukhwappang) on a baking mold, not taken at Honggane Pulppang
+   Alt (ja): 焼き型に並ぶ花形のあん入り焼き菓子(菊花パン)のイメージ写真(ホンガネ プルッパンで撮影したものではありません)
+   Alt (zh): 烤模上的菊花形红豆小烤饼示例照片（并非在洪家小烤饼拍摄）
+   Used for: place "hg"

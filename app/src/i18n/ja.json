@@ -306,6 +306,10 @@
     "original": "元の画像",
     "changes": "変更内容",
     "notice": "注意事項",
-    "licenseScope": "これらのライセンスは写真ファイルにのみ適用されます。"
+    "licenseScope": "これらのライセンスは写真ファイルにのみ適用されます。",
+    "dishExample": "料理のイメージ写真 · この店の写真ではありません",
+    "creditDish": "イメージ写真: {author} · {license}",
+    "dishCredits": "料理のイメージ写真(各店で撮影したものではありません): {list} · ウィキメディア・コモンズ",
+    "dishExampleOf": "{dish}のイメージ写真 · この店で撮影したものではありません"
   }
 }

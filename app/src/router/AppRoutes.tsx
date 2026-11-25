@@ -11,6 +11,7 @@ import { ToastProvider } from '../ui/Toast';
 import { useDismissToast } from '../ui/toastContext';
 import { PATHS, ROUTES, routeForPath, screenKeyForPath } from './routes';
 import { SCREENS } from './screens';
+import { isLaunchIntroPending, settleLaunchIntro } from './launchIntro';
 
 /** 화면이 바뀔 때마다 screen_view를 화면 키로 1회 기록 (같은 이동을 두 번 세지 않음) */
 function ScreenViewLogger() {
@@ -74,11 +75,21 @@ function AppLayout() {
   );
 }
 
-/** 첫 실행(언어 미선택)이면 어느 경로로 들어와도 /lang으로 */
+/**
+ * 첫 실행(언어 미선택)이면 어느 경로로 들어와도 /lang으로.
+ * 언어를 골랐어도 앱을 열어 처음 그리는 화면이 홈이면 인트로(/lang)를 먼저 (T6.8, launchIntro.ts).
+ */
 function LangGate() {
   const lang = useAppStore((s) => s.lang);
   const { pathname } = useLocation();
+  // 첫 화면이 그려지면 판단 끝 (인트로로 보냈든, 다른 화면으로 바로 열었든)
+  useEffect(() => {
+    settleLaunchIntro();
+  }, [pathname]);
   if (lang === null && pathname !== PATHS.lang) return <Navigate to={PATHS.lang} replace />;
+  if (isLaunchIntroPending() && pathname === PATHS.home) {
+    return <Navigate to={PATHS.lang} replace />;
+  }
   return (
     <>
       <ScreenViewLogger />

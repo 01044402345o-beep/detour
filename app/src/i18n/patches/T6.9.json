@@ -1,0 +1,26 @@
+{
+  "en": {
+    "photo": {
+      "dishExample": "Example photo of the dish · not this shop",
+      "creditDish": "Example photo: {author} · {license}",
+      "dishCredits": "Dish example photos (not taken at these shops): {list} · Wikimedia Commons",
+      "dishExampleOf": "Example photo of {dish} · not taken at this shop"
+    }
+  },
+  "ja": {
+    "photo": {
+      "dishExample": "料理のイメージ写真 · この店の写真ではありません",
+      "creditDish": "イメージ写真: {author} · {license}",
+      "dishCredits": "料理のイメージ写真(各店で撮影したものではありません): {list} · ウィキメディア・コモンズ",
+      "dishExampleOf": "{dish}のイメージ写真 · この店で撮影したものではありません"
+    }
+  },
+  "zh": {
+    "photo": {
+      "dishExample": "菜品示例照片 · 非本店照片",
+      "creditDish": "示例照片：{author} · {license}",
+      "dishCredits": "菜品示例照片（非各店拍摄）：{list} · 维基共享资源",
+      "dishExampleOf": "{dish}示例照片 · 非本店拍摄"
+    }
+  }
+}

@@ -10,7 +10,7 @@ import { bundleOfPlace, getPlace, type ContentPlace } from '../../data';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, coursePath } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
-import { photoCreditParams, photoForPlace, photoUrl } from '../../data/photos';
+import { isDishExample, photoCreditParams, photoForPlace, photoUrl } from '../../data/photos';
 import { Button, Icon, IconButton, cx, useToast } from '../../ui';
 import { ReportSheet } from '../../ui/ReportSheet';
 import { formatKrw } from '../Order/orderMath';
@@ -87,6 +87,8 @@ function PlaceView({ place }: { place: ContentPlace }) {
   const opening = status === 'closed' ? nextOpening(place) : null;
   const here = order.place?.id === place.id ? order : null;
   const photo = photoForPlace(place.id);
+  // 음식 예시 사진(T6.9): 그 가게에서 찍은 사진이 아님을 사진 위·출처 줄에 표시
+  const dishPhoto = !!photo && isDishExample(photo);
   const bundle = bundleOfPlace(place.id);
   const total = bundle?.places.length ?? place.order;
   const next = bundle?.places.find((p) => p.order === place.order + 1);
@@ -109,6 +111,7 @@ function PlaceView({ place }: { place: ContentPlace }) {
         className={cx('place-hero', photo ? 'place-hero--photo' : 'place-hero--text')}
         data-testid="place-hero"
         data-photo={photo ? photo.id : 'none'}
+        data-photo-kind={photo ? photo.kind : undefined}
       >
         {photo && (
           <img
@@ -133,6 +136,11 @@ function PlaceView({ place }: { place: ContentPlace }) {
           </span>
         </div>
         <div className="place-hero__tx">
+          {dishPhoto && (
+            <p className="place-hero__dish" data-testid="dish-example-label">
+              {t('photo.dishExample')}
+            </p>
+          )}
           <h1 className="place-hero__h">
             <span className="place-hero__ko" lang="ko">
               {place.nameKo}
@@ -164,7 +172,7 @@ function PlaceView({ place }: { place: ContentPlace }) {
           )}
           {photo && (
             <p className="place-hero__credit" data-testid="photo-credit">
-              {t('photo.credit', photoCreditParams(photo))}
+              {t(dishPhoto ? 'photo.creditDish' : 'photo.credit', photoCreditParams(photo))}
             </p>
           )}
         </div>

@@ -196,14 +196,14 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     return row;
   };
 
-  it('행을 누르면 시트가 열리고, 사진 6장의 장소·제목·저작자·라이선스 링크·원본 링크·고지·변경 내역', async () => {
+  it('행을 누르면 시트가 열리고, 사진 9장(장소 6 + 음식 예시 3, T6.9)의 장소·제목·저작자·라이선스 링크·원본 링크·고지·변경 내역', async () => {
     await renderSettings();
     openCredits();
     const dialog = screen.getByRole('dialog', { name: 'Photo credits' });
     expect(dialog).toHaveTextContent('These licenses apply only to the photo files.');
     const items = within(dialog).getAllByRole('listitem');
     expect(items).toHaveLength(PHOTOS.length);
-    expect(PHOTOS).toHaveLength(6);
+    expect(PHOTOS).toHaveLength(9);
     PHOTOS.forEach((p, i) => {
       const it = items[i];
       expect(it).toHaveAttribute('data-photo-id', p.id);
@@ -227,7 +227,7 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     const places = within(dialog)
       .getAllByRole('heading', { level: 3 })
       .map((h) => h.textContent);
-    expect(places).toHaveLength(6);
+    expect(places).toHaveLength(9);
     expect(places[0]).toMatch(/Sungsimdang/);
     expect(places).toEqual(
       expect.arrayContaining(['Daejeon Station', 'Daejeon Jungang Market', 'Yuseong Spa foot bath']),
@@ -240,12 +240,52 @@ describe('S12 설정 — 사진 출처 시트 (T6.6, 새 경로 없음)', () => 
     await renderSettings('ja');
     fireEvent.click(screen.getByTestId('open-photo-credits'));
     const dialog = screen.getByRole('dialog', { name: '写真のクレジット' });
-    expect(within(dialog).getAllByText('撮影者')).toHaveLength(6);
-    expect(within(dialog).getAllByText('元の題名')).toHaveLength(6);
+    expect(within(dialog).getAllByText('撮影者')).toHaveLength(9);
+    expect(within(dialog).getAllByText('元の題名')).toHaveLength(9);
     expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 4.0' })).toHaveLength(5);
     expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 2.5' })).toHaveLength(1);
     expect(within(dialog).getByRole('heading', { name: '大田中央市場' })).toBeInTheDocument();
     expect(dialog).toHaveTextContent('Trainholic');
+    // 음식 예시 사진(T6.9): BY와 BY-SA 링크 구분, 예시 표시 일본어
+    // CC BY 2.0 KR 사진(두부두루치기·고추튀김)은 R1 H-01로 제외
+    expect(within(dialog).queryAllByRole('link', { name: 'CC BY 2.0 KR' })).toHaveLength(0);
+    expect(within(dialog).getAllByRole('link', { name: 'CC BY 2.0' })).toHaveLength(1);
+    expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 2.0' })).toHaveLength(1);
+    expect(within(dialog).getAllByRole('link', { name: 'CC BY-SA 2.0 KR' })).toHaveLength(1);
+    expect(within(dialog).getAllByTestId('credit-dish-example')[0]).toHaveTextContent(
+      'マンドゥスープのイメージ写真 · この店で撮影したものではありません',
+    );
+  });
+
+  it('음식 예시 사진(T6.9): 시트에서 장소 사진과 구분 표시(음식 이름 + 이 가게 사진 아님)', async () => {
+    await renderSettings();
+    openCredits();
+    const dialog = screen.getByRole('dialog', { name: 'Photo credits' });
+    const items = within(dialog).getAllByRole('listitem');
+    PHOTOS.forEach((p, i) => {
+      expect(items[i]).toHaveAttribute('data-photo-kind', p.kind);
+      const mark = within(items[i]).queryByTestId('credit-dish-example');
+      if (p.kind === 'dish-example') {
+        expect(mark).toHaveTextContent(`Example photo of ${p.dish.en} · not taken at this shop`);
+      } else {
+        expect(mark).toBeNull();
+      }
+    });
+    const gc = items.find((el) => el.getAttribute('data-photo-id') === 'dish-manduguk')!;
+    expect(within(gc).getByRole('heading', { level: 3 })).toHaveTextContent('Gaecheon Sikdang');
+    expect(within(gc).getByRole('link', { name: 'CC BY-SA 2.0' })).toHaveAttribute(
+      'href',
+      'https://creativecommons.org/licenses/by-sa/2.0/',
+    );
+    expect(
+      within(gc).getByRole('link', { name: 'File:Korean.cuisine-Manduguk-01.jpg' }),
+    ).toBeInTheDocument();
+    const sj = items.find((el) => el.getAttribute('data-photo-id') === 'dish-sundae-gukbap')!;
+    expect(within(sj).getByRole('link', { name: 'CC BY 2.0' })).toHaveAttribute(
+      'href',
+      'https://creativecommons.org/licenses/by/2.0/',
+    );
+    expect(within(dialog).getAllByTestId('credit-dish-example')).toHaveLength(3);
   });
 
   it('닫기 버튼 → 시트 닫힘, 쌓은 기록 한 칸을 되돌리고(history.back) 초점은 행으로', async () => {

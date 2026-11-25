@@ -165,6 +165,16 @@
   color: var(--mute);
 }
 
+/* 음식 예시 사진 정류장 안내 (T6.9 R1 M-01) */
+.course-stop__dish {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--mute);
+  line-break: strict;
+}
+
 /* 확인/미확인이 섞일 때만 정류장마다 (DESIGN.md 6장) */
 .course-stop__check {
   display: flex;

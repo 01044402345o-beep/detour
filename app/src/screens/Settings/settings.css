@@ -253,6 +253,19 @@
   word-break: keep-all;
 }
 
+/* 음식 예시 사진 표시 (T6.9) */
+.set-cr__name {
+  min-width: 0;
+}
+
+.set-cr__kind {
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--mute);
+  line-break: strict;
+}
+
 .set-cr__dl {
   display: grid;
   grid-template-columns: minmax(84px, max-content) minmax(0, 1fr);

@@ -1,5 +1,5 @@
 // 시나리오 6: 제보 → 리포트의 내 기기 제보 건수 +1
-import { KO, LANGS, chooseLanguage, expect, openPlace, test, tr } from './support';
+import { KO, LANGS, chooseLanguage, expect, openHome, openPlace, test, tr } from './support';
 
 for (const lang of LANGS) {
   test(`S6 제보 → 내 기기 제보 +1 [${lang}]`, async ({ page }) => {
@@ -7,7 +7,7 @@ for (const lang of LANGS) {
     await page.goto('./#/report');
     await expect(page.getByTestId('device-reports')).toHaveText(KO.deviceReports(0));
 
-    await page.goto('./#/');
+    await openHome(page, lang);
     await page.getByTestId('hub-downtown').click();
     await openPlace(page, lang, 'ssd');
     await page.getByRole('button', { name: tr(lang, 'report.open') }).click();

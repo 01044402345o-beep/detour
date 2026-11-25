@@ -12,7 +12,7 @@
 import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { bundles, getBundle, type CourseBundle } from '../../data';
-import { photoForPlace, photoUrl, type Photo } from '../../data/photos';
+import { isDishExample, photoForPlace, photoUrl, type Photo } from '../../data/photos';
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, placePath } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
@@ -65,6 +65,7 @@ function Thumb({ photo, nameKo, no }: { photo?: Photo; nameKo: string; no?: numb
       className={`course-thumb${photo ? '' : ' course-thumb--tile'}`}
       data-testid="course-thumb"
       data-kind={photo ? 'photo' : 'tile'}
+      data-photo-kind={photo?.kind}
       aria-hidden="true"
     >
       {photo ? (
@@ -128,6 +129,9 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
   const usedPhotos = [startPhoto, ...STOPS.map((p) => photoForPlace(p.id))].filter(
     (p): p is Photo => !!p,
   );
+  // 장소 사진과 음식 예시 사진(그 가게 사진 아님, T6.9)은 출처 줄을 나눠 표시
+  const placePhotos = usedPhotos.filter((p) => !isDishExample(p));
+  const dishPhotos = usedPhotos.filter(isDishExample);
 
   const next = nextStopIndex(course.stops, events);
   const nextPlace = STOPS[next];
@@ -201,6 +205,7 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
                     ...(course.start.hint ? [pickL10n(lang, course.start.hint)] : []),
                   ].join(' · ')
                 : t('course.walkMin', { min: p.walkMinFromPrev });
+            const photo = photoForPlace(p.id);
             return (
               <li key={p.id}>
                 <button
@@ -209,7 +214,7 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
                   data-testid={`stop-${p.id}`}
                   onClick={() => open(p.id)}
                 >
-                  <Thumb photo={photoForPlace(p.id)} nameKo={p.nameKo} no={i + 1} />
+                  <Thumb photo={photo} nameKo={p.nameKo} no={i + 1} />
                   <span className="course-stop__body">
                     <span className="sr-only">
                       {t('course.stopOf', { n: i + 1, total: STOPS.length })}
@@ -218,6 +223,12 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
                     <span className="course-stop__sub">
                       <span lang="ko">{p.nameKo}</span> · {pickL10n(lang, p.areaLocal)}
                     </span>
+                    {/* 음식 예시 사진(T6.9 R1 M-01): 썸네일은 aria-hidden이라 이름 아래 글자로 알림 */}
+                    {photo && isDishExample(photo) && (
+                      <span className="course-stop__dish" data-testid={`dish-note-${p.id}`}>
+                        {t('photo.dishExample')}
+                      </span>
+                    )}
                     {!noneVerified && (
                       <span
                         className={`course-stop__check${p.verified ? ' is-verified' : ''}`}
@@ -259,9 +270,14 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
             {t('place.unverified')}
           </p>
         )}
-        {usedPhotos.length > 0 && (
+        {placePhotos.length > 0 && (
           <p className="course-credit" data-testid="course-photo-credit">
-            {t('course.photoCredits', { list: creditList(usedPhotos) })}
+            {t('course.photoCredits', { list: creditList(placePhotos) })}
+          </p>
+        )}
+        {dishPhotos.length > 0 && (
+          <p className="course-credit" data-testid="course-dish-credit">
+            {t('photo.dishCredits', { list: creditList(dishPhotos) })}
           </p>
         )}
         {nextPlace && (

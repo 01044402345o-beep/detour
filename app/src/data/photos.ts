@@ -1,30 +1,53 @@
 /**
- * 사진 기록 (DESIGN.md 5장, T6.0). 사진 정보는 이 파일 한 곳에 둡니다.
+ * 사진 기록 (DESIGN.md 5장, T6.0 · T6.9). 사진 정보는 이 파일 한 곳에 둡니다.
  * public/photos/CREDITS.txt는 이 파일에서 만듭니다(data/photoCredits.ts, photos.test.ts가 동기화 검사).
- * 사진 라이선스(CC BY-SA)는 사진 파일에만 적용되고 앱 코드 라이선스와는 별개입니다.
- * 얼굴을 흐리게 바꾼 사진도 원본과 같은 CC BY-SA 조건으로 공유합니다.
+ * 사진 라이선스(CC BY·CC BY-SA)는 사진 파일에만 적용되고 앱 코드 라이선스와는 별개입니다.
+ * BY-SA 사진은 바꾼 판(리사이즈·변환·얼굴 흐림)도 원본과 같은 BY-SA 조건으로 공유합니다.
  *
  * 확인(2026-11-26): 원본 파일 페이지를 Wikimedia Commons API(imageinfo extmetadata + 위키 원문)로 다시 확인.
- *  - 저작자·라이선스·라이선스 URL은 API 값과 같음. 6장 모두 personality rights·trademark 등 별도 주의 틀 없음,
+ *  - 저작자·라이선스·라이선스 URL은 API 값과 같음. 모든 사진에 personality rights·trademark 등 별도 주의 틀 없음,
  *    Restrictions 필드 빈 값. notice는 원본 EXIF Copyright 값을 그대로 옮김(coordinator가 API로 확인).
  *  - 권리 점검(인물·간판/로고): 1차에서 성심당·으능정이·유성 족욕장을 "불확실하면 제외"로 뺐다가,
  *    사용자 결정(2026-11-26)으로 식별 가능한 얼굴을 흐리게 처리한 판으로 사용. 각 항목 review에 기록.
  *
- * 사진이 없는 장소·권역은 글자 타일(파랑 바탕 + 흰 한글 2~3자)로 표시합니다. 다른 곳 사진으로 대신하지 않습니다.
+ * 종류(kind, T6.9):
+ *  - 'place': 그 장소·권역을 찍은 사진.
+ *  - 'dish-example': 그 가게 대표 음식과 같은 종류의 **일반 음식 사진**(그 가게에서 찍은 사진 아님).
+ *    사용자 요청(2026-11-26, 사진 없는 곳은 SNS 사진으로)을 SNS 사진 저작권 문제로 대체한 것.
+ *    사진 위·출처 줄·설정 사진 출처 시트·CREDITS에서 "음식 예시 사진(이 가게 사진 아님)"으로 구분합니다.
+ *    2026-11-26 확인: 3장 모두 EXIF Copyright/Credit 고지 없음(notice 없음), 사람·간판 없음.
+ *    후보 5장 중 블로그 출처 2장(두부두루치기·고추튀김)은 허락 근거 미확인으로 제외(R1 H-01, 아래 PHOTOS 주석).
+ *
+ * 사진이 없는 장소·권역은 글자 타일(파랑 바탕 + 흰 한글 2~3자)로 표시합니다
+ * (현재 광천식당 gwc·수연분식 sy). 다른 장소의 사진으로 대신하지 않습니다.
  */
 import type { L10n } from '../types';
 
 /** 홈 3권역 (types.ts HubId + 준비 중인 유성) */
 export type AreaId = 'downtown' | 'station' | 'yuseong';
 
-export type PhotoLicenseId = 'CC BY-SA 2.5' | 'CC BY-SA 4.0';
+export type PhotoLicenseId =
+  | 'CC BY 2.0'
+  | 'CC BY 2.0 KR'
+  | 'CC BY-SA 2.0'
+  | 'CC BY-SA 2.0 KR'
+  | 'CC BY-SA 2.5'
+  | 'CC BY-SA 4.0';
 
+/** 라이선스 원문 링크. BY(저작자 표시)와 BY-SA(저작자 표시-동일조건 변경허락)는 다른 라이선스입니다. */
 export const LICENSE_URLS: Record<PhotoLicenseId, string> = {
+  'CC BY 2.0': 'https://creativecommons.org/licenses/by/2.0/',
+  'CC BY 2.0 KR': 'https://creativecommons.org/licenses/by/2.0/kr/',
+  'CC BY-SA 2.0': 'https://creativecommons.org/licenses/by-sa/2.0/',
+  'CC BY-SA 2.0 KR': 'https://creativecommons.org/licenses/by-sa/2.0/kr/',
   'CC BY-SA 2.5': 'https://creativecommons.org/licenses/by-sa/2.5/',
   'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
 };
 
-export type Photo = {
+/** 'place' = 그 장소를 찍은 사진, 'dish-example' = 대표 음식의 일반 예시 사진(그 가게 사진 아님) */
+export type PhotoKind = 'place' | 'dish-example';
+
+type PhotoBase = {
   id: string;
   /** BASE_URL 기준 경로 (photoUrl()로 완성) */
   file: string;
@@ -52,20 +75,39 @@ export type Photo = {
   alt: L10n;
 };
 
+export type Photo = PhotoBase &
+  (
+    | { kind: 'place' }
+    | {
+        kind: 'dish-example';
+        /** 사진 속 대표 음식 이름 (그 가게 메뉴 이름과 같게) */
+        dish: L10n;
+      }
+  );
+
 const RESIZED =
   'Downloaded the 1280px-wide Wikimedia Commons thumbnail, resized to 1200px on the long side and converted to WebP. No crop, no color correction.';
 
 const blurred = (areas: number) =>
   `Downloaded the 1280px-wide Wikimedia Commons thumbnail; faces of identifiable people blurred (soft elliptical Gaussian blur, ${areas} areas); resized to 1200px on the long side; converted to WebP. No crop, no color correction; signage unchanged.`;
 
+/** 원본 파일을 크기 그대로 WebP로 바꾼 경우 (원본이 1200px보다 작음) */
+const converted = (w: number, h: number) =>
+  `Downloaded the original file (${w}×${h}px) from Wikimedia Commons and converted it to WebP at the same size. No resize, no crop, no color correction.`;
+
 const SOURCE_OK =
   'Source page: no personality-rights or trademark templates; Restrictions field empty.';
+const DISH_SOURCE_OK =
+  'Source page: no personality-rights or trademark templates; Restrictions field empty; no EXIF copyright or credit notice.';
+const dishNote = (shop: string) =>
+  `No people; no shop signs or logos. A general photo of the dish, not taken at ${shop} and unrelated to it. Why: the user asked (2026-11-26) for SNS photos of the shops without a photo; SNS photos cannot be republished in the public repository and app, so a freely licensed Wikimedia Commons photo of the shop’s signature dish is used instead and labeled on screen as an example photo, not this shop.`;
 const USER_DECISION =
   'User decision 2026-11-26: use after blurring faces; shop signs are shown in context with the app’s non-affiliation notice.';
 
 export const PHOTOS: readonly Photo[] = [
   {
     id: 'sungsimdang',
+    kind: 'place',
     file: 'photos/sungsimdang.webp',
     placeId: 'ssd',
     title: 'Sungsimdang 2019',
@@ -85,6 +127,7 @@ export const PHOTOS: readonly Photo[] = [
   },
   {
     id: 'euneungjeongi',
+    kind: 'place',
     file: 'photos/euneungjeongi.webp',
     placeId: 'eun',
     areaId: 'downtown',
@@ -105,6 +148,7 @@ export const PHOTOS: readonly Photo[] = [
   },
   {
     id: 'chungnam-office',
+    kind: 'place',
     file: 'photos/chungnam-office.webp',
     placeId: 'mus',
     title: 'South Chungcheong Provincial Office',
@@ -124,6 +168,7 @@ export const PHOTOS: readonly Photo[] = [
   },
   {
     id: 'daejeon-station',
+    kind: 'place',
     file: 'photos/daejeon-station.webp',
     placeId: 'djs',
     title: 'Daejeon Station',
@@ -143,6 +188,7 @@ export const PHOTOS: readonly Photo[] = [
   },
   {
     id: 'jungang-market',
+    kind: 'place',
     file: 'photos/jungang-market.webp',
     areaId: 'station',
     title: 'Daejeon Jungang Market',
@@ -162,6 +208,7 @@ export const PHOTOS: readonly Photo[] = [
   },
   {
     id: 'yuseong-footbath',
+    kind: 'place',
     file: 'photos/yuseong-footbath.webp',
     areaId: 'yuseong',
     title: 'Yuseong Foot Spa at Night',
@@ -179,9 +226,83 @@ export const PHOTOS: readonly Photo[] = [
       zh: '夜晚的儒城户外足浴池，人们在秋树下泡脚',
     },
   },
+
+  // ───── 음식 예시 사진 (T6.9) — 그 가게에서 찍은 사진이 아님 ─────
+  // 제외(T6.9 R1 H-01, 2026-11-26): 아래 2장은 블로그 출처이고, Commons에 라이선스 검토 기록이 없으며
+  // 업로더가 저작자라는 근거도 확인되지 않아(원 게시물 접속 실패) '불확실하면 제외' 기준으로 뺐습니다.
+  // public·CREDITS·사전 캐시에도 없음. 해당 장소(광천식당 gwc, 수연분식 sy)는 글자 타일.
+  // 원 게시물의 자유 이용 허락이나 권리자의 명시적 허락을 확인·기록한 뒤에만 다시 넣습니다.
+  //  - File:두부두루치기.jpg (이랑이랑, CC BY 2.0 KR 표시, 업로더 Gksyy 2023-10-01, 출처 네이버 eueuy/223055227139)
+  //    https://commons.wikimedia.org/wiki/File:%EB%91%90%EB%B6%80%EB%91%90%EB%A3%A8%EC%B9%98%EA%B8%B0.jpg
+  //  - File:Ojingeo-twigim and gochu-twigim 2.jpg ((Goodbye Seasoning) 굿바이 조미료, CC BY 2.0 KR 표시,
+  //    업로더 Gidiyorum 2017-12-28, 출처 다음 white0192/3635941)
+  //    https://commons.wikimedia.org/wiki/File:Ojingeo-twigim_and_gochu-twigim_2.jpg
+  {
+    id: 'dish-manduguk',
+    kind: 'dish-example',
+    file: 'photos/dish-manduguk.webp',
+    placeId: 'gc',
+    dish: { en: 'Dumpling Soup', ja: 'マンドゥスープ', zh: '饺子汤' },
+    title: 'Korean.cuisine-Manduguk-01',
+    author: 'avlxyz',
+    year: 2007,
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Korean.cuisine-Manduguk-01.jpg',
+    licenseId: 'CC BY-SA 2.0',
+    licenseUrl: LICENSE_URLS['CC BY-SA 2.0'],
+    changes: RESIZED,
+    review: `${DISH_SOURCE_OK} Author shown on the page as “by avlxyz” (Flickr user avlxyz). Commons Flickr review by Esrever (2007-12-14) confirmed CC BY-SA 2.0 on Flickr; the CC BY 2.0 first given at upload to Commons could not be confirmed as valid at that time. The Flickr page (checked 2026-11-26) also links to CC BY-SA 2.0. We use CC BY-SA 2.0 (ShareAlike). ${dishNote('Gaecheon Sikdang')}`,
+    alt: {
+      en: 'Example photo of dumpling soup (manduguk) with side dishes, not taken at Gaecheon Sikdang',
+      ja: 'おかずを添えたマンドゥスープのイメージ写真(ケチョン食堂で撮影したものではありません)',
+      zh: '配小菜的饺子汤示例照片（并非在Gaecheon食堂拍摄）',
+    },
+  },
+  {
+    id: 'dish-sundae-gukbap',
+    kind: 'dish-example',
+    file: 'photos/dish-sundae-gukbap.webp',
+    placeId: 'sj',
+    dish: { en: 'Sundae Soup with Rice', ja: 'スンデクッパ', zh: '米肠汤饭' },
+    title: 'Korean soup-Sundae gukbap-01',
+    author: 'pcamp',
+    year: 2008,
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Korean_soup-Sundae_gukbap-01.jpg',
+    licenseId: 'CC BY 2.0',
+    licenseUrl: LICENSE_URLS['CC BY 2.0'],
+    changes: converted(1024, 768),
+    review: `${DISH_SOURCE_OK} Originally posted to Flickr; Flickr upload bot license review (2008-06-20) confirmed CC BY 2.0. ${dishNote('Saengiljip')}`,
+    alt: {
+      en: 'Example photo of sundae gukbap in a hot pot with rice and kimchi, not taken at Saengiljip',
+      ja: 'ご飯とキムチを添えた土鍋のスンデクッパのイメージ写真(センイルチプで撮影したものではありません)',
+      zh: '配米饭和泡菜的砂锅米肠汤饭示例照片（并非在生日家拍摄）',
+    },
+  },
+  {
+    id: 'dish-gukhwappang',
+    kind: 'dish-example',
+    file: 'photos/dish-gukhwappang.webp',
+    placeId: 'hg',
+    dish: {
+      en: 'Pulppang (mini red-bean cakes)',
+      ja: 'プルッパン(あん入り小焼き菓子)',
+      zh: '红豆小烤饼',
+    },
+    title: 'Gukhwappang',
+    author: '국립국어원',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Gukhwappang.jpg',
+    licenseId: 'CC BY-SA 2.0 KR',
+    licenseUrl: LICENSE_URLS['CC BY-SA 2.0 KR'],
+    changes: RESIZED,
+    review: `${DISH_SOURCE_OK} From the Basic Korean Dictionary media of the National Institute of Korean Language (국립국어원); license review on the page (2024-01-11) confirmed CC BY-SA 2.0 KR. The date is only “before 2015-12-21”, so no year. Gukhwappang (flower-shaped pulppang) is the same kind of red-bean cake. ${dishNote('Honggane Pulppang')}`,
+    alt: {
+      en: 'Example photo of flower-shaped red-bean cakes (gukhwappang) on a baking mold, not taken at Honggane Pulppang',
+      ja: '焼き型に並ぶ花形のあん入り焼き菓子(菊花パン)のイメージ写真(ホンガネ プルッパンで撮影したものではありません)',
+      zh: '烤模上的菊花形红豆小烤饼示例照片（并非在洪家小烤饼拍摄）',
+    },
+  },
 ];
 
-/** 장소 id → 사진 (없으면 undefined = 글자 타일) */
+/** 장소 id → 사진 (없으면 undefined = 글자 타일). kind 'dish-example'이면 그 가게 사진이 아님 */
 export function photoForPlace(placeId: string): Photo | undefined {
   return PHOTOS.find((p) => p.placeId === placeId);
 }
@@ -194,6 +315,11 @@ export function photoForArea(areaId: AreaId): Photo | undefined {
 /** 배포 경로(/edulleo/)를 붙인 사진 URL */
 export function photoUrl(photo: Pick<Photo, 'file'>): string {
   return `${import.meta.env.BASE_URL}${photo.file}`;
+}
+
+/** 음식 예시 사진(그 가게에서 찍은 사진 아님)인지 */
+export function isDishExample(photo: Pick<Photo, 'kind'>): boolean {
+  return photo.kind === 'dish-example';
 }
 
 /**

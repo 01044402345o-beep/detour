@@ -64,7 +64,7 @@ function PhotoCredits({ lang }: { lang: Lang }) {
       <p className="set-cr__scope">{t('photo.licenseScope')}</p>
       <ul className="set-cr" data-testid="photo-credits">
         {PHOTOS.map((p) => (
-          <li key={p.id} className="set-cr__item" data-photo-id={p.id}>
+          <li key={p.id} className="set-cr__item" data-photo-id={p.id} data-photo-kind={p.kind}>
             <div className="set-cr__head">
               {/* 같은 정보(장소 이름)가 바로 옆 글자로 있으므로 빈 alt */}
               <img
@@ -76,7 +76,15 @@ function PhotoCredits({ lang }: { lang: Lang }) {
                 loading="lazy"
                 decoding="async"
               />
-              <h3 className="set-cr__place">{placeOf(p, lang)}</h3>
+              <div className="set-cr__name">
+                <h3 className="set-cr__place">{placeOf(p, lang)}</h3>
+                {/* 음식 예시 사진(T6.9): 그 가게에서 찍은 사진이 아님 */}
+                {p.kind === 'dish-example' && (
+                  <p className="set-cr__kind" data-testid="credit-dish-example">
+                    {t('photo.dishExampleOf', { dish: pickL10n(lang, p.dish) })}
+                  </p>
+                )}
+              </div>
             </div>
             <dl className="set-cr__dl">
               <dt>{t('settings.photoTitle')}</dt>

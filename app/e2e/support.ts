@@ -18,7 +18,9 @@ const dicts: Record<Lang, Record<string, unknown>> = Object.fromEntries(
 
 /** 사전 값 (점 경로 키, `{name}` 채움) */
 export function tr(lang: Lang, key: string, params: Record<string, string | number> = {}): string {
-  const v = key.split('.').reduce<unknown>((o, k) => (o as Record<string, unknown>)?.[k], dicts[lang]);
+  const v = key
+    .split('.')
+    .reduce<unknown>((o, k) => (o as Record<string, unknown>)?.[k], dicts[lang]);
   if (typeof v !== 'string') throw new Error(`missing i18n key ${lang}:${key}`);
   return v.replace(/\{(\w+)\}/g, (w, n: string) => (n in params ? String(params[n]) : w));
 }
@@ -46,7 +48,8 @@ export const test = base.extend<Fixtures>({
       const errors: string[] = [];
       page.on('pageerror', (e) => errors.push(e.message));
       page.on('console', (m) => {
-        if (m.type() === 'error') info.annotations.push({ type: 'console-error', description: m.text() });
+        if (m.type() === 'error')
+          info.annotations.push({ type: 'console-error', description: m.text() });
       });
       await installSpeechMock(page, speech);
       await use(errors);
@@ -67,9 +70,31 @@ export async function chooseLanguage(page: Page, lang: Lang): Promise<void> {
   await expect(page.getByTestId('screen-home')).toBeVisible();
 }
 
+/**
+ * 홈 주소로 이동. 페이지를 새로 열면 인트로가 먼저 나오고(T6.8), 같은 페이지 안의 이동이면 바로 홈.
+ * 인트로가 나오면 시작 버튼을 눌러 홈으로 간다.
+ */
+export async function openHome(page: Page, lang: Lang): Promise<void> {
+  await page.goto('./#/');
+  const intro = page.getByTestId('screen-lang');
+  const home = page.getByTestId('screen-home');
+  await expect(intro.or(home)).toBeVisible();
+  if (await intro.isVisible()) {
+    await page.getByRole('button', { name: tr(lang, 'lang.start') }).click();
+  }
+  await expect(home).toBeVisible();
+}
+
 /** 하단 탭바 이동 */
-export async function tab(page: Page, lang: Lang, key: 'explore' | 'course' | 'phrases' | 'saved' | 'me') {
-  await page.getByRole('navigation').getByRole('link', { name: tr(lang, `nav.${key}`) }).click();
+export async function tab(
+  page: Page,
+  lang: Lang,
+  key: 'explore' | 'course' | 'phrases' | 'saved' | 'me',
+) {
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name: tr(lang, `nav.${key}`) })
+    .click();
 }
 
 /** 코스 지도(탭바) → 정류장 목록에서 장소 열기 */

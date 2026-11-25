@@ -306,6 +306,10 @@
     "original": "原始文件",
     "changes": "修改说明",
     "notice": "注意事项",
-    "licenseScope": "这些许可协议仅适用于照片文件。"
+    "licenseScope": "这些许可协议仅适用于照片文件。",
+    "dishExample": "菜品示例照片 · 非本店照片",
+    "creditDish": "示例照片：{author} · {license}",
+    "dishCredits": "菜品示例照片（非各店拍摄）：{list} · 维基共享资源",
+    "dishExampleOf": "{dish}示例照片 · 非本店拍摄"
   }
 }
