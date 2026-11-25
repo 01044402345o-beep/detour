@@ -687,3 +687,9 @@
 .place-hero__tx .place-status {
   text-shadow: none;
 }
+
+/* 음성 가이드 버튼 줄 (T6.14): 진행 막대와 탭 사이 */
+.place-guide {
+  padding: 12px 16px 4px;
+  background: var(--surface);
+}

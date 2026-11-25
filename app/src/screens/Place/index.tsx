@@ -2,6 +2,7 @@
  * S03·S04 장소 상세 (T2.3, PRD F-04·F-05·F-13·F-14).
  * - 탭: 메뉴 / 이용 방법 / 문장. `orderable:false`면 메뉴 탭 없이 이용 방법 탭으로 엽니다.
  * - 같은 라우트에서 :id만 바뀌면 콘텐츠 루트에 key={id}를 줘 듣기 버튼 등을 다시 마운트합니다.
+ * - 음성 가이드(T6.14): 진행 막대 아래 '가이드 듣기' → 팝업에서 대표 메뉴·주문 방법을 화면 언어로 읽고 글도 보여 줌.
  * - screen_view는 라우터가 기록하고, 이 화면은 place_view·phrase_play만 기록합니다.
  */
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
@@ -17,7 +18,8 @@ import {
   photoForPlace,
   photoUrl,
 } from '../../data/photos';
-import { Button, Icon, IconButton, cx, useToast } from '../../ui';
+import { Button, GuidePlayer, Icon, IconButton, cx, useToast } from '../../ui';
+import { PLACE_GUIDES } from '../../data/guides';
 import { ReportSheet } from '../../ui/ReportSheet';
 import { formatKrw } from '../Order/orderMath';
 import { useOrderView } from '../Order/useOrder';
@@ -205,6 +207,18 @@ function PlaceView({ place }: { place: ContentPlace }) {
           ))}
         </span>
       </div>
+
+      {/* T6.14 장소 음성 가이드: 대표 메뉴·주문 방법·이용 팁 */}
+      {PLACE_GUIDES[place.id] && (
+        <div className="place-guide">
+          <GuidePlayer
+            guide={PLACE_GUIDES[place.id]}
+            title={pickL10n(lang, place.name)}
+            buttonLabel={t('guide.placeButton')}
+            testId="place-guide"
+          />
+        </div>
+      )}
 
       <div className="place-tabs" role="tablist">
         {tabs.map((k) => (

@@ -297,7 +297,7 @@
 }
 
 /* 행선지 선택 (T6.13): 정류장 4개를 2×2 라디오 칸으로(한 줄 4칸은 영어 이름이 단어 중간에서 끊겨 바꿈).
-   칸 = 번호 동그라미 + 이름 한 줄(넘치면 말줄임, 전체 이름은 버튼 아래 안내 문구). 고른 칸 = 파란 테두리·옅은 파랑. 칸 높이 44px */
+   칸 = 번호 동그라미 + 이름 한 줄(넘치면 말줄임, 전체 이름은 버튼 아래 안내 문구). 고른 칸 = 파란 테두리·옅은 파랑. 칸 높이 44px. ('Next' 알약은 T6.14에서 삭제) */
 .course-pick {
   margin: 0 0 10px;
   padding: 0;
@@ -377,19 +377,6 @@
   white-space: nowrap;
 }
 
-/* '다음' 표시: 칸 오른쪽 위 작은 앰버 알약(장식 색, 의미는 글자) */
-.course-pick__next {
-  position: absolute;
-  top: -9px;
-  right: 6px;
-  padding: 0 5px;
-  border-radius: 6px;
-  background: var(--signal);
-  color: var(--ink);
-  font-size: 11.5px;
-  font-weight: 700;
-  line-height: 16px;
-}
 
 .course-dock__btn {
   height: 54px;
@@ -479,4 +466,9 @@
   font-size: 12px;
   line-height: 1.45;
   color: var(--mute);
+}
+
+/* 코스 음성 가이드 버튼 (T6.14) */
+.course-head__guide {
+  margin-top: 12px;
 }

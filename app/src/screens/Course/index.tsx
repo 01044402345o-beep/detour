@@ -8,7 +8,9 @@
  * - 길찾기 버튼: 방문 기록이 없으면 "Start with stop 1", 있으면 다음 정류장(nextStop) 네이버 지도 도보 길찾기.
  *   T6.13(사용자 요청 2026-11-26): 버튼 위 '행선지' 선택(정류장 번호·이름 라디오)으로 가고 싶은 곳을 고르면
  *   버튼 문구·네이버 도보 길찾기 목적지·Google 장소 보기가 그곳으로 바뀝니다. 처음 선택은 다음 정류장.
+ *   T6.14: 'Next' 앰버 알약은 사용자 요청으로 삭제(다음 정류장은 처음 선택으로만 드러남).
  *   보조로 Google Maps 장소 보기·앱이 없을 때 안내.
+ * - 음성 가이드(T6.14): 제목 아래 '코스 가이드 듣기' → 팝업에서 화면 언어로 읽고 글도 보여 줌(ui/GuidePlayer).
  * - 코스 여러 개(T5.1): `/course?c=<코스 id>`. 없거나 모르는 id면 기본 코스(원도심).
  */
 import { useMemo } from 'react';
@@ -18,7 +20,8 @@ import { isDishExample, isOwnPhoto, photoForPlace, photoUrl, type Photo } from '
 import { pickL10n, useLang, useT } from '../../i18n';
 import { PATHS, placePath } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
-import { Icon, IconButton, TopBar } from '../../ui';
+import { GuidePlayer, Icon, IconButton, TopBar } from '../../ui';
+import { COURSE_GUIDES } from '../../data/guides';
 import { CourseMap, type MapLeg, type MapStop } from '../../ui/map';
 import { googlePlaceUrl, naverWalkUrl } from '../../ui/map/externalMap';
 import { nextStopIndex } from './nextStop';
@@ -177,6 +180,16 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
           {' · '}
           <b>{t('course.metaFrom', { start: t('course.mapStation') })}</b>
         </p>
+        {/* T6.14 코스 음성 가이드 */}
+        {COURSE_GUIDES[course.id] && (
+          <GuidePlayer
+            guide={COURSE_GUIDES[course.id]}
+            title={title}
+            buttonLabel={t('guide.courseButton')}
+            testId="course-guide"
+            className="course-head__guide"
+          />
+        )}
       </header>
 
       <CourseMap
@@ -332,11 +345,10 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
                     name={`walk-to-${course.id}`}
                     value={p.id}
                     checked={i === target}
-                    // 낭독: "Stop 2 of 4, 전체 이름(, Next)" — 화면의 이름은 한 줄 말줄임이라 전체 이름을 직접 줌 (R1 L-03)
+                    // 낭독: "Stop 2 of 4, 전체 이름" — 화면의 이름은 한 줄 말줄임이라 전체 이름을 직접 줌 (R1 L-03)
                     aria-label={[
                       t('course.stopOf', { n: i + 1, total: STOPS.length }),
                       pickL10n(lang, p.name),
-                      ...(i === next ? [t('course.nextTag')] : []),
                     ].join(', ')}
                     onChange={() => setPicked(p.id)}
                     className="sr-only"
@@ -347,7 +359,6 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
                   <span className="course-pick__name">
                     {pickL10n(lang, p.name)}
                   </span>
-                  {i === next && <span className="course-pick__next">{t('course.nextTag')}</span>}
                 </label>
               ))}
             </div>

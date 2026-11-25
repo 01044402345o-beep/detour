@@ -453,10 +453,10 @@ describe('S02 코스 지도', () => {
       const group = screen.getByRole('group', { name: t('en', 'course.pickLabel') });
       const radios = within(group).getAllByRole('radio');
       expect(radios).toHaveLength(4);
-      // 처음 선택 = 다음 정류장(2번), '다음' 표시도 2번에만
+      // 처음 선택 = 다음 정류장(2번). 'Next' 알약은 T6.14에서 삭제
       expect(radios[1]).toBeChecked();
-      expect(within(screen.getByTestId(`pick-${ids[1]}`)).getByText(t('en', 'course.nextTag'))).toBeInTheDocument();
-      expect(group.querySelectorAll('.course-pick__next')).toHaveLength(1);
+      expect(group.querySelector('.course-pick__next')).toBeNull();
+      expect(group).not.toHaveTextContent(t('en', 'course.nextTag'));
       // 4번을 고름
       fireEvent.click(radios[3]);
       expect(radios[3]).toBeChecked();
@@ -469,8 +469,6 @@ describe('S02 코스 지도', () => {
       expect(screen.getByTestId('walk-hint')).toHaveTextContent(
         t('en', 'course.dirTo', { n: 4, name: byId(ids[3]).name.en }),
       );
-      // '다음' 표시는 그대로 2번 (선택과 별개)
-      expect(within(screen.getByTestId(`pick-${ids[1]}`)).getByText(t('en', 'course.nextTag'))).toBeInTheDocument();
     });
 
     it('행선지 선택: 기록이 없을 때 1번이 아닌 곳을 고르면 "Start with stop 1" 대신 "Walk to stop n"', () => {
@@ -485,7 +483,7 @@ describe('S02 코스 지도', () => {
       expect(screen.getByTestId('start-walking')).toHaveTextContent(t('en', 'course.startWalk'));
     });
 
-    it('행선지 선택 유지 (R1 M-01): 고른 곳의 상세를 보고 돌아와도 선택·네이버·Google 그대로, Next만 기록대로 이동', () => {
+    it('행선지 선택 유지 (R1 M-01): 고른 곳의 상세를 보고 돌아와도 선택·네이버·Google 그대로, Next 표시는 없음(T6.14)', () => {
       renderCourse(url);
       fireEvent.click(within(screen.getByTestId(`pick-${ids[2]}`)).getByRole('radio'));
       // 3번 상세로 갔다 돌아옴 = 코스 화면이 사라졌다 다시 그려지고, 상세가 place_view를 남김
@@ -496,10 +494,6 @@ describe('S02 코스 지도', () => {
       expect(screen.getByTestId('start-walking')).toHaveAttribute('href', naverWalkUrl(byId(ids[2])));
       expect(screen.getByTestId('start-walking')).toHaveTextContent(t('en', 'course.walkToStop', { n: 3 }));
       expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId(ids[2])));
-      // 'Next'는 기록대로 4번으로
-      expect(
-        within(screen.getByTestId(`pick-${ids[3]}`)).getByText(t('en', 'course.nextTag')),
-      ).toBeInTheDocument();
     });
 
     it('데모 초기화(resetData)하면 고른 행선지도 비워져 다시 1번부터 (R2 M-01)', () => {
@@ -516,19 +510,16 @@ describe('S02 코스 지도', () => {
       expect(walk).toHaveTextContent(t('en', 'course.startWalk'));
       expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[0])));
       expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId(ids[0])));
-      expect(
-        within(screen.getByTestId(`pick-${ids[0]}`)).getByText(t('en', 'course.nextTag')),
-      ).toBeInTheDocument();
     });
 
-    it('행선지 라디오 낭독 이름: "Stop n of 4, 정류장 전체 이름(, Next)" 쉼표로 구분', () => {
+    it('행선지 라디오 낭독 이름: "Stop n of 4, 정류장 전체 이름" 쉼표로 구분', () => {
       renderCourse(url);
       const group = screen.getByRole('group', { name: t('en', 'course.pickLabel') });
       ids.forEach((id, i) => {
         const radio = within(screen.getByTestId(`pick-${id}`)).getByRole('radio');
         expect(within(group).getByRole('radio', { name: new RegExp(byId(id).name.en) })).toBe(radio);
         expect(radio).toHaveAccessibleName(
-          `${t('en', 'course.stopOf', { n: i + 1, total: 4 })}, ${byId(id).name.en}${i === 0 ? `, ${t('en', 'course.nextTag')}` : ''}`,
+          `${t('en', 'course.stopOf', { n: i + 1, total: 4 })}, ${byId(id).name.en}`,
         );
       });
     });
@@ -571,5 +562,27 @@ describe('S02 코스 지도', () => {
     expect(screen.getByTestId('start-walking')).toHaveClass('ui-btn');
     expect(screen.getByTestId('stop-ssd')).toHaveClass('course-stop');
     expect(screen.getByTestId('google-maps')).toHaveClass('course-google');
+  });
+});
+
+describe('코스 음성 가이드 (T6.14)', () => {
+  it.each([
+    ['/course', 'Old Downtown Half-day', 'Welcome to the Old Downtown Half-day course.'],
+    ['/course?c=jungang-market', 'Jungang Market Food Walk', 'Welcome to the Jungang Market Food Walk.'],
+  ])('%s: 제목 아래 "Listen to the course guide" → 팝업(코스 이름) + 원고', (url, title, first) => {
+    renderCourse(url);
+    const btn = screen.getByTestId('course-guide');
+    expect(btn).toHaveTextContent('Listen to the course guide');
+    expect(btn.closest('header')).not.toBeNull();
+    fireEvent.click(btn);
+    const dialog = screen.getByRole('dialog', { name: title });
+    expect(within(dialog).getByTestId('guide-s-0')).toHaveTextContent(first);
+  });
+
+  it('중국어 화면이면 중국어 원고', () => {
+    useAppStore.setState({ lang: 'zh' });
+    renderCourse();
+    fireEvent.click(screen.getByTestId('course-guide'));
+    expect(screen.getByRole('dialog')).toHaveTextContent('欢迎参加老城区半日游。');
   });
 });

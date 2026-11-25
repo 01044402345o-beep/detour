@@ -1,0 +1,153 @@
+/* 음성 가이드 버튼·팝업 (T6.14). DESIGN.md 토큰만 사용, 이모지 없음 */
+
+/* 버튼: 흰 바탕 + 파란 테두리 알약(보조 행동). 높이 44px 이상 */
+.ui-guide-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--touch);
+  padding: 9px 16px 9px 13px;
+  border: 1.5px solid var(--blue);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.ui-guide-btn svg {
+  flex: none;
+}
+
+.ui-guide-btn:active {
+  transform: scale(0.97);
+}
+
+.ui-guide-btn:focus-visible {
+  outline: 3px solid var(--blue-deep);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ui-guide-btn:hover {
+    background: var(--tint);
+  }
+}
+
+/* 팝업 안 */
+.ui-guide {
+  margin-top: 14px;
+}
+
+.ui-guide__ctrl {
+  display: flex;
+  gap: 8px;
+}
+
+.ui-guide__play.ui-btn {
+  flex: 1;
+  gap: 8px;
+  height: 50px;
+  border-radius: var(--r-md);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.ui-guide__slow {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 50px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ui-guide__slow.is-on {
+  border-color: var(--blue);
+  background: var(--tint);
+  color: var(--blue-deep);
+}
+
+.ui-guide__slow:focus-visible {
+  outline: 3px solid var(--blue-deep);
+  outline-offset: 2px;
+}
+
+.ui-guide__status:empty {
+  display: none;
+}
+
+.ui-guide__status {
+  margin-top: 8px;
+  color: var(--blue-deep);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ui-guide__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--tint);
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.ui-guide__notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--blue);
+}
+
+.ui-guide__text {
+  margin-top: 14px;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+}
+
+.ui-guide__text p + p {
+  margin-top: 12px;
+}
+
+.ui-guide__text:lang(ja),
+.ui-guide__text:lang(zh) {
+  line-break: strict;
+}
+
+/* 지금 읽는 문장: 옅은 파랑 형광(색만이 아니라 밑줄로도 구분) */
+.ui-guide__s {
+  border-radius: 4px;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.ui-guide__s.is-cur {
+  background: var(--tint);
+  box-shadow: inset 0 -2px 0 var(--blue);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-guide-btn,
+  .ui-guide__s {
+    transition: none;
+  }
+}

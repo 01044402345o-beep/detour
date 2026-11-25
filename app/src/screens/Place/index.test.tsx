@@ -666,3 +666,29 @@ describe('T6.4 R1 L-01 숫자 글꼴', () => {
     expect(within(bar).getByText('₩1,700')).toHaveClass('num');
   });
 });
+
+describe('음성 가이드 (T6.14)', () => {
+  it.each(['ssd', 'eun', 'mus', 'gwc', 'sy', 'gc', 'sj', 'hg'])(
+    '%s: 진행 막대와 탭 사이 "Listen to the guide" → 팝업 제목 = 장소 이름, 원고 글 표시',
+    (id) => {
+      renderAt(`/place/${id}`);
+      const btn = screen.getByTestId('place-guide');
+      expect(btn).toHaveTextContent('Listen to the guide');
+      // 위치: 진행 막대 다음, 탭 앞
+      const prog = screen.getByTestId('place-progress');
+      const tabs = screen.getByRole('tablist');
+      expect(prog.compareDocumentPosition(btn) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(btn.compareDocumentPosition(tabs) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      fireEvent.click(btn);
+      const dialog = screen.getByRole('dialog', { name: getPlace(id)!.name.en });
+      expect(within(dialog).getByTestId('guide-s-0')).toHaveTextContent(/\S/);
+    },
+  );
+
+  it('일본어 화면이면 일본어 버튼·원고', () => {
+    resetStore('ja');
+    renderAt('/place/ssd');
+    fireEvent.click(screen.getByTestId('place-guide'));
+    expect(screen.getByRole('dialog')).toHaveTextContent('聖心堂は大田で一番有名なパン屋');
+  });
+});

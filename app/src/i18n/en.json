@@ -317,5 +317,17 @@
     "creditOwn": "Photo: Edulleo team (own photo)",
     "ownAuthor": "Edulleo team (own photo)",
     "ownLicense": "Own photo, used with permission (not a Creative Commons license)"
+  },
+  "guide": {
+    "courseButton": "Listen to the course guide",
+    "placeButton": "Listen to the guide",
+    "play": "Play",
+    "resume": "Continue",
+    "stop": "Stop",
+    "slow": "Slow",
+    "playing": "Playing the guide…",
+    "noVoice": "We couldn't find an English voice on this device. If you hear nothing, turn on English in your phone's text-to-speech settings, or read the guide below.",
+    "unsupported": "This browser can't read aloud. Please read the guide below.",
+    "failed": "The voice couldn't play. Tap Play to try again (another voice on this device will be used if there is one), or read the guide below."
   }
 }

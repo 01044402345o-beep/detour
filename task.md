@@ -460,6 +460,9 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - [x] **T6.13 코스 길찾기 행선지 선택 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.13_r1~r3.md (R3 미해결 0) · Vitest 1074·E2E 81 — 소유: `screens/Course/index.tsx`·`Course.css`·`Course.test.tsx`, `store/useAppStore.ts`(walkPicks·setWalkPick, 저장 안 함, resetData가 비움 — R2 M-01)·`useAppStore.test.ts`, 번역 패치 `i18n/patches/T6.13.json`(course.pickLabel·nextTag·dirTo), DESIGN.md 7장 코스, prd.md v0.12 F-03·S02
   - 사용자 요청: "walk to stop이 각각 정해져 있는데 가고 싶은 곳을 선택을 할 수 있도록 해줘. 선택을 하면 네이버 지도에서 선택한 곳까지 나타나도록"
   - 완료 조건: 버튼 위 라디오 2×2(처음 = 다음 정류장, 'Next' 표시는 다음 정류장에 고정), 고르면 버튼 문구·네이버 도보 길찾기·Google 장소 보기·안내 문구가 고른 곳으로, 두 코스 모두, 360px EN·JA·ZH 넘침 없음·칸 44px, 키보드(라디오 화살표)·초점 표시, 테스트·E2E 통과, Codex 검토 미해결 0
+- [x] **T6.14 음성 가이드(코스·장소) + 'Next' 표시 삭제 (사용자 요청 2026-11-26, A안 = 휴대폰 내장 음성)** — 2026-11-26 · reviews/T6.14_r1~r3.md (R3 미해결 0) · Vitest 1161·E2E 81 · 휴대폰 일본어·중국어 실제 소리는 사용자 확인 대기 — 소유: `data/guides.ts`(+test), `speech/guideTts.ts`(+test), `ui/GuidePlayer.tsx`·`.css`(+test), `ui/index.ts`, `screens/Course/*`, `screens/Place/index.tsx`·`place.css`·`index.test.tsx`, 번역 패치 `T6.14.json`(guide.*), prd.md v0.13 F-19, DESIGN.md 7장
+  - 사용자 요청: "NEXT라는 주황색 박스는 삭제", "코스를 선택하면 여행가이드가 코스에 대한 부가 설명을 하는 형태", "각 장소… 대표메뉴·주문방법 등 설명", "각각 버튼으로 해서 누르면 들을 수 있도록… 팝업으로 내용도 글씨로", "영어·일본어·중국어 모두", "일본어 중국어도 꼭 소리가 나도록", "버튼은 이모지 없이 앱과 어울리게"
+  - 완료 조건: 코스 2개·장소 8곳 원고 3개 언어(한글 없음·예시 정보 안내), 언어별 음성 고르기(없으면 lang 지정 시도 + 안내), 문장 단위 재생·강조·멈춤/이어 듣기·천천히, 닫기·화면 이탈·언어 변경 시 멈춤, 360px 3개 언어 넘침 없음, 테스트·E2E 통과, Codex 검토 미해결 0. 실기기(휴대폰) 일본어·중국어 소리 확인은 사용자 확인 항목
 
 ## 진행 현황 요약
 
@@ -472,7 +475,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | 3 오프라인·배포 | 3 | 1 | T3.1 → T3.2 순차, T3.3 병렬 |
 | 4A 시연 준비 | 6 | 0 | 사용자 task 포함(T4.4c 연락처), T4.2a는 결과 도착 시 |
 | 4B 콘텐츠 확정 | 6 | 0 | 현장 확인 후, 순차 |
-| 6 디자인 개편 | 15 | 15 | T6.D → T6.0 → 6개 동시 → T6.7 |
+| 6 디자인 개편 | 16 | 16 | T6.D → T6.0 → 6개 동시 → T6.7 |
 
 ## 변경 이력
 | 버전 | 날짜 | 내용 |

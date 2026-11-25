@@ -1,0 +1,44 @@
+{
+  "en": {
+    "guide": {
+      "courseButton": "Listen to the course guide",
+      "placeButton": "Listen to the guide",
+      "play": "Play",
+      "resume": "Continue",
+      "stop": "Stop",
+      "slow": "Slow",
+      "playing": "Playing the guide…",
+      "noVoice": "We couldn't find an English voice on this device. If you hear nothing, turn on English in your phone's text-to-speech settings, or read the guide below.",
+      "unsupported": "This browser can't read aloud. Please read the guide below.",
+      "failed": "The voice couldn't play. Tap Play to try again (another voice on this device will be used if there is one), or read the guide below."
+    }
+  },
+  "ja": {
+    "guide": {
+      "courseButton": "コースのガイドを聞く",
+      "placeButton": "ガイドを聞く",
+      "play": "再生",
+      "resume": "続きを聞く",
+      "stop": "停止",
+      "slow": "ゆっくり",
+      "playing": "ガイドを再生中…",
+      "noVoice": "この端末で日本語の音声が見つかりませんでした。音が出ない場合は、端末の読み上げ(テキスト読み上げ)設定で日本語を追加するか、下のガイドを読んでください。",
+      "unsupported": "このブラウザは読み上げに対応していません。下のガイドを読んでください。",
+      "failed": "音声を再生できませんでした。もう一度「再生」を押すか(端末に別の音声があればそちらを使います)、下のガイドを読んでください。"
+    }
+  },
+  "zh": {
+    "guide": {
+      "courseButton": "收听路线导览",
+      "placeButton": "收听导览",
+      "play": "播放",
+      "resume": "继续播放",
+      "stop": "停止",
+      "slow": "慢速",
+      "playing": "正在播放导览…",
+      "noVoice": "在此设备上没有找到中文语音。如果听不到声音，请在手机的文字转语音设置中添加中文，或阅读下面的导览内容。",
+      "unsupported": "此浏览器不支持朗读。请阅读下面的导览内容。",
+      "failed": "语音无法播放。请再次点“播放”(如果设备上有其他语音会改用该语音)，或阅读下面的导览内容。"
+    }
+  }
+}

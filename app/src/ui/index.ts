@@ -8,6 +8,7 @@ export { ListenButton, type ListenButtonProps } from './ListenButton';
 export { Pill, type PillProps, type PillTone } from './Pill';
 export { pickPronunciation, pronunciationKind } from './pron';
 export { Pronunciation, type PronunciationProps } from './Pronunciation';
+export { GuidePlayer, type GuidePlayerProps } from './GuidePlayer';
 export { Sheet, type SheetProps } from './Sheet';
 export { TabBar } from './TabBar';
 export { TOAST_MS, ToastProvider } from './Toast';
