@@ -3,8 +3,8 @@ import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// 배포 URL: https://01044402345o-beep.github.io/detour/ (PRD 8장)
-const BASE = '/detour/';
+// 배포 URL: https://01044402345o-beep.github.io/edulleo/ (PRD 8장)
+const BASE = '/edulleo/';
 
 /**
  * manifest는 public/manifest.webmanifest(정적 파일)를 씁니다. 플러그인 manifest 생성을 끄면 <link>도

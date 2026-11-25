@@ -40,7 +40,7 @@ cleanupOutdatedCaches();
 // 업데이트 때는 새 워커가 SKIP_WAITING 전까지 대기하므로(토스트) 이 호출이 교체를 앞당기지 않습니다.
 clientsClaim();
 
-// HashRouter라 문서 요청은 /detour/ 또는 /detour/index.html 뿐 — 오프라인에서도 앱 셸로 답합니다.
+// HashRouter라 문서 요청은 /edulleo/ 또는 /edulleo/index.html 뿐 — 오프라인에서도 앱 셸로 답합니다.
 registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')));
 
 // 글꼴 CSS: 캐시 먼저 보여 주고 뒤에서 갱신

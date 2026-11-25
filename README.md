@@ -1,8 +1,8 @@
-# 대전 디투어 (Daejeon Detour)
+# Edulleo(에둘러)
 
 외국인 방문객용 대전 원도심 동선·주문 카드·현장 한국어 웹앱입니다. 심사 시연용 데모입니다.
 
-- 배포 URL: https://01044402345o-beep.github.io/detour/
+- 배포 URL: https://01044402345o-beep.github.io/edulleo/
 
 ## 실행 방법
 

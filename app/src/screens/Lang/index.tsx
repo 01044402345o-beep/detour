@@ -33,12 +33,12 @@ export default function LangScreen() {
       <div className="lang-glow2" aria-hidden="true" />
       <div className="lang-in">
         <div className="lang-logo" aria-hidden="true">
-          {'D'}
+          {'E'}
         </div>
         <h1 className="lang-name">
-          {'Daejeon'}
+          {'Edulleo'}
           <br />
-          <i>{'Detour'}</i>
+          <i>{'Daejeon'}</i>
         </h1>
         <p className="lang-sub">
           {t('lang.welcomeTitle')}

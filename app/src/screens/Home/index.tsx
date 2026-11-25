@@ -54,10 +54,10 @@ export default function HomeScreen() {
     <section className="screen home-screen" data-testid="screen-home">
       <header className="home-brand">
         <div className="home-brand__logo" aria-hidden="true">
-          {'D'}
+          {'E'}
         </div>
         <div>
-          <div className="home-brand__name">{'Daejeon Detour'}</div>
+          <div className="home-brand__name">{'Edulleo'}</div>
           <div className="home-xs">{t('home.location')}</div>
         </div>
         <span className="home-brand__sp" />

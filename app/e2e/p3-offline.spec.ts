@@ -56,7 +56,7 @@ for (const lang of LANGS) {
       const reg = await navigator.serviceWorker.getRegistration();
       return { scope: reg?.scope ?? null, controlled: !!navigator.serviceWorker.controller };
     });
-    expect(sw.scope).toMatch(/\/detour\/$/);
+    expect(sw.scope).toMatch(/\/edulleo\/$/);
     expect(sw.controlled).toBe(true);
 
     await context.setOffline(true);

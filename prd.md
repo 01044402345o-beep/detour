@@ -1,4 +1,4 @@
-# 대전 디투어(Daejeon Detour) 데모 — PRD
+# Edulleo(에둘러) 데모 — PRD
 
 | 항목 | 내용 |
 |---|---|
@@ -6,7 +6,7 @@
 | 용도 | 창업중심대학 지역문제 해결 아이디어 경진대회 **심사 시연용 데모** |
 | 범위 | **코스 2개:** 원도심(은행동·선화동) 코스, 대전역·소제동 거점 안의 전통시장 코스(대전중앙시장, F-18). 두 코스 모두 대전역 출발. 유성 권역은 이후 확장 |
 | 지원 언어 | 영어 · 일본어 · 중국어(간체). 첫 실행 시 선택하고 설정에서 바꿀 수 있음 |
-| 저장소 | https://github.com/01044402345o-beep/detour |
+| 저장소 | https://github.com/01044402345o-beep/edulleo |
 | 화면 목업 | `mockup/index.html` |
 
 ---
@@ -189,7 +189,7 @@
 | 음성 | Web Speech API (speechSynthesis / SpeechRecognition) | 자체 서버 없음 (인식은 브라우저 음성 서비스에서 처리될 수 있음) |
 | 채점 | 한글 자모 분해 + 편집거리 (자체 구현) | |
 | 테스트 | Vitest(단위) + Playwright(phase 단위 E2E, 모바일 뷰포트) | |
-| 배포 | GitHub Actions → GitHub Pages. 배포 URL `https://01044402345o-beep.github.io/detour/`, Vite base `/detour/`, manifest start_url·scope와 service worker 범위를 같은 경로로 맞춤. 새 버전 배포 시 캐시 갱신 | HTTPS 자동 적용 |
+| 배포 | GitHub Actions → GitHub Pages. 배포 URL `https://01044402345o-beep.github.io/edulleo/`, Vite base `/edulleo/`, manifest start_url·scope와 service worker 범위를 같은 경로로 맞춤. 새 버전 배포 시 캐시 갱신 | HTTPS 자동 적용 |
 
 ### 8.1 데이터 모델 (요약)
 ```ts
@@ -234,7 +234,7 @@ Claude worker 코드 작성
 - 같은 항목에서 2회 연속 이견이면 사용자에게 결정을 요청합니다.
 - 서로 영향이 없는 task(예: 다국어 사전 작성과 채점 모듈)는 **동시에** 진행합니다.
 - 전체 시험(E2E)은 task마다 하지 않고 **phase가 끝날 때 한 번** 실행합니다. phase E2E가 실패하면 수정 후 재실행할 수 있습니다.
-- 완료된 코드는 `https://github.com/01044402345o-beep/detour`에 push합니다.
+- 완료된 코드는 `https://github.com/01044402345o-beep/edulleo`에 push합니다.
 
 ---
 

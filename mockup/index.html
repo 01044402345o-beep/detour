@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Daejeon Detour · Interactive Mockup</title>
+<title>Edulleo · Interactive Mockup</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet">
@@ -333,8 +333,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <aside class="side">
     <div class="brand">
       <div class="mark">
-        <div class="logo">D</div>
-        <div><h1>Daejeon <i>Detour</i></h1><div class="tag">대전 디투어 · 인터랙티브 목업</div></div>
+        <div class="logo">E</div>
+        <div><h1>Edulleo <i>Daejeon</i></h1><div class="tag">Edulleo(에둘러) · 인터랙티브 목업</div></div>
       </div>
       <div class="ver"><span class="chip-s g">DEMO v0.1</span><span class="chip-s">원도심 코스</span><span class="chip-s">EN · JA · ZH</span></div>
     </div>
@@ -559,13 +559,13 @@ const topbar=(title,right='')=>`<div class="topbar"><button class="icb" data-a="
 
 const R={};
 R.lang=()=>`<div class="lang-hero"><div class="glow"></div><div class="glow2"></div>${status(true)}<div class="in">
-  <div class="logo">D</div><div class="nm">Daejeon<br><i>Detour</i></div><div class="sub">${t('welcome')}</div>
+  <div class="logo">E</div><div class="nm">Edulleo<br><i>Daejeon</i></div><div class="sub">${t('welcome')}</div>
   <div class="lang-list"><div style="font-size:12px;font-weight:700;letter-spacing:1.4px;color:#8f97ab;margin-bottom:4px">${t('chooseLang').toUpperCase()}</div>
   ${Object.entries(LANGS).map(([k,v])=>`<button class="lang-opt ${S.lang===k?'on':''}" data-a="pickLang" data-l="${k}"><span class="fl">${v.f}</span><span><div class="a">${v.a}</div><div class="b2">${v.b}</div></span><span class="ck"></span></button>`).join('')}
   <button class="btn b-acc" style="margin-top:10px" data-a="go" data-to="home" data-log="'${LANGS[S.lang].a}'로 시작 → 홈">${t('start')} →</button></div></div></div>`;
 
 R.home=()=>{const ph=P('ssd').phrases[1];return`${status()}<div class="view">
-  <div class="row pad gap10" style="padding-top:4px"><div style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#f58a5c,#c24e22);display:grid;place-items:center;color:#fff;font-weight:800">D</div><div><div style="font-weight:800;font-size:16px">Daejeon Detour</div><div class="t-xs">Daejeon, Korea</div></div><div class="sp"></div><span class="pill p-line">${I.pin} Jungang-ro</span></div>
+  <div class="row pad gap10" style="padding-top:4px"><div style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#f58a5c,#c24e22);display:grid;place-items:center;color:#fff;font-weight:800">E</div><div><div style="font-weight:800;font-size:16px">Edulleo</div><div class="t-xs">Daejeon, Korea</div></div><div class="sp"></div><span class="pill p-line">${I.pin} Jungang-ro</span></div>
   <div class="hello" style="margin-top:20px"><div class="h-xl">${t('hi')}<br>${t('whereTo')}</div></div>
   <div class="search">${I.search}${t('search')}</div>
   <div class="sec"><div class="h-m">${t('pickHub')}</div><button class="lk" data-a="go" data-to="course" data-log="'지도 보기' → 원도심 코스 지도">${t('seeMap')}</button></div>

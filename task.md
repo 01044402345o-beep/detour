@@ -1,11 +1,11 @@
-# 대전 디투어 데모 — task.md
+# Edulleo(에둘러) 데모 — task.md
 
 | 항목 | 내용 |
 |---|---|
 | 문서 버전 | v0.8 (2026-11-23) · 변경 내용은 맨 끝 '변경 이력' 참고 |
 | 기준 문서 | `prd.md` v0.6 (v0.3까지 Codex 교차 검증 미해결 0건, v0.4·v0.5 변경분은 `reviews/docs_review_phase1.md`·판정으로 검토, v0.6 변경분(사용자 결정 U-4·U-5)은 `reviews/task_review_v07_verdict.md`·`reviews/task_review_v08.md`·`reviews/task_review_v08_verdict.md`로 검토), `mockup/index.html` |
-| 저장소 | https://github.com/01044402345o-beep/detour |
-| 배포 URL | https://01044402345o-beep.github.io/detour/ |
+| 저장소 | https://github.com/01044402345o-beep/edulleo |
+| 배포 URL | https://01044402345o-beep.github.io/edulleo/ |
 
 ## 0. 이 문서 쓰는 법
 
@@ -44,14 +44,14 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - 허용 목록 아래에 빌드 산출물을 명시 제외합니다: `**/node_modules/`, `**/dist/`, `**/coverage/`, `**/test-results/`, `**/playwright-report/`, `**/.env*`.
 - 브랜치: `main`(배포) / `dev`(작업). task는 `dev`에 커밋합니다. 커밋 메시지는 `T1.3: 주문 문장 생성 모듈` 형식.
 - 커밋은 coordinator 한 명이 task 소유 파일만 `git add <경로>`로 stage해 수행합니다. task 체크 시 `dev`에 push합니다.
-- **배포 게이트 (phase 끝).** 원칙: 배포가 없어도 확인할 수 있는 것은 모두 배포 전 로컬 `vite preview`(base `/detour/`)에서 검증합니다. 배포 후 smoke에는 실제 Pages 환경에서만 확인할 수 있는 것만 남깁니다. task 체크는 [배포 전] 조건 기준이고, [배포 후] 조건이 있는 task만 smoke 뒤에 체크합니다.
+- **배포 게이트 (phase 끝).** 원칙: 배포가 없어도 확인할 수 있는 것은 모두 배포 전 로컬 `vite preview`(base `/edulleo/`)에서 검증합니다. 배포 후 smoke에는 실제 Pages 환경에서만 확인할 수 있는 것만 남깁니다. task 체크는 [배포 전] 조건 기준이고, [배포 후] 조건이 있는 task만 smoke 뒤에 체크합니다.
 - **공통 (모든 phase)**
   1. [배포 전] phase의 모든 task가 [배포 전] 완료 조건을 충족하고 검토 미해결 0건입니다. [배포 후] 조건이 없는 task는 이 시점에 체크합니다.
   2. [배포 전] coordinator가 `dev`의 후보 커밋 해시를 고정해 기록합니다.
-  3. [배포 전] `npm run build`(base `/detour/`) 후 `vite preview`에서 phase E2E를 실행합니다. 실패하면 원인 task로 돌아가 1부터 다시 시작합니다.
+  3. [배포 전] `npm run build`(base `/edulleo/`) 후 `vite preview`에서 phase E2E를 실행합니다. 실패하면 원인 task로 돌아가 1부터 다시 시작합니다.
   4. [배포] 같은 커밋을 `main`에 병합·push → GitHub Actions가 Pages에 배포합니다.
-  5. [배포 후] 배포 URL smoke(모든 phase): HTTPS 200, 콘솔 오류 0건, 자산이 `/detour/` 경로로 로드됨.
-     smoke 추가(Phase 3 이후): service worker 등록(scope `/detour/`), 배포 URL에서 "오프라인 준비 완료" → 오프라인 새로고침.
+  5. [배포 후] 배포 URL smoke(모든 phase): HTTPS 200, 콘솔 오류 0건, 자산이 `/edulleo/` 경로로 로드됨.
+     smoke 추가(Phase 3 이후): service worker 등록(scope `/edulleo/`), 배포 URL에서 "오프라인 준비 완료" → 오프라인 새로고침.
   6. [배포 후] smoke에 실패하면 `main`을 직전 커밋으로 되돌리고 원인 task로 돌아갑니다.
   7. [배포 후] [배포 후] 인수 조건이 있는 task를 확인하고 체크합니다.
 - **Phase 0 (최초 배포)**
@@ -93,18 +93,18 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 
 - [x] **T0.1 저장소 초기화** — 소유: `.gitignore`, `README.md`, `.github/` — 2026-11-23 · reviews/T0.1_r2.md (미해결 0) · PUBLIC 전환·push 완료
   - git init, 허용 목록 `.gitignore`(0.3절 제외 목록 포함), 원격 `origin` 연결, `main`/`dev` 브랜치 생성
-  - 현재 저장소 `01044402345o-beep/detour`는 PRIVATE·빈 저장소. 무료 GitHub Pages를 쓰기 위해 **첫 push 직전**에 coordinator가 `gh repo edit 01044402345o-beep/detour --visibility public --accept-visibility-change-consequences`로 PUBLIC 전환
+  - 현재 저장소 `01044402345o-beep/edulleo`는 PRIVATE·빈 저장소. 무료 GitHub Pages를 쓰기 위해 **첫 push 직전**에 coordinator가 `gh repo edit 01044402345o-beep/edulleo --visibility public --accept-visibility-change-consequences`로 PUBLIC 전환
   - 공개 전환의 선행 조건: `git ls-files` 목록 검사에서 허용 경로만 있고 개인 자료(HWP, mp4, 신청서 PDF 등) 0건
   - README: 프로젝트 한 줄 소개, 실행 방법, 문서 링크(prd/task/mockup)
   - 완료 조건: 첫 커밋 전 `git ls-files` 전체 목록을 `reviews/T0.1_files.txt`에 남기고, 허용 경로만 있음(개인 자료 0건). 그 뒤 저장소 PUBLIC 전환 확인(`gh repo view --json visibility`가 `PUBLIC`). 원격 push 성공.
 - [x] **T0.1a GitHub Pages 활성화** — 담당: coordinator (실패 시에만 **[사용자]**). T0.1의 공개 전환 후 수행 — 2026-11-23 · build_type=workflow 확인
-  - coordinator가 `gh api -X POST repos/01044402345o-beep/detour/pages -f build_type=workflow`로 Pages 소스를 'GitHub Actions'로 설정합니다
+  - coordinator가 `gh api -X POST repos/01044402345o-beep/edulleo/pages -f build_type=workflow`로 Pages 소스를 'GitHub Actions'로 설정합니다
   - `gh`로 안 되면 이 task를 **[사용자]**로 바꾸고, 사용자가 저장소 Settings → Pages → Source를 'GitHub Actions'로 설정합니다
-  - 완료 조건: `gh api repos/01044402345o-beep/detour/pages`의 `build_type`이 `workflow`
+  - 완료 조건: `gh api repos/01044402345o-beep/edulleo/pages`의 `build_type`이 `workflow`
 - [x] **T0.2 앱 골격** — 소유: `app/` 전체 (이 시점에만) — 2026-11-23 · reviews/T0.2_r2.md (미해결 0)
   - `app/`에 Vite + React + TypeScript 생성. 의존성: react-router-dom, zustand, leaflet, vite-plugin-pwa, vitest, @testing-library/react, @playwright/test, eslint, prettier
   - 스타일: **CSS Modules + 전역 토큰 `app/src/styles/tokens.css`** (목업의 색·글꼴·반경 값을 그대로 옮김). Tailwind는 쓰지 않음
-  - `vite.config.ts`의 `base: '/detour/'`, HashRouter
+  - `vite.config.ts`의 `base: '/edulleo/'`, HashRouter
   - 폴더 구조 확정:
     ```
     app/src/
@@ -287,7 +287,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 ## Phase 3 — 오프라인·성능·배포 (순차: T3.1 → 빌드 고정 → T3.2, T3.3은 병렬. 순서는 0.3절 3-a~3-f)
 
 - [x] **T3.1 PWA·오프라인** — 소유: `app/public/manifest.webmanifest`, `app/src/sw/`, `vite.config.ts`, `screens/Settings*`의 오프라인 표시 부분, `ui/Toast` 연결, `package.json`·lock(플러그인 추가 시) — 2026-11-23 · reviews/T3.1_r4.md (미해결 0) · 오프라인 검증 PASS(reviews/T3.1_offline.md)
-  - manifest(start_url·scope `/detour/`, 아이콘), service worker 프리캐시: 앱 셸 + 3개 언어 사전 + 원도심 JSON + SVG 약도(T5.1부터 전통시장 콘텐츠·두 코스 경로 JSON도 앱 JS에 포함되어 함께 프리캐시). OSM 타일은 프리캐시 제외
+  - manifest(start_url·scope `/edulleo/`, 아이콘), service worker 프리캐시: 앱 셸 + 3개 언어 사전 + 원도심 JSON + SVG 약도(T5.1부터 전통시장 콘텐츠·두 코스 경로 JSON도 앱 JS에 포함되어 함께 프리캐시). OSM 타일은 프리캐시 제외
   - "오프라인 준비 완료" 조건: 프리캐시 목록 전부 캐시됨 → 설정 화면에 표시
   - 새 버전 배포 시 캐시 갱신(업데이트 토스트)
   - 완료 조건 [배포 전]: preview에서 ① "오프라인 준비 완료" 표시 → 네트워크 차단 → 새로고침 → 미방문 화면 포함 전 화면 열림, ② 업데이트 토스트 확인(빌드 A preview 접속 → 빌드 B로 다시 build·preview → 새로고침 시 토스트 → 새 버전 적용, 수동 확인). [배포 후] 조건 없음 → 이 시점에 체크

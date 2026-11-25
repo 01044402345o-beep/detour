@@ -41,7 +41,7 @@ describe('findHardcoded 규칙', () => {
     ).toEqual([]);
     expect(check("const u = c === '인분';", 'src/ui/x.ts')).toEqual([]);
     expect(check('const A = () => <p>🐢 0.75× · → ₩{1000}</p>;')).toEqual([]);
-    expect(check('const A = () => <h1>Daejeon Detour</h1>;')).toEqual([]);
+    expect(check('const A = () => <h1>Edulleo</h1>;')).toEqual([]);
   });
 
   it('t() 호출·import 경로·타입 리터럴·비가시 문자열은 넘긴다', () => {
@@ -111,7 +111,7 @@ describe('R1 M-2 회귀: 변수·속성·hook 경로', () => {
       "logEvent({ type: 'place_view' });",
       "console.warn('Missing key x.');",
       "throw new Error('Store is not ready.');",
-      "const name = 'Daejeon Detour';",
+      "const name = 'Edulleo';",
       "const lang = 'ko-KR';",
     ].join('\n');
     expect(check(src)).toEqual([]);
