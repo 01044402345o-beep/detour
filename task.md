@@ -2,8 +2,8 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v0.9 (2026-11-26) · 변경 내용은 맨 끝 '변경 이력' 참고 |
-| 기준 문서 | `prd.md` v0.11(Phase 6 디자인 개편 반영, T6.D) · 이전 기준 v0.6 (v0.3까지 Codex 교차 검증 미해결 0건, v0.4·v0.5 변경분은 `reviews/docs_review_phase1.md`·판정으로 검토, v0.6 변경분(사용자 결정 U-4·U-5)은 `reviews/task_review_v07_verdict.md`·`reviews/task_review_v08.md`·`reviews/task_review_v08_verdict.md`로 검토), `mockup/index.html` |
+| 문서 버전 | v0.10 (2026-11-26) · 변경 내용은 맨 끝 '변경 이력' 참고 |
+| 기준 문서 | `prd.md` v0.14(현재 앱 기준 정리, T6.15) · `DESIGN.md` v1.2 · `PRODUCT.md` · 이전 기준 v0.11(Phase 6 디자인 개편 반영, T6.D)·v0.12(T6.13)·v0.13(T6.14) · 그 이전 기준 v0.6 (v0.3까지 Codex 교차 검증 미해결 0건, v0.4·v0.5 변경분은 `reviews/docs_review_phase1.md`·판정으로 검토, v0.6 변경분(사용자 결정 U-4·U-5)은 `reviews/task_review_v07_verdict.md`·`reviews/task_review_v08.md`·`reviews/task_review_v08_verdict.md`로 검토), `mockup/index.html` |
 | 저장소 | https://github.com/01044402345o-beep/edulleo |
 | 배포 URL | https://01044402345o-beep.github.io/edulleo/ |
 
@@ -35,7 +35,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - 공용 파일(`src/types.ts`, `package.json` 등)을 바꿔야 하면 해당 task를 멈추고 coordinator(메인 세션)에 요청합니다.
 - **테스트 파일:** 소유 파일과 같은 이름의 `*.test.ts(x)`는 자동으로 그 task가 소유합니다.
 - **체크·커밋·push:** task.md 체크, 커밋, push는 coordinator만 합니다.
-- **이용 기록:** 각 화면 task는 자기 화면의 `screen_view`·`place_view` 등 이벤트를 store 액션으로 기록합니다. 장소·문장 ID는 `downtown.json`의 실제 ID를 그대로 넘기고, `logEvent`의 반환값이 false면 개발 모드에서 경고합니다(T1.6 R2).
+- **이용 기록:** 각 화면 task는 자기 화면의 `screen_view`·`place_view` 등 이벤트를 store 액션으로 기록합니다. 장소·문장 ID는 코스 데이터(`downtown.json`·`market.json`)의 실제 ID를 그대로 넘기고, `logEvent`의 반환값이 false면 개발 모드에서 경고합니다(T1.6 R2).
 - **제보 시트:** `ui/ReportSheet`는 T2.6 소유(T2.0 `ui/` 소유의 예외)이고, T2.3은 import만 합니다.
 - **E2E 파일:** Playwright 테스트는 `app/e2e/`에 두고, phase E2E는 coordinator가 작성·실행합니다.
 
@@ -80,7 +80,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - **Phase 4B (현장 확인 후)**
   - 4B-a. [배포 전] T4.1 결과 수령(T4.4, 4A에서 반영하지 않은 T4.2 결과 포함) → 사용자 task 체크.
   - 4B-b. [배포 전] T4.1a 반영과 검토 루프(확인된 장소 `verified:true`·`checkedAt` → 배지 자동 전환). 미해결 0건이면 체크.
-  - 4B-b2. [배포 전] coordinator: E2E 기대값 갱신(0.2절 E2E 소유). 장소 확인 배지는 고정 문자열 대신 `downtown.json`의 장소별 `verified`·`checkedAt`에서 기대값을 만들도록 바꾸고(확인한 장소 = "확인일 YYYY-MM-DD", 미확인 장소 = "현장 확인 전 · 예시 정보" 유지 확인), T4.1a·T4.2a로 바뀐 메뉴·가격·문구 고정값도 같이 점검. 데이터를 테스트에 맞춰 되돌리지 않습니다. 대상: `p3-offline.spec.ts`, `s6-report-count.spec.ts` 외 확인 배지·메뉴 문자열을 고정한 spec 전부(grep `place.unverified`, 메뉴 testid). 데이터 기반 기대값 변경은 4A 중에 미리 해 두어도 되며(현재 데이터에서는 결과가 같음), 미리 했다면 4B-b2는 고정값 점검만 합니다.
+  - 4B-b2. [배포 전] coordinator: E2E 기대값 갱신(0.2절 E2E 소유). 장소 확인 배지는 고정 문자열 대신 `downtown.json`·`market.json`의 장소별 `verified`·`checkedAt`에서 기대값을 만들도록 바꾸고(확인한 장소 = "확인일 YYYY-MM-DD", 미확인 장소 = "현장 확인 전 · 예시 정보" 유지 확인), T4.1a·T4.2a로 바뀐 메뉴·가격·문구 고정값도 같이 점검. 데이터를 테스트에 맞춰 되돌리지 않습니다. 대상: `p3-offline.spec.ts`, `s6-report-count.spec.ts` 외 확인 배지·메뉴 문자열을 고정한 spec 전부(grep `place.unverified`, 메뉴 testid). 데이터 기반 기대값 변경은 4A 중에 미리 해 두어도 되며(현재 데이터에서는 결과가 같음), 미리 했다면 4B-b2는 고정값 점검만 합니다.
   - 4B-c. 4B-b2 갱신 후 공통 2~6 (Phase 4B E2E = preview에서 Phase 2·3 시나리오 재실행 → 배포 → smoke, Phase 3 이후 항목 포함). 이 배포 커밋 해시를 **4B 기준 커밋**으로 기록합니다.
   - 4B-d. T4.7: 4B 기준 커밋에서 T2.7 영향 장면 재녹화·재렌더(0.3절 Phase 2.5 규칙, 앱 배포 게이트 없음) → 체크.
   - 4B-e. [배포 후] T4.3b: 4B 기준 커밋 대상 짧은 재점검(변경 영향 범위) → 체크.
@@ -228,7 +228,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 타일 로드 실패·오프라인 → SVG 약도로 자동 전환
   - 정류장 목록에 이동 시간·확인 상태 표시: 장소 `verified:true`면 "확인일 YYYY-MM-DD", `false`면 날짜 없이 "현장 확인 전 · 예시 정보"(T1.1b). 핀·목록 클릭 → 장소 상세 (F-03)
   - "Start walking" → 다음 정류장의 **네이버 지도 웹 길찾기 URL**(기본) 열기. Google Maps는 장소 보기용 보조 링크
-- [ ] **T2.2b 도보 경로선·네이버 앱 안내 (사용자 요청 2026-11-24, 4A 기준 커밋 이후 변경)** — 소유: `ui/map/`, `screens/Course*`, `screens/Place/InfoTabs.tsx`, `data/route.ts`·`data/downtown.route.json`, `scripts/gen-course-route.mjs`
+- [ ] **T2.2b 도보 경로선·네이버 앱 안내 (사용자 요청 2026-11-24, 4A 기준 커밋 이후 변경)** — (현재 상태 2026-11-26, T6.15: 구현 커밋 19e9d8d·51a42c3, 검토는 T5.1 R1~R5에 포함되어 미해결 0. 체크는 사용자 확인 후) — 소유: `ui/map/`, `screens/Course*`, `screens/Place/InfoTabs.tsx`, `data/route.ts`·`data/downtown.route.json`, `scripts/gen-course-route.mjs`
   - 경로는 개발 시 `node scripts/gen-course-route.mjs downtown`(T5.1부터 코스 이름 인자 필수)으로 한 번 계산(OSM 기반 OSRM 도보, routing.openstreetmap.de)해 커밋. 앱 실행 중 경로 API 호출 없음 → 오프라인·외부 호출 없음 유지
   - `downtown.route.json`(T5.1 전 이름 `courseRoute.json`): 출발지 + 정류장 순서의 구간(점 수 − 1개, 현재 대전역 + 4곳 = 4구간)별 [위도, 경도] 목록, 양 끝 = 해당 지점(출발지·정류장) 좌표, 출처·계산일·`verified:false`. 로드 시 검증(순서·구간 수·양 끝 좌표), 정류장 좌표만 바꾸고 재계산하지 않으면 throw
   - 타일 지도: 실선 경로(점선 직선 대체). 약도: 같은 경로를 정류장과 같은 축척으로 투영. 안내 문구 `course.routeNote`(참고용 · 정확한 길 안내는 NAVER Map)
@@ -325,7 +325,7 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 합격 조건: 안내 없이 180초 이내 완주, 진행자 음성 경로와 심사위원 텍스트 경로 각 1회
   - 비상 시나리오(인식 실패 → 직원 화면) 연습
   - 영상 정합성: 최종 4A 기준 커밋과 T2.7 녹화 커밋(`reviews/T2.7_render.md`)을 비교해, 그 사이 앱 변경이 영상 장면(영어 UI·한국어 주문 문장·직원 화면 등)에 나오면 해당 장면만 재녹화·재렌더(T2.7 규칙, 앱 재배포 불필요). 영향이 없으면 '4A 영향 장면 없음 (비교 커밋 a..b)'을 `reviews/T2.7_render.md`에 기록
-- [ ] **T4.2 번역 원어민 검수 [사용자]** — 일본어·중국어 UI 문구, 문장 뜻, 가타카나 표기, 수량 칩 뜻(人前·杯·碗·人份 — T1.3 R1). 가능할 때 진행하며, 결과는 4A(T4.2a) 또는 4B(T4.1a)에서 반영
+- [ ] **T4.2 번역 원어민 검수 [사용자]** — 일본어·중국어 UI 문구, 문장 뜻, 가타카나 표기, 수량 칩 뜻(人前·杯·碗·人份 — T1.3 R1), 음성 가이드 원고 `data/guides.ts`(T6.15 추가). 가능할 때 진행하며, 결과는 4A(T4.2a) 또는 4B(T4.1a)에서 반영
 - [ ] **T4.2a 4A 반영(번역·연락처)** — 담당: coordinator (검토 루프 적용). T4.2 결과 또는 T4.4c 연락처가 4A 중에 오면 수행. 번역이 4A 중에 오지 않으면 번역은 4B의 T4.1a에서 반영(연락처만 반영했으면 그것으로 체크, 둘 다 없으면 '해당 없음'으로 체크)
   - 번역: T4.1a의 'T4.2 결과' 반영 규칙(①~③)을 그대로 적용
   - 연락처: T4.4c에서 확정한 값을 `app/src/screens/Settings/contact.ts`의 `TAKEDOWN_CONTACT`에 반영(현재 `null`)
@@ -340,10 +340,10 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 > 순서: 0.3절 4B-a~4B-f를 따르며, 0.1절 'phase 단위 검증'보다 우선합니다. T4.1 현장 확인 → T4.1a 반영·검토 루프(배지 자동 전환) → E2E·배포·smoke → T4.7 영상 갱신 → T4.3b·T4.5b 짧은 재점검
 
 - [ ] **T4.4 가게 안내 [사용자]** (4B, 현장 방문 때) — 실제 상호 사용 안내·동의 여부 확인. 현장 방문(T4.1) 때 함께 진행(사용자 결정 U-5). 정정 연락처는 4A의 T4.4c로 분리됨
-- [ ] **T4.1 현장 확인 [사용자]** — PRD 11장: 4곳 메뉴·가격·영업시간·휴무일·주문 방식, 주소·좌표, 광천식당 사리 명칭·단독 주문 여부, 메뉴별 알레르기 정보(T1.1 R1)
+- [ ] **T4.1 현장 확인 [사용자]** — PRD 11장: 8곳(원도심 4 + 시장 4, T6.15 확장) 메뉴·가격·영업시간·휴무일·주문 방식, 주소·좌표, 광천식당 사리 명칭·단독 주문 여부, 메뉴별 알레르기 정보(T1.1 R1)
 - [ ] **T4.1a 검증 결과 반영** — 담당: coordinator (검토 루프 적용)
-  - T4.1 결과 → `downtown.json` 갱신: 확인한 장소만 장소 `verified:true`와 `checkedAt`(실제 확인일), 확인한 메뉴만 메뉴 `verified:true`. 확인 못 한 항목은 `false` 유지. 주소·좌표 확정 후 도보 시간·총거리 재계산
-  - T4.2 결과(4A의 T4.2a에서 반영하지 않은 경우) → 영향받는 곳에 모두 반영: ① `i18n/*.json`(UI 문구) ② `downtown.json`의 해당 `meaning`·`words[].meaning`·`kana` ③ 수사 표기 변경 시 task.md 검수표 + `numerals.ts`·`orderSentence.ts`와 대응 테스트 기대값. 변경 없는 파일은 건드리지 않음
+  - T4.1 결과 → `downtown.json`·`market.json` 갱신: 확인한 장소만 장소 `verified:true`와 `checkedAt`(실제 확인일), 확인한 메뉴만 메뉴 `verified:true`. 확인 못 한 항목은 `false` 유지. 주소·좌표 확정 후 도보 시간·총거리 재계산
+  - T4.2 결과(4A의 T4.2a에서 반영하지 않은 경우) → 영향받는 곳에 모두 반영: ① `i18n/*.json`(UI 문구) ② `downtown.json`·`market.json`의 해당 `meaning`·`words[].meaning`·`kana`, `data/guides.ts` 가이드 원고(일본어·중국어) ③ 수사 표기 변경 시 task.md 검수표 + `numerals.ts`·`orderSentence.ts`와 대응 테스트 기대값. 변경 없는 파일은 건드리지 않음
   - T4.4c 연락처를 4A(T4.2a)에서 반영하지 못한 경우 → `app/src/screens/Settings/contact.ts`의 `TAKEDOWN_CONTACT`에 반영. T4.4 가게 안내 결과(동의 거절·정정 요청 등)가 있으면 해당 내용도 반영
   - 완료 조건 [배포 전]: 반영 완료, 교정 항목별 반영 파일을 `reviews/T4.1a_fix.md`에 기록, 검토 미해결 0건. 배포는 완료 조건이 아니며 0.3절 4B-c에서 수행
 - [ ] **T4.7 시연 영상 갱신 (T2.7 재실행)** — 소유: `video/`. 4B 기준 커밋에서 T4.1a로 바뀐 화면이 나오는 장면만 재녹화·재렌더(0.3절 Phase 2.5 규칙)
@@ -363,23 +363,24 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 화면: 홈 대전역·소제동 카드 열림(DEMO·Traditional Market) → `/course?c=jungang-market`. 코스 화면은 `?c=`로 코스 선택(없거나 모르면 원도심), 시즌 카드(SeasonCard·season.ts). 장소 상세 "STOP n OF 코스 장소 수"·뒤로가기 → 그 코스. 문장 모음 코스별 묶음. 운영자 리포트 정렬은 코스 순서 → 방문 순서
   - 지도: 시장처럼 가까운 핀은 터치 영역(44px)이 겹치지 않게 화면 좌표로 벌림(약도·타일 지도)
   - Codex 교차 검증 R1~R5 완료(2026-11-24, 미해결 0): reviews/T5.1_r1~r5.md · 판정·수정 기록 *_verdict.md·*_fix.md (R1 M3 L4 → R2 M1 L1 → R3 M1 → R4 M1 → R5 0). T2.2b 범위 포함
-  - 남은 것: 수량 단위 '그릇'(국밥·만둣국은 현재 '개'), 메뉴 그림(빵 아이콘 공용), 현장 확인(위치·메뉴·가격·영업시간·포장 여부), 행사 다음 시즌 일정, T4.2 번역 시트에 새 문구·데이터 추가, E2E(시장 코스 경로) 추가, Codex 교차 검증
+  - (당시 기록) 남은 것: 수량 단위 '그릇'(국밥·만둣국은 현재 '개'), 메뉴 그림(빵 아이콘 공용), 현장 확인(위치·메뉴·가격·영업시간·포장 여부), 행사 다음 시즌 일정, T4.2 번역 시트에 새 문구·데이터 추가, E2E(시장 코스 경로) 추가, Codex 교차 검증
+  - 현재 상태(2026-11-26, T6.15): 구현·Codex R1~R5 검토 완료(4738d8d). 메뉴 아이콘은 Phase 6에서 없어져 해당 없음. 체크 전 남은 인수 조건 = 수량 단위 '그릇', 시장 코스 E2E, 현장 확인(T4.1에 포함), 행사 다음 시즌 일정, 번역 검수(T4.2에 포함)
 
 ## Phase 6 — 디자인 개편 (C 새안 · 사용자 확정 2026-11-26)
 
-> 기준: `DESIGN.md` v1.1, `PRODUCT.md`, 디자인 진단 `.impeccable/critique/`(25/40), 시안 `mockup/redesign/`. 계획 검토: `reviews/P6_plan_r1.md`·`_verdict.md`.
+> 기준: `DESIGN.md` v1.1(계획 당시, 현재 v1.2), `PRODUCT.md`, 디자인 진단 `.impeccable/critique/`(25/40), 시안 `mockup/redesign/`. 계획 검토: `reviews/P6_plan_r1.md`·`_verdict.md`.
 > 원칙: **기능·데이터·문구 의미는 그대로, 보이는 모습과 화면 구성만 바꿈.** 단, 진단에서 나온 사용성 문제(주 버튼 순서, 반복 안내, 남는 알림 등)는 함께 고침. 기존 `data-testid`는 유지하고, 바꿀 수밖에 없으면 해당 task에서 테스트를 같이 고칩니다. 기존 동작을 기대하는 테스트는 지우지 않고, 바뀐 동작만 갱신합니다.
 > 순서: T6.D(문서, coordinator) → T6.0(기반) → T6.1~T6.6(병렬 묶음 C: 6개 동시) → 번역 패치 일괄 재적용 → T6.7(phase 검증·배포).
 > **번역 파일 규칙(0.2절 예외):** 병렬 묶음 동안 worker의 tsc·테스트 결과는 **잠정**입니다(다른 worker의 동시 적용으로 일시 실패할 수 있음). worker 완료 판정은 coordinator가 모든 패치를 직렬 재적용하고 쓰기가 멈춘 상태에서 tsc·그 task 테스트·i18n 검사를 다시 돌려 통과한 뒤에 합니다. `i18n/en.json`·`ja.json`·`zh.json`은 병렬 task가 직접 쓰지 않습니다. 각 task는 자기 이름공간 키를 `app/src/i18n/patches/T6.x.json`(형식 `{ "en": {...}, "ja": {...}, "zh": {...} }`, 중첩 키)에 적고, `node app/scripts/i18n-patch.mjs <패치>`로 적용해 자기 테스트를 돌립니다(읽고-합치고-쓰기를 한 번에 하는 작은 스크립트, T6.0이 작성). 병렬 묶음이 끝나면 coordinator가 모든 패치를 순서대로 다시 적용(같은 결과가 나오는 멱등 병합)하고 3개 언어 키 일치 검사를 돌립니다. 패치 파일이 번역의 원본입니다. `--check`는 잠금 없이 읽으므로, 최종 `--check`·검증은 모든 패치 적용이 끝난 뒤(쓰기가 없는 상태)에 실행합니다(T6.7 R1 L-01). 잠금이 남아 종료 코드 4가 나면 coordinator에게 알리고, coordinator가 다른 작업이 없을 때 `node app/scripts/i18n-patch.mjs --break-lock`으로 정리합니다(소유 PID가 살아 있으면 거부).
 > **공용 파일:** `types.ts`·`router/*`(T6.0의 알림 정리 제외)는 coordinator 단독. 화면 task가 바꿔야 하면 멈추고 요청합니다.
 
-- [x] **T6.D 기준 문서 정리 (coordinator)** — 2026-11-26 · reviews/P6_plan_r1~r4.md (R4 미해결 0) — 소유: `prd.md`, `DESIGN.md`, `PRODUCT.md`, `.gitignore`, `mockup/redesign/*`
+- [x] **T6.D 기준 문서 정리 (coordinator)** — 2026-11-26 · reviews/P6_plan_r1~r4.md (R4 미해결 0) · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `prd.md`, `DESIGN.md`, `PRODUCT.md`, `.gitignore`, `mockup/redesign/*`
   - prd.md 갱신: 사진·로고 사용(사용자 결정 2026-11-26, 사진 출처 표시 의무), 디자인 기준 문서 `DESIGN.md` 참조, 대비 4.5:1 유지, 확인 전 안내 정책(모두 미확인 = 요약 한 줄 / 혼합 = 장소별 표시, 비제휴·알레르기·가격 미정·확인일 유지), 인트로 화면(S00 언어 선택 대체), 코스 길찾기 버튼 첫/다음 정류장 규칙 유지
   - prd.md F-02·S01 홈 구성 갱신(오늘의 코스 → 원도심 카드, 오늘의 문장·1박 배너 홈에서 제거, 문장 듣기·모음은 기존 경로 유지), 실제 상호 위험 표에 사진 속 간판·인물 권리 경계
   - `.gitignore` 허용 목록에 `DESIGN.md`, `PRODUCT.md` 추가(`.impeccable/`는 올리지 않음). 시안 그림은 `mockup/redesign/`(허용 목록 안), 시안별 사진 출처 연결 `mockup/redesign/CREDITS.md`. **시안 PNG는 CREDITS 작성 뒤에만 커밋**
   - 완료 조건: Codex 문서 검토 미해결 0
 
-- [x] **T6.0 디자인 기반 (색·글자·공용 UI·로고·사진·번역 도구)** — 2026-11-26 · reviews/T6.0_r1~r3.md (R3 미해결 0) · 사용자 결정: 사진 3장 얼굴 흐림 후 사용 · 범위 예외: `Settings.test.tsx` 2줄(nav.me 값 변경) — 소유: `styles/*`, `ui/*`(map 제외), `sw/updateToast.css`, `public/*`, `index.html`, `vite.config.ts`(사전 캐시 패턴만), `data/photos.ts`(신설), `i18n/hardcodeCheck.ts`(브랜드 허용 목록만)와 그 테스트, `ui/map/sketchConstants.ts`(색 값만)와 `SketchMap.test.tsx`(색 일치 검사만), `scripts/i18n-patch.mjs`(신설), `router/AppRoutes.tsx`(알림 정리만) · 문구 `nav.*`·`common.*`·`photo.*`(패치 `T6.0.json`)
+- [x] **T6.0 디자인 기반 (색·글자·공용 UI·로고·사진·번역 도구)** — 2026-11-26 · reviews/T6.0_r1~r3.md (R3 미해결 0) · 사용자 결정: 사진 3장 얼굴 흐림 후 사용 · 범위 예외: `Settings.test.tsx` 2줄(nav.me 값 변경) · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `styles/*`, `ui/*`(map 제외), `sw/updateToast.css`, `public/*`, `index.html`, `vite.config.ts`(사전 캐시 패턴만), `data/photos.ts`(신설), `i18n/hardcodeCheck.ts`(브랜드 허용 목록만)와 그 테스트, `ui/map/sketchConstants.ts`(색 값만)와 `SketchMap.test.tsx`(색 일치 검사만), `scripts/i18n-patch.mjs`(신설), `router/AppRoutes.tsx`(알림 정리만) · 문구 `nav.*`·`common.*`·`photo.*`(패치 `T6.0.json`)
   - `tokens.css`를 DESIGN.md 2장 토큰으로 교체. 옛 토큰 이름(`--acc`·`--acc-d`·`--sea`·`--soft`·`--paper`·`--ink2` 등)은 새 값으로 **호환 대응**시켜 화면 task 전에도 모든 화면이 새 색으로 빌드·표시되게 함. `ui/a11y.ts` 대비 검사 대상 색 쌍을 새 토큰으로 갱신
   - 공용 UI(Button·Card·Pill·TabBar·TopBar·Toast·Sheet·IconButton·ListenButton·Pronunciation·ReportSheet, `styles/ui.css`)를 DESIGN.md 3·6·8장에 맞춤. 기존 props·variant 이름(`ink|acc|sea|ghost` 등)은 유지하고 색만 대응(화면 코드가 그대로 컴파일). 굵기 800 제거. `ui/Logo.tsx`(e 우회로 SVG + 글자 로고) 추가
   - 글자: `index.html`에서 Fraunces 제거, IBM Plex Mono(500·600) 추가, `Pretendard Variable` 유지. 숫자용 유틸 클래스(`.num`)
@@ -391,38 +392,38 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 사진별 권리 점검: 원본 페이지의 별도 제한·주의 표시, 식별 가능한 인물, 간판·로고가 주제인지 확인해 `photos.ts`의 `review` 필드에 기록. **불확실하면** 그 사진은 쓰지 않고(public·사전 캐시에서도 제외) 글자 타일로 대체, 제외 목록·사유를 `photos.ts` 주석과 작업 보고에 기록. 원본 고지(EXIF Copyright 등)는 `notice`에 그대로
   - 완료 조건: tsc·lint·Vitest 통과(색·글꼴 값에 묶인 기존 테스트만 갱신), `npm run build` 성공, 사전 캐시 목록에 점검 통과 사진 전부 포함(제외 사진은 없음 확인)·각 크기·총 증가량 기록
 
-- [x] **T6.1 인트로 (첫 실행 화면, 언어 선택 대체)** — 2026-11-26 · reviews/T6.1_r1~r2.md (R2 미해결 0) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 — 소유: `screens/Lang/*` · 문구 `lang.*`(패치 `T6.1.json`)
+- [x] **T6.1 인트로 (첫 실행 화면, 언어 선택 대체)** — 2026-11-26 · reviews/T6.1_r1~r2.md (R2 미해결 0) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `screens/Lang/*` · 문구 `lang.*`(패치 `T6.1.json`)
   - DESIGN.md 7장 '인트로'. 경로 `/lang`, `data-testid="screen-lang"`, 언어 버튼 `lang-en|ja|zh`, 시작 버튼 문구 키 `lang.start`, 시작 전 언어 저장 동작 유지(E2E `chooseLanguage` 그대로 통과)
   - 기능 안내판 3장면(코스·주문·직원), 약 4.4초 자동 전환, 장면 탭으로 이동하면 자동 재생 멈춤, 재생/일시정지 버튼(키보드·`aria-pressed` 등 상태 전달). 장면마다 한 줄 설명(3개 언어). 특정 메뉴 예시 문장 없음
   - 언어 버튼을 누르면 즉시 그 언어로 문구가 바뀜(기존 동작), 발음 안내 문구(`lang.pronRoman`/`pronKana`) 유지
   - 움직임 줄이기면 자동 재생 없음. 화면을 떠나면 타이머 정리
   - 완료 조건: Lang 단위 테스트 갱신·통과(장면 이동, 탭 시 자동 재생 멈춤, 재생/정지, 움직임 줄이기, 언어 전환), hardcodeCheck 통과
 
-- [x] **T6.2 홈** — 2026-11-26 · reviews/T6.2_r1~r2.md (R2 미해결 0) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 — 소유: `screens/Home/*` · 문구 `home.*`(패치 `T6.2.json`)
+- [x] **T6.2 홈** — 2026-11-26 · reviews/T6.2_r1~r2.md (R2 미해결 0) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `screens/Home/*` · 문구 `home.*`(패치 `T6.2.json`)
   - DESIGN.md 7장 '홈': 1호선 세로 노선 위 3권역 사진 카드. `HubArt` 삽화·가로 캐러셀·인사말·1박 배너·오늘의 문장 블록 제거(오늘의 코스는 원도심 카드가 대신). 쓰지 않게 된 `home.*` 키는 패치에서 지우지 않고 남겨 둠(T6.7에서 정리 여부 결정)
   - `data-testid` `screen-home`·`hub-downtown`·`hub-station`·`hub-yuseong` 유지, 유성 누르면 "준비 중" 알림 유지
   - 사진 출처 한 줄(`data/photos.ts`), 야시장 한 줄은 `screens/Course/season.ts` 판단을 import해 재사용(기간 밖이면 숨김)
   - 완료 조건: Home 단위 테스트 갱신·통과
 
-- [x] **T6.3 코스** — 2026-11-26 · reviews/T6.3_r1~r2.md (R2 미해결 0) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 — 소유: `screens/Course/*`, `ui/map/*` · 문구 `course.*`(패치 `T6.3.json`)
+- [x] **T6.3 코스** — 2026-11-26 · reviews/T6.3_r1~r2.md (R2 미해결 0) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `screens/Course/*`, `ui/map/*` · 문구 `course.*`(패치 `T6.3.json`)
   - DESIGN.md 7장 '코스': 지도 밝게, 경로선 파랑+흰 테두리, 핀 흰 바탕+파란 테두리, 구간 분 칩, 오프라인 약도도 같은 색 체계
   - 정류장 목록: 사진 썸네일(없으면 글자 타일), 분·영업시간 고정폭, 확인 전 안내는 DESIGN.md 6장 정책, 사진 출처 한 줄
-  - 아래 고정 길찾기 버튼: 방문 기록 없으면 "Start with stop 1", 있으면 기존 `nextStop` 문구·주소 그대로(네이버 지도·대체 경로 유지)
+  - 아래 고정 길찾기 버튼: 방문 기록 없으면 "Start with stop 1", 있으면 기존 `nextStop` 문구·주소 그대로(네이버 지도·대체 경로 유지) (T6.13에서 버튼 위 행선지 선택 추가, 처음 선택 = 이 규칙의 정류장)
   - 완료 조건: Course·map 단위 테스트 갱신·통과(두 코스 × 첫 진입/중간 방문/마지막 정류장 버튼 상태 포함), 오프라인 약도 표시 유지
 
-- [x] **T6.4 장소** — 2026-11-26 · reviews/T6.4_r1~r2.md (R2 미해결 0, R1 M-01 E2E는 T6.7) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 — 소유: `screens/Place/*` · 문구 `place.*`·`menu.*`(패치 `T6.4.json`) · `Order/QtyStepper`는 import만
+- [x] **T6.4 장소** — 2026-11-26 · reviews/T6.4_r1~r2.md (R2 미해결 0, R1 M-01 E2E는 T6.7) · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `screens/Place/*` · 문구 `place.*`·`menu.*`(패치 `T6.4.json`) · `Order/QtyStepper`는 import만
   - DESIGN.md 7장 '장소': 사진 머리(사진 없으면 파란 글자 머리, `PlaceArt` 삽화 제거) + 사진 출처, 진행 표시, 탭(주문 가능한 장소만 Menu, 비주문 장소 메뉴 탭 숨김 유지), 메뉴 줄 선택 표시, 가격 미정·알레르기 미정은 중립 회색
   - "지금 닫힘"은 빨강 대신 중립색 + 계산 가능할 때 다음 영업 시각, 확인 전 안내는 장소당 한 줄(비제휴 안내·알레르기·가격 표시는 유지)
   - 떠 있는 버튼은 담은 메뉴가 있을 때 주문 바만(떠 있는 연습 버튼 제거). Phrases 탭 → 연습 진입 계약은 유지
   - 완료 조건: Place 단위 테스트 갱신·통과(제거한 떠 있는 연습 버튼 기대만 갱신, 문장 탭 → 연습 테스트 유지)
 
-- [x] **T6.5 주문·직원·응답** — 2026-11-26 · reviews/T6.5_r1~r2.md (R2 미해결 0) · coordinator가 `i18n/staffKo.ts`에 sampleTotal 추가 · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 — 소유: `screens/Order/*`(QtyStepper 포함, props 호환 유지), `screens/Staff/*`, `screens/Reply/*` · 문구 `order.*`·`staff.*`·`reply.*`(패치 `T6.5.json`)
+- [x] **T6.5 주문·직원·응답** — 2026-11-26 · reviews/T6.5_r1~r2.md (R2 미해결 0) · coordinator가 `i18n/staffKo.ts`에 sampleTotal 추가 · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `screens/Order/*`(QtyStepper 포함, props 호환 유지), `screens/Staff/*`, `screens/Reply/*` · 문구 `order.*`·`staff.*`·`reply.*`(패치 `T6.5.json`)
   - 주문: 주 버튼 "Show to staff"(파랑), 보조 "Practice saying it". 문장 카드·Listen 연파랑
   - 직원: 상단 짙은 파랑 띠, 흰 화면, 아주 큰 한국어 문장, 응답 버튼(네 = 파랑 채움). 한국어 고정 문구 유지
   - 응답: 응답마다 다음 행동이 보이게(품절 → 주문 수정, 네 → 완료 흐름 유지). `reply.yesTitle`의 이모지 제거
   - 완료 조건: Order·Staff·Reply 단위 테스트 갱신·통과
 
-- [x] **T6.6 연습·결과·문장 모음·저장·설정** — 2026-11-26 · reviews/T6.6_r1~r3.md (R3 미해결 0) · DESIGN.md 8장 녹음 중 표시 예외 · 범위 예외: Report 굵기·숫자 글꼴 · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 — 소유: `screens/Practice/*`, `screens/Result/*`, `screens/Phrases/*`, `screens/Saved/*`, `screens/Settings/*`, `screens/Report/*`(색만) · 문구 `practice.*`·`result.*`·`phrases.*`·`saved.*`·`settings.*`(패치 `T6.6.json`)
+- [x] **T6.6 연습·결과·문장 모음·저장·설정** — 2026-11-26 · reviews/T6.6_r1~r3.md (R3 미해결 0) · DESIGN.md 8장 녹음 중 표시 예외 · 범위 예외: Report 굵기·숫자 글꼴 · coordinator 직렬 재검증(패치 7개 재적용·tsc·lint·Vitest 1030) 통과 · 커밋 39da3a4(Phase 6 통합 커밋) — 소유: `screens/Practice/*`, `screens/Result/*`, `screens/Phrases/*`, `screens/Saved/*`, `screens/Settings/*`, `screens/Report/*`(색만) · 문구 `practice.*`·`result.*`·`phrases.*`·`saved.*`·`settings.*`(패치 `T6.6.json`)
   - 같은 색·글자·버튼 체계. 저장 빈 화면에 저장 방법 안내
   - 설정: 운영자 리포트·데모 초기화를 '시연 도구' 묶음(접힘)으로, **사진 출처**는 새 경로 없이 설정 안의 시트(Sheet)로(제목·저작자·라이선스 링크·원본 링크·원본 고지·변경 내역, `data/photos.ts`에서 읽음). 정정 연락처 표시 유지
   - 운영자 리포트(S13, 한국어 고정·데스크톱)는 색만 새 토큰으로
@@ -438,44 +439,49 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
   - 빌드 → preview E2E → 사용자 요청 시 커밋·main 병합·배포 → smoke(`/edulleo/` 아래 사진·아이콘 로드, 오프라인 새로고침 시 사진 표시)
   - 시연 영상·발표 덱의 화면은 이번 범위 밖(사용자 지시 '영상은 아직 만들지 말어')
 
-- [x] **T6.8 앱을 열 때마다 인트로 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.8_r1~r2.md (R2 미해결 0) · Vitest 1040·E2E 81 — 소유: `router/AppRoutes.tsx`·`router/launchIntro.ts`(신설)·`test/setup.ts`, `e2e/support.ts`·`s5`·`s6`·`s8`(신설), 문서 prd.md S00·DESIGN.md 7장
+- [x] **T6.8 앱을 열 때마다 인트로 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.8_r1~r2.md (R2 미해결 0) · Vitest 1040·E2E 81 · 커밋 e947a50(T6.9와 함께) → main 배포(Deploy·CI 성공) — 소유: `router/AppRoutes.tsx`·`router/launchIntro.ts`(신설)·`test/setup.ts`, `e2e/support.ts`·`s5`·`s6`·`s8`(신설), 문서 prd.md S00·DESIGN.md 7장
   - (사용자 요청 '항상'을 coordinator가 이렇게 구현) 페이지를 새로 열어 처음 그리는 화면이 홈이면 언어를 골랐어도 인트로(`/lang`) 먼저. 언어 미선택이면 어느 주소든 기존처럼 인트로 → 홈. PWA 창 재개·뒤로가기 캐시 복원은 새로 불러온 것이 아니라 다시 안 나옴. 고른 언어는 그대로 선택돼 있고 시작 → 홈
   - 특정 화면 주소로 열거나 새로고침하면 그 화면 그대로(링크·새로고침 보존), 같은 페이지 안에서 홈으로 가도 다시 끼어들지 않음
   - 완료 조건: 단위 테스트(새로 연 홈 → 인트로, 지난 뒤 홈 이동, 특정 화면 주소), E2E S8(3개 언어) + 전체 E2E 통과, Codex 검토 미해결 0
 
-- [x] **T6.9 사진 없는 5곳에 음식 예시 사진 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.9_r1~r2.md (R2 미해결 0) · 결과: 3곳(개천식당 만둣국·생일집 순대국밥·홍가네풀빵 국화빵) 음식 예시 사진, 광천식당·수연분식은 블로그 출처 사진의 허락 근거 미확인으로 제외 → 글자 타일 유지 — 소유: `data/photos.ts`·`data/photoCredits.ts`·`public/photos/*`, `screens/Place/*`, `screens/Course/*`(사진 표시 부분), DESIGN.md 5장
+- [x] **T6.9 사진 없는 5곳에 음식 예시 사진 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.9_r1~r2.md (R2 미해결 0) · 결과: 3곳(개천식당 만둣국·생일집 순대국밥·홍가네풀빵 국화빵) 음식 예시 사진, 광천식당·수연분식은 블로그 출처 사진의 허락 근거 미확인으로 제외 → 글자 타일 유지(이 2곳은 T6.10에서 운영자 직접 촬영 사진으로 채움) · 커밋 e947a50(T6.8과 함께) → main 배포(Deploy·CI 성공) — 소유: `data/photos.ts`·`data/photoCredits.ts`·`public/photos/*`, `screens/Place/*`, `screens/Course/*`(사진 표시 부분), DESIGN.md 5장
   - 사용자 요청: 사진 없는 곳은 SNS 사진으로 → SNS 사진은 저작권상 공개 저장소·배포 사이트에 올릴 수 없어(coordinator 판단), 위키미디어 공용의 자유 이용 **음식 사진**으로 대체: 광천식당=두부두루치기(CC BY 2.0 KR), 수연분식=고추튀김(CC BY 2.0 KR), 개천식당=만둣국(CC BY-SA 2.0), 생일집=순대국밥(CC BY 2.0), 홍가네풀빵=국화빵(CC BY-SA 2.0 KR)
   - 그 가게에서 찍은 사진이 아니므로 사진 위·출처 줄에 "음식 예시 사진(이 가게 사진 아님)" 표시(3개 언어), 사진 출처 시트·CREDITS에도 구분
   - 완료 조건: 장소 머리·코스 썸네일에 5곳 사진 표시, 라이선스 기록(BY와 BY-SA 구분), 단위 테스트·E2E 통과, Codex 검토 미해결 0
 
-- [x] **T6.10 광천식당·수연분식 직접 촬영 사진 등록 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.10_r1~r3.md (R3 미해결 0) · Vitest 1062·E2E 81 — 소유: `data/photos.ts`·`data/photoCredits.ts`·`public/photos/*`, 관련 테스트, DESIGN.md 5장
+- [x] **T6.10 광천식당·수연분식 직접 촬영 사진 등록 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.10_r1~r3.md (R3 미해결 0) · Vitest 1062·E2E 81 · 커밋 f2d4b3d → main 배포(Deploy·CI 성공) — 소유: `data/photos.ts`·`data/photoCredits.ts`·`public/photos/*`, 관련 테스트, DESIGN.md 5장
   - 사용자가 직접 찍은 사진 2장(광천식당 정면 간판, 수연분식 간판). 광천식당 사진은 사용자가 운영하는 블로그에 올린 본인 사진임을 사용자가 확인(2026-11-26). 저작자 표기는 개인 이름 없이 "Edulleo 운영자(직접 촬영)", 앱 사용 허락(별도 CC 라이선스 아님)
   - 광천식당 사진 오른쪽 끝 행인 흐림 처리, 800px WebP
   - 완료 조건: 장소 머리·코스 썸네일에 실제 가게 사진(kind 'place'), 음식 예시 표시 없음, 출처·CREDITS·설정 시트에 저작자·이용 조건 표시, 테스트·E2E 통과, Codex 검토 미해결 0
-- [x] **T6.11 사진 덜 가리기 + 대전역·소제동 시작 버튼 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.11_r1~r3.md (R3 미해결 0) · Vitest 1063·E2E 81 — 홈·장소 사진 위 막을 그라데이션(글자 줄 ≥0.62)으로, 카드·머리 높이 키움, 대전역 카드를 원도심과 같은 틀(코스 요약·출발 안내·Start the course → 시장 코스) — 소유: `screens/Home/*`·`screens/Place/place.css`·DESIGN.md 5장
+- [x] **T6.11 사진 덜 가리기 + 대전역·소제동 시작 버튼 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.11_r1~r3.md (R3 미해결 0) · Vitest 1063·E2E 81 · 커밋 65aa9ae(T6.12와 함께) → main 배포(Deploy·CI 성공) — 홈·장소 사진 위 막을 그라데이션(글자 줄 ≥0.62)으로, 카드·머리 높이 키움, 대전역 카드를 원도심과 같은 틀(코스 요약·출발 안내·Start the course → 시장 코스) — 소유: `screens/Home/*`·`screens/Place/place.css`·DESIGN.md 5장
   - 완료 조건: 홈·장소 사진 위 글자 줄 막 ≥0.62(흰 사진 최악 합성 대비 ≥4.5:1), 사진 위쪽은 막 없이 보임, 대전역·소제동 카드에 시작 버튼(→ 시장 코스, 한 번만 이동), 두 시작 버튼을 코스 이름으로 구분, 360px EN·JA·ZH 가로 넘침 없음, 테스트·E2E 통과, Codex 검토 미해결 0
-- [x] **T6.12 대전근현대사전시관 사진을 운영자 직접 촬영 사진으로 교체 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.12_r1.md (R1 미해결 0) · Vitest 1063·E2E 81 · 빌드 사전 캐시에 새 사진 포함 확인 — 소유: `data/photos.ts`·`public/photos/*`, 관련 테스트(photos·Course·Settings), DESIGN.md 5장
+- [x] **T6.12 대전근현대사전시관 사진을 운영자 직접 촬영 사진으로 교체 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.12_r1.md (R1 미해결 0) · Vitest 1063·E2E 81 · 빌드 사전 캐시에 새 사진 포함 확인 · 커밋 65aa9ae(T6.11과 함께) → main 배포(Deploy·CI 성공) — 소유: `data/photos.ts`·`public/photos/*`, 관련 테스트(photos·Course·Settings), DESIGN.md 5장
   - 위키미디어 옛 충남도청 사진(Yoo Chung, CC BY-SA 2.5) 삭제 → `daejeon-modern-history-hall.webp`(800×600, 방문객 얼굴은 촬영자가 미리 흐림). 앞서 받은 '대전광역시 중구' 로고 사진은 공공누리 근거 미확인으로 쓰지 않음
   - 완료 조건: 장소 머리·코스 썸네일에 새 사진, 출처 '직접 촬영'(3개 언어)·설정 시트·CREDITS 반영, 옛 사진 출처 흔적 없음, 테스트·E2E 통과, Codex 검토 미해결 0
-- [x] **T6.13 코스 길찾기 행선지 선택 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.13_r1~r3.md (R3 미해결 0) · Vitest 1074·E2E 81 — 소유: `screens/Course/index.tsx`·`Course.css`·`Course.test.tsx`, `store/useAppStore.ts`(walkPicks·setWalkPick, 저장 안 함, resetData가 비움 — R2 M-01)·`useAppStore.test.ts`, 번역 패치 `i18n/patches/T6.13.json`(course.pickLabel·nextTag·dirTo), DESIGN.md 7장 코스, prd.md v0.12 F-03·S02
+- [x] **T6.13 코스 길찾기 행선지 선택 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.13_r1~r3.md (R3 미해결 0) · Vitest 1074·E2E 81 · 커밋 c11dbc1 → main 배포(Deploy·CI 성공) — 소유: `screens/Course/index.tsx`·`Course.css`·`Course.test.tsx`, `store/useAppStore.ts`(walkPicks·setWalkPick, 저장 안 함, resetData가 비움 — R2 M-01)·`useAppStore.test.ts`, 번역 패치 `i18n/patches/T6.13.json`(course.pickLabel·nextTag·dirTo), DESIGN.md 7장 코스, prd.md v0.12 F-03·S02
   - 사용자 요청: "walk to stop이 각각 정해져 있는데 가고 싶은 곳을 선택을 할 수 있도록 해줘. 선택을 하면 네이버 지도에서 선택한 곳까지 나타나도록"
-  - 완료 조건: 버튼 위 라디오 2×2(처음 = 다음 정류장, 'Next' 표시는 다음 정류장에 고정), 고르면 버튼 문구·네이버 도보 길찾기·Google 장소 보기·안내 문구가 고른 곳으로, 두 코스 모두, 360px EN·JA·ZH 넘침 없음·칸 44px, 키보드(라디오 화살표)·초점 표시, 테스트·E2E 통과, Codex 검토 미해결 0
-- [x] **T6.14 음성 가이드(코스·장소) + 'Next' 표시 삭제 (사용자 요청 2026-11-26, A안 = 휴대폰 내장 음성)** — 2026-11-26 · reviews/T6.14_r1~r3.md (R3 미해결 0) · Vitest 1161·E2E 81 · 휴대폰 일본어·중국어 실제 소리는 사용자 확인 대기 — 소유: `data/guides.ts`(+test), `speech/guideTts.ts`(+test), `ui/GuidePlayer.tsx`·`.css`(+test), `ui/index.ts`, `screens/Course/*`, `screens/Place/index.tsx`·`place.css`·`index.test.tsx`, 번역 패치 `T6.14.json`(guide.*), prd.md v0.13 F-19, DESIGN.md 7장
+  - 완료 조건: 버튼 위 라디오 2×2(처음 = 다음 정류장, 'Next' 표시는 다음 정류장에 고정 — 'Next' 표시는 T6.14에서 삭제), 고르면 버튼 문구·네이버 도보 길찾기·Google 장소 보기·안내 문구가 고른 곳으로, 두 코스 모두, 360px EN·JA·ZH 넘침 없음·칸 44px, 키보드(라디오 화살표)·초점 표시, 테스트·E2E 통과, Codex 검토 미해결 0
+- [x] **T6.14 음성 가이드(코스·장소) + 'Next' 표시 삭제 (사용자 요청 2026-11-26, A안 = 휴대폰 내장 음성)** — 2026-11-26 · reviews/T6.14_r1~r3.md (R3 미해결 0) · Vitest 1161·E2E 81 · 커밋 7643986 → main 배포(Deploy·CI 성공) · 휴대폰 일본어·중국어 실제 소리는 사용자 확인 대기 — 소유: `data/guides.ts`(+test), `speech/guideTts.ts`(+test), `ui/GuidePlayer.tsx`·`.css`(+test), `ui/index.ts`, `screens/Course/*`, `screens/Place/index.tsx`·`place.css`·`index.test.tsx`, 번역 패치 `T6.14.json`(guide.*), prd.md v0.13 F-19, DESIGN.md 7장
   - 사용자 요청: "NEXT라는 주황색 박스는 삭제", "코스를 선택하면 여행가이드가 코스에 대한 부가 설명을 하는 형태", "각 장소… 대표메뉴·주문방법 등 설명", "각각 버튼으로 해서 누르면 들을 수 있도록… 팝업으로 내용도 글씨로", "영어·일본어·중국어 모두", "일본어 중국어도 꼭 소리가 나도록", "버튼은 이모지 없이 앱과 어울리게"
   - 완료 조건: 코스 2개·장소 8곳 원고 3개 언어(한글 없음·예시 정보 안내), 언어별 음성 고르기(없으면 lang 지정 시도 + 안내), 문장 단위 재생·강조·멈춤/이어 듣기·천천히, 닫기·화면 이탈·언어 변경 시 멈춤, 360px 3개 언어 넘침 없음, 테스트·E2E 통과, Codex 검토 미해결 0. 실기기(휴대폰) 일본어·중국어 소리 확인은 사용자 확인 항목
+- [x] **T6.15 문서 정합화 (사용자 요청 2026-11-26)** — prd.md v0.14·DESIGN.md v1.2·PRODUCT.md·README.md·task.md를 현재 앱 기준으로 정리, Codex 교차 검토 (reviews/T6.15_*) — 2026-11-26 완료 · 개발 문서 reviews/T6.15_dev_r1~r3(미해결 0) · 대외 문서(사업계획서 2종·발표 덱·참가신청서 개편안·임시명세서) reviews/T6.15_extA_r1~r2·extB_r1~r2(미해결 0) · 앱 화면 캡처 8장(앱화면/, 이전 6장은 앱화면/이전_2026-11-23) · 참가신청서 HWP 본문은 원본 부재로 사용자 수동 반영 필요
 
 ## 진행 현황 요약
+
+(2026-11-26 실제 체크박스 기준으로 다시 셈. 하위 [사용자] 항목(T2.7 안의 edge-tts 확인)은 task 수에 넣지 않음)
 
 | Phase | task 수 | 완료 | 병렬 |
 |---|---|---|---|
 | 0 기반 | 4 | 4 | 순차 |
 | 1 데이터·도메인 | 7 | 7 | 6개 동시 |
-| 2 화면 | 7 | 7 | T2.0 후 6개 동시 |
+| 2 화면 | 8 | 7 | T2.0 후 6개 동시 (T2.2b 미체크) |
 | 2.5 시연 영상 | 1 | 1 | Phase 3과 병렬 |
-| 3 오프라인·배포 | 3 | 1 | T3.1 → T3.2 순차, T3.3 병렬 |
-| 4A 시연 준비 | 6 | 0 | 사용자 task 포함(T4.4c 연락처), T4.2a는 결과 도착 시 |
+| 3 오프라인·배포 | 3 | 3 | T3.1 → T3.2 순차, T3.3 병렬 |
+| 4A 시연 준비 | 6 | 2 | 사용자 task 포함(T4.4c 연락처), T4.2a는 결과 도착 시 (T4.3·T4.5 완료) |
 | 4B 콘텐츠 확정 | 6 | 0 | 현장 확인 후, 순차 |
-| 6 디자인 개편 | 16 | 16 | T6.D → T6.0 → 6개 동시 → T6.7 |
+| 5 확장 데모 | 1 | 0 | T5.1 미체크 |
+| 6 디자인 개편 | 17 | 17 | T6.D → T6.0 → 6개 동시 → T6.7 → T6.8~T6.15 |
+| 합계 | 53 | 41 | |
 
 ## 변경 이력
 | 버전 | 날짜 | 내용 |
@@ -490,3 +496,4 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | v0.8 | 2026-11-23 | v0.7 검토(`reviews/task_review_v07.md`)·판정(`reviews/task_review_v07_verdict.md`) 반영. M-01: 4A 완료 정의를 '확인 전 표시 상태로 심사 시연 가능(PRD 4장 v0.6 예외)'으로 변경(사용자 결정 U-4). U-5: T4.4를 가게 안내(4B, 현장 방문 때)와 T4.4c 정정 연락처 확정(4A)으로 분리, T4.2a를 '4A 반영(번역·연락처)'으로 확장(`Settings/contact.ts` `TAKEDOWN_CONTACT`). M-02: T4.5 영상 정합성 조건. M-03: 4B-b2 E2E 데이터 기반 기대값. L-01: 진행 표(2.5 완료 1, 3 완료 1, 4B 6). 상세는 `reviews/task_fix_v08.md` |
 | v0.8 보완 | 2026-11-23 | 상단 기준 문서를 prd.md v0.6으로 정정 (`reviews/task_review_v08_verdict.md` R2-L01) |
 | v0.9 | 2026-11-26 | Phase 6 디자인 개편(T6.D·T6.0~T6.7) 추가. 계획 검토 R1~R3(`reviews/P6_plan_r1~r3.md`·판정) 반영. 사용자 확정 시안 C 새안(밝은 파랑 + 사진) · 파란 인트로 · e 우회로 로고. 기준 `DESIGN.md` v1.1, `PRODUCT.md`(사진 사용 결정 반영). Codex 계획 검토 R1(`reviews/P6_plan_r1.md` H2 M10 L2) 판정·반영(`reviews/P6_plan_r1_verdict.md`): T6.D 신설, 번역 패치 규칙, 사진 라이선스 필드, 코스 버튼 첫/다음 정류장, 인트로 정지 수단, 검증표 |
+| v0.10 | 2026-11-26 | 문서 정합화(T6.15). 상단 기준 문서를 prd.md v0.14·DESIGN.md v1.2로 갱신(Phase 6 머리말의 DESIGN.md v1.1은 '계획 당시'로 표기). T6.D~T6.6에 커밋 39da3a4, T6.8~T6.14에 커밋 해시(e947a50·f2d4b3d·65aa9ae·c11dbc1·7643986)와 main 배포 기록 추가(git log·GitHub Actions 결과 기준). T6.13 'Next' 표시에 'T6.14에서 삭제', T6.3 버튼 규칙에 'T6.13 행선지 선택 추가', T6.9에 '나머지 2곳은 T6.10' 메모. T6.15 항목 추가(미체크). 진행 현황 표를 실제 체크박스 기준으로 다시 셈(Phase 2 8/7, Phase 3 3/3, 4A 6/2, Phase 5 행 추가 1/0, Phase 6 17/16, 합계 53/40). 완료 task의 기록 내용은 바꾸지 않음 |

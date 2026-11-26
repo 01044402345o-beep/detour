@@ -6,11 +6,11 @@
 <title>Edulleo 시연 QR</title>
 <!-- 시연 슬라이드 1장 (task.md T3.3, PRD F-17). 16:9 고정 비율, 화면 크기에 맞춰 확대·축소.
      QR 원본: ../app/public/qr.svg (내용 https://01044402345o-beep.github.io/edulleo/, reviews/T3.3_qr.md 디코드 검증)
-     외부 글꼴·스크립트 없음 — 시연장 네트워크가 없어도 그대로 열림. 색은 app/src/styles/tokens.css 값. -->
+     외부 글꼴·스크립트 없음 — 시연장 네트워크가 없어도 그대로 열림. 색은 app/src/styles/tokens.css 값(Phase 6 파랑, T6.15 갱신). 로고는 app/src/ui/Logo.tsx의 e 우회로 도형. -->
 <style>
   :root {
-    --ink: #151a26; --ink2: #2b3346; --soft: #656c81; --paper: #fbf7ef; --card: #ffffff;
-    --line: #ece4d6; --acc: #ee6a3c; --acc-d: #b3461c; --sea: #13807e; --stage: #0e121b;
+    --ink: #0f1b33; --ink2: #0f1b33; --soft: #55627a; --paper: #f4f7fb; --card: #ffffff;
+    --line: #dce3ee; --acc: #1d5bd6; --acc-d: #1d5bd6; --sea: #0e3a8f; --stage: #0e121b;
     --kfont: 'Pretendard Variable', Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', system-ui, sans-serif;
     --dfont: 'Fraunces', Georgia, serif;
   }
@@ -25,6 +25,8 @@
     transform-origin: center; transform: translate(-50%, -50%);
   }
   .slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: var(--acc); }
+  .brand { display: flex; align-items: center; gap: 18px; margin-bottom: 28px; }
+  .brand .tile { width: 72px; height: 72px; border-radius: 19px; background: var(--acc); display: flex; align-items: center; justify-content: center; }
   .eyebrow { font-size: 26px; font-weight: 700; color: var(--sea); letter-spacing: .02em; }
   h1 { font-size: 112px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; margin-top: 18px; }
   .en { font-family: var(--dfont); font-size: 44px; color: var(--acc-d); margin-top: 12px; font-style: italic; }
@@ -44,10 +46,10 @@
 <body>
   <main class="slide" aria-label="Edulleo 시연 접속 안내">
     <section>
-      <div class="eyebrow">지역문제 해결 아이디어 · 시연</div>
+      <div class="brand"><span class="tile"><svg width="56" height="56" viewBox="0 0 48 48" role="img" aria-label="Edulleo 로고"><path d="M14.5 24 H39 A15 15 0 1 0 34.6 34.6" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="24" r="4.6" fill="#1d5bd6" stroke="#ffffff" stroke-width="3"/><circle cx="34.6" cy="34.6" r="4.4" fill="#ffffff"/></svg></span><div class="eyebrow">지역문제 해결 아이디어 · 시연</div></div>
       <h1>Edulleo</h1>
       <div class="en">에둘러 · Daejeon walks</div>
-      <p class="tagline">외국인 방문객용 대전 원도심 동선·주문 카드·현장 한국어 웹앱</p>
+      <p class="tagline">대전역 출발 원도심 · 시장 코스<br>음성 가이드 · 주문 카드 웹앱</p>
       <p class="url"><small>휴대폰으로 QR을 찍거나 주소를 입력하세요</small>https://01044402345o-beep.github.io/edulleo/</p>
     </section>
     <figure class="qr">
