@@ -113,6 +113,12 @@
   animation: lang-prog linear forwards;
 }
 
+/* 영상 재생 중: 영상 시간의 진행률을 그대로(애니메이션 없음, 확인 간격만큼 부드럽게) */
+.lang-tab__bar--video {
+  animation: none;
+  transition: transform 100ms linear;
+}
+
 @keyframes lang-prog {
   to {
     transform: scaleX(1);
@@ -148,22 +154,31 @@
 }
 
 .lang-stage {
+  /* T6.16: 영상 칸 232px(사용자 결정). 영상·정지 그림은 1.42:1로 만들어 390px 화면에서 거의 잘리지 않음 */
   position: relative;
-  height: 196px;
+  height: 232px;
   overflow: hidden;
   border-radius: var(--r-lg);
-  background: rgba(255, 255, 255, 0.07);
+  background: #e9eef6;
 }
 
-.lang-scene {
+.lang-still,
+.lang-video {
   position: absolute;
   inset: 0;
-  padding: 14px;
-  opacity: 0;
-  transition: opacity 320ms var(--ease);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.lang-scene.is-on {
+/* 영상은 재생 준비가 되면 정지 그림 위로 서서히 (준비 전에는 정지 그림) */
+.lang-video {
+  opacity: 0;
+  transition: opacity 240ms var(--ease);
+}
+
+.lang-video.is-on {
   opacity: 1;
 }
 
@@ -183,473 +198,6 @@
   text-decoration-color: var(--signal);
   text-decoration-thickness: 3px;
   text-underline-offset: 4px;
-}
-
-/* ───────── ① 코스 ───────── */
-.lc-svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.lc-grid {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-width: 1;
-}
-
-.lc-road {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.2);
-  stroke-width: 7;
-  stroke-linecap: round;
-}
-
-.lc-run {
-  fill: none;
-  stroke: var(--signal);
-  stroke-width: 6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 360;
-  stroke-dashoffset: 360;
-}
-
-.lc-start,
-.lc-stop {
-  fill: var(--blue-deep);
-  stroke: var(--on-blue);
-  stroke-width: 3;
-}
-
-.lc-num {
-  fill: var(--on-blue);
-  font-family: var(--num);
-  font-size: 11px;
-  font-weight: 600;
-  text-anchor: middle;
-}
-
-.lc-chip {
-  fill: var(--blue-deep);
-}
-
-.lc-icon {
-  fill: none;
-  stroke: var(--signal);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.lc-line1 {
-  fill: var(--on-blue);
-}
-
-.lc-line2 {
-  fill: rgba(255, 255, 255, 0.55);
-}
-
-.lc-pop,
-.lc-fade {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.is-on .lc-run {
-  animation: lang-draw 1.8s 0.15s var(--ease) forwards;
-}
-
-.is-on .lc-pop {
-  animation: lang-pop 380ms var(--ease) forwards;
-}
-
-.is-on .lc-fade {
-  animation: lang-fade 400ms var(--ease) forwards;
-}
-
-@keyframes lang-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes lang-pop {
-  from {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes lang-fade {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* ───────── ② 주문 ───────── */
-.lo {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 12px;
-  align-items: center;
-  height: 100%;
-}
-
-.lo-rows {
-  display: grid;
-  gap: 8px;
-}
-
-.lo-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  height: 40px;
-  padding: 0 6px 0 10px;
-  border-radius: var(--r-sm);
-  /* 불투명 짙은 파랑: 수량·기호 글자 대비를 합성 없이 보장 (R1 M-02, Lang.test 대비 검사) */
-  background: var(--blue-deep);
-}
-
-.lo-t {
-  display: grid;
-  gap: 5px;
-  min-width: 0;
-}
-
-.lo-t span {
-  display: block;
-  width: 30px;
-  max-width: 100%;
-  height: 7px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.45);
-}
-
-.lo-t span:first-child {
-  width: 52px;
-  height: 9px;
-  background: var(--on-blue);
-}
-
-.lo-step {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 3px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.lo-step em {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-  color: var(--on-blue);
-  font-size: 14px;
-  font-style: normal;
-  line-height: 1;
-}
-
-.lo-step em.lo-tap::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border: 2px solid var(--signal);
-  border-radius: 50%;
-  animation: lang-ripple 520ms var(--ease) forwards;
-}
-
-@keyframes lang-ripple {
-  from {
-    opacity: 1;
-    transform: scale(0.6);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.4);
-  }
-}
-
-.lo-step b {
-  min-width: 12px;
-  color: var(--tint);
-  font-weight: 600;
-  text-align: center;
-}
-
-/* 양수: 흰색 굵게 (앰버 글자 금지, DESIGN.md 2장) */
-.lo-step b.lo-n {
-  color: var(--on-blue);
-  font-weight: 700;
-}
-
-.lo-card {
-  display: grid;
-  gap: 9px;
-  padding: 14px 12px;
-  border-radius: var(--r-lg);
-  background: var(--surface);
-  box-shadow: 0 10px 24px -14px rgba(14, 58, 143, 0.7);
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 420ms var(--ease),
-    transform 420ms var(--ease);
-}
-
-.lo-card.is-on {
-  opacity: 1;
-  transform: none;
-}
-
-.lo-ko {
-  display: grid;
-  gap: 7px;
-}
-
-.lo-ko span {
-  display: block;
-  height: 12px;
-  border-radius: 6px;
-  background: var(--blue);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 500ms var(--ease);
-}
-
-.lo-ko span:nth-child(2) {
-  width: 70%;
-  transition-delay: 120ms;
-}
-
-.lo-card.is-on .lo-ko span {
-  transform: scaleX(1);
-}
-
-.lo-ro {
-  width: 80%;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--line);
-}
-
-.lo-snd {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--blue);
-}
-
-.lo-snd svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.lo-w {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  height: 16px;
-}
-
-.lo-w i {
-  width: 3px;
-  height: 6px;
-  border-radius: 2px;
-  background: var(--tint);
-}
-
-.lo-card.is-on .lo-w i {
-  animation: lang-wave 900ms ease-in-out infinite;
-}
-
-.lo-card.is-on .lo-w i:nth-child(2) {
-  animation-delay: 120ms;
-}
-
-.lo-card.is-on .lo-w i:nth-child(3) {
-  animation-delay: 240ms;
-}
-
-.lo-card.is-on .lo-w i:nth-child(4) {
-  animation-delay: 360ms;
-}
-
-@keyframes lang-wave {
-  50% {
-    height: 16px;
-    background: var(--blue);
-  }
-}
-
-/* ───────── ③ 직원 ───────── */
-.ls {
-  display: grid;
-  grid-template-columns: 104px minmax(0, 1fr);
-  gap: 14px;
-  align-items: center;
-  height: 100%;
-}
-
-.ls-phone {
-  display: grid;
-  align-content: start;
-  gap: 8px;
-  width: 96px;
-  height: 150px;
-  margin: 0 auto;
-  padding: 14px 10px;
-  border: 2px solid var(--blue-deep);
-  border-radius: var(--r-xl);
-  background: var(--surface);
-  transition: transform 700ms var(--ease);
-}
-
-.ls-phone.is-turned {
-  transform: rotate(180deg);
-}
-
-.ls-phone > span {
-  display: block;
-  height: 13px;
-  border-radius: 6px;
-  background: var(--ink);
-}
-
-.ls-phone > span:nth-of-type(2) {
-  width: 75%;
-}
-
-.ls-phone small {
-  display: block;
-  width: 50%;
-  height: 5px;
-  margin-bottom: 4px;
-  border-radius: 3px;
-  background: var(--line);
-}
-
-.ls-btns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-  margin-top: 10px;
-}
-
-.ls-btns i {
-  display: grid;
-  place-items: center;
-  height: 18px;
-  border: 1.5px solid var(--ink);
-  border-radius: var(--r-xs);
-}
-
-.ls-btns i svg {
-  fill: none;
-  stroke: var(--on-blue);
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0;
-}
-
-.ls-btns i.is-yes {
-  border-color: var(--blue);
-  background: var(--blue);
-}
-
-.ls-btns i.is-yes svg {
-  opacity: 1;
-}
-
-.ls-flow {
-  display: grid;
-  gap: 10px;
-  min-width: 0;
-}
-
-.ls-who {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--tint);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.ls-who svg {
-  flex: none;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.ls-bubble {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 12px 12px 12px 4px;
-  background: var(--surface);
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 380ms var(--ease),
-    transform 380ms var(--ease);
-}
-
-.ls-bubble.is-on {
-  opacity: 1;
-  transform: none;
-}
-
-.ls-bubble svg {
-  flex: none;
-  fill: none;
-  stroke: var(--blue);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.ls-lines {
-  display: grid;
-  flex: 1;
-  gap: 5px;
-}
-
-.ls-lines span {
-  display: block;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--ink);
-}
-
-.ls-lines span:last-child {
-  width: 60%;
-  background: var(--line);
 }
 
 /* ───────── 제목·언어·시작 ───────── */
@@ -753,49 +301,16 @@
   text-align: center;
 }
 
-/* ───────── 움직임 줄이기: 장면 안 움직임 없이 마지막 모습 ───────── */
+/* ───────── 움직임 줄이기: 영상 없이 정지 그림(IntroStage), 전환 효과 없음 ───────── */
 @media (prefers-reduced-motion: reduce) {
-  .lang-scene,
-  .lo-card,
-  .lo-ko span,
-  .ls-phone,
-  .ls-bubble,
+  .lang-video,
   .lang-tab,
   .lang-opt {
     transition: none;
   }
 
-  .lc-run {
-    stroke-dashoffset: 0;
-    animation: none !important;
-  }
-
-  .lc-pop,
-  .lc-fade {
-    opacity: 1;
-    animation: none !important;
-  }
-
-  .lo-card.is-on .lo-w i,
-  .lo-step em.lo-tap::after,
   .lang-tab__bar {
     animation: none;
+    transition: none;
   }
-}
-
-/* ───────── 일시정지(또는 움직임 줄이기): 장면 안 반복·진행 움직임 정지, 마지막 모습 (R1 M-01) ───────── */
-.lang-screen--still .lc-run {
-  stroke-dashoffset: 0;
-  animation: none;
-}
-
-.lang-screen--still .lc-pop,
-.lang-screen--still .lc-fade {
-  opacity: 1;
-  animation: none;
-}
-
-.lang-screen--still .lo-card.is-on .lo-w i,
-.lang-screen--still .lo-step em.lo-tap::after {
-  animation: none;
 }

@@ -1,9 +1,11 @@
 /**
  * S00 인트로 — 첫 실행 화면 (T2.1 언어 선택 → T6.1 인트로로 대체, DESIGN.md 7장 '인트로').
  * - 로고 → 파란 기능 안내판(① 코스 ② 주문 ③ 직원) → 제목·필요성 문장 → 언어 선택 → 시작 버튼.
- * - 안내판은 약 4.4초마다 다음 장면으로 넘어갑니다. 장면 탭을 직접 고르면 자동 재생이 멈추고,
- *   재생/일시정지 버튼으로 다시 켤 수 있습니다. 움직임 줄이기 설정이면 자동 재생·장면 안 움직임 없이
- *   각 장면의 마지막 모습만 보여 줍니다(장면 간 이동만). 타이머는 모두 useEffect에서 정리합니다.
+ * - 안내판 그림 칸(T6.16, 232px)은 영상(IntroStage). 영상이 재생 중이면 영상 시간이 장면을 정하고(4.4초씩),
+ *   영상을 못 쓰면(불러오기 실패·재생 거부) 장면별 정지 그림 + 4.4초 타이머로 넘깁니다.
+ * - 장면 탭을 직접 고르면 자동 재생이 멈추고 영상은 그 장면만 재생한 뒤 끝 모습에서 멈춥니다.
+ *   재생/일시정지 버튼으로 멈추거나 이어서 재생합니다. 움직임 줄이기 설정이면 영상 없이 정지 그림,
+ *   자동 재생·재생 버튼 없이 장면 탭으로 이동만 합니다. 타이머는 모두 useEffect에서 정리합니다.
  * - 언어 선택(T2.1 그대로): 같은 name의 네이티브 radio. 누르면 store에 바로 저장되고 문구가 즉시 바뀝니다.
  *   첫 실행(lang null)에는 기본 언어(EN)가 선택된 것으로 보이고, "시작하기"를 누를 때 저장합니다.
  * - 발음 표기 방식 안내(로마자/가타카나)를 선택한 언어에 맞춰 보여 줍니다.
@@ -16,7 +18,7 @@ import { PATHS } from '../../router/routes';
 import { useAppStore } from '../../store/useAppStore';
 import { LANGS } from '../../types';
 import { Button, Logo, cx, pronunciationKind } from '../../ui';
-import { CourseScene, OrderScene, StaffScene } from './scenes';
+import { IntroStage, type IntroMode } from './IntroStage';
 import './lang.css';
 
 /** 장면 하나가 머무는 시간(ms) */
@@ -75,23 +77,32 @@ export default function LangScreen() {
 
   const [scene, setScene] = useState(0);
   const [playing, setPlaying] = useState(true);
+  /** 사용자가 탭으로 고른 장면을 재생 중(영상은 그 장면 끝에서 멈춤) */
+  const [held, setHeld] = useState(false);
+  /** 탭을 고를 때마다 +1 → 영상이 그 장면 시작점으로 이동 */
+  const [seekToken, setSeekToken] = useState(0);
+  /** 영상이 재생 가능한지(아니면 정지 그림 + 타이머) */
+  const [videoOk, setVideoOk] = useState(false);
+  /** 영상 재생 중 지금 장면 안 진행률(0–1): 탭 진행 막대 */
+  const [progress, setProgress] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const autoplay = playing && !reduce;
-  /** 움직임 줄이기 또는 일시정지: 장면 안 움직임(단계 타이머·반복 파형)도 멈추고 정적 모습 (R1 M-01) */
-  const still = !autoplay;
+  const mode: IntroMode = autoplay ? 'auto' : held ? 'segment' : 'paused';
   const id = SCENES[scene];
 
-  // 자동 전환: 장면마다 SCENE_MS 뒤 다음 장면. 멈추거나 화면을 떠나면 정리.
+  // 자동 전환(영상을 못 쓸 때만): 장면마다 SCENE_MS 뒤 다음 장면. 영상이 있으면 영상 시간이 장면을 정함.
   useEffect(() => {
-    if (!autoplay) return;
+    if (!autoplay || videoOk) return;
     const timer = window.setTimeout(() => setScene((s) => (s + 1) % SCENES.length), SCENE_MS);
     return () => window.clearTimeout(timer);
-  }, [autoplay, scene]);
+  }, [autoplay, scene, videoOk]);
 
-  /** 사용자가 장면을 직접 고름 → 자동 재생 멈춤 */
+  /** 사용자가 장면을 직접 고름 → 자동 재생 멈춤, 영상은 그 장면으로 */
   const choose = (i: number, focus = false) => {
     setPlaying(false);
+    setHeld(true);
     setScene(i);
+    setSeekToken((n) => n + 1);
     if (focus) tabRefs.current[i]?.focus();
   };
 
@@ -119,7 +130,7 @@ export default function LangScreen() {
 
   return (
     <section
-      className={cx('screen', 'lang-screen', still && 'lang-screen--still')}
+      className="screen lang-screen"
       data-testid="screen-lang"
       // 화면 문구 언어를 알려 중국어가 일본어 글꼴 모양으로 그려지지 않게 (글꼴 선택·낭독기)
       lang={selected === 'zh' ? 'zh-Hans' : selected}
@@ -154,11 +165,17 @@ export default function LangScreen() {
                     </i>
                     <span>{t(TAB_KEY[s])}</span>
                     {on && autoplay && (
+                      // 영상이 있으면 영상 시간의 장면 안 진행률로, 없으면 4.4초 CSS 애니메이션 (R1 L-03)
                       <span
-                        key={`${scene}-${String(autoplay)}`}
-                        className="lang-tab__bar"
+                        key={`${scene}-${String(autoplay)}-${String(videoOk)}`}
+                        className={cx('lang-tab__bar', videoOk && 'lang-tab__bar--video')}
                         aria-hidden="true"
-                        style={{ animationDuration: `${SCENE_MS}ms` }}
+                        data-testid="lang-tab-bar"
+                        style={
+                          videoOk
+                            ? { transform: `scaleX(${progress})` }
+                            : { animationDuration: `${SCENE_MS}ms` }
+                        }
                       />
                     )}
                   </button>
@@ -171,7 +188,10 @@ export default function LangScreen() {
                 className="lang-play"
                 data-testid="lang-play"
                 aria-label={t(playing ? 'lang.pause' : 'lang.play')}
-                onClick={() => setPlaying((p) => !p)}
+                onClick={() => {
+                  setPlaying((p) => !p);
+                  setHeld(false);
+                }}
               >
                 <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
                   {playing ? (
@@ -192,21 +212,17 @@ export default function LangScreen() {
             data-testid="lang-scene"
             data-scene={id}
           >
-            <div className="lang-stage" aria-hidden="true">
-              {SCENES.map((s) => (
-                <div
-                  // 장면이 다시 켜질 때마다 새로 그려 안의 움직임을 처음부터 재생
-                  key={`${s}-${String(s === id)}`}
-                  className={cx('lang-scene', `lang-scene--${s}`, s === id && 'is-on')}
-                >
-                  {s === 'course' && <CourseScene />}
-                  {s === 'order' && <OrderScene active={s === id} still={still} />}
-                  {s === 'staff' && (
-                    <StaffScene active={s === id} still={still} turnLabel={t('lang.turnScreen')} />
-                  )}
-                </div>
-              ))}
-            </div>
+            <IntroStage
+              // 움직임 줄이기 설정이 바뀌면 새로 만들어 영상 불러오기 세대를 새로 시작 (R1 M-01)
+              key={reduce ? 'still' : 'video'}
+              scene={scene}
+              mode={mode}
+              reduce={reduce}
+              seekToken={seekToken}
+              onScene={setScene}
+              onVideo={setVideoOk}
+              onProgress={setProgress}
+            />
             <p
               className="lang-cap"
               data-testid="lang-scene-cap"

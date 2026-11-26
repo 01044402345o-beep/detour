@@ -46,7 +46,8 @@ export default defineConfig({
       injectRegister: false, // 등록은 src/sw/pwa.ts(startPwa)가 앱 시작 시 합니다
       manifest: false,
       injectManifest: {
-        globPatterns: ['**/*.{html,js,css,svg,png,webp,webmanifest}'],
+        // T6.16: 인트로 영상(public/intro/intro.mp4, 약 0.9MB)도 오프라인용으로 미리 저장
+        globPatterns: ['**/*.{html,js,css,svg,png,webp,webmanifest,mp4}'],
       },
     }),
   ],
