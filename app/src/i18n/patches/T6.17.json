@@ -1,0 +1,29 @@
+{
+  "en": {
+    "guide": {
+      "prev": "Previous",
+      "next": "Next",
+      "part": "Part {n} of {total}",
+      "full": "See full text",
+      "paged": "Two sentences at a time"
+    }
+  },
+  "ja": {
+    "guide": {
+      "prev": "前へ",
+      "next": "次へ",
+      "part": "{total}のうち{n}",
+      "full": "全文を見る",
+      "paged": "2文ずつ表示"
+    }
+  },
+  "zh": {
+    "guide": {
+      "prev": "上一段",
+      "next": "下一段",
+      "part": "第{n}段，共{total}段",
+      "full": "查看全文",
+      "paged": "每次显示两句"
+    }
+  }
+}

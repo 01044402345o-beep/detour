@@ -328,6 +328,11 @@
     "playing": "Playing the guide…",
     "noVoice": "We couldn't find an English voice on this device. If you hear nothing, turn on English in your phone's text-to-speech settings, or read the guide below.",
     "unsupported": "This browser can't read aloud. Please read the guide below.",
-    "failed": "The voice couldn't play. Tap Play to try again (another voice on this device will be used if there is one), or read the guide below."
+    "failed": "The voice couldn't play. Tap Play to try again (another voice on this device will be used if there is one), or read the guide below.",
+    "prev": "Previous",
+    "next": "Next",
+    "part": "Part {n} of {total}",
+    "full": "See full text",
+    "paged": "Two sentences at a time"
   }
 }

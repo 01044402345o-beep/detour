@@ -1,7 +1,12 @@
 /**
  * 음성 가이드 버튼 + 팝업 (T6.14). 버튼을 누르면 팝업(바텀시트)이 열리며 바로 화면 언어로 읽기 시작합니다.
- * - 팝업: 재생/멈춤, 천천히(0.75배), 원고 전체 글(지금 읽는 문장 강조), 음성이 없을 때 안내.
- * - 멈췄다 다시 누르면 멈춘 문장부터, 끝까지 읽었으면 처음부터.
+ * - 팝업: 재생/멈춤, 천천히(0.75배), 원고 글(지금 읽는 문장 강조), 음성이 없을 때 안내.
+ * - 글은 2문장씩(T6.17, guideChunks.ts): 읽는 문장이 다음 묶음으로 넘어가면 앞 묶음이 사라지고 다음 묶음이 나타납니다.
+ *   칸 높이는 가장 긴 묶음에 맞춰 고정(모든 묶음을 같은 칸에 겹쳐 두고 지금 것만 보임 → 넘어갈 때 팝업 크기가 흔들리지 않음).
+ *   이전/다음 버튼으로 직접 넘길 수 있고(재생 중이면 그 묶음부터 다시 읽음), '전체 글 보기'로 원고 전체를 펼칠 수 있습니다
+ *   (버튼 이름은 누르면 할 일: 전체 글 보기 ↔ 2문장씩 표시, R1 L-01)
+ *   (음성이 없는 기기·화면 읽기 프로그램 사용자). 움직임 줄이기 설정이면 흐려지는 효과 없이 바로 바뀝니다.
+ * - 멈췄다 다시 누르면 멈춘 문장부터(다른 묶음으로 넘겨 두었으면 그 묶음 처음부터), 끝까지 읽었으면 처음부터.
  * - 팝업을 닫거나 화면을 떠나거나 앱이 숨겨지면 멈춥니다. 언어를 바꾸면 멈추고 새 언어 글을 처음부터.
  * - 누를 때마다 음성 상태를 다시 확인하고(R1 M-03), 재생이 오류로 끝나면 '다시 눌러 보세요·글로 읽기' 안내(R1 M-02).
  * - 이모지 없이 앱 아이콘(speaker·stop·slow)과 앱 버튼 모양을 씁니다(사용자 요청).
@@ -15,6 +20,7 @@ import {
   type GuideTts,
   type GuideVoiceState,
 } from '../speech/guideTts';
+import { GUIDE_CHUNK_MAX, chunkGuide } from './guideChunks';
 import { Icon } from './Icon';
 import { Sheet } from './Sheet';
 import { cx } from './cx';
@@ -32,7 +38,14 @@ export type GuidePlayerProps = {
   tts?: GuideTts;
 };
 
-export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts }: GuidePlayerProps) {
+export function GuidePlayer({
+  guide,
+  title,
+  buttonLabel,
+  testId,
+  className,
+  tts,
+}: GuidePlayerProps) {
   const t = useT();
   const lang = useLang();
   const engine = tts ?? getGuideTts();
@@ -52,6 +65,10 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
     }
     return { sentences: flat, starts: st };
   }, [paragraphs]);
+  const { chunks, chunkOf } = useMemo(
+    () => chunkGuide(paragraphs, GUIDE_CHUNK_MAX[lang]),
+    [paragraphs, lang],
+  );
 
   const [open, setOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -60,6 +77,12 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
   const [voice, setVoice] = useState<GuideVoiceState | null>(() => engine.voiceState(lang));
   /** 마지막 재생이 오류로 끝남 (R1 M-02) */
   const [failed, setFailed] = useState(false);
+  /** 지금 보이는 묶음 (T6.17) */
+  const [page, setPage] = useState(0);
+  /** 끝까지 읽음: 다음 재생은 처음부터 */
+  const [ended, setEnded] = useState(false);
+  /** 원고 전체 펼치기 */
+  const [showAll, setShowAll] = useState(false);
   // 언어가 바뀌면 멈춘 위치를 버리고 처음부터 (R1 L-02). 렌더 중 이전 값과 비교해 초기화
   const [shownLang, setShownLang] = useState(lang);
   if (shownLang !== lang) {
@@ -67,6 +90,8 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
     setCur(-1);
     setPlaying(false);
     setFailed(false);
+    setPage(0);
+    setEnded(false);
   }
 
   // 음성 목록 확인 (늦게 오는 브라우저는 최대 2초)
@@ -103,17 +128,23 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
   function start(from: number, r: GuideRate = rate) {
     refreshVoice();
     setFailed(false);
+    setEnded(false);
     const res = engine.play(sentences, lang, r, from, {
-      onSentence: (i) => setCur(i),
+      onSentence: (i) => {
+        setCur(i);
+        setPage(chunkOf[i] ?? 0);
+      },
       onEnd: (reason) => {
         setPlaying(false);
         if (reason !== 'stopped') setCur(-1);
         if (reason === 'error') setFailed(true);
+        if (reason === 'done') setEnded(true);
       },
     });
     if (res === 'started') {
       setPlaying(true);
       setCur(from);
+      setPage(chunkOf[from] ?? 0);
     } else if (res === 'unsupported') {
       setVoice('unsupported');
     }
@@ -122,6 +153,7 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
   function openAndPlay() {
     setOpen(true);
     setCur(-1);
+    setPage(0);
     start(0);
   }
 
@@ -132,16 +164,30 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
     setCur(-1);
   }
 
+  /** 멈춘 문장이 지금 보이는 묶음 안에 있는지 (아니면 그 묶음 처음부터) */
+  const resumeHere = cur >= 0 && chunkOf[cur] === page;
+  const pageStart = chunks[page]?.[0] ?? 0;
+
   function toggle() {
     if (playing) engine.stop();
-    else start(cur >= 0 ? cur : 0);
+    else start(ended ? 0 : resumeHere ? cur : pageStart);
   }
 
   function toggleSlow() {
     const next: GuideRate = rate === 1 ? 0.75 : 1;
     setRate(next);
-    if (playing) start(cur >= 0 ? cur : 0, next);
+    if (playing) start(cur >= 0 ? cur : pageStart, next);
   }
+
+  /** 이전/다음 묶음. 재생 중이면 그 묶음 첫 문장부터 다시 읽음 */
+  function goPage(p: number) {
+    if (p < 0 || p >= chunks.length) return;
+    setEnded(false);
+    setPage(p);
+    if (playing) start(chunks[p][0]);
+  }
+
+  const textLang = lang === 'zh' ? 'zh-Hans' : lang;
 
   const notice =
     voice === 'unsupported'
@@ -175,7 +221,11 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
               data-testid="guide-toggle"
             >
               <Icon name={playing ? 'stop' : 'speaker'} size={20} />
-              {playing ? t('guide.stop') : cur >= 0 ? t('guide.resume') : t('guide.play')}
+              {playing
+                ? t('guide.stop')
+                : resumeHere && !ended
+                  ? t('guide.resume')
+                  : t('guide.play')}
             </button>
             <button
               type="button"
@@ -197,25 +247,90 @@ export function GuidePlayer({ guide, title, buttonLabel, testId, className, tts 
               <span>{notice}</span>
             </p>
           )}
-          <div className="ui-guide__text" lang={lang === 'zh' ? 'zh-Hans' : lang}>
-            {paragraphs.map((p, pi) => (
-              <p key={pi}>
-                {p.map((s, si) => {
-                  const i = starts[pi] + si;
-                  return (
-                    <span
-                      key={si}
-                      className={cx('ui-guide__s', i === cur && playing && 'is-cur')}
-                      data-testid={`guide-s-${i}`}
-                    >
-                      {s}
-                      {lang === 'en' ? ' ' : ''}
-                    </span>
-                  );
-                })}
-              </p>
-            ))}
-          </div>
+          {showAll ? (
+            <div className="ui-guide__text" lang={textLang} data-testid="guide-full">
+              {paragraphs.map((p, pi) => (
+                <p key={pi}>
+                  {p.map((s, si) => {
+                    const i = starts[pi] + si;
+                    return (
+                      <span
+                        key={si}
+                        className={cx('ui-guide__s', i === cur && playing && 'is-cur')}
+                        data-testid={`guide-s-${i}`}
+                      >
+                        {s}
+                        {lang === 'en' ? ' ' : ''}
+                      </span>
+                    );
+                  })}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <div className="ui-guide__pager">
+              {/* 모든 묶음을 한 칸에 겹쳐 둠: 칸 높이 = 가장 긴 묶음, 지금 묶음만 보임 */}
+              <div className="ui-guide__stage" lang={textLang} data-testid="guide-stage">
+                {chunks.map((c, k) => (
+                  <p
+                    key={k}
+                    className={cx('ui-guide__chunk', k === page && 'is-on')}
+                    data-testid={`guide-chunk-${k}`}
+                  >
+                    {c.map((i) => (
+                      <span
+                        key={i}
+                        className={cx('ui-guide__s', i === cur && playing && 'is-cur')}
+                        data-testid={`guide-s-${i}`}
+                      >
+                        {sentences[i]}
+                        {lang === 'en' ? ' ' : ''}
+                      </span>
+                    ))}
+                  </p>
+                ))}
+              </div>
+              <div className="ui-guide__nav">
+                <button
+                  type="button"
+                  className="ui-guide__arrow"
+                  onClick={() => goPage(page - 1)}
+                  disabled={page === 0}
+                  aria-label={t('guide.prev')}
+                  data-testid="guide-prev"
+                >
+                  <Icon name="back" size={20} />
+                </button>
+                <span className="ui-guide__count" data-testid="guide-count">
+                  <span aria-hidden="true">
+                    {page + 1} / {chunks.length}
+                  </span>
+                  <span className="sr-only">
+                    {t('guide.part', { n: page + 1, total: chunks.length })}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  className="ui-guide__arrow"
+                  onClick={() => goPage(page + 1)}
+                  disabled={page >= chunks.length - 1}
+                  aria-label={t('guide.next')}
+                  data-testid="guide-next"
+                >
+                  <Icon name="forward" size={20} />
+                </button>
+              </div>
+            </div>
+          )}
+          <button
+            type="button"
+            className="ui-guide__all"
+            onClick={() => setShowAll((v) => !v)}
+            data-testid="guide-all"
+          >
+            <Icon name="text" size={18} />
+            {showAll ? t('guide.paged') : t('guide.full')}
+          </button>
         </div>
       </Sheet>
     </>

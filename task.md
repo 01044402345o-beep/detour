@@ -468,6 +468,8 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 - [x] **T6.16 인트로 그림 칸을 영상으로 (사용자 요청 2026-11-26)** — 2026-11-26 · reviews/T6.16_r1~r2.md (R2 미해결 0) · Vitest 1176·E2E 81 · 실기기(아이폰·안드로이드) 영상 재생은 사용자 확인 대기 — 소유: `screens/Lang/index.tsx`·`IntroStage.tsx`·`introMedia.ts`·`lang.css`·`Lang.test.tsx`, `scenes.tsx` 삭제, `public/intro/*`(intro.mp4·scene-1~3.webp), `vite.config.ts`(사전 캐시 mp4), DESIGN.md 7장 인트로, prd.md v0.15 S00. 영상 원본·만든 과정은 저장소 밖 `intro-film/`(Lemo-Opuscar Tabletop App Flythrough, TREATMENT·CREDITS·build.sh)
   - 사용자 결정: 칸 232px(추천), 탭을 누르면 그 장면으로 이동·자동 재생 멈춤·그 장면만 재생 후 정지(추천안), 오프라인 저장, 예전 SVG 정리, 무음·글자 없음·한 번에 이어지는 13.2초
   - 완료 조건: 영상 시간이 장면을 정함(타이머 어긋남 없음), 탭·일시정지·재생, 영상 실패·재생 거부·움직임 줄이기 → 정지 그림(+타이머), 오프라인 재생(blob URL), 390·360 화면 넘침 없음, 테스트·E2E 통과, Codex 검토 미해결 0
+- [x] **T6.17 음성 가이드 글을 2문장씩 (사용자 요청 2026-11-26, A안)** — 2026-11-26 · reviews/T6.17_r1~r2.md (R2 미해결 0) · Vitest 1188·E2E 81 · 화면 reviews/T6.17_shots.jpg — 팝업에 원고 전체가 보여 너무 큼 → 2문장씩 보여 주고 다 읽으면 다음 2문장. 이전/다음·'전체 글 보기', 칸 높이 고정, 움직임 줄이기 대응 — 소유: `ui/GuidePlayer.tsx`·`GuidePlayer.css`·`GuidePlayer.test.tsx`, `ui/guideChunks.ts`(신설)·`guideChunks.test.ts`, 문구 `guide.prev·next·part·full·paged`(패치 `T6.17.json`), DESIGN.md 음성 가이드 줄, prd.md v0.16 F-19
+  - 완료 조건: 문단 안 최대 2문장(언어별 길이 상한), 읽는 문장 따라 묶음 자동 전환(앞 묶음 즉시 숨김·겹침 없음), 이전/다음(재생 중이면 그 묶음부터)·'n / N'·전체 글 보기, 멈춤/이어 듣기·끝까지 읽으면 처음부터·오류·천천히·닫기/다시 열기·언어 변경 시 첫 묶음, 칸 높이 고정(넘길 때 팝업 크기 그대로), 움직임 줄이기 = 전환 없음, 3개 언어 화면 확인, 테스트·E2E 통과, Codex 검토 미해결 0
 
 ## 진행 현황 요약
 
@@ -483,8 +485,8 @@ Claude worker 작성 → Codex worker 검토(High/Medium/Low) → Claude worker 
 | 4A 시연 준비 | 6 | 2 | 사용자 task 포함(T4.4c 연락처), T4.2a는 결과 도착 시 (T4.3·T4.5 완료) |
 | 4B 콘텐츠 확정 | 6 | 0 | 현장 확인 후, 순차 |
 | 5 확장 데모 | 1 | 0 | T5.1 미체크 |
-| 6 디자인 개편 | 18 | 18 | T6.D → T6.0 → 6개 동시 → T6.7 → T6.8~T6.16 |
-| 합계 | 54 | 42 | |
+| 6 디자인 개편 | 19 | 19 | T6.D → T6.0 → 6개 동시 → T6.7 → T6.8~T6.17 |
+| 합계 | 55 | 43 | |
 
 ## 변경 이력
 | 버전 | 날짜 | 내용 |

@@ -1,7 +1,14 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import type { GuideText } from '../data/guides';
 import { t } from '../i18n';
-import type { GuideEndReason, GuidePlayHandlers, GuideTts, GuideVoiceState } from '../speech/guideTts';
+import type {
+  GuideEndReason,
+  GuidePlayHandlers,
+  GuideTts,
+  GuideVoiceState,
+} from '../speech/guideTts';
 import { useAppStore } from '../store/useAppStore';
 import type { Lang } from '../types';
 import { GuidePlayer } from './GuidePlayer';
@@ -196,5 +203,137 @@ describe('GuidePlayer (T6.14)', () => {
     fireEvent.click(screen.getByTestId('g'));
     act(() => useAppStore.setState({ lang: 'ja' }));
     expect(f.tts.stops).toBeGreaterThan(0);
+  });
+});
+
+describe('GuidePlayer 2문장씩 보기 (T6.17)', () => {
+  const on = (k: number) => screen.getByTestId(`guide-chunk-${k}`);
+
+  it('열면 첫 묶음(문단 안 2문장)만 보이고, 몇 번째 묶음인지 표시', () => {
+    setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    // GUIDE en: [['Hello there.', 'This is stop one.'], ['Enjoy!']] → 묶음 [0,1] / [2]
+    expect(on(0)).toHaveClass('is-on');
+    expect(on(1)).not.toHaveClass('is-on');
+    expect(within(on(0)).getByTestId('guide-s-0')).toBeInTheDocument();
+    expect(within(on(0)).getByTestId('guide-s-1')).toBeInTheDocument();
+    expect(within(on(1)).getByTestId('guide-s-2')).toBeInTheDocument();
+    expect(screen.getByTestId('guide-count')).toHaveTextContent('1 / 2');
+    // 화면 읽기: 숫자 표시는 숨기고 'Part 1 of 2' 문구로 (R1 참고: role=img 대신)
+    const count = screen.getByTestId('guide-count');
+    expect(within(count).getByText(t('en', 'guide.part', { n: 1, total: 2 }))).toHaveClass(
+      'sr-only',
+    );
+    expect(within(count).getByText('1 / 2')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByTestId('guide-prev')).toBeDisabled();
+    expect(screen.getByTestId('guide-next')).toBeEnabled();
+    expect(screen.queryByTestId('guide-full')).toBeNull();
+  });
+
+  it('읽는 문장이 다음 묶음으로 넘어가면 앞 묶음이 사라지고 다음 묶음이 보임', () => {
+    const f = setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    f.sentence(1);
+    expect(on(0)).toHaveClass('is-on');
+    expect(screen.getByTestId('guide-s-1')).toHaveClass('is-cur');
+    f.sentence(2);
+    expect(on(0)).not.toHaveClass('is-on');
+    expect(on(1)).toHaveClass('is-on');
+    expect(screen.getByTestId('guide-s-2')).toHaveClass('is-cur');
+    expect(screen.getByTestId('guide-count')).toHaveTextContent('2 / 2');
+    expect(screen.getByTestId('guide-next')).toBeDisabled();
+  });
+
+  it('재생 중 다음/이전: 그 묶음 첫 문장부터 다시 읽음', () => {
+    const f = setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    fireEvent.click(screen.getByTestId('guide-next'));
+    expect(f.calls.at(-1)?.from).toBe(2);
+    expect(on(1)).toHaveClass('is-on');
+    fireEvent.click(screen.getByTestId('guide-prev'));
+    expect(f.calls.at(-1)?.from).toBe(0);
+    expect(on(0)).toHaveClass('is-on');
+  });
+
+  it('멈춘 뒤 다른 묶음으로 넘기면 재생 버튼은 그 묶음 처음부터, 다시 돌아오면 멈춘 문장부터 이어 듣기', () => {
+    const f = setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    f.sentence(1);
+    fireEvent.click(screen.getByTestId('guide-toggle')); // 멈춤 (1번 문장)
+    const calls = f.calls.length;
+    fireEvent.click(screen.getByTestId('guide-next')); // 멈춘 상태: 넘기기만, 재생 안 함
+    expect(f.calls.length).toBe(calls);
+    expect(on(1)).toHaveClass('is-on');
+    expect(screen.getByTestId('guide-toggle')).toHaveTextContent(t('en', 'guide.play'));
+    fireEvent.click(screen.getByTestId('guide-prev'));
+    expect(screen.getByTestId('guide-toggle')).toHaveTextContent(t('en', 'guide.resume'));
+    fireEvent.click(screen.getByTestId('guide-next'));
+    fireEvent.click(screen.getByTestId('guide-toggle'));
+    expect(f.calls.at(-1)?.from).toBe(2);
+  });
+
+  it('끝까지 읽은 뒤에는 마지막 묶음이 남아 있고, 재생하면 처음부터', () => {
+    const f = setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    f.sentence(2);
+    f.end('done');
+    expect(on(1)).toHaveClass('is-on');
+    fireEvent.click(screen.getByTestId('guide-toggle'));
+    expect(f.calls.at(-1)?.from).toBe(0);
+    expect(on(0)).toHaveClass('is-on');
+  });
+
+  it('전체 글 보기: 원고 전체를 펼치고, 버튼 이름은 다음에 할 일 — 눌림 상태는 쓰지 않음 (R1 L-01)', () => {
+    const f = setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    const all = screen.getByTestId('guide-all');
+    expect(all).not.toHaveAttribute('aria-pressed');
+    expect(all).toHaveAccessibleName(t('en', 'guide.full'));
+    fireEvent.click(all);
+    expect(all).not.toHaveAttribute('aria-pressed');
+    expect(all).toHaveAccessibleName(t('en', 'guide.paged'));
+    const full = screen.getByTestId('guide-full');
+    expect(full).toHaveTextContent('Hello there. This is stop one.');
+    expect(full).toHaveTextContent('Enjoy!');
+    expect(screen.queryByTestId('guide-stage')).toBeNull();
+    f.sentence(2);
+    expect(screen.getByTestId('guide-s-2')).toHaveClass('is-cur');
+    fireEvent.click(all);
+    expect(on(1)).toHaveClass('is-on');
+  });
+
+  it('닫았다 다시 열면 첫 묶음부터 읽음', () => {
+    const f = setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    f.sentence(2);
+    fireEvent.click(screen.getByRole('button', { name: t('en', 'common.close') }));
+    fireEvent.click(screen.getByTestId('g'));
+    expect(on(0)).toHaveClass('is-on');
+    expect(f.calls.at(-1)?.from).toBe(0);
+  });
+
+  it('언어가 바뀌면 첫 묶음으로', () => {
+    const f = setup('en');
+    fireEvent.click(screen.getByTestId('g'));
+    f.sentence(2);
+    act(() => useAppStore.setState({ lang: 'ja' }));
+    expect(on(0)).toHaveClass('is-on');
+    expect(screen.getByTestId('guide-count')).toHaveTextContent('1 / 2');
+  });
+
+  it('CSS: 묶음은 한 칸(grid)에 겹치고 지금 묶음만 보임, 앞 묶음은 즉시 숨김(겹쳐 보임 없음), 움직임 줄이기면 전환 없음', () => {
+    const css = readFileSync(resolve(__dirname, 'GuidePlayer.css'), 'utf8');
+    expect(css).toMatch(/\.ui-guide__stage\s*\{[^}]*display:\s*grid/);
+    // 비활성 묶음: 전환 없이 바로 숨김 (R1 M-01: 흐려지는 동안 새 묶음과 겹쳐 보이지 않게)
+    expect(css).toMatch(/\.ui-guide__chunk\s*\{[^}]*transition:\s*none/);
+    const onRule = /\.ui-guide__chunk\.is-on\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(onRule).toMatch(/transition:[^;]*opacity/);
+    expect(onRule).not.toMatch(/visibility\s+\d|transition:[^;]*\d+(\.\d+)?s\s+[^,;]*\s\d/);
+    expect(css).toMatch(
+      /\.ui-guide__chunk\s*\{[^}]*grid-area:\s*1\s*\/\s*1[^}]*visibility:\s*hidden/,
+    );
+    expect(css).toMatch(/\.ui-guide__chunk\.is-on\s*\{[^}]*visibility:\s*visible/);
+    const reduce = css.slice(css.indexOf('prefers-reduced-motion'));
+    expect(reduce).toMatch(/\.ui-guide__chunk[\s\S]*transition:\s*none/);
   });
 });
