@@ -1,13 +1,15 @@
-import { places } from '../../data';
-import { googlePlaceUrl, naverWalkUrl } from './externalMap';
+import { courses, places } from '../../data';
+import { DEMO_START, googlePlaceUrl, naverWalkUrl } from './externalMap';
+
+const START = `127.4325,36.3315,${encodeURIComponent('대전역')},,`;
 
 const ssd = places.find((p) => p.id === 'ssd')!;
 
 describe('externalMap', () => {
-  it('네이버 지도 웹 도보 길찾기: 도착지만 지정(경도,위도,한국어 이름), walk 모드', () => {
+  it('네이버 지도 웹 도보 길찾기: 출발 대전역(녹화용 고정) → 도착지(경도,위도,한국어 이름), walk 모드', () => {
     const url = naverWalkUrl(ssd);
     expect(url).toBe(
-      `https://map.naver.com/p/directions/-/127.4273,36.3277,${encodeURIComponent('성심당 본점')},,/-/walk`,
+      `https://map.naver.com/p/directions/${START}/127.4273,36.3277,${encodeURIComponent('성심당 본점')},,/-/walk`,
     );
     expect(new URL(url).hostname).toBe('map.naver.com');
   });
@@ -26,8 +28,18 @@ describe('externalMap', () => {
 
   it('모든 코스 장소에 대해 URL을 만들 수 있음', () => {
     for (const p of places) {
-      expect(naverWalkUrl(p)).toMatch(/^https:\/\/map\.naver\.com\/p\/directions\/-\/.+\/-\/walk$/);
+      expect(naverWalkUrl(p).startsWith(`https://map.naver.com/p/directions/${START}/`)).toBe(true);
+      expect(naverWalkUrl(p)).toMatch(/\/-\/walk$/);
       expect(googlePlaceUrl(p)).toMatch(/^https:\/\/www\.google\.com\/maps\/search\/\?api=1/);
+    }
+  });
+
+  it('고정 출발지는 모든 코스의 출발지(대전역) 데이터와 같은 이름·좌표', () => {
+    expect(courses.length).toBeGreaterThan(0);
+    for (const c of courses) {
+      expect(c.start.nameKo).toBe('대전역');
+      expect(c.start.nameKo).toBe(DEMO_START.nameKo);
+      expect(c.start.geo).toEqual(DEMO_START.geo);
     }
   });
 });
