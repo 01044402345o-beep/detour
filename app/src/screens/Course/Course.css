@@ -284,6 +284,10 @@
 .course-dock {
   position: sticky;
   bottom: 0;
+  /* 행선지 선택 칸은 DOM에서는 버튼 뒤(Tab 순서: 버튼 → 칸), 화면에서는 버튼 위(order -1)에 펼쳐짐 (T6.18 R1 M-01).
+     고정 영역이 위로 커지므로 버튼·길찾기 버튼은 제자리 */
+  display: flex;
+  flex-direction: column;
   z-index: 5;
   margin-top: auto;
   padding: 10px 16px 12px;
@@ -298,11 +302,99 @@
 
 /* 행선지 선택 (T6.13): 정류장 4개를 2×2 라디오 칸으로(한 줄 4칸은 영어 이름이 단어 중간에서 끊겨 바꿈).
    칸 = 번호 동그라미 + 이름 한 줄(넘치면 말줄임, 전체 이름은 버튼 아래 안내 문구). 고른 칸 = 파란 테두리·옅은 파랑. 칸 높이 44px. ('Next' 알약은 T6.14에서 삭제) */
+/* 행선지 선택 버튼 (T6.18): 한 줄(44px 이상), 왼쪽 걷기 아이콘 · 제목 + 지금 행선지 · 오른쪽 화살표(펼치면 아래로) */
+.course-pick__toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--touch);
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.course-pick__toggle[aria-expanded='true'] {
+  border-color: var(--blue);
+  background: var(--tint);
+}
+
+.course-pick__toggle:focus-visible {
+  outline: 3px solid var(--blue-deep);
+  outline-offset: 2px;
+}
+
+.course-pick__toggle-icon {
+  flex: none;
+  color: var(--blue);
+}
+
+.course-pick__toggle-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.course-pick__toggle-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mute);
+}
+
+.course-pick__toggle-value {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 접힘 = 위쪽 화살표(펼칠 수 있음), 펼침 = 아래쪽 화살표(접을 수 있음) */
+.course-pick__chev {
+  flex: none;
+  color: var(--mute);
+  transform: rotate(-90deg);
+  transition: transform var(--dur) var(--ease);
+}
+
+.course-pick__toggle[aria-expanded='true'] .course-pick__chev {
+  transform: rotate(90deg);
+}
+
 .course-pick {
+  order: -1;
   margin: 0 0 10px;
   padding: 0;
   border: 0;
   min-width: 0;
+  animation: course-pick-up var(--dur) var(--ease);
+}
+
+.course-pick[hidden] {
+  display: none;
+}
+
+@keyframes course-pick-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .course-pick {
+    animation: none;
+  }
+  .course-pick__chev {
+    transition: none;
+  }
 }
 
 .course-pick__legend {
@@ -376,7 +468,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 
 .course-dock__btn {
   height: 54px;

@@ -13,7 +13,7 @@
  * - 음성 가이드(T6.14): 제목 아래 '코스 가이드 듣기' → 팝업에서 화면 언어로 읽고 글도 보여 줌(ui/GuidePlayer).
  * - 코스 여러 개(T5.1): `/course?c=<코스 id>`. 없거나 모르는 id면 기본 코스(원도심).
  */
-import { useMemo } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { bundles, getBundle, type CourseBundle } from '../../data';
 import { isDishExample, isOwnPhoto, photoForPlace, photoUrl, type Photo } from '../../data/photos';
@@ -147,6 +147,9 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
   const setWalkPick = useAppStore((s) => s.setWalkPick);
   const setPicked = (id: string) => setWalkPick(course.id, id);
   const pickedIdx = picked ? STOPS.findIndex((p) => p.id === picked) : -1;
+  // 행선지 선택 칸 펼침 (T6.18, 저장하지 않음: 화면을 다시 열면 접힌 상태)
+  const [pickOpen, setPickOpen] = useState(false);
+  const pickId = useId();
   const target = pickedIdx >= 0 ? pickedIdx : next;
   const nextPlace = STOPS[target];
   const nextNo = target + 1;
@@ -331,8 +334,26 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
 
       {nextPlace && (
         <div className="course-dock">
-          <fieldset className="course-pick" data-testid="walk-pick">
-            <legend className="course-pick__legend">{t('course.pickLabel')}</legend>
+          {/* 행선지 선택 (T6.18): 평소엔 한 줄 버튼(지금 행선지 표시), 누르면 위로 펼쳐지고 다시 누르면 접힘 */}
+          <button
+            type="button"
+            className="course-pick__toggle"
+            aria-expanded={pickOpen}
+            aria-controls={pickId}
+            onClick={() => setPickOpen((v) => !v)}
+            data-testid="walk-pick-toggle"
+          >
+            <Icon name="walk" size={18} className="course-pick__toggle-icon" />
+            <span className="course-pick__toggle-text">
+              <span className="course-pick__toggle-label">{t('course.pickLabel')}</span>
+              <span className="course-pick__toggle-value" data-testid="walk-pick-current">
+                <span className="num">{nextNo}</span> · {pickL10n(lang, nextPlace.name)}
+              </span>
+            </span>
+            <Icon name="forward" size={18} className="course-pick__chev" />
+          </button>
+          <fieldset className="course-pick" id={pickId} hidden={!pickOpen} data-testid="walk-pick">
+            <legend className="course-pick__legend sr-only">{t('course.pickLabel')}</legend>
             <div className="course-pick__row">
               {STOPS.map((p, i) => (
                 <label
@@ -356,9 +377,7 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
                   <span className="course-pick__no num" aria-hidden="true">
                     {i + 1}
                   </span>
-                  <span className="course-pick__name">
-                    {pickL10n(lang, p.name)}
-                  </span>
+                  <span className="course-pick__name">{pickL10n(lang, p.name)}</span>
                 </label>
               ))}
             </div>
