@@ -102,7 +102,8 @@
     "photoCredits": "Photos: {list} · Wikimedia Commons",
     "pickLabel": "Where do you want to walk?",
     "nextTag": "Next",
-    "dirTo": "Opens walking directions to stop {n}, {name}, in the NAVER Map app"
+    "dirTo": "Opens walking directions to stop {n}, {name}, in the NAVER Map app",
+    "pickHint": "Pick a stop · NAVER Map walking route"
   },
   "season": {
     "kicker": "SEASONAL EVENT",

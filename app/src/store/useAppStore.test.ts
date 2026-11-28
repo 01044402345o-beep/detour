@@ -343,7 +343,7 @@ describe('기본 store', () => {
     expect(JSON.parse(localStorage.getItem(STORAGE_KEY) as string).state.lang).toBe('en');
   });
 
-  it('고른 행선지(walkPicks, T6.13)는 저장하지 않음 — 새로 열면 다음 정류장부터', () => {
+  it('고른 행선지(walkPicks, T6.13)는 저장하지 않음 — 새로 열면 1번부터(T6.19)', () => {
     useAppStore.getState().setWalkPick('downtown-halfday', 'mus');
     expect(useAppStore.getState().walkPicks).toEqual({ 'downtown-halfday': 'mus' });
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) as string).state;

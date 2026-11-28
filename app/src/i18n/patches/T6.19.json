@@ -1,0 +1,20 @@
+{
+  "en": {
+    "course": {
+      "pickHint": "Pick a stop · NAVER Map walking route"
+    }
+  },
+  "ja": {
+    "course": {
+      "pickHint": "行き先を選んでNAVER Mapへ"
+    }
+  },
+  "zh": {
+    "course": {
+      "pickHint": "选择目的地 · NAVER地图步行导航"
+    }
+  },
+  "$override": [
+    "course.pickHint"
+  ]
+}

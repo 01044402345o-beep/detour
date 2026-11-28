@@ -102,7 +102,8 @@
     "photoCredits": "照片：{list} · 维基共享资源",
     "pickLabel": "想步行去哪里？",
     "nextTag": "下一站",
-    "dirTo": "将在NAVER地图App中打开前往第{n}站“{name}”的步行路线"
+    "dirTo": "将在NAVER地图App中打开前往第{n}站“{name}”的步行路线",
+    "pickHint": "选择目的地 · NAVER地图步行导航"
   },
   "season": {
     "kicker": "限时活动",

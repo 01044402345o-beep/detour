@@ -102,7 +102,8 @@
     "photoCredits": "写真: {list} · ウィキメディア・コモンズ",
     "pickLabel": "どこまで歩きますか？",
     "nextTag": "次",
-    "dirTo": "NAVER地図アプリで{n}か所目「{name}」への徒歩ルートが開きます"
+    "dirTo": "NAVER地図アプリで{n}か所目「{name}」への徒歩ルートが開きます",
+    "pickHint": "行き先を選んでNAVER Mapへ"
   },
   "season": {
     "kicker": "期間限定イベント",

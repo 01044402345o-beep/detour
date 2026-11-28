@@ -397,13 +397,13 @@ describe('S02 코스 지도', () => {
     expect(screen.getByTestId('course-noapp')).toHaveTextContent(t('en', 'course.noApp'));
   });
 
-  it('Start walking: 2번을 본 뒤면 3번 정류장으로', () => {
+  it('Start walking: 방문 기록이 있어도 처음 행선지는 1번 (T6.19)', () => {
     useAppStore.setState({ events: [{ type: 'place_view', placeId: 'eun', t: 1 }] });
     renderCourse();
     const walk = screen.getByTestId('start-walking');
-    expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 3 }));
-    expect(walk).toHaveAttribute('href', naverWalkUrl(byId('mus')));
-    expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId('mus')));
+    expect(walk).toHaveTextContent(t('en', 'course.startWalk'));
+    expect(walk).toHaveAttribute('href', naverWalkUrl(byId('ssd')));
+    expect(screen.getByTestId('google-maps')).toHaveAttribute('href', googlePlaceUrl(byId('ssd')));
   });
 
   describe.each([
@@ -427,102 +427,86 @@ describe('S02 코스 지도', () => {
       );
     });
 
-    it('중간 방문(1번을 봄): 기존 다음 정류장 문구 "Walk to stop 2"·2번 주소', () => {
+    it('1번을 본 뒤에도 처음 행선지는 1번: "Start with stop 1"·1번 주소 (T6.19)', () => {
       useAppStore.setState({ events: [view(ids[0])] });
       renderCourse(url);
       const walk = screen.getByTestId('start-walking');
-      expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 2 }));
-      expect(walk).not.toHaveTextContent(t('en', 'course.startWalk'));
-      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[1])));
+      expect(walk).toHaveTextContent(t('en', 'course.startWalk'));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[0])));
       expect(screen.getByTestId('walk-hint')).toHaveTextContent(
-        t('en', 'course.dirTo', { n: 2, name: byId(ids[1]).name.en }),
-      );
-      expect(screen.getByTestId('google-maps')).toHaveTextContent(
-        t('en', 'course.googleMaps', { n: 2 }),
+        t('en', 'course.dirTo', { n: 1, name: byId(ids[0]).name.en }),
       );
     });
 
-    it('마지막 정류장을 봄: 마지막 정류장 그대로 (코스 끝)', () => {
-      useAppStore.setState({ events: [view(ids[0]), view(ids[3])] });
-      renderCourse(url);
-      const walk = screen.getByTestId('start-walking');
-      expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 4 }));
-      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[3])));
-      expect(screen.getByTestId('google-maps')).toHaveAttribute(
-        'href',
-        googlePlaceUrl(byId(ids[3])),
-      );
-      expect(screen.getByTestId('course-noapp')).toHaveTextContent(t('en', 'course.noApp'));
-    });
-
-    it('행선지 선택 버튼 (T6.18): 처음엔 접혀 있고 지금 행선지를 한 줄로, 누르면 펼치고 다시 누르면 접힘', () => {
-      useAppStore.setState({ events: [view(ids[0])] });
+    it('행선지 버튼 (T6.19): 평소엔 버튼 하나(제목 + 할 일 안내, 장소 표시 없음), 누르면 팝업에 정류장·길찾기 버튼, 다시 누르면 내려감', () => {
       renderCourse(url);
       const toggle = screen.getByTestId('walk-pick-toggle');
-      const panel = screen.getByTestId('walk-pick');
+      const panel = screen.getByTestId('walk-panel');
       expect(toggle).toHaveAttribute('aria-expanded', 'false');
       expect(toggle).toHaveAttribute('aria-controls', panel.id);
+      // 이름 = 제목, 설명 = 할 일 안내 (두 줄이 붙어 읽히지 않게)
+      expect(toggle).toHaveAccessibleName(t('en', 'course.pickLabel'));
+      expect(toggle).toHaveAccessibleDescription(t('en', 'course.pickHint'));
+      expect(screen.queryByTestId('walk-pick-current')).toBeNull();
+      for (const id of ids) expect(toggle).not.toHaveTextContent(byId(id).name.en);
+      // 접혀 있으면 정류장·길찾기 버튼·안내 모두 숨김
       expect(panel).not.toBeVisible();
-      expect(screen.queryByRole('group', { name: t('en', 'course.pickLabel') })).toBeNull();
-      expect(toggle).toHaveTextContent(t('en', 'course.pickLabel'));
-      expect(screen.getByTestId('walk-pick-current')).toHaveTextContent(
-        `2 · ${byId(ids[1]).name.en}`,
-      );
-      // 길찾기 버튼·안내는 접혀 있어도 그대로
-      expect(screen.getByTestId('start-walking')).toHaveTextContent(
-        t('en', 'course.walkToStop', { n: 2 }),
-      );
+      expect(screen.getByTestId('start-walking')).not.toBeVisible();
+      expect(screen.getByTestId('walk-hint')).not.toBeVisible();
       fireEvent.click(toggle);
       expect(toggle).toHaveAttribute('aria-expanded', 'true');
-      expect(panel).toBeVisible();
-      // 고르면 한 줄 표시도 바뀜, 펼친 상태는 그대로
+      expect(screen.getByRole('group', { name: t('en', 'course.pickLabel') })).toBeVisible();
+      const walk = screen.getByTestId('start-walking');
+      expect(walk).toBeVisible();
+      expect(panel).toContainElement(walk);
+      expect(walk).toHaveTextContent(t('en', 'course.startWalk'));
       fireEvent.click(within(screen.getByTestId(`pick-${ids[3]}`)).getByRole('radio'));
-      expect(screen.getByTestId('walk-pick-current')).toHaveTextContent(
-        `4 · ${byId(ids[3]).name.en}`,
-      );
+      expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 4 }));
+      expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[3])));
       expect(panel).toBeVisible();
       fireEvent.click(toggle);
       expect(toggle).toHaveAttribute('aria-expanded', 'false');
       expect(panel).not.toBeVisible();
-      expect(screen.getByTestId('start-walking')).toHaveAttribute(
-        'href',
-        naverWalkUrl(byId(ids[3])),
-      );
+      // Google 장소 보기·앱 없을 때 안내는 팝업 밖 본문: 접혀 있어도 보이고, 목적지는 고른 곳 (T6.19 R1 L-02)
+      const google = screen.getByTestId('google-maps');
+      expect(panel).not.toContainElement(google);
+      expect(google).toBeVisible();
+      expect(google).toHaveAttribute('href', googlePlaceUrl(byId(ids[3])));
+      expect(panel).not.toContainElement(screen.getByTestId('course-noapp'));
     });
 
-    it('행선지 선택 버튼: 화면을 다시 열면 접힌 상태, CSS는 움직임 줄이기에서 전환 없음', () => {
+    it('행선지 버튼: 화면을 다시 열면 접힌 상태, 팝업은 버튼 위(order -1)·Tab 순서 버튼 → 팝업, 움직임 줄이기 = 전환 없음', () => {
       renderCourse(url);
       fireEvent.click(screen.getByTestId('walk-pick-toggle'));
       cleanup();
       renderCourse(url);
       expect(screen.getByTestId('walk-pick-toggle')).toHaveAttribute('aria-expanded', 'false');
       const css = readFileSync(resolve(__dirname, 'Course.css'), 'utf8');
-      expect(css).toMatch(/\.course-pick\[hidden\]\s*\{[^}]*display:\s*none/);
-      // 칸은 DOM에선 버튼 뒤(Tab 순서), 화면에선 버튼 위로 펼침 (R1 M-01)
+      expect(css).toMatch(/\.course-pick__panel\[hidden\]\s*\{[^}]*display:\s*none/);
       expect(css).toMatch(/\.course-dock\s*\{[^}]*flex-direction:\s*column/);
-      expect(css).toMatch(/\.course-pick\s*\{[^}]*order:\s*-1/);
+      expect(css).toMatch(/\.course-pick__panel\s*\{[^}]*order:\s*-1/);
       const dock = screen.getByTestId('walk-pick-toggle').parentElement!;
       const kids = [...dock.children].map((el) => (el as HTMLElement).dataset.testid);
-      expect(kids.indexOf('walk-pick-toggle')).toBeLessThan(kids.indexOf('walk-pick'));
+      expect(kids).toEqual(['walk-pick-toggle', 'walk-panel']);
       const reduce = css.slice(css.lastIndexOf('prefers-reduced-motion'));
-      expect(reduce).toMatch(/\.course-pick\s*\{[^}]*animation:\s*none/);
+      expect(reduce).toMatch(/\.course-pick__panel\s*\{[^}]*animation:\s*none/);
     });
 
-    it('행선지 선택 (T6.13): 처음엔 다음 정류장, 다른 곳을 고르면 버튼·네이버·Google·안내가 그곳으로', () => {
+    it('행선지 선택 (T6.13 → T6.19): 처음엔 1번(기록과 무관), 다른 곳을 고르면 버튼·네이버·Google·안내가 그곳으로', () => {
       useAppStore.setState({ events: [view(ids[0])] });
       renderCourse(url);
       openPick();
       const group = screen.getByRole('group', { name: t('en', 'course.pickLabel') });
       const radios = within(group).getAllByRole('radio');
       expect(radios).toHaveLength(4);
-      // 처음 선택 = 다음 정류장(2번). 'Next' 알약은 T6.14에서 삭제
-      expect(radios[1]).toBeChecked();
+      // 처음 선택 = 1번 (T6.19, 1번을 본 기록이 있어도). 'Next' 알약은 T6.14에서 삭제
+      expect(radios[0]).toBeChecked();
       expect(group.querySelector('.course-pick__next')).toBeNull();
       expect(group).not.toHaveTextContent(t('en', 'course.nextTag'));
       // 4번을 고름
       fireEvent.click(radios[3]);
       expect(radios[3]).toBeChecked();
-      expect(radios[1]).not.toBeChecked();
+      expect(radios[0]).not.toBeChecked();
       const walk = screen.getByTestId('start-walking');
       expect(walk).toHaveTextContent(t('en', 'course.walkToStop', { n: 4 }));
       expect(walk).toHaveAttribute('href', naverWalkUrl(byId(ids[3])));

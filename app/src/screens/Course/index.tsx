@@ -5,10 +5,10 @@
  *   → 확인 전 안내(DESIGN.md 6장 정책) + 사진 출처 + 앱이 없을 때 대체 경로 → 아래 고정 길찾기 버튼.
  * - 확인 전 안내: 정류장이 모두 미확인이면 코스에 요약 한 줄, 그 밖(모두 확인·혼합)은 정류장마다 확인일/미확인.
  * - 핀·목록 → 장소 상세. place_view는 장소 상세(T2.3)가 기록하므로 여기서는 남기지 않습니다.
- * - 길찾기 버튼: 방문 기록이 없으면 "Start with stop 1", 있으면 다음 정류장(nextStop) 네이버 지도 도보 길찾기.
- *   T6.13(사용자 요청 2026-11-26): 버튼 위 '행선지' 선택(정류장 번호·이름 라디오)으로 가고 싶은 곳을 고르면
- *   버튼 문구·네이버 도보 길찾기 목적지·Google 장소 보기가 그곳으로 바뀝니다. 처음 선택은 다음 정류장.
- *   T6.14: 'Next' 앰버 알약은 사용자 요청으로 삭제(다음 정류장은 처음 선택으로만 드러남).
+ * - 길찾기: 아래 고정 영역에는 'Where do you want to walk?' 버튼 하나(T6.19). 누르면 위로 팝업이 올라와
+ *   정류장 선택(번호·이름 라디오, T6.13)과 네이버 지도 도보 길찾기 버튼·안내가 보이고, 다시 누르면 내려갑니다.
+ *   처음 행선지는 항상 1번("Start with stop 1"), 다른 곳을 고르면 "Walk to stop n"·네이버 목적지·Google 장소 보기가
+ *   그곳으로. T6.19(사용자 요청 2026-11-28): 방문 기록으로 다음 정류장을 고르던 동작(nextStop) 삭제.
  *   보조로 Google Maps 장소 보기·앱이 없을 때 안내.
  * - 음성 가이드(T6.14): 제목 아래 '코스 가이드 듣기' → 팝업에서 화면 언어로 읽고 글도 보여 줌(ui/GuidePlayer).
  * - 코스 여러 개(T5.1): `/course?c=<코스 id>`. 없거나 모르는 id면 기본 코스(원도심).
@@ -24,7 +24,6 @@ import { GuidePlayer, Icon, IconButton, TopBar } from '../../ui';
 import { COURSE_GUIDES } from '../../data/guides';
 import { CourseMap, type MapLeg, type MapStop } from '../../ui/map';
 import { googlePlaceUrl, naverWalkUrl } from '../../ui/map/externalMap';
-import { nextStopIndex } from './nextStop';
 import { SeasonCard } from './SeasonCard';
 import { tileText, withNums } from './text';
 import './Course.css';
@@ -89,7 +88,6 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
   const t = useT();
   const lang = useLang();
   const navigate = useNavigate();
-  const events = useAppStore((s) => s.events);
   const { course, places: STOPS, route } = bundle;
   const ROUTE = ROUTES.get(course.id);
 
@@ -140,8 +138,7 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
   const placePhotos = usedPhotos.filter((p) => !isDishExample(p) && !isOwnPhoto(p));
   const dishPhotos = usedPhotos.filter(isDishExample);
 
-  const next = nextStopIndex(course.stops, events);
-  // 사용자가 고른 행선지(정류장 id). 고르기 전에는 다음 정류장을 따라갑니다
+  // 사용자가 고른 행선지(정류장 id). 고르기 전에는 1번 정류장 (T6.19: 방문 기록으로 다음 정류장을 고르던 것 → 항상 1번)
   // 저장소에 둬서 상세 왕복에도 유지, 데모 초기화로 비워짐 (T6.13 R1·R2 M-01)
   const picked = useAppStore((s) => s.walkPicks[course.id] ?? null);
   const setWalkPick = useAppStore((s) => s.setWalkPick);
@@ -150,10 +147,10 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
   // 행선지 선택 칸 펼침 (T6.18, 저장하지 않음: 화면을 다시 열면 접힌 상태)
   const [pickOpen, setPickOpen] = useState(false);
   const pickId = useId();
-  const target = pickedIdx >= 0 ? pickedIdx : next;
+  const target = pickedIdx >= 0 ? pickedIdx : 0;
   const nextPlace = STOPS[target];
   const nextNo = target + 1;
-  const isFirstStart = target === 0 && next === 0;
+  const isFirstStart = target === 0;
 
   return (
     <section className="screen course" data-testid="screen-course">
@@ -334,67 +331,79 @@ function CourseView({ bundle }: { bundle: CourseBundle }) {
 
       {nextPlace && (
         <div className="course-dock">
-          {/* 행선지 선택 (T6.18): 평소엔 한 줄 버튼(지금 행선지 표시), 누르면 위로 펼쳐지고 다시 누르면 접힘 */}
+          {/* 행선지 선택 (T6.18 → T6.19): 평소엔 'Where do you want to walk?' 버튼 하나.
+              누르면 위로 팝업(정류장 2×2 + 네이버 지도 길찾기 버튼 + 안내)이 올라오고 다시 누르면 내려감 */}
           <button
             type="button"
             className="course-pick__toggle"
             aria-expanded={pickOpen}
             aria-controls={pickId}
+            aria-labelledby={`${pickId}-l`}
+            aria-describedby={`${pickId}-h`}
             onClick={() => setPickOpen((v) => !v)}
             data-testid="walk-pick-toggle"
           >
-            <Icon name="walk" size={18} className="course-pick__toggle-icon" />
+            <Icon name="walk" size={22} className="course-pick__toggle-icon" />
             <span className="course-pick__toggle-text">
-              <span className="course-pick__toggle-label">{t('course.pickLabel')}</span>
-              <span className="course-pick__toggle-value" data-testid="walk-pick-current">
-                <span className="num">{nextNo}</span> · {pickL10n(lang, nextPlace.name)}
+              <span className="course-pick__toggle-label" id={`${pickId}-l`}>
+                {t('course.pickLabel')}
+              </span>
+              <span className="course-pick__toggle-hint" id={`${pickId}-h`}>
+                {t('course.pickHint')}
               </span>
             </span>
-            <Icon name="forward" size={18} className="course-pick__chev" />
+            <Icon name="forward" size={20} className="course-pick__chev" />
           </button>
-          <fieldset className="course-pick" id={pickId} hidden={!pickOpen} data-testid="walk-pick">
-            <legend className="course-pick__legend sr-only">{t('course.pickLabel')}</legend>
-            <div className="course-pick__row">
-              {STOPS.map((p, i) => (
-                <label
-                  key={p.id}
-                  className={`course-pick__opt${i === target ? ' is-on' : ''}`}
-                  data-testid={`pick-${p.id}`}
-                >
-                  <input
-                    type="radio"
-                    name={`walk-to-${course.id}`}
-                    value={p.id}
-                    checked={i === target}
-                    // 낭독: "Stop 2 of 4, 전체 이름" — 화면의 이름은 한 줄 말줄임이라 전체 이름을 직접 줌 (R1 L-03)
-                    aria-label={[
-                      t('course.stopOf', { n: i + 1, total: STOPS.length }),
-                      pickL10n(lang, p.name),
-                    ].join(', ')}
-                    onChange={() => setPicked(p.id)}
-                    className="sr-only"
-                  />
-                  <span className="course-pick__no num" aria-hidden="true">
-                    {i + 1}
-                  </span>
-                  <span className="course-pick__name">{pickL10n(lang, p.name)}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <a
-            className="ui-btn ui-btn--ink course-dock__btn"
-            href={naverWalkUrl(nextPlace)}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="start-walking"
+          <div
+            className="course-pick__panel"
+            id={pickId}
+            hidden={!pickOpen}
+            data-testid="walk-panel"
           >
-            {isFirstStart ? t('course.startWalk') : t('course.walkToStop', { n: nextNo })}
-            <Icon name="forward" size={20} />
-          </a>
-          <p className="course-dock__hint" data-testid="walk-hint">
-            {t('course.dirTo', { n: nextNo, name: pickL10n(lang, nextPlace.name) })}
-          </p>
+            <fieldset className="course-pick" data-testid="walk-pick">
+              <legend className="course-pick__legend sr-only">{t('course.pickLabel')}</legend>
+              <div className="course-pick__row">
+                {STOPS.map((p, i) => (
+                  <label
+                    key={p.id}
+                    className={`course-pick__opt${i === target ? ' is-on' : ''}`}
+                    data-testid={`pick-${p.id}`}
+                  >
+                    <input
+                      type="radio"
+                      name={`walk-to-${course.id}`}
+                      value={p.id}
+                      checked={i === target}
+                      // 낭독: "Stop 2 of 4, 전체 이름" — 화면의 이름은 한 줄 말줄임이라 전체 이름을 직접 줌 (R1 L-03)
+                      aria-label={[
+                        t('course.stopOf', { n: i + 1, total: STOPS.length }),
+                        pickL10n(lang, p.name),
+                      ].join(', ')}
+                      onChange={() => setPicked(p.id)}
+                      className="sr-only"
+                    />
+                    <span className="course-pick__no num" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <span className="course-pick__name">{pickL10n(lang, p.name)}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <a
+              className="ui-btn ui-btn--ink course-dock__btn"
+              href={naverWalkUrl(nextPlace)}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="start-walking"
+            >
+              {isFirstStart ? t('course.startWalk') : t('course.walkToStop', { n: nextNo })}
+              <Icon name="forward" size={20} />
+            </a>
+            <p className="course-dock__hint" data-testid="walk-hint">
+              {t('course.dirTo', { n: nextNo, name: pickL10n(lang, nextPlace.name) })}
+            </p>
+          </div>
         </div>
       )}
     </section>
